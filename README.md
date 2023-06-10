@@ -1,14 +1,28 @@
 # FileManagerSphere
+## EM CONSTRUÇÂO
 
 ![FileManagerSphere Logo](link_para_o_logo)
 
 Bem-vindo ao FileManagerSphere - seu gerenciador de arquivos personalizado!
 
-![FileManagerSphere App Screenshot](link_para_screenshot)
+## Preview
+
+<p><img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/1.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/2.jpg" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="32%" />
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" width="32%" /></p>
+
 
 ## Visão geral
 
 O FileManagerSphere é uma poderosa ferramenta de gerenciamento de arquivos, projetada para simplificar e aprimorar sua experiência ao lidar com documentos, mídia e outros tipos de arquivos. Com recursos avançados e uma interface intuitiva, o FileManagerSphere oferece uma solução abrangente para organizar, navegar, buscar e manipular seus arquivos com facilidade.
+
+## Características
+   
+- **Código aberto:** leve, limpo e seguro.
+- **Design de Materiais:** Segue as diretrizes de Design de Materiais, com atenção aos detalhes.
+- **Breadcrumbs:** Navegue no sistema de arquivos com facilidade.
+- **Suporte a arquivos:** Visualize, extraia e crie arquivos compactados comuns.
+- **Temas:** cores de interface do usuário personalizáveis, além do modo noturno com preto verdadeiro opcional.
+- **Bem implementado:** Construído sobre as coisas certas, incluindo Java NIO2 File API e LiveData.
 
 ## Recursos Principais
 
@@ -20,11 +34,6 @@ O FileManagerSphere é uma poderosa ferramenta de gerenciamento de arquivos, pro
 
 - **Manipulação de Arquivos**: O FileManagerSphere oferece várias opções para manipular seus arquivos. Copie, mova, renomeie e exclua arquivos com apenas alguns cliques. Você também pode visualizar e editar arquivos diretamente na interface.
 
-## Como Usar
-
-1. Faça o download ou clone este repositório.
-2. Abra o FileManagerSphere em seu navegador.
-3. Siga as instruções na tela para começar a gerenciar seus arquivos.
 
 ## Contribuição
 
