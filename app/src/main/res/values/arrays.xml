@@ -1,0 +1,27 @@
+<resources>
+    <!-- Themes Preference -->
+    <string-array name="themes_entries">
+        <item>Seguir o sistema</item>
+        <item>Tema claro</item>
+        <item>Tema escuro</item>
+        <item>Tema rosa</item>
+        <item>Tema verde modo claro</item>
+        <item>Tema verde modo escuro</item>
+        <item>Tema azul modo claro</item>
+        <item>Tema azul modo escuro</item>
+        <item>Tema vermelho</item>
+    </string-array>
+
+    <string-array name="themes_values">
+        <item>FOLLOW_SYSTEM</item>
+        <item>LIGHT_THEME</item>
+        <item>DARK_THEME</item>
+        <item>PINK_THEME</item>
+        <item>GREEN_THEME_LIGHT</item>
+        <item>GREEN_THEME_DARK</item>
+        <item>BLUE_THEME_LIGHT</item>
+        <item>BLUE_THEME_DARK</item>
+        <item>RED_THEME</item>
+    </string-array>
+
+</resources>

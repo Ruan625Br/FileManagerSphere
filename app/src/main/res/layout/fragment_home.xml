@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+              android:orientation="vertical"
+             tools:context=".fragment.HomeFragment">
+
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/file_item"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_marginTop="60dp"
+            android:id="@+id/recyclerView" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintVertical_bias="1.0"/>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="-117dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/relativeLayout">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_create_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/file_generic_icon"
+                app:tint="?attr/colorOnPrimaryContainer"
+                app:elevation="6dp"
+                style="?attr/floatingActionButtonSmallStyle"
+                app:pressedTranslationZ="12dp"
+                android:visibility="gone"
+                android:background="?attr/colorPrimary"
+                android:layout_above="@id/fab_create_folder"
+                android:layout_alignEnd="@id/fab_create_folder"
+                android:contentDescription="@string/fab_menu_action_create_file"
+                android:layout_marginEnd="0dp" android:layout_marginBottom="2dp" tools:visibility="visible"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_create_folder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/file_directory_icon"
+                app:tint="?attr/colorOnPrimaryContainer"
+                app:elevation="6dp"
+                style="?attr/floatingActionButtonSmallStyle"
+                app:pressedTranslationZ="12dp"
+                android:visibility="gone"
+                android:layout_above="@id/mfab"
+                android:contentDescription="@string/fab_menu_action_create_folder"
+                android:layout_alignEnd="@id/mfab"
+                android:background="?attr/colorPrimary"
+                android:layout_marginRight="4dp"
+                tools:visibility="visible"/>
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/mfab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/add_icon_white_24dp"
+                app:tint="?attr/colorOnPrimaryContainer"
+
+                android:background="?attr/colorPrimary"
+                app:pressedTranslationZ="12dp"
+                android:contentDescription="@string/dialog_new_file"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true" android:layout_marginTop="16dp" android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" android:layout_marginBottom="16dp"/>
+
+
+    </RelativeLayout>
+    <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary"
+            android:theme="?attr/actionBarTheme"
+            android:minHeight="?attr/actionBarSize" android:id="@+id/topAppBar"
+            app:menu="@menu/menu_file_list" app:title="@string/app_name" tools:ignore="MissingConstraints"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toTopOf="@+id/recyclerView"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

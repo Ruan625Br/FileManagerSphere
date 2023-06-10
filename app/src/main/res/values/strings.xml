@@ -1,0 +1,73 @@
+<resources>
+    <string name="app_name">File Manager</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sort">Classificar</string>
+    <string name="file_list_action_sort_by_name">Nome</string>
+    <string name="file_list_action_sort_by_type">Tipo</string>
+    <string name="file_list_action_sort_by_size">Tamanho</string>
+    <string name="file_list_action_sort_by_last_modified">Útilma Modificação</string>
+    <string name="file_list_action_sort_order_ascending">Crescente</string>
+    <string name="file_list_action_sort_directories_first">Pastas primeiro</string>
+    <string name="file_list_action_sort_path_specific">Somente pata esta pasta</string>
+    <string name="refresh">Atualizar</string>
+    <string name="select_all">Selecionar tudo</string>
+    <string name="file_list_action_navigate_to">Ir para</string>
+    <string name="file_list_action_show_hidden_files">Mostrar arquivos ocultos</string>
+    <string name="share">Compartilhar</string>
+    <string name="file_list_action_copy_path">Copiar caminho</string>
+    <string name="fab_menu_action_create_file">Criar arquivo</string>
+    <string name="fab_menu_action_create_folder">Criar pasta</string>
+    <string name="file_item_action_archive">Compactar</string>
+    <string name="file_item_action_extract">Extrair</string>
+    <string name="rename">Renomear</string>
+    <string name="delete">Excluir</string>
+    <string name="copy">Copiar</string>
+    <string name="cut">Recortar</string>
+    <string name="file_item_action_open_with">Abrir com</string>
+    <string name="file_item_action_properties">Propiedades</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="dialog_new_folder">Nova pasta</string>
+    <string name="dialog_new_file">Novo arquivo</string>
+    <string name="dialog_name_file">Nome do arquivo</string>
+    <string name="dialog_name_folder">Nome da pasta</string>
+    <string name="dialog_file_exists">Um arquivo com esse nome já existe</string>
+    <string name="_24_de_mar">24 de mar.</string>
+    <string name="_16_kb">16 KB</string>
+    <string name="todo">TODO</string>
+    <string name="testeeeeeeeee">TESTEEEEEEEEE</string>
+    <string name="file_list_select_action_archive">Compactar</string>
+
+    <string name="recente">Recentes</string>
+    <string name="storage">Storage</string>
+    <string name="used_space">Espaço usado</string>
+    <string name="free_space">Espaço livre</string>
+    <string name="gb">GB</string>
+    <string name="gb_total">128</string>
+    <string name="internal_st">Internal storage</string>
+    <string name="policy_and_terms"><![CDATA[Privacy Policy and Terms & conditions]]></string>
+    <string name="ok"></string>
+    <string name="download">Download</string>
+
+
+    <string name="action_mode_title">selecionado</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Themes Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="themes_title">Tema</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <string name="settings">Configuração</string>
+
+    <string name="category_aparencia">Aparência</string>
+
+</resources>
