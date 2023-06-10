@@ -11,11 +11,18 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.recyclerview.selection.ItemDetailsLookup
+import androidx.recyclerview.selection.ItemDetailsLookup.ItemDetails
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.settings.PopupSettingsListener
 import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
+import com.etb.filemanager.manager.selection.Details
+import com.etb.filemanager.manager.selection.FileItemDetailsLookup
+import com.etb.filemanager.manager.selection.FileItemKeyProvider
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.util.file.style.IconUtil
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -44,11 +51,14 @@ class FileModelAdapter(
     private var isActionMode = false
     private val mainScope = MainScope()
 
+     var selectionTracker: SelectionTracker<Long>? = null
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileModelAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.file_item, parent, false)
-
         return ViewHolder(view)
+
+
     }
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -57,6 +67,13 @@ class FileModelAdapter(
         val fileViewModel = fileModels[position]
         val item = fileModels[position]
 
+
+        val itemDetails = Details(fileViewModel, position)
+        holder.itemDetails = itemDetails
+
+
+
+
         selectPreferenceUtils = SelectPreferenceUtils.getInstance()
         fileAdapterListenerUtil = FileAdapterListenerUtil.getInstance()
 
@@ -64,13 +81,19 @@ class FileModelAdapter(
         val iconUtil = IconUtil()
 
 
-        mainScope.launch {
-            if (selectedItems.contains(fileViewModel)) {
+        if (selectionTracker != null){
+            if (selectionTracker?.isSelected(itemDetails.selectionKey)!!){
+                holder.itemView.isActivated = true
                 holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
             } else {
+                holder.itemView.isActivated = false
                 holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
             }
         }
+
+
+
+
 
 
         holder.titleFile.text = fileViewModel.fileName
@@ -83,19 +106,6 @@ class FileModelAdapter(
             Log.i("ADAPTER", "PATH  ${fileViewModel.filePath}")
 
         }
-        holder.itemFile.setOnLongClickListener {
-            if (!isActionMode) {
-                isActionMode = true
-               // holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
-
-
-                fileAdapterListenerUtil.addItemOnLongClick(item, isActionMode)
-                Log.i("INFO", "CLICOUUU")
-            }
-
-            true
-        }
-
 
         if (fileViewModel.isDirectory) {
             holder.dateFile.visibility = View.GONE
@@ -177,7 +187,12 @@ class FileModelAdapter(
         return fileModels.size
     }
 
+
+
     class ViewHolder(ItemFileView: View) : RecyclerView.ViewHolder(ItemFileView) {
+        lateinit var itemDetails: Details
+
+
         val titleFile: TextView = itemView.findViewById(R.id.tv_file_title)
         val dateFile: TextView = itemView.findViewById(R.id.tv_file_date)
         val sizeFile: TextView = itemView.findViewById(R.id.tv_file_size)
@@ -185,6 +200,8 @@ class FileModelAdapter(
         val itemFile: LinearLayout = itemView.findViewById(R.id.item_file)
         val itemBorder: LinearLayout = itemView.findViewById(R.id.linearLayout2)
         val iconPreview: ImageView = itemView.findViewById(R.id.iv_preview)
+
+
 
 
     }
@@ -262,10 +279,8 @@ class FileModelAdapter(
 
 
 
-    private fun setCenterVertical(mTextView: TextView) {
-        val layoutParams = mTextView.layoutParams as RelativeLayout.LayoutParams
-        layoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE)
-        mTextView.layoutParams = layoutParams
-    }
+
+
 
 }
+

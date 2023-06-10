@@ -19,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
@@ -32,6 +34,8 @@ import com.etb.filemanager.manager.adapter.FileModelAdapter
 import com.etb.filemanager.manager.adapter.ManagerUtil
 import com.etb.filemanager.manager.bar.adapter.FolderBarModel
 import com.etb.filemanager.manager.bar.adapter.FolderBarModelAdapter
+import com.etb.filemanager.manager.selection.FileItemDetailsLookup
+import com.etb.filemanager.manager.selection.FileItemKeyProvider
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.PopupSettings
@@ -41,6 +45,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.*
 import java.nio.file.*
+import java.util.*
 import kotlin.streams.toList
 
 
@@ -82,6 +87,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     private lateinit var selectPreferenceUtils: SelectPreferenceUtils
     private lateinit var fileAdapterListenerUtil: FileAdapterListenerUtil
+
+    lateinit var selectionTracker: SelectionTracker<Long>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,7 +152,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     override fun onItemClick(item: FileModel, path: String, isDirectory: Boolean) {
         if (isActionMode) {
-            onItemClicked(item)
+
         } else {
             if (isDirectory) {
                 mCurrentPath = path
@@ -217,7 +224,17 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             val fileLength = fileUtil.getFileSize(path)
             val file = path.toFile()
 
-            fileModel.add(FileModel(fileName, filePath, isDirectory, fileExtension, fileLength, file))
+            fileModel.add(
+                FileModel(
+                    UUID.randomUUID().mostSignificantBits,
+                    fileName,
+                    filePath,
+                    isDirectory,
+                    fileExtension,
+                    fileLength,
+                    file
+                )
+            )
         }
         selectPreferenceUtils.sortFilesAuto(fileModel, requireContext())
 
@@ -359,7 +376,15 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val fileLength = fileUtil.getFileSize(itemFile)
         val file = itemFile.toFile()
 
-        val newItem = FileModel(fileName, filePath, isDirectory, fileExtension, fileLength, file)
+        val newItem = FileModel(
+            UUID.randomUUID().mostSignificantBits,
+            fileName,
+            filePath,
+            isDirectory,
+            fileExtension,
+            fileLength,
+            file
+        )
         fileModel.add(newItem)
         refreshAdapter()
     }
@@ -370,11 +395,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             override fun handleOnBackPressed() {
 
                 val mPreviousPath = managerUtil.getPreviousPath()
-                if (mPreviousPath.equals(BASE_PATH)){
+                if (mPreviousPath.equals(BASE_PATH)) {
                     val recentFragment = RecentFragment()
-                        (requireActivity() as MainActivity).starNewFragment(recentFragment)
+                    (requireActivity() as MainActivity).starNewFragment(recentFragment)
 
-                }else{
+                } else {
                     listFilesAndFoldersInBackground(managerUtil.getPreviousPath())
 
                 }
@@ -421,21 +446,57 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         }
     }
 
+    private fun setupSelectionTracker(recyclerView: RecyclerView) {
+
+
+
+    }
+
+
     private fun updateSelectedItems(item: FileModel) {
         selectedItems.add(item)
 
     }
 
+    private fun initSelectionTracker(){
+
+        selectionTracker = SelectionTracker.Builder<Long>(
+            "selection-files",
+            recyclerView,
+            FileItemKeyProvider(fileModel),
+            FileItemDetailsLookup(recyclerView),
+            StorageStrategy.createLongStorage()
+        ).build()
+
+
+
+        (recyclerView.adapter as FileModelAdapter).selectionTracker = selectionTracker
+
+        startActionMode()
+        selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>(){
+            override fun onItemStateChanged(key: Long, selected: Boolean) {
+                super.onItemStateChanged(key, selected)
+                val selectedItemCount = selectionTracker.selection.size() ?: 0
+
+
+
+                updateActionModeTitle(selectedItemCount)
+            }
+        })
+    }
+
     private fun startActionMode() {
+        isActionMode = true
         actionMode?.finish()
         actionMode = (activity as AppCompatActivity?)!!.startSupportActionMode(this)
+        updateActionModeTitle(0)
     }
 
     private fun finishActionMode() {
         actionMode?.finish()
         actionMode = null
+      selectionTracker.clearSelection()
         isActionMode = false
-        clearItemsSelecteds()
     }
 
     private fun clearItemsSelecteds() {
@@ -502,7 +563,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             R.id.action_sort_path_specific -> {}
             R.id.action_refresh -> {}
             R.id.action_select_all -> {}
-            R.id.action_navigate_to -> {}
+            R.id.action_navigate_to -> {
+                initSelectionTracker()
+            }
             R.id.action_show_hidden_files -> {
                 popupSettings.setSelectedActionShowHiddenFiles()
             }
@@ -515,41 +578,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         return true
     }
 
-
-    /*  override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-          mode.title = "Selecione seus items"
-         // actionMode = mode
-          val inflater = mode.menuInflater
-          inflater.inflate(R.menu.menu_file_lis_select, menu)
-
-          return true
-      }
-
-      override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-          // Called each time the action mode is shown
-          return false
-      }
-
-      override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
-          when (item?.itemId) {
-              R.id.action_cut -> {}
-              R.id.action_copy -> {}
-              R.id.action_delete -> {}
-              R.id.action_archive -> {}
-              R.id.action_share -> {}
-              R.id.action_select_all -> {}
-              else -> return super.onOptionsItemSelected(item!!)
-          }
-          return true
-      }
-
-      override fun onDestroyActionMode(mode: ActionMode?) {
-          topAppBar.menu.clear()
-          topAppBar.inflateMenu(R.menu.menu_file_list)
-          isActionMode = false
-          clearItemsSelecteds()
-          actionMode = null
-      }*/
 
     companion object {
         /**
@@ -573,6 +601,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     override fun onCreateActionMode(mode: androidx.appcompat.view.ActionMode?, menu: Menu?): Boolean {
+
         val inflater = mode?.menuInflater
         inflater?.inflate(R.menu.menu_file_lis_select, menu)
         return true

@@ -7,6 +7,15 @@ class ManagerUtil {
     private var pathStack = Stack<String>()
     private val basePath = "/storage/emulated/0"
 
+
+
+
+
+
+
+
+
+
     fun getPreviousPath(): String {
         if (!pathStack.isEmpty()) {
             if (pathStack.size == 1) {
