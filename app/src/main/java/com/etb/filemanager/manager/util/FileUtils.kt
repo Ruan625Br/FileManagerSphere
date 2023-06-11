@@ -12,6 +12,8 @@ import com.etb.filemanager.manager.category.adapter.RecentImageModel
 import com.etb.filemanager.settings.preference.PopupSettings
 import com.etb.filemanager.util.file.style.ColorUtil
 import com.etb.filemanager.util.file.style.IconUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import java.text.DecimalFormat
@@ -250,58 +252,33 @@ class FileUtils {
         }
     }
 
-  /*  fun getRecentImages(context: Context): RecentImageModel? {
+
+    suspend fun getRecentImages(context: Context): ArrayList<RecentImageModel> = withContext(Dispatchers.IO) {
         val projection = arrayOf(
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DATA
         )
 
         val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
-        val queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI.buildUpon()
-            .appendQueryParameter("limit", "4")
-            .build()
+        val queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
-        context.contentResolver.query(queryUri, projection, null, null, sortOrder)?.use { cursor ->
-            if (cursor.moveToFirst()) {
-                val imageIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-                val imageDataColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-                val imageId = cursor.getLong(imageIdColumn)
-                val imagePath = cursor.getString(imageDataColumn)
+        val recentImageModelList = ArrayList<RecentImageModel>()
 
-                val thumbnailUri = ContentUris.withAppendedId(
-                    MediaStore.Images.Thumbnails.getContentUri(MediaStore.VOLUME_EXTERNAL),
-                    imageId
-                )
-                return RecentImageModel(imagePath)
+        withContext(Dispatchers.IO) {
+            context.contentResolver.query(queryUri, projection, null, null, sortOrder)?.use { cursor ->
+                val imagePathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                var count = 0
+                while (cursor.moveToNext() && count < 11) {
+                    val imagePath = cursor.getString(imagePathColumn)
+                    recentImageModelList.add(RecentImageModel(imagePath))
+                    count++
+                }
             }
         }
 
-        return null
+        recentImageModelList
     }
-*/
-  fun getRecentImages(context: Context): ArrayList<RecentImageModel> {
-      val projection = arrayOf(
-          MediaStore.Images.Media._ID,
-          MediaStore.Images.Media.DATA
-      )
 
-      val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
-      val queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-
-      val recentImageModelList = ArrayList<RecentImageModel>()
-
-      context.contentResolver.query(queryUri, projection, null, null, sortOrder)?.use { cursor ->
-          val imagePathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-          var count = 0
-          while (cursor.moveToNext() && count < 11) {
-              val imagePath = cursor.getString(imagePathColumn)
-              recentImageModelList.add(RecentImageModel(imagePath))
-              count++
-          }
-      }
-
-      return recentImageModelList
-  }
 
 
 

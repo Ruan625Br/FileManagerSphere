@@ -25,6 +25,9 @@ import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.FileUtils.SpaceType
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 
 // TODO: Rename parameter arguments, choose names that match
@@ -90,15 +93,18 @@ class RecentFragment : Fragment() {
        recyclerView.adapter = adapter
 
     }
+    @OptIn(DelicateCoroutinesApi::class)
     fun setRecentImages() {
-        val recyclerView = requireView().findViewById<RecyclerView>(R.id.recy_recents_images)
-        val recentImage = fileUtils.getRecentImages(requireContext())
-        val recentImageModel = ArrayList<RecentImageModel>()
+        GlobalScope.launch {
+            val recyclerView = requireView().findViewById<RecyclerView>(R.id.recy_recents_images)
+            val recentImage = fileUtils.getRecentImages(requireContext())
+            val recentImageModel = ArrayList<RecentImageModel>()
 
 
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
-        val adapter = RecentImagemodelAdapter(recentImage, requireContext())
-        recyclerView.adapter = adapter
+            recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
+            val adapter = RecentImagemodelAdapter(recentImage, requireContext())
+            recyclerView.adapter = adapter
+        }
     }
 
     fun initClick() {

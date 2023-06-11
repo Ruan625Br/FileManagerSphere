@@ -76,21 +76,11 @@
                     android:id="@+id/tv_file_date" android:visibility="gone" tools:visibility="visible"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintVertical_bias="0.86"
+                    app:layout_constraintVertical_bias="0.953"
                     app:layout_constraintStart_toEndOf="@+id/tv_file_size"
                     app:layout_constraintHorizontal_bias="0.928"/>
 
-            <!--<com.filemanager.ui.views.RippleFixMaterialButton
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    style="@style/Widget.Manager.Button.Icon.Large"
-                    app:icon="@drawable/more_vertical_icon_white_24dp"
-                    android:clickable="true"
-                    android:layout_centerVertical="true"
-                    android:padding="1dp"
-                    app:tint="@color/file_icon_grey"
-                    android:layout_alignParentEnd="true"
-                    android:id="@+id/mb_more" android:contentDescription="@string/app_name"/>-->
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

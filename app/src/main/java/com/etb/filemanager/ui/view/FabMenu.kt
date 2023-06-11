@@ -1,4 +1,4 @@
-package com.etb.filemanager.ui.view.anim
+package com.etb.filemanager.ui.view
 
 
 import android.annotation.SuppressLint

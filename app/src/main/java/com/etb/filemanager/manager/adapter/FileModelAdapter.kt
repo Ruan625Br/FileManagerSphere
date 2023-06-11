@@ -18,6 +18,7 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
+import com.etb.filemanager.interfaces.manager.FileListener
 import com.etb.filemanager.interfaces.settings.PopupSettingsListener
 import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
 import com.etb.filemanager.manager.selection.Details
@@ -34,7 +35,7 @@ import java.util.*
 
 
 class FileModelAdapter(
-    private var fileModels: MutableList<FileModel>, private val mContext: Context
+    private var fileModels: MutableList<FileModel>, private val mContext: Context, private val listener: FileListener
 ) : RecyclerView.Adapter<FileModelAdapter.ViewHolder>() {
 
     private val fileUtils: FileUtils = FileUtils.getInstance()
@@ -82,6 +83,7 @@ class FileModelAdapter(
 
 
         if (selectionTracker != null){
+            isActionMode = true
             if (selectionTracker?.isSelected(itemDetails.selectionKey)!!){
                 holder.itemView.isActivated = true
                 holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
@@ -89,21 +91,28 @@ class FileModelAdapter(
                 holder.itemView.isActivated = false
                 holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
             }
+        }else{
+           isActionMode= false
         }
 
 
 
+        holder.itemFile.setOnLongClickListener {
+            if (!isActionMode){
+                fileAdapterListenerUtil.addItemOnLongClick(fileViewModel, false)
+            }
 
+            true
+        }
 
 
         holder.titleFile.text = fileViewModel.fileName
 
         holder.itemFile.setOnClickListener {
 
-            val mPath = fileViewModel.filePath
-            fileAdapterListenerUtil.addItemClick(item, mPath, fileViewModel.isDirectory)
-            Log.i("ADAPTER", "CLICK")
-            Log.i("ADAPTER", "PATH  ${fileViewModel.filePath}")
+          if (fileViewModel.isDirectory){
+              listener.openFile(fileViewModel)
+          }
 
         }
 
@@ -276,6 +285,7 @@ class FileModelAdapter(
         }
 
     }
+
 
 
 

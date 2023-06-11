@@ -12,6 +12,8 @@ import android.provider.Settings
 import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
@@ -27,6 +29,7 @@ import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
 import com.etb.filemanager.interfaces.manager.FileAdapterListener
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
+import com.etb.filemanager.interfaces.manager.FileListener
 import com.etb.filemanager.interfaces.settings.PopupSettingsListener
 import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
 import com.etb.filemanager.manager.adapter.FileModel
@@ -39,9 +42,10 @@ import com.etb.filemanager.manager.selection.FileItemKeyProvider
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.PopupSettings
-import com.etb.filemanager.ui.view.anim.FabMenu
+import com.etb.filemanager.ui.view.FabMenu
 import com.etb.filemanager.util.file.FileUtil
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.*
 import java.nio.file.*
@@ -53,17 +57,16 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 
-class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.ActionMode.Callback,
+class HomeFragment : Fragment(), PopupSettingsListener,
+    androidx.appcompat.view.ActionMode.Callback,
+    FileListener,
     FileAdapterListener {
 
     private var param1: String? = null
     private var param2: String? = null
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var recyclerViewFolderBar: RecyclerView
-    private var folderBarModel = ArrayList<FolderBarModel>()
     private lateinit var adapter: FileModelAdapter
-    private lateinit var barAdapter: FolderBarModelAdapter
     private var itemSelectedSort: Int = 0
     private lateinit var popupSettings: PopupSettings
     private lateinit var fileUtils: FileUtils
@@ -161,9 +164,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                     listFilesAndFoldersInBackground(path)
 
                 }
-                //monitorDirectory(path)
-                /*    folderBarModel.add(FolderBarModel(path))
-                    initFolderBar(folderBarModel)*/
                 Log.e("HOMEE CURRENTPATH", "PATH $path")
 
             }
@@ -172,13 +172,18 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     override fun onLongClickListener(item: FileModel, isActionMode: Boolean) {
-        this.isActionMode = isActionMode
-        if (isActionMode) {
-            startActionMode()
-            onItemClicked(item)
-        }
+
 
     }
+
+
+    fun showBottomSheet() {
+        val standardBottomSheet = requireView().findViewById<FrameLayout>(R.id.standard_bottom_sheet)
+        val standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
+
+        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
 
     override fun onFileInfoReceived(currentPath: String) {
         // mCurrentPath = currentPath
@@ -194,14 +199,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     @OptIn(DelicateCoroutinesApi::class)
     fun listFilesAndFoldersInBackground(mPath: String) {
+
         GlobalScope.launch(Dispatchers.IO) {
-            val rootPath: Path = Paths.get(mPath)
             try {
-                val fileEntries = Files.list(rootPath).use { it.toList() }
+                val fileEntries = Files.list(Paths.get(mPath))
+                    .use { it.toList() }
+
                 launch(Dispatchers.Main) {
-
                     updateData(fileEntries)
-
                 }
             } catch (e: Exception) {
                 Log.e("ERRO AO LISTAR OS ARQUIVOS", "ERRO: $e")
@@ -239,7 +244,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         selectPreferenceUtils.sortFilesAuto(fileModel, requireContext())
 
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        adapter = FileModelAdapter(fileModel, requireContext())
+        adapter = FileModelAdapter(fileModel, requireContext(), this)
         recyclerView.adapter = adapter
         setRecyclerViewAnimation()
     }
@@ -411,50 +416,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         )
     }
 
-
     private fun updateActionModeTitle(selectedCount: Int) {
 
         val title = "$selectedCount selecionado(s)"
         actionMode?.title = title
-
-    }
-
-    private fun onItemClicked(item: FileModel) {
-        if (isActionMode) {
-
-
-            /*  if (selectedItems.contains(item)) {
-                  selectedItems.remove(item)
-                 // adapter.removeSelectedItem(item)
-                 // updateActionModeTitle(selectedCount - 1)
-              } else {
-                  selectedItems.add(item)
-                  adapter.setSelectedItem(item)
-                  //updateSelectedItems(item)
-                //  updateActionModeTitle(selectedCount + 1)
-              }*/
-            adapter.setSelectedItem(item)
-            val selectedCount = adapter.getSizeItemSelected()
-
-
-            updateActionModeTitle(selectedCount)
-            Log.i("HOMEFRAGMENT", "Size $selectedCount")
-
-
-        } else {
-            // Handle non-action mode behavior
-        }
-    }
-
-    private fun setupSelectionTracker(recyclerView: RecyclerView) {
-
-
-
-    }
-
-
-    private fun updateSelectedItems(item: FileModel) {
-        selectedItems.add(item)
 
     }
 
@@ -627,5 +592,73 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     override fun onDestroyActionMode(mode: androidx.appcompat.view.ActionMode?) {
         finishActionMode()
     }
+
+    override fun selectFile(file: FileModel, selected: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun selectFiles(files: FileModel, selected: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun openFile(file: FileModel) {
+        if (file.isDirectory) {
+            mCurrentPath = file.filePath
+            coroutineScope.launch {
+                managerUtil.addToPathStack(mCurrentPath)
+                listFilesAndFoldersInBackground(mCurrentPath)
+
+            }
+        }
+    }
+
+    override fun openFileWith(file: FileModel) {
+        TODO("Not yet implemented")
+    }
+
+    override fun cutFile(file: FileModel) {
+        TODO("Not yet implemented")
+    }
+
+    override fun copyFile(file: FileModel) {
+        TODO("Not yet implemented")
+    }
+
+    override fun confirmDeleteFile(file: FileModel) {
+        TODO("Not yet implemented")
+    }
+
+    override fun showRenameFileDialog(file: FileModel) {
+        TODO("Not yet implemented")
+    }
+
+    override fun extractFile(file: FileModel) {
+        TODO("Not yet implemented")
+    }
+
+    override fun showCreateArchiveDialog(file: FileModel) {
+        TODO("Not yet implemented")
+    }
+
+    override fun shareFile(file: FileModel) {
+        TODO("Not yet implemented")
+    }
+
+    override fun copyPath(file: FileModel) {
+        TODO("Not yet implemented")
+    }
+
+    override fun addBookmark(file: FileModel) {
+        TODO("Not yet implemented")
+    }
+
+    override fun createShortcut(file: FileModel) {
+        TODO("Not yet implemented")
+    }
+
+    override fun showPropertiesDialog(file: FileModel) {
+        TODO("Not yet implemented")
+    }
+
 
 }
