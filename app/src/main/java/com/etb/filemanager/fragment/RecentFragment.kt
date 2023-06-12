@@ -98,7 +98,6 @@ class RecentFragment : Fragment() {
         GlobalScope.launch {
             val recyclerView = requireView().findViewById<RecyclerView>(R.id.recy_recents_images)
             val recentImage = fileUtils.getRecentImages(requireContext())
-            val recentImageModel = ArrayList<RecentImageModel>()
 
 
             recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)

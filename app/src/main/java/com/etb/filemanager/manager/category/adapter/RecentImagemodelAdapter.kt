@@ -7,6 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
 import com.etb.filemanager.manager.util.FileUtils
 
@@ -24,8 +27,15 @@ class RecentImagemodelAdapter(private var recentImageModel: List<RecentImageMode
 
     override fun onBindViewHolder(holder: RecentImagemodelAdapter.ViewHolder, position: Int) {
         val recentImageViewModel = recentImageModel[position]
-        val bitmap = BitmapFactory.decodeFile(recentImageViewModel.imagePath)
-        holder.itemImage.setImageBitmap(bitmap)
+        val imagePath = recentImageViewModel.imagePath
+
+        Glide.with(mContext)
+            .load(imagePath)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .apply(RequestOptions().placeholder(R.drawable.ic_image))
+            .into(holder.itemImage)
+
+
 
 
     }
