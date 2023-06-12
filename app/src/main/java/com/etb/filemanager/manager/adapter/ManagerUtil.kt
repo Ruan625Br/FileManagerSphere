@@ -5,13 +5,8 @@ import java.util.*
 class ManagerUtil {
 
     private var pathStack = Stack<String>()
+
     private val basePath = "/storage/emulated/0"
-
-
-
-
-
-
 
 
 
@@ -37,13 +32,13 @@ class ManagerUtil {
     }
 
     companion object {
+        @Volatile
         private var instance: ManagerUtil? = null
 
         fun getInstance(): ManagerUtil {
-            if (instance == null) {
-                instance = ManagerUtil()
+            return instance ?: synchronized(this) {
+                instance ?: ManagerUtil().also { instance = it }
             }
-            return instance!!
         }
     }
 }

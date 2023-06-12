@@ -49,7 +49,7 @@ class FileModelAdapter(
 
 
     private val selectedItems = mutableListOf<FileModel>()
-    private var isActionMode = false
+     var isActionMode = false
     private val mainScope = MainScope()
 
      var selectionTracker: SelectionTracker<Long>? = null
@@ -82,8 +82,7 @@ class FileModelAdapter(
         val iconUtil = IconUtil()
 
 
-        if (selectionTracker != null){
-            isActionMode = true
+        if (isActionMode){
             if (selectionTracker?.isSelected(itemDetails.selectionKey)!!){
                 holder.itemView.isActivated = true
                 holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
@@ -92,14 +91,14 @@ class FileModelAdapter(
                 holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
             }
         }else{
-           isActionMode= false
+            holder.itemView.isActivated = false
+            holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
         }
-
 
 
         holder.itemFile.setOnLongClickListener {
             if (!isActionMode){
-                fileAdapterListenerUtil.addItemOnLongClick(fileViewModel, false)
+                listener.showBottomSheet(fileViewModel)
             }
 
             true
