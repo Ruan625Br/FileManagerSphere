@@ -16,8 +16,6 @@ import com.etb.filemanager.manager.util.FileUtils
 class RecentImagemodelAdapter(private var recentImageModel: List<RecentImageModel>, private val mContext: Context) :
     RecyclerView.Adapter<RecentImagemodelAdapter.ViewHolder>() {
 
-    private val fileUtils: FileUtils = FileUtils.getInstance()
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentImagemodelAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.recent_image_item, parent, false)
 
@@ -34,7 +32,6 @@ class RecentImagemodelAdapter(private var recentImageModel: List<RecentImageMode
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .apply(RequestOptions().placeholder(R.drawable.ic_image))
             .into(holder.itemImage)
-
 
 
 
