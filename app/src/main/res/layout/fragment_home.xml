@@ -3,7 +3,7 @@
               xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-              android:orientation="vertical"
+             android:id="@+id/item_root"
              tools:context=".fragment.HomeFragment">
 
 
@@ -85,6 +85,8 @@
             app:menu="@menu/menu_file_list" app:title="@string/app_name" tools:ignore="MissingConstraints"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toTopOf="@+id/recyclerView"/>
+
+    <include layout="@layout/bottom_sheet_content"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
