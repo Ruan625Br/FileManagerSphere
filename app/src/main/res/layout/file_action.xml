@@ -13,6 +13,7 @@
             android:gravity="center_vertical">
         <ImageView
                 android:layout_width="wrap_content"
+                app:tint="?attr/colorPrimaryInverse"
                 android:layout_height="wrap_content" app:srcCompat="@drawable/baseline_edit_24"
                 android:id="@+id/imageView4"
         />

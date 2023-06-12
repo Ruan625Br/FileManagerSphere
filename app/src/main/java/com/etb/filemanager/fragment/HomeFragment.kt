@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
@@ -736,7 +737,9 @@ class HomeFragment : Fragment(), PopupSettingsListener,
          standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
 
         val rvAction = requireView().findViewById<RecyclerView>(R.id.recyclerView2)
+        val tvItemTitle = requireView().findViewById<TextView>(R.id.tv_title)
 
+        tvItemTitle.text = fileItem.fileName
         rvAction.layoutManager = LinearLayoutManager(requireActivity())
          val actionAdapter = FileOptionAdapter(this, fileItem, fileOption)
         rvAction.adapter = actionAdapter
