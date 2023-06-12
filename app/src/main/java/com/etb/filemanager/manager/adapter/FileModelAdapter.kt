@@ -9,28 +9,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.recyclerview.selection.ItemDetailsLookup
-import androidx.recyclerview.selection.ItemDetailsLookup.ItemDetails
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.selection.SelectionTracker
-import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
+import com.etb.filemanager.files.file.common.mime.MidiaType
+import com.etb.filemanager.files.file.common.mime.MimeTypeUtil
+import com.etb.filemanager.files.file.common.mime.getMidiaType
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.manager.FileListener
 import com.etb.filemanager.interfaces.settings.PopupSettingsListener
 import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
 import com.etb.filemanager.manager.selection.Details
-import com.etb.filemanager.manager.selection.FileItemDetailsLookup
-import com.etb.filemanager.manager.selection.FileItemKeyProvider
 import com.etb.filemanager.manager.util.FileUtils
+import com.etb.filemanager.util.file.style.ColorUtil
 import com.etb.filemanager.util.file.style.IconUtil
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.*
 
 
@@ -49,10 +52,10 @@ class FileModelAdapter(
 
 
     private val selectedItems = mutableListOf<FileModel>()
-     var isActionMode = false
+    var isActionMode = false
     private val mainScope = MainScope()
 
-     var selectionTracker: SelectionTracker<Long>? = null
+    var selectionTracker: SelectionTracker<Long>? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileModelAdapter.ViewHolder {
@@ -67,8 +70,51 @@ class FileModelAdapter(
     override fun onBindViewHolder(holder: FileModelAdapter.ViewHolder, position: Int) {
         val fileViewModel = fileModels[position]
         val item = fileModels[position]
+        val mimeTypeUtil = MimeTypeUtil()
+        val filePath = fileViewModel.filePath
+        val colorUtil = ColorUtil()
+        val iconUtil = IconUtil()
 
 
+        val mimeType = getFileMimeType(fileViewModel.filePath)
+        Log.i("Adapter", "Meu $mimeType")
+
+
+        if (fileViewModel.isDirectory) {
+
+        } else {
+
+            if (mimeType != null && mimeType.isMimeTypeMedia()) {
+                val midiaType = getMidiaType(mimeType)
+                when (midiaType) {
+                    MidiaType.IMAGE -> {
+                        loadImage(filePath, holder)
+                    }
+
+                    MidiaType.VIDEO -> {
+                        loadImage(filePath, holder)
+                    }
+
+                    else -> {
+                        loadImage(filePath, holder)
+                    }
+                }
+            } else {
+                val iconResourceId = mimeType?.let { mimeTypeUtil.getIconByMimeType(it, fileViewModel.filePath) }
+                    ?: R.drawable.ic_document.setTintResource(mContext, colorUtil.getColorPrimaryInverse(mContext))
+
+
+
+                val icFile = mContext.getDrawable(R.drawable.ic_document)
+                icFile?.setTint(colorUtil.getColorPrimaryInverse(mContext))
+
+
+                Glide.with(mContext).load(iconResourceId).diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .apply(RequestOptions().placeholder(icFile)).into(holder.iconFile)
+
+            }
+
+        }
         val itemDetails = Details(fileViewModel, position)
         holder.itemDetails = itemDetails
 
@@ -79,25 +125,24 @@ class FileModelAdapter(
         fileAdapterListenerUtil = FileAdapterListenerUtil.getInstance()
 
         currentPath = fileViewModel.filePath
-        val iconUtil = IconUtil()
 
 
-        if (isActionMode){
-            if (selectionTracker?.isSelected(itemDetails.selectionKey)!!){
+        if (isActionMode) {
+            if (selectionTracker?.isSelected(itemDetails.selectionKey)!!) {
                 holder.itemView.isActivated = true
                 holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
             } else {
                 holder.itemView.isActivated = false
                 holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
             }
-        }else{
+        } else {
             holder.itemView.isActivated = false
             holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
         }
 
 
         holder.itemFile.setOnLongClickListener {
-            if (!isActionMode){
+            if (!isActionMode) {
                 listener.showBottomSheet(fileViewModel)
             }
 
@@ -109,9 +154,9 @@ class FileModelAdapter(
 
         holder.itemFile.setOnClickListener {
 
-          if (fileViewModel.isDirectory){
-              listener.openFile(fileViewModel)
-          }
+            if (fileViewModel.isDirectory) {
+                listener.openFile(fileViewModel)
+            }
 
         }
 
@@ -132,69 +177,90 @@ class FileModelAdapter(
         }
 
 
-        if (isImageOrVideo(fileViewModel.fileName)) {
-            val mFile = File(fileViewModel.filePath)
+        /*
+          if (isImageOrVideo(fileViewModel.fileName)) {
+              val mFile = File(fileViewModel.filePath)
 
-            if (isImage(mFile)) {
-                mainScope.launch {
+              if (isImage(mFile)) {
+                  mainScope.launch {
 
-                    holder.iconFile.visibility = View.GONE
-                    holder.iconPreview.visibility = View.VISIBLE
-                    holder.itemBorder.background = iconUtil.getBorderPreview(mContext)
-                    iconUtil.getPreview(
-                        IconUtil.OptionFile.IMAGE, mContext, fileViewModel.filePath, holder.iconPreview
-                    )
+                      holder.iconFile.visibility = View.GONE
+                      holder.iconPreview.visibility = View.VISIBLE
+                      holder.itemBorder.background = iconUtil.getBorderPreview(mContext)
+                      iconUtil.getPreview(
+                          IconUtil.OptionFile.IMAGE, mContext, fileViewModel.filePath, holder.iconPreview
+                      )
 
 
-                }
+                  }
 
-            } else if (isVideo(mFile)) {
-                mainScope.launch {
-                    holder.iconFile.visibility = View.GONE
-                    holder.iconPreview.visibility = View.VISIBLE
-                    holder.itemBorder.background = iconUtil.getBorderPreview(mContext)
-                    iconUtil.getPreview(
-                        IconUtil.OptionFile.VIDEO,
-                        mContext,
-                        fileViewModel.filePath,
-                        holder.iconPreview
-                    )
-                }
+              } else if (isVideo(mFile)) {
+                  mainScope.launch {
+                      holder.iconFile.visibility = View.GONE
+                      holder.iconPreview.visibility = View.VISIBLE
+                      holder.itemBorder.background = iconUtil.getBorderPreview(mContext)
+                      iconUtil.getPreview(
+                          IconUtil.OptionFile.VIDEO,
+                          mContext,
+                          fileViewModel.filePath,
+                          holder.iconPreview
+                      )
+                  }
 
-            }
-        } else{
-            holder.iconPreview.visibility = View.GONE
-            holder.iconFile.setImageDrawable(fileUtils.getFileIconByExtension(mContext, fileViewModel.file))
+              }
+          } else{
+              holder.iconPreview.visibility = View.GONE
+              holder.iconFile.setImageDrawable(fileUtils.getFileIconByExtension(mContext, fileViewModel.file))
 
+          }
+  */
+
+    }
+
+    fun getFileMimeType(mPath: String): String? {
+        val path: Path = Paths.get(mPath)
+        val mimeType: String?
+        try {
+            mimeType = Files.probeContentType(path)
+        } catch (e: Exception) {
+            Log.e("Get File", "Erro: $e")
+            return null
         }
-
+        return mimeType
     }
 
-    //Code test
-    private fun isImageOrVideo(title: String): Boolean{
-        if (title.endsWith(".png") ||title.endsWith(".jpg") || title.endsWith(".jpeg")){
-            return true
-        } else if (title.endsWith(".mp4")){
-            return true
-        }
-        return false
+    fun Int.setTintResource(context: Context, color: Int) {
+        val drawable = AppCompatResources.getDrawable(context, this)
+        drawable?.setTint(color)
     }
 
 
-    private fun isImage(file: File): Boolean {
-        val fileExtension = fileUtils.getFileExtension(file)
-        return fileExtension in listOf("png", "jpg", "jpeg")
+    private fun loadImage(path: String, holder: ViewHolder) {
+        val iconUtil = IconUtil()
+        holder.iconFile.visibility = View.GONE
+        holder.iconPreview.visibility = View.VISIBLE
+        holder.itemBorder.background = iconUtil.getBorderPreview(mContext)
+        Glide.with(mContext).load(path).diskCacheStrategy(DiskCacheStrategy.ALL)
+            .apply(RequestOptions().override(50, 50)).apply(RequestOptions().placeholder(R.drawable.ic_image))
+            .into(holder.iconPreview)
+
+
     }
 
-    private fun isVideo(file: File): Boolean {
-        val fileExtension = fileUtils.getFileExtension(file)
-        return fileExtension in listOf("mp4")
+    private fun String.isMimeTypeMedia(): Boolean {
+        val mediaMimeTypes = listOf("video/", "audio/", "image/", "apk")
+        val mimeType = this.lowercase(Locale.getDefault())
+        return mediaMimeTypes.any { mimeType.startsWith(it) }
+    }
+
+
+    private fun String.isMimeTypeImage(): Boolean {
+        return this.lowercase(Locale.getDefault()).startsWith("image/")
     }
 
     override fun getItemCount(): Int {
         return fileModels.size
     }
-
 
 
     class ViewHolder(ItemFileView: View) : RecyclerView.ViewHolder(ItemFileView) {
@@ -208,8 +274,6 @@ class FileModelAdapter(
         val itemFile: LinearLayout = itemView.findViewById(R.id.item_file)
         val itemBorder: LinearLayout = itemView.findViewById(R.id.linearLayout2)
         val iconPreview: ImageView = itemView.findViewById(R.id.iv_preview)
-
-
 
 
     }
@@ -246,12 +310,11 @@ class FileModelAdapter(
     }
 
 
-
     fun removeSelectedItem(item: FileModel) {
         val position = fileModels.indexOf(item) // Encontra a posição do item na lista do Adapter
         if (position != -1) {
             fileModels[position] = item // Atualiza o item na lista do Adapter
-             selectedItems.remove(item)
+            selectedItems.remove(item)
             notifyItemChanged(position) // Notifica o Adapter sobre a mudança no item específico
         }
 
@@ -264,15 +327,15 @@ class FileModelAdapter(
 
     }
 
-    fun getSizeItemSelected(): Int{
+    fun getSizeItemSelected(): Int {
         return selectedItems.size
     }
 
     fun setSelectedItem(item: FileModel) {
         mainScope.launch {
-            if (selectedItems.contains(item)){
+            if (selectedItems.contains(item)) {
                 removeSelectedItem(item)
-            } else{
+            } else {
                 val position = fileModels.indexOf(item) // Encontra a posição do item na lista do Adapter
                 if (position != -1) {
                     fileModels[position] = item // Atualiza o item na lista do Adapter
@@ -284,11 +347,6 @@ class FileModelAdapter(
         }
 
     }
-
-
-
-
-
 
 
 }
