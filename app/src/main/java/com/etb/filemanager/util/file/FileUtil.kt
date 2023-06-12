@@ -5,6 +5,7 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
 
 
 class FileUtil {
@@ -60,6 +61,19 @@ class FileUtil {
         val regex = Regex("^[^/\\\\?%*:|\"<>]*$") // Padrão regex para validar o nome da pasta
         return regex.matches(folderName)
 
+    }
+
+
+    fun renameFile(path: String, newFileName: String) {
+        val sourcePath = Paths.get(path)
+        val targetPath = sourcePath.resolveSibling(newFileName)
+
+        try {
+            Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING)
+        } catch (e: Exception) {
+           Log.e("Erro ao renomear", "Erro: ${e.message}")
+           Log.e("File", "sourcePath: $sourcePath\ntargetPath: $targetPath\nnewFileName: $newFileName")
+        }
     }
 
 
