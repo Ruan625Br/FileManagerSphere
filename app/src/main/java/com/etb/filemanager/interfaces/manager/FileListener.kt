@@ -1,6 +1,7 @@
 package com.etb.filemanager.interfaces.manager
 
 import com.etb.filemanager.manager.adapter.FileModel
+import com.etb.filemanager.manager.file.CreateFileAction
 
 interface FileListener {
 
@@ -19,4 +20,8 @@ interface FileListener {
     fun addBookmark(file: FileModel)
     fun createShortcut(file: FileModel)
     fun showPropertiesDialog(file: FileModel)
+    fun showBottomSheet(file: FileModel)
+    fun onClickFileAction(file: FileModel, action: CreateFileAction)
+
+
 }

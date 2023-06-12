@@ -32,15 +32,11 @@ class MaterialDialogUtils {
         MaterialAlertDialogBuilder(context)
             .setTitle(title)
             .setView(dialogView)
+            .setCancelable(false)
             .setPositiveButton(textPositiveButton) { dialog, which ->
                 val enteredText = eInputEditText.text.toString()
-               if (fileUtil.isValidName(enteredText)){
                    callback(DialogResult(true, enteredText))
 
-               }else{
-                   eInputLayout.error = "Nome inválido"
-
-               }
 
             }
             .setNegativeButton(R.string.dialog_cancel) { _, _ ->

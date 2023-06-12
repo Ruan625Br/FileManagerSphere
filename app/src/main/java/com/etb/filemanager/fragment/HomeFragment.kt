@@ -4,6 +4,8 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Point
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -13,7 +15,6 @@ import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
@@ -27,7 +28,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
-import com.etb.filemanager.interfaces.manager.FileAdapterListener
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.manager.FileListener
 import com.etb.filemanager.interfaces.settings.PopupSettingsListener
@@ -35,8 +35,9 @@ import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
 import com.etb.filemanager.manager.adapter.FileModel
 import com.etb.filemanager.manager.adapter.FileModelAdapter
 import com.etb.filemanager.manager.adapter.ManagerUtil
-import com.etb.filemanager.manager.bar.adapter.FolderBarModel
-import com.etb.filemanager.manager.bar.adapter.FolderBarModelAdapter
+import com.etb.filemanager.manager.file.CreateFileAction
+import com.etb.filemanager.manager.file.FileAction
+import com.etb.filemanager.manager.file.FileOptionAdapter
 import com.etb.filemanager.manager.selection.FileItemDetailsLookup
 import com.etb.filemanager.manager.selection.FileItemKeyProvider
 import com.etb.filemanager.manager.util.FileUtils
@@ -59,8 +60,7 @@ private const val ARG_PARAM2 = "param2"
 
 class HomeFragment : Fragment(), PopupSettingsListener,
     androidx.appcompat.view.ActionMode.Callback,
-    FileListener,
-    FileAdapterListener {
+    FileListener {
 
     private var param1: String? = null
     private var param2: String? = null
@@ -93,6 +93,9 @@ class HomeFragment : Fragment(), PopupSettingsListener,
 
     lateinit var selectionTracker: SelectionTracker<Long>
 
+    private lateinit var standardBottomSheet: FrameLayout
+    private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -121,7 +124,7 @@ class HomeFragment : Fragment(), PopupSettingsListener,
 
         popupSettings = PopupSettings(requireContext())
         fileUtils = FileUtils()
-        managerUtil = ManagerUtil()
+        managerUtil = ManagerUtil.getInstance()
         materialDialogUtils = MaterialDialogUtils()
 
 
@@ -135,7 +138,6 @@ class HomeFragment : Fragment(), PopupSettingsListener,
 
         selectPreferenceUtils = SelectPreferenceUtils.getInstance()
         fileAdapterListenerUtil = FileAdapterListenerUtil.getInstance()
-        fileAdapterListenerUtil.setListener(this, requireContext())
         selectPreferenceUtils.setListener(this, requireContext())
 
         listFilesAndFoldersInBackground(BASE_PATH)
@@ -151,37 +153,6 @@ class HomeFragment : Fragment(), PopupSettingsListener,
             selectPreferenceUtils.sortFilesAuto(fileModel, requireContext())
             refreshAdapter()
         }
-    }
-
-    override fun onItemClick(item: FileModel, path: String, isDirectory: Boolean) {
-        if (isActionMode) {
-
-        } else {
-            if (isDirectory) {
-                mCurrentPath = path
-                coroutineScope.launch {
-                    managerUtil.addToPathStack(path)
-                    listFilesAndFoldersInBackground(path)
-
-                }
-                Log.e("HOMEE CURRENTPATH", "PATH $path")
-
-            }
-        }
-
-    }
-
-    override fun onLongClickListener(item: FileModel, isActionMode: Boolean) {
-
-
-    }
-
-
-    fun showBottomSheet() {
-        val standardBottomSheet = requireView().findViewById<FrameLayout>(R.id.standard_bottom_sheet)
-        val standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
-
-        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
 
@@ -394,27 +365,6 @@ class HomeFragment : Fragment(), PopupSettingsListener,
         refreshAdapter()
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-
-                val mPreviousPath = managerUtil.getPreviousPath()
-                if (mPreviousPath.equals(BASE_PATH)) {
-                    val recentFragment = RecentFragment()
-                    (requireActivity() as MainActivity).starNewFragment(recentFragment)
-
-                } else {
-                    listFilesAndFoldersInBackground(managerUtil.getPreviousPath())
-
-                }
-
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this, callback
-        )
-    }
 
     private fun updateActionModeTitle(selectedCount: Int) {
 
@@ -423,50 +373,23 @@ class HomeFragment : Fragment(), PopupSettingsListener,
 
     }
 
-    private fun initSelectionTracker(){
-
-        selectionTracker = SelectionTracker.Builder<Long>(
-            "selection-files",
-            recyclerView,
-            FileItemKeyProvider(fileModel),
-            FileItemDetailsLookup(recyclerView),
-            StorageStrategy.createLongStorage()
-        ).build()
-
-
-
-        (recyclerView.adapter as FileModelAdapter).selectionTracker = selectionTracker
-
-        startActionMode()
-        selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>(){
-            override fun onItemStateChanged(key: Long, selected: Boolean) {
-                super.onItemStateChanged(key, selected)
-                val selectedItemCount = selectionTracker.selection.size() ?: 0
-
-
-
-                updateActionModeTitle(selectedItemCount)
-            }
-        })
-    }
 
     private fun startActionMode() {
+        adapter.isActionMode = true
         isActionMode = true
         actionMode?.finish()
         actionMode = (activity as AppCompatActivity?)!!.startSupportActionMode(this)
-        updateActionModeTitle(0)
+
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun finishActionMode() {
         actionMode?.finish()
-        actionMode = null
-      selectionTracker.clearSelection()
-        isActionMode = false
-    }
 
-    private fun clearItemsSelecteds() {
-        selectedItems.clear()
-        adapter.clearAllItemSelectedItem()
+        selectionTracker.clearSelection()
+        adapter.notifyDataSetChanged()
+        adapter.isActionMode = false
+        isActionMode = false
     }
 
 
@@ -526,11 +449,15 @@ class HomeFragment : Fragment(), PopupSettingsListener,
             }
 
             R.id.action_sort_path_specific -> {}
-            R.id.action_refresh -> {}
+            R.id.action_refresh -> {
+                refresh()
+            }
+
             R.id.action_select_all -> {}
             R.id.action_navigate_to -> {
-                initSelectionTracker()
+                createDialogNavigateTo()
             }
+
             R.id.action_show_hidden_files -> {
                 popupSettings.setSelectedActionShowHiddenFiles()
             }
@@ -589,9 +516,106 @@ class HomeFragment : Fragment(), PopupSettingsListener,
         return true
     }
 
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+
+                val mPreviousPath = managerUtil.getPreviousPath()
+                //listFilesAndFoldersInBackground(mPreviousPath)
+                if (mCurrentPath == BASE_PATH) {
+                    val recentFragment = RecentFragment()
+                    (requireActivity() as MainActivity).starNewFragment(recentFragment)
+
+                } else {
+                    listFilesAndFoldersInBackground(mPreviousPath)
+                    mCurrentPath = mPreviousPath
+
+                }
+
+                Log.e("Pasta anterior", "Pasta $mPreviousPath")
+                Log.e("Pasta atual", "Pasta $mCurrentPath")
+                Log.e("Pasta base", "Pasta $BASE_PATH")
+
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this, callback
+        )
+    }
+
+    fun refresh() {
+        listFilesAndFoldersInBackground(mCurrentPath)
+    }
+
+    fun navigateTo(path: String) {
+        mCurrentPath = path
+        coroutineScope.launch {
+            managerUtil.addToPathStack(path)
+            listFilesAndFoldersInBackground(path)
+
+        }
+
+    }
+
+
+    fun createDialogNavigateTo() {
+        val title = requireContext().getString(R.string.file_list_action_navigate_to)
+        val text = mCurrentPath
+        val textPositiveButton = requireContext().getString(R.string.dialog_ok)
+
+        materialDialogUtils.createBasicMaterial(title, text, textPositiveButton, requireContext()) { dialogResult ->
+            val isConfirmed = dialogResult.confirmed
+            val enteredText = dialogResult.text
+            if (isConfirmed && enteredText != mCurrentPath) {
+                navigateTo(enteredText)
+            }
+        }
+
+    }
+
     override fun onDestroyActionMode(mode: androidx.appcompat.view.ActionMode?) {
         finishActionMode()
     }
+
+    private fun initSelectionTracker(fileItem: FileModel) {
+
+        selectionTracker = SelectionTracker.Builder<Long>(
+            "selection-files",
+            recyclerView,
+            FileItemKeyProvider(fileModel),
+            FileItemDetailsLookup(recyclerView),
+            StorageStrategy.createLongStorage()
+        ).build()
+
+        selectionTracker.select(fileItem.id)
+        startActionMode()
+        updateActionModeTitle(1)
+
+
+
+
+        (recyclerView.adapter as FileModelAdapter).selectionTracker = selectionTracker
+
+
+        selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
+            override fun onItemStateChanged(key: Long, selected: Boolean) {
+                super.onItemStateChanged(key, selected)
+                val selectedItemCount = selectionTracker.selection.size() ?: 0
+
+                if (selectedItemCount <= 0){
+                    finishActionMode()
+                } else{
+                    updateActionModeTitle(selectedItemCount)
+                }
+
+
+
+            }
+        })
+    }
+
 
     override fun selectFile(file: FileModel, selected: Boolean) {
         TODO("Not yet implemented")
@@ -603,12 +627,7 @@ class HomeFragment : Fragment(), PopupSettingsListener,
 
     override fun openFile(file: FileModel) {
         if (file.isDirectory) {
-            mCurrentPath = file.filePath
-            coroutineScope.launch {
-                managerUtil.addToPathStack(mCurrentPath)
-                listFilesAndFoldersInBackground(mCurrentPath)
-
-            }
+            navigateTo(file.filePath)
         }
     }
 
@@ -629,7 +648,18 @@ class HomeFragment : Fragment(), PopupSettingsListener,
     }
 
     override fun showRenameFileDialog(file: FileModel) {
-        TODO("Not yet implemented")
+        val title = requireContext().getString(R.string.rename)
+        val text = file.fileName
+        val textPositiveButton = requireContext().getString(R.string.dialog_ok)
+
+        materialDialogUtils.createBasicMaterial(title, text, textPositiveButton, requireContext()) { dialogResult ->
+            val isConfirmed = dialogResult.confirmed
+            val enteredText = dialogResult.text
+            if (isConfirmed && enteredText != mCurrentPath) {
+               fileUtil.renameFile(file.filePath, enteredText)
+             adapter.notifyDataSetChanged()
+            }
+        }
     }
 
     override fun extractFile(file: FileModel) {
@@ -658,6 +688,66 @@ class HomeFragment : Fragment(), PopupSettingsListener,
 
     override fun showPropertiesDialog(file: FileModel) {
         TODO("Not yet implemented")
+    }
+
+    override fun showBottomSheet(file: FileModel) {
+        showBottomSheetMoreActionFile(file)
+    }
+
+    override fun onClickFileAction(file: FileModel, action: CreateFileAction) {
+
+        when (action){
+            CreateFileAction.RENAME -> {showRenameFileDialog(file)}
+            CreateFileAction.OPEN_WITH -> {initSelectionTracker(file)
+            }
+
+            else -> {}
+        }
+        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+
+
+
+    }
+
+
+    fun showBottomSheetMoreActionFile(fileItem: FileModel) {
+        val fileOption = mutableListOf<FileAction>()
+        fileOption.add(
+            FileAction(
+                R.drawable.baseline_edit_24, requireContext().getString(R.string.rename),
+                CreateFileAction.RENAME
+            )
+        )
+        fileOption.add(
+            FileAction(
+                R.drawable.baseline_edit_24, requireContext().getString(R.string.rename),
+                CreateFileAction.RENAME
+            )
+        )
+        fileOption.add(
+            FileAction(
+                R.drawable.baseline_edit_24, requireContext().getString(R.string.rename),
+                CreateFileAction.RENAME
+            )
+        )
+
+         standardBottomSheet = requireView().findViewById(R.id.standard_bottom_sheet)
+         standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
+
+        val rvAction = requireView().findViewById<RecyclerView>(R.id.recyclerView2)
+
+        rvAction.layoutManager = LinearLayoutManager(requireActivity())
+         val actionAdapter = FileOptionAdapter(this, fileItem, fileOption)
+        rvAction.adapter = actionAdapter
+
+
+        standardBottomSheetBehavior.peekHeight = 500
+        standardBottomSheetBehavior.maxHeight = 500
+        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+
+
     }
 
 
