@@ -3,6 +3,7 @@ package com.etb.filemanager.manager.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.PorterDuff
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -100,14 +101,15 @@ class FileModelAdapter(
                     }
                 }
             } else {
-                val iconResourceId = mimeType?.let { mimeTypeUtil.getIconByMimeType(it, fileViewModel.filePath) }
-                    ?: R.drawable.ic_document.setTintResource(mContext, colorUtil.getColorPrimaryInverse(mContext))
 
+                val tint  =colorUtil.getColorPrimaryInverse(mContext)
+                val icFile = mContext.getDrawable(R.drawable.file_generic_icon)
+                icFile?.setTint(tint)
 
+                val iconResourceId = mimeType?.let { mimeTypeUtil.getIconByMimeType(it) }
+                    ?: icFile
 
-                val icFile = mContext.getDrawable(R.drawable.ic_document)
-                icFile?.setTint(colorUtil.getColorPrimaryInverse(mContext))
-
+                holder.iconFile.setColorFilter(tint, PorterDuff.Mode.SRC_IN)
 
                 Glide.with(mContext).load(iconResourceId).diskCacheStrategy(DiskCacheStrategy.ALL)
                     .apply(RequestOptions().placeholder(icFile)).into(holder.iconFile)
