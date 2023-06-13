@@ -49,7 +49,7 @@ Contribuições são bem-vindas! Se você quiser melhorar o FileManagerSphere, s
 
 
 
-<kbd style="background-color: #333; color: white; padding: 10px;">
+
 
 ## License
 
