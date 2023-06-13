@@ -4,8 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.Point
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -605,12 +603,11 @@ class HomeFragment : Fragment(), PopupSettingsListener,
                 super.onItemStateChanged(key, selected)
                 val selectedItemCount = selectionTracker.selection.size() ?: 0
 
-                if (selectedItemCount <= 0){
+                if (selectedItemCount <= 0) {
                     finishActionMode()
-                } else{
+                } else {
                     updateActionModeTitle(selectedItemCount)
                 }
-
 
 
             }
@@ -657,8 +654,8 @@ class HomeFragment : Fragment(), PopupSettingsListener,
             val isConfirmed = dialogResult.confirmed
             val enteredText = dialogResult.text
             if (isConfirmed && enteredText != mCurrentPath) {
-               fileUtil.renameFile(file.filePath, enteredText)
-             adapter.notifyDataSetChanged()
+                fileUtil.renameFile(file.filePath, enteredText)
+                adapter.notifyDataSetChanged()
             }
         }
     }
@@ -697,9 +694,13 @@ class HomeFragment : Fragment(), PopupSettingsListener,
 
     override fun onClickFileAction(file: FileModel, action: CreateFileAction) {
 
-        when (action){
-            CreateFileAction.RENAME -> {showRenameFileDialog(file)}
-            CreateFileAction.OPEN_WITH -> {initSelectionTracker(file)
+        when (action) {
+            CreateFileAction.RENAME -> {
+                showRenameFileDialog(file)
+            }
+
+            CreateFileAction.OPEN_WITH -> {
+                initSelectionTracker(file)
             }
 
             else -> {}
@@ -707,51 +708,60 @@ class HomeFragment : Fragment(), PopupSettingsListener,
         standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
 
-
-
     }
 
 
-    fun showBottomSheetMoreActionFile(fileItem: FileModel) {
-        val fileOption = mutableListOf<FileAction>()
-        fileOption.add(
-            FileAction(
-                R.drawable.baseline_edit_24, requireContext().getString(R.string.rename),
-                CreateFileAction.RENAME
-            )
-        )
-        fileOption.add(
-            FileAction(
-                R.drawable.baseline_edit_24, requireContext().getString(R.string.rename),
-                CreateFileAction.RENAME
-            )
-        )
-        fileOption.add(
-            FileAction(
-                R.drawable.baseline_edit_24, requireContext().getString(R.string.rename),
-                CreateFileAction.RENAME
-            )
-        )
+    private fun showBottomSheetMoreActionFile(fileItem: FileModel) {
 
-         standardBottomSheet = requireView().findViewById(R.id.standard_bottom_sheet)
-         standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
+            val fileOption = mutableListOf<FileAction>().apply {
+                add(
+                    FileAction(
+                        R.drawable.ic_open_with_24,
+                        requireContext().getString(R.string.file_item_action_open_with),
+                        CreateFileAction.OPEN_WITH
+                    )
+                )
+                add(FileAction(R.drawable.ic_cut_24, requireContext().getString(R.string.cut), CreateFileAction.CUT))
+                add(
+                    FileAction(
+                        R.drawable.ic_copy_24,
+                        requireContext().getString(R.string.copy),
+                        CreateFileAction.RENAME
+                    )
+                )
+                add(
+                    FileAction(
+                        R.drawable.ic_trash_24,
+                        requireContext().getString(R.string.delete),
+                        CreateFileAction.DELETE
+                    )
+                )
+                add(
+                    FileAction(
+                        R.drawable.ic_edit_24,
+                        requireContext().getString(R.string.rename),
+                        CreateFileAction.RENAME
+                    )
+                )
+            }
 
-        val rvAction = requireView().findViewById<RecyclerView>(R.id.recyclerView2)
-        val tvItemTitle = requireView().findViewById<TextView>(R.id.tv_title)
+            standardBottomSheet = requireView().findViewById(R.id.standard_bottom_sheet)
+            standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
 
-        tvItemTitle.text = fileItem.fileName
-        rvAction.layoutManager = LinearLayoutManager(requireActivity())
-         val actionAdapter = FileOptionAdapter(this, fileItem, fileOption)
-        rvAction.adapter = actionAdapter
+            val rvAction = requireView().findViewById<RecyclerView>(R.id.recyclerView2)
+            val tvItemTitle = requireView().findViewById<TextView>(R.id.tv_title)
 
+            tvItemTitle.text = fileItem.fileName
+            rvAction.layoutManager = LinearLayoutManager(requireActivity())
+            val actionAdapter = FileOptionAdapter(this, fileItem, fileOption)
+            rvAction.adapter = actionAdapter
 
-        standardBottomSheetBehavior.peekHeight = 500
-        standardBottomSheetBehavior.maxHeight = 500
-        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-
-
-
-    }
-
-
+            standardBottomSheetBehavior.peekHeight = 600
+            standardBottomSheetBehavior.maxHeight = 600
+            standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
 }
+
+
+
+

@@ -18,34 +18,43 @@
                                                                            android:layout_height="wrap_content"/>
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" android:padding="8dp">
+                android:layout_height="match_parent"
+                android:padding="8dp">
 
             <TextView
+                    android:id="@+id/tv_title"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/tv_title"
+                    android:layout_height="wrap_content"
+                    android:text="@string/download"
+                    android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.048"
-                    android:text="@string/download" android:textSize="18sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginTop="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/divider" app:layout_constraintVertical_bias="0.812"/>
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toTopOf="@+id/divider"
+                    app:layout_constraintVertical_bias="1.0" app:layout_constraintHorizontal_bias="0.048"/>
             <View
                     android:id="@+id/divider"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:background="?android:attr/listDivider"
-                    android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/recyclerView2"
-                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.93"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_title"
+                    app:layout_constraintBottom_toTopOf="@+id/recyclerView2"/>
+
             <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/recyclerView2"
-                    tools:listitem="@layout/file_action"
-                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    android:id="@+id/recyclerView2"
+                    android:layout_width="379dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider"
+                    app:layout_constraintBottom_toBottomOf="parent" tools:listitem="@layout/file_action"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -12,9 +12,9 @@
             app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/lv_item"
             android:gravity="center_vertical">
         <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="24dp"
                 app:tint="?attr/colorPrimaryInverse"
-                android:layout_height="wrap_content" app:srcCompat="@drawable/baseline_edit_24"
+                android:layout_height="24dp" app:srcCompat="@drawable/ic_edit_24"
                 android:id="@+id/imageView4"
         />
         <TextView

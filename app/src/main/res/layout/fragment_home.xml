@@ -78,8 +78,7 @@
     <com.google.android.material.appbar.MaterialToolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            app:titleTextColor="?attr/colorOnPrimary"
+            android:background="?attr/colorPrimaryContainer"
             android:theme="?attr/actionBarTheme"
             android:minHeight="?attr/actionBarSize" android:id="@+id/topAppBar"
             app:menu="@menu/menu_file_list" app:title="@string/app_name" tools:ignore="MissingConstraints"
