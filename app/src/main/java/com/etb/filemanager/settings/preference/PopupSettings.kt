@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.etb.filemanager.interfaces.settings.PopupSettingsListener
 import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
+import com.etb.filemanager.manager.files.filelist.Settings
 
 
 class PopupSettings(private var context: Context){
@@ -70,6 +71,8 @@ class PopupSettings(private var context: Context){
     }
 
     fun setSelectedActionShowHiddenFiles() {
+
+
         if (getActionShowHiddenFiles()) {
             sharedPopupSettingsActionSort.edit().putBoolean("settings_action_show_hidden_files", false).apply()
 
@@ -79,6 +82,11 @@ class PopupSettings(private var context: Context){
 
         }
 
+    }
+
+
+    fun getActionShowHiddenFiles(): Boolean {
+        return sharedPopupSettingsActionSort.getBoolean("settings_action_show_hidden_files", false)
 
     }
 
@@ -86,9 +94,6 @@ class PopupSettings(private var context: Context){
         return sharedPopupSettingsActionSort.getBoolean("settings_action_sort_directories_first", false)
     }
 
-    fun getActionShowHiddenFiles(): Boolean {
-        return sharedPopupSettingsActionSort.getBoolean("settings_action_show_hidden_files", false)
-    }
 
     fun getItemSelectedActionSort(): Int {
         val sharedPopupSettingsActionSort: SharedPreferences =

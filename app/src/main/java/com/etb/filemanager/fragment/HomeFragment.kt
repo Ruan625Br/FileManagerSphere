@@ -37,6 +37,7 @@ import com.etb.filemanager.manager.adapter.ManagerUtil
 import com.etb.filemanager.manager.file.CreateFileAction
 import com.etb.filemanager.manager.file.FileAction
 import com.etb.filemanager.manager.file.FileOptionAdapter
+import com.etb.filemanager.manager.files.filelist.SettingsViewModel
 import com.etb.filemanager.manager.selection.FileItemDetailsLookup
 import com.etb.filemanager.manager.selection.FileItemKeyProvider
 import com.etb.filemanager.manager.util.FileUtils
@@ -94,6 +95,8 @@ class HomeFragment : Fragment(), PopupSettingsListener,
 
     private lateinit var standardBottomSheet: FrameLayout
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
+    private lateinit var settingsViewModel: SettingsViewModel
+    private var showHiddenFiles = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,6 +119,9 @@ class HomeFragment : Fragment(), PopupSettingsListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        settingsViewModel = SettingsViewModel(requireContext())
+        showHiddenFiles = settingsViewModel.getActionShowHiddenFiles()
         topAppBar = view.findViewById(R.id.topAppBar)
         initToolbar()
 
@@ -127,6 +133,7 @@ class HomeFragment : Fragment(), PopupSettingsListener,
         materialDialogUtils = MaterialDialogUtils()
 
 
+        observeSettings()
 
         initFabClick()
 
@@ -199,6 +206,9 @@ class HomeFragment : Fragment(), PopupSettingsListener,
             val fileLength = fileUtil.getFileSize(path)
             val file = path.toFile()
 
+            if (!showHiddenFiles && fileName.toString().startsWith(".")){
+                continue
+            }
             fileModel.add(
                 FileModel(
                     UUID.randomUUID().mostSignificantBits,
@@ -350,7 +360,7 @@ class HomeFragment : Fragment(), PopupSettingsListener,
         val fileExtension = fileUtil.getFileExtension(itemFile)
         val fileLength = fileUtil.getFileSize(itemFile)
         val file = itemFile.toFile()
-
+popupSettings.getActionShowHiddenFiles()
         val newItem = FileModel(
             UUID.randomUUID().mostSignificantBits,
             fileName,
@@ -358,7 +368,7 @@ class HomeFragment : Fragment(), PopupSettingsListener,
             isDirectory,
             fileExtension,
             fileLength,
-            file
+            file,
         )
         fileModel.add(newItem)
         refreshAdapter()
@@ -458,7 +468,7 @@ class HomeFragment : Fragment(), PopupSettingsListener,
             }
 
             R.id.action_show_hidden_files -> {
-                popupSettings.setSelectedActionShowHiddenFiles()
+                settingsViewModel.setSelectedActionShowHiddenFiles()
             }
 
             R.id.action_share -> {}
@@ -760,6 +770,16 @@ class HomeFragment : Fragment(), PopupSettingsListener,
             standardBottomSheetBehavior.maxHeight = 600
             standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
+
+    private fun observeSettings(){
+        settingsViewModel.settingsState.observe(viewLifecycleOwner) { settingsState ->
+
+             showHiddenFiles = settingsState.showHiddenFiles
+
+            refresh()
+        }
+
+    }
 }
 
 
