@@ -14,6 +14,7 @@
             android:clickable="true"
             android:id="@+id/item_file" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+            android:foreground="?selectableItemBackground"
             android:background="@drawable/background_file_item"
             app:layout_constraintBottom_toBottomOf="parent">
 
