@@ -46,7 +46,13 @@ Contribuições são bem-vindas! Se você quiser melhorar o FileManagerSphere, s
 
 - [@Ruan625Br](https://www.github.com/Ruan625Br)
 
+
+
+
+<kbd style="background-color: #333; color: white; padding: 10px;">
+
 ## License
+
 
 Direitos autorais (C) 2023 Juan Nascimento
 
