@@ -70,7 +70,6 @@ class FileModelAdapter(
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onBindViewHolder(holder: FileModelAdapter.ViewHolder, position: Int) {
         val fileViewModel = fileModels[position]
-        val item = fileModels[position]
         val mimeTypeUtil = MimeTypeUtil()
         val filePath = fileViewModel.filePath
         val colorUtil = ColorUtil()
@@ -78,12 +77,9 @@ class FileModelAdapter(
 
 
         val mimeType = getFileMimeType(fileViewModel.filePath)
-        Log.i("Adapter", "Meu $mimeType")
 
 
-        if (fileViewModel.isDirectory) {
-
-        } else {
+        if (!fileViewModel.isDirectory) {
 
             if (mimeType != null && mimeType.isMimeTypeMedia()) {
                 val midiaType = getMidiaType(mimeType)
@@ -102,12 +98,11 @@ class FileModelAdapter(
                 }
             } else {
 
-                val tint  =colorUtil.getColorPrimaryInverse(mContext)
+                val tint = colorUtil.getColorPrimaryInverse(mContext)
                 val icFile = mContext.getDrawable(R.drawable.file_generic_icon)
                 icFile?.setTint(tint)
 
-                val iconResourceId = mimeType?.let { mimeTypeUtil.getIconByMimeType(it) }
-                    ?: icFile
+                val iconResourceId = mimeType?.let { mimeTypeUtil.getIconByMimeType(it) } ?: icFile
 
                 holder.iconFile.setColorFilter(tint, PorterDuff.Mode.SRC_IN)
 
@@ -119,8 +114,6 @@ class FileModelAdapter(
         }
         val itemDetails = Details(fileViewModel, position)
         holder.itemDetails = itemDetails
-
-
 
 
         selectPreferenceUtils = SelectPreferenceUtils.getInstance()
@@ -179,43 +172,6 @@ class FileModelAdapter(
         }
 
 
-        /*
-          if (isImageOrVideo(fileViewModel.fileName)) {
-              val mFile = File(fileViewModel.filePath)
-
-              if (isImage(mFile)) {
-                  mainScope.launch {
-
-                      holder.iconFile.visibility = View.GONE
-                      holder.iconPreview.visibility = View.VISIBLE
-                      holder.itemBorder.background = iconUtil.getBorderPreview(mContext)
-                      iconUtil.getPreview(
-                          IconUtil.OptionFile.IMAGE, mContext, fileViewModel.filePath, holder.iconPreview
-                      )
-
-
-                  }
-
-              } else if (isVideo(mFile)) {
-                  mainScope.launch {
-                      holder.iconFile.visibility = View.GONE
-                      holder.iconPreview.visibility = View.VISIBLE
-                      holder.itemBorder.background = iconUtil.getBorderPreview(mContext)
-                      iconUtil.getPreview(
-                          IconUtil.OptionFile.VIDEO,
-                          mContext,
-                          fileViewModel.filePath,
-                          holder.iconPreview
-                      )
-                  }
-
-              }
-          } else{
-              holder.iconPreview.visibility = View.GONE
-              holder.iconFile.setImageDrawable(fileUtils.getFileIconByExtension(mContext, fileViewModel.file))
-
-          }
-  */
 
     }
 
@@ -255,11 +211,6 @@ class FileModelAdapter(
         return mediaMimeTypes.any { mimeType.startsWith(it) }
     }
 
-
-    private fun String.isMimeTypeImage(): Boolean {
-        return this.lowercase(Locale.getDefault()).startsWith("image/")
-    }
-
     override fun getItemCount(): Int {
         return fileModels.size
     }
@@ -280,26 +231,6 @@ class FileModelAdapter(
 
     }
 
-    fun getPreviousPath(): String {
-        if (!pathStack.isEmpty()) {
-            if (pathStack.size == 1) {
-                // Caso especial: voltando para o caminho base
-                pathStack.pop()
-                return basePath
-            } else {
-                // Obtém o caminho anterior
-                pathStack.pop() // Remove o caminho atual da pilha
-                val previousPath = pathStack.peek()
-                return previousPath
-            }
-        } else {
-            return basePath
-        }
-    }
-
-    fun addToPathStack(path: String) {
-        pathStack.push(path)
-    }
 
     fun removeFile(fileName: String) {
         val fileToRemove = fileModels.firstOrNull { it.fileName == fileName }
@@ -313,25 +244,16 @@ class FileModelAdapter(
 
 
     fun removeSelectedItem(item: FileModel) {
-        val position = fileModels.indexOf(item) // Encontra a posição do item na lista do Adapter
+        val position = fileModels.indexOf(item)
         if (position != -1) {
-            fileModels[position] = item // Atualiza o item na lista do Adapter
+            fileModels[position] = item
             selectedItems.remove(item)
-            notifyItemChanged(position) // Notifica o Adapter sobre a mudança no item específico
+            notifyItemChanged(position)
         }
 
     }
 
-    fun clearAllItemSelectedItem() {
-        selectedItems.clear()
-        isActionMode = false
-        notifyDataSetChanged()
 
-    }
-
-    fun getSizeItemSelected(): Int {
-        return selectedItems.size
-    }
 
     fun setSelectedItem(item: FileModel) {
         mainScope.launch {
