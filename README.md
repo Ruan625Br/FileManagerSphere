@@ -3,8 +3,8 @@
 
 ![FileManagerSphere Logo](link_para_o_logo)
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 [![GitHub release](https://img.shields.io/github/v/release/Ruan625Br/FlappyBird)](https://github.com/Ruan625Br/FileManagerSphere/releases)
+[![License](https://img.shields.io/github/license/Ruan625Br/FileManagerSphere?color=blue)](LICENSE)
 
 Bem-vindo ao FileManagerSphere - seu gerenciador de arquivos personalizado!
 
@@ -47,6 +47,7 @@ Contribuições são bem-vindas! Se você quiser melhorar o FileManagerSphere, s
 - [@Ruan625Br](https://www.github.com/Ruan625Br)
 
 ## License
+
 Direitos autorais (C) 2023 Juan Nascimento
 
 Este programa é um software livre: você pode redistribuí-lo e/ou modificá-lo
