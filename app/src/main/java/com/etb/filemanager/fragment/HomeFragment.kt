@@ -2,12 +2,15 @@ package com.etb.filemanager.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.storage.StorageManager
+import android.provider.DocumentsContract
 import android.provider.Settings
 import android.util.Log
 import android.view.*
@@ -16,10 +19,14 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
@@ -37,7 +44,10 @@ import com.etb.filemanager.manager.adapter.ManagerUtil
 import com.etb.filemanager.manager.file.CreateFileAction
 import com.etb.filemanager.manager.file.FileAction
 import com.etb.filemanager.manager.file.FileOptionAdapter
+import com.etb.filemanager.manager.files.filelist.FileListViewModel
+import com.etb.filemanager.manager.files.filelist.Mode
 import com.etb.filemanager.manager.files.filelist.SettingsViewModel
+import com.etb.filemanager.manager.files.filelist.asWatchChannel
 import com.etb.filemanager.manager.selection.FileItemDetailsLookup
 import com.etb.filemanager.manager.selection.FileItemKeyProvider
 import com.etb.filemanager.manager.util.FileUtils
@@ -49,6 +59,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.*
+import java.io.File
 import java.nio.file.*
 import java.util.*
 import kotlin.streams.toList
@@ -58,9 +69,7 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 
-class HomeFragment : Fragment(), PopupSettingsListener,
-    androidx.appcompat.view.ActionMode.Callback,
-    FileListener {
+class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.ActionMode.Callback, FileListener {
 
     private var param1: String? = null
     private var param2: String? = null
@@ -85,7 +94,6 @@ class HomeFragment : Fragment(), PopupSettingsListener,
 
     private var actionMode: androidx.appcompat.view.ActionMode? = null
     private var isActionMode = false
-    private val selectedItems = mutableListOf<FileModel>()
     private lateinit var topAppBar: MaterialToolbar
 
     private lateinit var selectPreferenceUtils: SelectPreferenceUtils
@@ -97,6 +105,11 @@ class HomeFragment : Fragment(), PopupSettingsListener,
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
     private lateinit var settingsViewModel: SettingsViewModel
     private var showHiddenFiles = false
+
+    private lateinit var viewModel: FileListViewModel
+
+    private val selectedItems = mutableListOf<FileModel>()
+    private val REQUEST_CODE = 6
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,6 +134,9 @@ class HomeFragment : Fragment(), PopupSettingsListener,
         super.onViewCreated(view, savedInstanceState)
 
         settingsViewModel = SettingsViewModel(requireContext())
+        viewModel = ViewModelProvider(this).get(FileListViewModel::class.java)
+
+
         showHiddenFiles = settingsViewModel.getActionShowHiddenFiles()
         topAppBar = view.findViewById(R.id.topAppBar)
         initToolbar()
@@ -134,6 +150,7 @@ class HomeFragment : Fragment(), PopupSettingsListener,
 
 
         observeSettings()
+        initObeserveViewModel()
 
         initFabClick()
 
@@ -149,6 +166,12 @@ class HomeFragment : Fragment(), PopupSettingsListener,
         listFilesAndFoldersInBackground(BASE_PATH)
 
 
+    }
+
+    private fun initObeserveViewModel() {
+        viewModel.deletionProgress.observe(viewLifecycleOwner, androidx.lifecycle.Observer { progress ->
+            updateProgressUI(progress)
+        })
     }
 
 
@@ -173,20 +196,26 @@ class HomeFragment : Fragment(), PopupSettingsListener,
         (requireActivity() as AppCompatActivity).setSupportActionBar(topAppBar)
     }
 
+    private fun updateProgressUI(progress: Int) {
+        Log.i("HomeFragment", "Update ui")
+
+    }
+
 
     @OptIn(DelicateCoroutinesApi::class)
     fun listFilesAndFoldersInBackground(mPath: String) {
 
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                val fileEntries = Files.list(Paths.get(mPath))
-                    .use { it.toList() }
+                val fileEntries = Files.list(Paths.get(mPath)).use { it.toList() }
 
                 launch(Dispatchers.Main) {
                     updateData(fileEntries)
+                    monitorPath(mPath)
                 }
             } catch (e: Exception) {
                 Log.e("ERRO AO LISTAR OS ARQUIVOS", "ERRO: $e")
+
             }
         }
 
@@ -206,7 +235,7 @@ class HomeFragment : Fragment(), PopupSettingsListener,
             val fileLength = fileUtil.getFileSize(path)
             val file = path.toFile()
 
-            if (!showHiddenFiles && fileName.toString().startsWith(".")){
+            if (!showHiddenFiles && fileName.toString().startsWith(".")) {
                 continue
             }
             fileModel.add(
@@ -360,7 +389,10 @@ class HomeFragment : Fragment(), PopupSettingsListener,
         val fileExtension = fileUtil.getFileExtension(itemFile)
         val fileLength = fileUtil.getFileSize(itemFile)
         val file = itemFile.toFile()
-popupSettings.getActionShowHiddenFiles()
+        if (!showHiddenFiles && fileName.toString().startsWith(".")) {
+            return
+        }
+
         val newItem = FileModel(
             UUID.randomUUID().mostSignificantBits,
             fileName,
@@ -501,6 +533,114 @@ popupSettings.getActionShowHiddenFiles()
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun requestAllFilesPermission() {
+        val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+        intent.addCategory("android.intent.category.DEFAULT")
+        intent.data = Uri.fromParts("package", requireContext().packageName, null)
+        startActivity(intent)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun requestDocumentPermission(folder: String) {
+        val storageManager = requireActivity().getSystemService(Context.STORAGE_SERVICE) as StorageManager
+        val intent = storageManager.primaryStorageVolume.createOpenDocumentTreeIntent()
+        val targetDirectory = "Android%2F$folder"
+        var uri = intent.getParcelableExtra<Uri>("android.provider.INITIAL_URI") as? Uri
+        var scheme = uri.toString()
+        scheme += "%3A$targetDirectory"
+        uri = Uri.parse(scheme)
+        intent.putExtra("android.provider.INITIAL_URI", uri)
+        startActivityForResult(intent, REQUEST_CODE)
+      //  startActivity(intent)
+
+        /*val takeUriPermission = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                if (intent != null) {
+                    intent.data?.let { treeUri ->
+
+                        navigateTo(treeUri.path.toString())
+                    }
+                }
+            }
+        }
+
+        takeUriPermission.launch(Intent(requireActivity(), MainActivity::class.java))*/
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            if (data != null){
+                data.data?.let { treeUri ->
+                    requireContext().contentResolver.takePersistableUriPermission(
+                        treeUri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
+                    val path = getFolderPathFromUri(treeUri)
+                    if (path != null) {
+                        navigateTo(path)
+                    } else {
+                        // Tratar o caso em que não foi possível obter o caminho da URI da árvore
+                    }
+                }
+            }
+        }
+
+
+
+    }
+
+    private fun getPathFromTreeUri(treeUri: Uri): String? {
+        val documentId = DocumentsContract.getTreeDocumentId(treeUri)
+        val parts = documentId.split(":")
+        if (parts.size >= 2) {
+            val storageId = parts[0]
+            val path = parts[1]
+            return "/storage/emulated/0/$path"
+        }
+        return null
+    }
+
+    private fun getFolderPathFromUri(uri: Uri): String? {
+        val docUri = DocumentsContract.buildDocumentUriUsingTree(uri, DocumentsContract.getTreeDocumentId(uri))
+        val resolver = requireContext().contentResolver
+
+        resolver.query(docUri, null, null, null, null)?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                val pathIndex = cursor.getColumnIndex(DocumentsContract.Root.COLUMN_DOCUMENT_ID)
+                val fullPath = cursor.getString(pathIndex)
+                return fullPath?.removePrefix("tree:")
+            }
+        }
+
+        return null
+    }
+
+    private fun readSDK30(treeUri: Uri){
+        val tree =DocumentFile.fromTreeUri(requireContext(), treeUri)!!
+        val uriList = arrayListOf<Uri>()
+        listFiles(tree).forEach{uri ->
+            uriList.add(uri)
+            Log.i("Uri Log:", uri.toString())
+           // navigateTo(uri.path.toString())
+        }
+
+    }
+
+    private fun listFiles(folder: DocumentFile): List<Uri>{
+        return if (folder.isDirectory){
+            folder.listFiles().mapNotNull { file ->
+                if (file.name != null) file.uri else null
+            }
+        } else{
+            emptyList()
+        }
+    }
+
+
+
     override fun onCreateActionMode(mode: androidx.appcompat.view.ActionMode?, menu: Menu?): Boolean {
 
         val inflater = mode?.menuInflater
@@ -516,7 +656,10 @@ popupSettings.getActionShowHiddenFiles()
         when (item?.itemId) {
             R.id.action_cut -> {}
             R.id.action_copy -> {}
-            R.id.action_delete -> {}
+            R.id.action_delete -> {
+                confirmDeleteFile(fileModel.get(0), true, selectedItems.size)
+            }
+
             R.id.action_archive -> {}
             R.id.action_share -> {}
             R.id.action_select_all -> {}
@@ -525,6 +668,9 @@ popupSettings.getActionShowHiddenFiles()
         return true
     }
 
+    override fun onDestroyActionMode(mode: androidx.appcompat.view.ActionMode?) {
+        finishActionMode()
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -532,7 +678,6 @@ popupSettings.getActionShowHiddenFiles()
             override fun handleOnBackPressed() {
 
                 val mPreviousPath = managerUtil.getPreviousPath()
-                //listFilesAndFoldersInBackground(mPreviousPath)
                 if (mCurrentPath == BASE_PATH) {
                     val recentFragment = RecentFragment()
                     (requireActivity() as MainActivity).starNewFragment(recentFragment)
@@ -584,12 +729,10 @@ popupSettings.getActionShowHiddenFiles()
 
     }
 
-    override fun onDestroyActionMode(mode: androidx.appcompat.view.ActionMode?) {
-        finishActionMode()
-    }
 
     private fun initSelectionTracker(fileItem: FileModel) {
 
+        selectedItems.clear()
         selectionTracker = SelectionTracker.Builder<Long>(
             "selection-files",
             recyclerView,
@@ -597,6 +740,7 @@ popupSettings.getActionShowHiddenFiles()
             FileItemDetailsLookup(recyclerView),
             StorageStrategy.createLongStorage()
         ).build()
+
 
         selectionTracker.select(fileItem.id)
         startActionMode()
@@ -611,7 +755,16 @@ popupSettings.getActionShowHiddenFiles()
         selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
             override fun onItemStateChanged(key: Long, selected: Boolean) {
                 super.onItemStateChanged(key, selected)
+                val fileItem = getFileItemByKey(key)
+
+                if (selected) {
+                    fileItem?.let { selectedItems.add(it) }
+                } else {
+                    selectedItems.remove(fileItem)
+                }
+
                 val selectedItemCount = selectionTracker.selection.size() ?: 0
+
 
                 if (selectedItemCount <= 0) {
                     finishActionMode()
@@ -622,6 +775,15 @@ popupSettings.getActionShowHiddenFiles()
 
             }
         })
+    }
+
+    private fun getFileItemByKey(key: Long): FileModel? {
+        for (item in fileModel) {
+            if (item.id == key) {
+                return item
+            }
+        }
+        return null
     }
 
 
@@ -651,8 +813,21 @@ popupSettings.getActionShowHiddenFiles()
         TODO("Not yet implemented")
     }
 
-    override fun confirmDeleteFile(file: FileModel) {
-        TODO("Not yet implemented")
+    override fun confirmDeleteFile(file: FileModel, multItems: Boolean, items: Int) {
+        val title = requireContext().getString(R.string.delete)
+        val text = if (multItems) "$title $items items?" else file.fileName
+        val textPositiveButton = requireContext().getString(R.string.dialog_ok)
+
+        materialDialogUtils.createDialogInfo(title, text, textPositiveButton, requireContext()) { dialogResult ->
+            val isConfirmed = dialogResult.confirmed
+            if (isConfirmed) {
+                delete()
+                finishActionMode()
+                refresh()
+
+            }
+        }
+
     }
 
     override fun showRenameFileDialog(file: FileModel) {
@@ -720,66 +895,78 @@ popupSettings.getActionShowHiddenFiles()
 
     }
 
+    suspend fun monitorPath(path: String) {
+        val directory = File(path)
+
+        val watchChannel = directory.asWatchChannel(mode = Mode.Recursive)
+
+        // Iniciar a observação da pasta
+        for (event in watchChannel) {
+            Log.i("Evento: ${event.kind}", "- Pasta: ${event.file}")
+        }
+    }
 
     private fun showBottomSheetMoreActionFile(fileItem: FileModel) {
 
-            val fileOption = mutableListOf<FileAction>().apply {
-                add(
-                    FileAction(
-                        R.drawable.ic_open_with_24,
-                        requireContext().getString(R.string.file_item_action_open_with),
-                        CreateFileAction.OPEN_WITH
-                    )
+        val fileOption = mutableListOf<FileAction>().apply {
+            add(
+                FileAction(
+                    R.drawable.ic_open_with_24,
+                    requireContext().getString(R.string.file_item_action_open_with),
+                    CreateFileAction.OPEN_WITH
                 )
-                add(FileAction(R.drawable.ic_cut_24, requireContext().getString(R.string.cut), CreateFileAction.CUT))
-                add(
-                    FileAction(
-                        R.drawable.ic_copy_24,
-                        requireContext().getString(R.string.copy),
-                        CreateFileAction.RENAME
-                    )
+            )
+            add(FileAction(R.drawable.ic_cut_24, requireContext().getString(R.string.cut), CreateFileAction.CUT))
+            add(
+                FileAction(
+                    R.drawable.ic_copy_24, requireContext().getString(R.string.copy), CreateFileAction.RENAME
                 )
-                add(
-                    FileAction(
-                        R.drawable.ic_trash_24,
-                        requireContext().getString(R.string.delete),
-                        CreateFileAction.DELETE
-                    )
+            )
+            add(
+                FileAction(
+                    R.drawable.ic_trash_24, requireContext().getString(R.string.delete), CreateFileAction.DELETE
                 )
-                add(
-                    FileAction(
-                        R.drawable.ic_edit_24,
-                        requireContext().getString(R.string.rename),
-                        CreateFileAction.RENAME
-                    )
+            )
+            add(
+                FileAction(
+                    R.drawable.ic_edit_24, requireContext().getString(R.string.rename), CreateFileAction.RENAME
                 )
-            }
-
-            standardBottomSheet = requireView().findViewById(R.id.standard_bottom_sheet)
-            standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
-
-            val rvAction = requireView().findViewById<RecyclerView>(R.id.recyclerView2)
-            val tvItemTitle = requireView().findViewById<TextView>(R.id.tv_title)
-
-            tvItemTitle.text = fileItem.fileName
-            rvAction.layoutManager = LinearLayoutManager(requireActivity())
-            val actionAdapter = FileOptionAdapter(this, fileItem, fileOption)
-            rvAction.adapter = actionAdapter
-
-            standardBottomSheetBehavior.peekHeight = 600
-            standardBottomSheetBehavior.maxHeight = 600
-            standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            )
         }
 
-    private fun observeSettings(){
+        standardBottomSheet = requireView().findViewById(R.id.standard_bottom_sheet)
+        standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
+
+        val rvAction = requireView().findViewById<RecyclerView>(R.id.recyclerView2)
+        val tvItemTitle = requireView().findViewById<TextView>(R.id.tv_title)
+
+        tvItemTitle.text = fileItem.fileName
+        rvAction.layoutManager = LinearLayoutManager(requireActivity())
+        val actionAdapter = FileOptionAdapter(this, fileItem, fileOption)
+        rvAction.adapter = actionAdapter
+
+        standardBottomSheetBehavior.peekHeight = 600
+        standardBottomSheetBehavior.maxHeight = 600
+        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    private fun observeSettings() {
         settingsViewModel.settingsState.observe(viewLifecycleOwner) { settingsState ->
 
-             showHiddenFiles = settingsState.showHiddenFiles
+            showHiddenFiles = settingsState.showHiddenFiles
 
             refresh()
         }
 
     }
+
+    private fun delete() {
+        val filePaths = selectedItems.map { it.filePath }
+        viewModel.deleteFilesAndFolders(filePaths)
+        selectedItems.clear()
+    }
+
+
 }
 
 

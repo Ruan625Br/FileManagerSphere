@@ -13,8 +13,9 @@ class MaterialDialogUtils {
     private val fileUtil = FileUtil()
 
     data class DialogResult(val confirmed: Boolean, val text: String)
+    data class DialogInfoResult(val confirmed: Boolean)
 
-    @SuppressLint("InflateParams")
+    @SuppressLint("InflateParams", "SuspiciousIndentation")
     fun createBasicMaterial(
         title: String,
         text: String,
@@ -41,6 +42,29 @@ class MaterialDialogUtils {
             }
             .setNegativeButton(R.string.dialog_cancel) { _, _ ->
                 callback(DialogResult(false, ""))
+            }
+            .show()
+    }
+    @SuppressLint("InflateParams", "SuspiciousIndentation")
+    fun createDialogInfo(
+        title: String,
+        message: String,
+        textPositiveButton: String,
+        context: Context,
+        callback: (DialogInfoResult) -> Unit
+    ) {
+
+
+        MaterialAlertDialogBuilder(context)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(textPositiveButton) { dialog, which ->
+                   callback(DialogInfoResult(true))
+
+
+            }
+            .setNegativeButton(R.string.dialog_cancel) { _, _ ->
+                callback(DialogInfoResult(false))
             }
             .show()
     }
