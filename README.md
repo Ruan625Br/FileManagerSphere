@@ -46,20 +46,23 @@ Contribuições são bem-vindas! Se você quiser melhorar o FileManagerSphere, s
 
 - [@Ruan625Br](https://www.github.com/Ruan625Br)
 
+
+
+
+
 ## License
 
-Direitos autorais (C) 2023 Juan Nascimento
+    Copyright (C) 2023 Juan Nscimento
 
-Este programa é um software livre: você pode redistribuí-lo e/ou modificá-lo
-sob os termos da Licença Pública Geral GNU, conforme publicada pela
-Free Software Foundation, tanto a versão 3 da Licença, ou
-(a seu critério) qualquer versão posterior.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-Este programa é distribuído na esperança de que seja útil,
-mas SEM NENHUMA GARANTIA; sem sequer a garantia implícita de
-COMERCIABILIDADE ou ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Veja a
-Licença Pública Geral GNU para mais detalhes.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-Você deve ter recebido uma cópia da Licença Pública Geral GNU
-juntamente com este programa. Caso contrário, consulte <https://www.gnu.org/licenses/>.
-
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
