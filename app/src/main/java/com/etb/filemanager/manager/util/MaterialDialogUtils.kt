@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import com.etb.filemanager.R
 import com.etb.filemanager.util.file.FileUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -67,5 +68,28 @@ class MaterialDialogUtils {
                 callback(DialogInfoResult(false))
             }
             .show()
+    }
+
+    @SuppressLint("MissingInflatedId")
+    fun createDialogProgress(
+        title: String,
+        message: String,
+        progress: Int,
+        context: Context)
+       {
+        val inflater = LayoutInflater.from(context)
+        val dialogView = inflater.inflate(R.layout.basic_dialog_progress, null)
+        val lProgress = dialogView.findViewById<LinearProgressIndicator>(R.id.progressindicator)
+
+
+        lProgress.progress = progress
+
+
+        MaterialAlertDialogBuilder(context)
+            .setTitle(title)
+            .setView(dialogView)
+            .setCancelable(false)
+            .show()
+
     }
 }

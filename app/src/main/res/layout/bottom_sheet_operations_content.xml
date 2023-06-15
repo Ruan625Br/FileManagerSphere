@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto">
+    <FrameLayout
+            android:id="@+id/standard_bottom_operation"
+            style="@style/Widget.Material3.BottomSheet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    >
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView android:layout_width="match_parent"
+                                                                       android:layout_height="wrap_content"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp">
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" app:srcCompat="@drawable/baseline_close_24"
+                    android:id="@+id/iv_close_op"
+                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_title_op" app:layout_constraintHorizontal_bias="0.0"
+                    android:layout_marginTop="60dp"
+            />
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/tv_title_op"
+                    android:textSize="18sp" app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="64dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.398"/>
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" app:srcCompat="@drawable/paste_icon_control_normal_24dp"
+                    android:id="@+id/iv_start_op"
+                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="60dp" android:layout_marginEnd="16dp"
+                    app:layout_constraintStart_toEndOf="@+id/tv_title_op" app:layout_constraintHorizontal_bias="0.926"
+            />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>

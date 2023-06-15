@@ -16,6 +16,7 @@ import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -44,10 +45,7 @@ import com.etb.filemanager.manager.adapter.ManagerUtil
 import com.etb.filemanager.manager.file.CreateFileAction
 import com.etb.filemanager.manager.file.FileAction
 import com.etb.filemanager.manager.file.FileOptionAdapter
-import com.etb.filemanager.manager.files.filelist.FileListViewModel
-import com.etb.filemanager.manager.files.filelist.Mode
-import com.etb.filemanager.manager.files.filelist.SettingsViewModel
-import com.etb.filemanager.manager.files.filelist.asWatchChannel
+import com.etb.filemanager.manager.files.filelist.*
 import com.etb.filemanager.manager.selection.FileItemDetailsLookup
 import com.etb.filemanager.manager.selection.FileItemKeyProvider
 import com.etb.filemanager.manager.util.FileUtils
@@ -103,6 +101,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     private lateinit var standardBottomSheet: FrameLayout
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
+    private lateinit var standardBehaviorOperation: BottomSheetBehavior<FrameLayout>
     private lateinit var settingsViewModel: SettingsViewModel
     private var showHiddenFiles = false
 
@@ -132,6 +131,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         settingsViewModel = SettingsViewModel(requireContext())
         viewModel = ViewModelProvider(this).get(FileListViewModel::class.java)
@@ -198,6 +198,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     private fun updateProgressUI(progress: Int) {
         Log.i("HomeFragment", "Update ui")
+        materialDialogUtils.createDialogProgress("Movendo", "teste", progress, requireContext())
 
     }
 
@@ -654,7 +655,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     override fun onActionItemClicked(mode: androidx.appcompat.view.ActionMode?, item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.action_cut -> {}
+            R.id.action_cut -> { cutFile(fileModel.get(0))}
             R.id.action_copy -> {}
             R.id.action_delete -> {
                 confirmDeleteFile(fileModel.get(0), true, selectedItems.size)
@@ -806,7 +807,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     override fun cutFile(file: FileModel) {
-        TODO("Not yet implemented")
+        createBottomSheetOperation(TypeOperation.CUT)
+        finishActionMode()
     }
 
     override fun copyFile(file: FileModel) {
@@ -950,6 +952,36 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
+    private fun createBottomSheetOperation(typeOperation: TypeOperation){
+
+
+      val  standardBottomSheetOp = requireView().findViewById<FrameLayout>(R.id.standard_bottom_operation)
+        standardBehaviorOperation = BottomSheetBehavior.from(standardBottomSheetOp)
+
+        val ivCloseOp = requireView().findViewById<ImageView>(R.id.iv_close_op)
+        val ivStartOp = requireView().findViewById<ImageView>(R.id.iv_start_op)
+        val tvTitleOp = requireView().findViewById<TextView>(R.id.tv_title_op)
+
+        val sourceFiles = selectedItems.map { it.filePath }
+
+
+        standardBehaviorOperation.peekHeight = 300
+        standardBehaviorOperation.maxHeight = 300
+        standardBehaviorOperation.state = BottomSheetBehavior.STATE_EXPANDED
+
+        tvTitleOp.text = "Movendo ${selectedItems.size}"
+
+        ivStartOp.setOnClickListener {
+            val destinationDir = File(mCurrentPath)
+            viewModel.initOperation(typeOperation, sourceFiles, destinationDir)
+            standardBehaviorOperation.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        ivCloseOp.setOnClickListener {
+            standardBehaviorOperation.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+    }
+
     private fun observeSettings() {
         settingsViewModel.settingsState.observe(viewLifecycleOwner) { settingsState ->
 
@@ -962,8 +994,15 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     private fun delete() {
         val filePaths = selectedItems.map { it.filePath }
+
         viewModel.deleteFilesAndFolders(filePaths)
         selectedItems.clear()
+    }
+
+    fun iniStateBottomSheet(){
+        standardBehaviorOperation.state = BottomSheetBehavior.STATE_HIDDEN
+        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
     }
 
 

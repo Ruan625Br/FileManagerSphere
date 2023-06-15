@@ -3,6 +3,7 @@ package com.etb.filemanager.manager.files.filelist
 import android.content.ContentValues
 import android.content.Context
 import android.os.Build
+import com.etb.filemanager.manager.files.root.OperationCommand
 import java.io.File
 
 object DeleteOperation {
@@ -31,8 +32,7 @@ object DeleteOperation {
         if (file.deleteRecursively()){
             return true
         }
-
-        return false
+        return OperationCommand.deleteDir(file)
 
 
     }
