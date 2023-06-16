@@ -50,6 +50,8 @@
     <string name="ok"></string>
     <string name="download">Download</string>
 
+    <string name="action_bottom_select">Selecionar</string>
+
 
     <string name="action_mode_title">selecionado</string>
     <!-- Preference Titles -->
@@ -69,5 +71,9 @@
     <string name="settings">Configuração</string>
 
     <string name="category_aparencia">Aparência</string>
+
+
+    <string name="restriction_folder">Pasta com restrição</string>
+    <string name="e_restriction_folder">Os conteúdos desta pasta não podem ser exibidos devido à restrições do android</string>
 
 </resources>

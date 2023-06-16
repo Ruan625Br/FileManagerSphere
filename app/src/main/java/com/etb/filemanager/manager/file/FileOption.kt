@@ -5,6 +5,7 @@ package com.etb.filemanager.manager.file
 
 enum class CreateFileAction{
     OPEN_WITH,
+    SELECT,
     CUT,
     COPY,
     DELETE,

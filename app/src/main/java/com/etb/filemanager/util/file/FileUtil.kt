@@ -1,6 +1,10 @@
 package com.etb.filemanager.util.file
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -75,6 +79,17 @@ class FileUtil {
            Log.e("File", "sourcePath: $sourcePath\ntargetPath: $targetPath\nnewFileName: $newFileName")
         }
     }
+
+    fun copyTextToClipboard(context: Context, text: String, toast: Boolean) {
+        val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("label", text)
+        clipboardManager.setPrimaryClip(clipData)
+
+        if (toast){
+            Toast.makeText(context, "\"$text\" Caminho Copiado", Toast.LENGTH_LONG).show()
+        }
+    }
+
 
 
 

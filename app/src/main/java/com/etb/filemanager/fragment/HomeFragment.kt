@@ -20,8 +20,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -108,6 +106,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     private lateinit var viewModel: FileListViewModel
 
     private val selectedItems = mutableListOf<FileModel>()
+    private var isSelectionMode = false
     private val REQUEST_CODE = 6
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -209,17 +208,49 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         GlobalScope.launch(Dispatchers.IO) {
             try {
                 val fileEntries = Files.list(Paths.get(mPath)).use { it.toList() }
-
+                mCurrentPath = mPath
                 launch(Dispatchers.Main) {
                     updateData(fileEntries)
                     monitorPath(mPath)
                 }
             } catch (e: Exception) {
+                if (e is AccessDeniedException) {
+                    try {
+                        launch(Dispatchers.Main) {
+                            createDialgRestriction()
+
+                        }
+                    } catch (ec: Exception){
+                        Log.e("Dialog", "ERRO: $e")
+
+                    }
+
+                }
                 Log.e("ERRO AO LISTAR OS ARQUIVOS", "ERRO: $e")
 
             }
+
         }
 
+    }
+
+    private fun createDialgRestriction(){
+        val title = requireContext().getString(R.string.restriction_folder)
+        val text = requireContext().getString(R.string.e_restriction_folder)
+        val textPositiveButton = requireContext().getString(R.string.dialog_ok)
+
+        materialDialogUtils.createDialogInfo(
+            title,
+            text,
+            textPositiveButton,
+            requireContext(), false
+        ) { dialogResult ->
+            val isConfirmed = dialogResult.confirmed
+            if (isConfirmed) {
+                managerUtil.getPreviousPath()
+
+            }
+        }
     }
 
     fun updateData(fileEntries: List<Path>) {
@@ -426,6 +457,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     @SuppressLint("NotifyDataSetChanged")
     private fun finishActionMode() {
+        isSelectionMode = false
         actionMode?.finish()
 
         adapter.isActionMode = false
@@ -495,7 +527,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 refresh()
             }
 
-            R.id.action_select_all -> {}
+            R.id.action_select_all -> { selectFiles(fileModel, true)}
             R.id.action_navigate_to -> {
                 createDialogNavigateTo()
             }
@@ -505,7 +537,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             R.id.action_share -> {}
-            R.id.action_copy_path -> {}
+            R.id.action_copy_path -> { fileUtil.copyTextToClipboard(requireContext(), mCurrentPath, true)}
             else -> return super.onOptionsItemSelected(item)
         }
         activity?.invalidateOptionsMenu()
@@ -553,7 +585,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         uri = Uri.parse(scheme)
         intent.putExtra("android.provider.INITIAL_URI", uri)
         startActivityForResult(intent, REQUEST_CODE)
-      //  startActivity(intent)
+        //  startActivity(intent)
 
         /*val takeUriPermission = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -572,8 +604,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK){
-            if (data != null){
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
                 data.data?.let { treeUri ->
                     requireContext().contentResolver.takePersistableUriPermission(
                         treeUri,
@@ -588,7 +620,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 }
             }
         }
-
 
 
     }
@@ -619,27 +650,26 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         return null
     }
 
-    private fun readSDK30(treeUri: Uri){
-        val tree =DocumentFile.fromTreeUri(requireContext(), treeUri)!!
+    private fun readSDK30(treeUri: Uri) {
+        val tree = DocumentFile.fromTreeUri(requireContext(), treeUri)!!
         val uriList = arrayListOf<Uri>()
-        listFiles(tree).forEach{uri ->
+        listFiles(tree).forEach { uri ->
             uriList.add(uri)
             Log.i("Uri Log:", uri.toString())
-           // navigateTo(uri.path.toString())
+            // navigateTo(uri.path.toString())
         }
 
     }
 
-    private fun listFiles(folder: DocumentFile): List<Uri>{
-        return if (folder.isDirectory){
+    private fun listFiles(folder: DocumentFile): List<Uri> {
+        return if (folder.isDirectory) {
             folder.listFiles().mapNotNull { file ->
                 if (file.name != null) file.uri else null
             }
-        } else{
+        } else {
             emptyList()
         }
     }
-
 
 
     override fun onCreateActionMode(mode: androidx.appcompat.view.ActionMode?, menu: Menu?): Boolean {
@@ -655,15 +685,18 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     override fun onActionItemClicked(mode: androidx.appcompat.view.ActionMode?, item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.action_cut -> { cutFile(fileModel.get(0))}
+            R.id.action_cut -> {
+                cutFile(fileModel.get(0))
+            }
+
             R.id.action_copy -> {}
             R.id.action_delete -> {
-                confirmDeleteFile(fileModel.get(0), true, selectedItems.size)
+                confirmDeleteFile(fileModel.get(0), true)
             }
 
             R.id.action_archive -> {}
             R.id.action_share -> {}
-            R.id.action_select_all -> {}
+            R.id.action_select_all -> { selectFiles(fileModel, true)}
             else -> return super.onOptionsItemSelected(item!!)
         }
         return true
@@ -705,7 +738,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     fun navigateTo(path: String) {
-        mCurrentPath = path
+
         coroutineScope.launch {
             managerUtil.addToPathStack(path)
             listFilesAndFoldersInBackground(path)
@@ -731,8 +764,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
 
-    private fun initSelectionTracker(fileItem: FileModel) {
-
+    private fun initSelectionTracker() {
+        isSelectionMode = true
         selectedItems.clear()
         selectionTracker = SelectionTracker.Builder<Long>(
             "selection-files",
@@ -750,8 +783,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
 
         (recyclerView.adapter as FileModelAdapter).selectionTracker = selectionTracker
-        selectionTracker.select(fileItem.id)
-        selectedItems.add(fileItem)
 
         selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
             override fun onItemStateChanged(key: Long, selected: Boolean) {
@@ -789,11 +820,31 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
 
     override fun selectFile(file: FileModel, selected: Boolean) {
-        initSelectionTracker(file)
+        if (isSelectionMode){
+            selectionTracker.select(file.id)
+            selectedItems.add(file)
+
+        } else{
+            initSelectionTracker()
+            selectionTracker.select(file.id)
+            selectedItems.add(file)
+        }
+
     }
 
-    override fun selectFiles(files: FileModel, selected: Boolean) {
-        TODO("Not yet implemented")
+    override fun selectFiles(files: MutableList<FileModel>, selected: Boolean) {
+     if (isSelectionMode){
+         for (file in files){
+             selectionTracker.select(file.id)
+             selectedItems.add(file)
+         }
+     } else{
+         initSelectionTracker()
+         for (file in files){
+             selectionTracker.select(file.id)
+             selectedItems.add(file)
+         }
+     }
     }
 
     override fun openFile(file: FileModel) {
@@ -815,12 +866,12 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         TODO("Not yet implemented")
     }
 
-    override fun confirmDeleteFile(file: FileModel, multItems: Boolean, items: Int) {
+    override fun confirmDeleteFile(file: FileModel, multItems: Boolean) {
         val title = requireContext().getString(R.string.delete)
-        val text = if (multItems) "$title $items items?" else file.fileName
+        val text = if (multItems) "$title ${selectionTracker.selection.size()} items?" else file.fileName
         val textPositiveButton = requireContext().getString(R.string.dialog_ok)
 
-        materialDialogUtils.createDialogInfo(title, text, textPositiveButton, requireContext()) { dialogResult ->
+        materialDialogUtils.createDialogInfo(title, text, textPositiveButton, requireContext(), true) { dialogResult ->
             val isConfirmed = dialogResult.confirmed
             if (isConfirmed) {
                 delete()
@@ -882,12 +933,17 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     override fun onClickFileAction(file: FileModel, action: CreateFileAction) {
 
         when (action) {
-            CreateFileAction.RENAME -> {
-                showRenameFileDialog(file)
-            }
 
             CreateFileAction.OPEN_WITH -> {
                 selectFile(file, true)
+            }
+
+            CreateFileAction.SELECT -> {
+                selectFile(file, true)
+            }
+
+            CreateFileAction.RENAME -> {
+                showRenameFileDialog(file)
             }
 
             else -> {}
@@ -916,6 +972,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                     R.drawable.ic_open_with_24,
                     requireContext().getString(R.string.file_item_action_open_with),
                     CreateFileAction.OPEN_WITH
+                )
+            )
+            add(
+                FileAction(
+                    R.drawable.ic_check,
+                    requireContext().getString(R.string.action_bottom_select),
+                    CreateFileAction.SELECT
                 )
             )
             add(FileAction(R.drawable.ic_cut_24, requireContext().getString(R.string.cut), CreateFileAction.CUT))
@@ -947,15 +1010,15 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val actionAdapter = FileOptionAdapter(this, fileItem, fileOption)
         rvAction.adapter = actionAdapter
 
-        standardBottomSheetBehavior.peekHeight = 600
-        standardBottomSheetBehavior.maxHeight = 600
+        standardBottomSheetBehavior.peekHeight = 800
+        standardBottomSheetBehavior.maxHeight = 800
         standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private fun createBottomSheetOperation(typeOperation: TypeOperation){
+    private fun createBottomSheetOperation(typeOperation: TypeOperation) {
 
 
-      val  standardBottomSheetOp = requireView().findViewById<FrameLayout>(R.id.standard_bottom_operation)
+        val standardBottomSheetOp = requireView().findViewById<FrameLayout>(R.id.standard_bottom_operation)
         standardBehaviorOperation = BottomSheetBehavior.from(standardBottomSheetOp)
 
         val ivCloseOp = requireView().findViewById<ImageView>(R.id.iv_close_op)
@@ -969,7 +1032,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         standardBehaviorOperation.maxHeight = 300
         standardBehaviorOperation.state = BottomSheetBehavior.STATE_EXPANDED
 
-        tvTitleOp.text = "Movendo ${selectedItems.size}"
+        tvTitleOp.text = "Movendo ${selectionTracker.selection.size()}"
 
         ivStartOp.setOnClickListener {
             val destinationDir = File(mCurrentPath)
@@ -997,12 +1060,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
         viewModel.deleteFilesAndFolders(filePaths)
         selectedItems.clear()
-    }
-
-    fun iniStateBottomSheet(){
-        standardBehaviorOperation.state = BottomSheetBehavior.STATE_HIDDEN
-        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-
     }
 
 

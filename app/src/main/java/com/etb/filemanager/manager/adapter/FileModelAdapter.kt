@@ -122,7 +122,7 @@ class FileModelAdapter(
         currentPath = fileViewModel.filePath
 
 
-        if (isActionMode) {
+      if (isActionMode) {
             if (selectionTracker?.isSelected(itemDetails.selectionKey)!!) {
                 holder.itemView.isActivated = true
                 holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
@@ -148,10 +148,25 @@ class FileModelAdapter(
         holder.titleFile.text = fileViewModel.fileName
 
         holder.itemFile.setOnClickListener {
+            if (!isActionMode) {
+                if (fileViewModel.isDirectory) {
+                    listener.openFile(fileViewModel)
+                }
+                holder.itemView.isActivated = false
+                holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
 
-            if (fileViewModel.isDirectory) {
-                listener.openFile(fileViewModel)
-            }
+
+            } else {
+                if (selectionTracker?.isSelected(itemDetails.selectionKey)!!) {
+                    holder.itemView.isActivated = true
+                    holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
+                } else {
+                    holder.itemView.isActivated = false
+                    holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
+                }
+                   }
+
+
 
         }
 

@@ -18,11 +18,7 @@ class MaterialDialogUtils {
 
     @SuppressLint("InflateParams", "SuspiciousIndentation")
     fun createBasicMaterial(
-        title: String,
-        text: String,
-        textPositiveButton: String,
-        context: Context,
-        callback: (DialogResult) -> Unit
+        title: String, text: String, textPositiveButton: String, context: Context, callback: (DialogResult) -> Unit
     ) {
         val inflater = LayoutInflater.from(context)
         val dialogView = inflater.inflate(R.layout.layout_basic_dialog, null)
@@ -31,52 +27,46 @@ class MaterialDialogUtils {
 
         eInputEditText.setText(text)
 
-        MaterialAlertDialogBuilder(context)
-            .setTitle(title)
-            .setView(dialogView)
-            .setCancelable(false)
+        MaterialAlertDialogBuilder(context).setTitle(title).setView(dialogView).setCancelable(false)
             .setPositiveButton(textPositiveButton) { dialog, which ->
                 val enteredText = eInputEditText.text.toString()
-                   callback(DialogResult(true, enteredText))
+                callback(DialogResult(true, enteredText))
 
 
-            }
-            .setNegativeButton(R.string.dialog_cancel) { _, _ ->
+            }.setNegativeButton(R.string.dialog_cancel) { _, _ ->
                 callback(DialogResult(false, ""))
-            }
-            .show()
+            }.show()
     }
+
     @SuppressLint("InflateParams", "SuspiciousIndentation")
     fun createDialogInfo(
         title: String,
         message: String,
         textPositiveButton: String,
         context: Context,
+        cancelable: Boolean,
         callback: (DialogInfoResult) -> Unit
     ) {
 
 
-        MaterialAlertDialogBuilder(context)
-            .setTitle(title)
-            .setMessage(message)
+        val mDialog = MaterialAlertDialogBuilder(context).setTitle(title).setMessage(message)
             .setPositiveButton(textPositiveButton) { dialog, which ->
-                   callback(DialogInfoResult(true))
+                callback(DialogInfoResult(true))
 
 
             }
-            .setNegativeButton(R.string.dialog_cancel) { _, _ ->
+        if (cancelable) {
+            mDialog.setNegativeButton(R.string.dialog_cancel) { _, _ ->
                 callback(DialogInfoResult(false))
             }
-            .show()
+        }
+        mDialog.show()
     }
 
     @SuppressLint("MissingInflatedId")
     fun createDialogProgress(
-        title: String,
-        message: String,
-        progress: Int,
-        context: Context)
-       {
+        title: String, message: String, progress: Int, context: Context
+    ) {
         val inflater = LayoutInflater.from(context)
         val dialogView = inflater.inflate(R.layout.basic_dialog_progress, null)
         val lProgress = dialogView.findViewById<LinearProgressIndicator>(R.id.progressindicator)
@@ -85,11 +75,7 @@ class MaterialDialogUtils {
         lProgress.progress = progress
 
 
-        MaterialAlertDialogBuilder(context)
-            .setTitle(title)
-            .setView(dialogView)
-            .setCancelable(false)
-            .show()
+        MaterialAlertDialogBuilder(context).setTitle(title).setView(dialogView).setCancelable(false).show()
 
     }
 }

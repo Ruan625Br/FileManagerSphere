@@ -6,12 +6,12 @@ import com.etb.filemanager.manager.file.CreateFileAction
 interface FileListener {
 
     fun selectFile(file: FileModel, selected: Boolean)
-    fun selectFiles(files: FileModel, selected: Boolean)
+    fun selectFiles(files: MutableList<FileModel>, selected: Boolean)
     fun openFile(file: FileModel)
     fun openFileWith(file: FileModel)
     fun cutFile(file: FileModel)
     fun copyFile(file: FileModel)
-    fun confirmDeleteFile(file: FileModel,  multItems: Boolean, items: Int)
+    fun confirmDeleteFile(file: FileModel,  multItems: Boolean)
     fun showRenameFileDialog(file: FileModel)
     fun extractFile(file: FileModel)
     fun showCreateArchiveDialog(file: FileModel)
