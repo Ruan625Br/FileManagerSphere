@@ -74,6 +74,7 @@
 
 
     <string name="restriction_folder">Pasta com restrição</string>
-    <string name="e_restriction_folder">Os conteúdos desta pasta não podem ser exibidos devido à restrições do android</string>
+    <string name="e_restriction_folder">Os conteúdos desta pasta não podem ser exibidos devido à restrições do android
+    </string>
 
 </resources>

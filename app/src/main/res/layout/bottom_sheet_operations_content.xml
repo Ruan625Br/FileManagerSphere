@@ -4,7 +4,7 @@
                                                    android:layout_height="match_parent"
                                                    xmlns:app="http://schemas.android.com/apk/res-auto">
     <FrameLayout
-            android:id="@+id/standard_bottom_operation"
+            android:id="@+id/standard_bottom_operations"
             style="@style/Widget.Material3.BottomSheet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

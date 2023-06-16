@@ -25,14 +25,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
+import com.etb.filemanager.files.file.properties.ViewStateAdapter
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.manager.FileListener
 import com.etb.filemanager.interfaces.settings.PopupSettingsListener
@@ -54,6 +57,7 @@ import com.etb.filemanager.util.file.FileUtil
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.*
 import java.io.File
 import java.nio.file.*
@@ -935,7 +939,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         when (action) {
 
             CreateFileAction.OPEN_WITH -> {
-                selectFile(file, true)
+                showBottomSheetProperties()
             }
 
             CreateFileAction.SELECT -> {
@@ -1018,7 +1022,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     private fun createBottomSheetOperation(typeOperation: TypeOperation) {
 
 
-        val standardBottomSheetOp = requireView().findViewById<FrameLayout>(R.id.standard_bottom_operation)
+        val standardBottomSheetOp = requireView().findViewById<FrameLayout>(R.id.standard_bottom_operations)
         standardBehaviorOperation = BottomSheetBehavior.from(standardBottomSheetOp)
 
         val ivCloseOp = requireView().findViewById<ImageView>(R.id.iv_close_op)
@@ -1044,6 +1048,26 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             standardBehaviorOperation.state = BottomSheetBehavior.STATE_HIDDEN
         }
     }
+
+    private fun showBottomSheetProperties(){
+        val bottomSheetProperties = requireView().findViewById<FrameLayout>(R.id.standard_bottom_properties)
+        val bottomSheetBehaviorroperties = BottomSheetBehavior.from(bottomSheetProperties)
+
+        val fm: FragmentManager = requireActivity().supportFragmentManager
+        val sa = ViewStateAdapter(fm, lifecycle)
+        val pa: ViewPager2 = requireView().findViewById(R.id.pager)
+        pa.adapter = sa
+
+        val tabLayout = requireView().findViewById<TabLayout>(R.id.tabLayout)
+        tabLayout.addTab(tabLayout.newTab().setText("Basico"))
+
+
+
+        bottomSheetBehaviorroperties.peekHeight = 2000
+        bottomSheetBehaviorroperties.maxHeight = 2000
+        bottomSheetBehaviorroperties.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
 
     private fun observeSettings() {
         settingsViewModel.settingsState.observe(viewLifecycleOwner) { settingsState ->

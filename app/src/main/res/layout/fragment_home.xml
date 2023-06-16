@@ -87,6 +87,7 @@
 
     <include layout="@layout/bottom_sheet_content"/>
     <include layout="@layout/bottom_sheet_operations_content"/>
+    <include layout="@layout/bottom_sheet_properties_content"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
