@@ -57,7 +57,6 @@ class FileModelAdapter(
     private val mainScope = MainScope()
 
     var selectionTracker: SelectionTracker<Long>? = null
-    var showHiddenFiles = false
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileModelAdapter.ViewHolder {

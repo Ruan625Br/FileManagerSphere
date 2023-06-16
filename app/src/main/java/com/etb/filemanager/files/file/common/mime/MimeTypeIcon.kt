@@ -36,10 +36,8 @@ val MimeType.icon: MimeTypeIcon
 private val mimeTypeToIconMap = mapOf(
     "application/vnd.android.package-archive" to MimeTypeIcon.APK,
     "application/gzip" to MimeTypeIcon.ARCHIVE,
-    // Not in IANA list, but Mozilla and Wikipedia say so.
     "application/java-archive" to MimeTypeIcon.ARCHIVE,
     "application/mac-binhex40" to MimeTypeIcon.ARCHIVE,
-    // Not in IANA list, but AOSP MimeUtils says so.
     "application/rar" to MimeTypeIcon.ARCHIVE,
     "application/zip" to MimeTypeIcon.ARCHIVE,
     "application/vnd.debian.binary-package" to MimeTypeIcon.ARCHIVE,

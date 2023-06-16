@@ -1,10 +1,11 @@
 package com.etb.filemanager.manager.files.filelist
 
-import android.content.ContentValues
-import android.content.Context
-import android.os.Build
+
+import android.util.Log
 import com.etb.filemanager.manager.files.root.OperationCommand
 import java.io.File
+import java.io.IOException
+import java.nio.file.Files
 
 object DeleteOperation {
 
@@ -26,12 +27,20 @@ object DeleteOperation {
         }
 
 
-        if (file.delete()){
-            return true
+
+        try {
+            return file.delete()
+        }catch (e: IOException){
+            Log.e("Operation delete", "Errro: $e")
         }
-        if (file.deleteRecursively()){
-            return true
+        try {
+            return file.deleteRecursively()
+        }catch (e: IOException){
+            Log.e("Operation delete", "Errro: $e")
         }
+
+
+        //tenta apagar o arquivo com comando
         return OperationCommand.deleteDir(file)
 
 

@@ -170,7 +170,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     private fun initObeserveViewModel() {
         viewModel.deletionProgress.observe(viewLifecycleOwner, androidx.lifecycle.Observer { progress ->
-            updateProgressUI(progress)
+
         })
     }
 
@@ -428,10 +428,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     private fun finishActionMode() {
         actionMode?.finish()
 
-        selectionTracker.clearSelection()
-        adapter.notifyDataSetChanged()
         adapter.isActionMode = false
         isActionMode = false
+        selectionTracker.clearSelection()
+
     }
 
 
@@ -743,7 +743,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         ).build()
 
 
-        selectionTracker.select(fileItem.id)
         startActionMode()
         updateActionModeTitle(1)
 
@@ -751,7 +750,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
 
         (recyclerView.adapter as FileModelAdapter).selectionTracker = selectionTracker
-
+        selectionTracker.select(fileItem.id)
+        selectedItems.add(fileItem)
 
         selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
             override fun onItemStateChanged(key: Long, selected: Boolean) {
@@ -789,7 +789,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
 
     override fun selectFile(file: FileModel, selected: Boolean) {
-        TODO("Not yet implemented")
+        initSelectionTracker(file)
     }
 
     override fun selectFiles(files: FileModel, selected: Boolean) {
@@ -887,7 +887,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             CreateFileAction.OPEN_WITH -> {
-                initSelectionTracker(file)
+                selectFile(file, true)
             }
 
             else -> {}
