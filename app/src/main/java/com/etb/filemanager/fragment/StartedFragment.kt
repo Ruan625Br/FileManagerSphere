@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
 
@@ -51,7 +50,7 @@ class StartedFragment : Fragment() {
         val btnStarted = requireView().findViewById<Button>(R.id.btn_started)
         val recentFragment = RecentFragment()
         btnStarted.setOnClickListener {
-            (requireActivity() as MainActivity).starNewFragment(recentFragment)
+            (requireActivity() as MainActivity).startNewFragment(recentFragment)
         }
     }
 

@@ -3,8 +3,6 @@ package com.etb.filemanager.fragment
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -19,7 +17,6 @@ import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
 import com.etb.filemanager.manager.category.adapter.CategoryFileModel
 import com.etb.filemanager.manager.category.adapter.CategoryFileModelAdapter
-import com.etb.filemanager.manager.category.adapter.RecentImageModel
 import com.etb.filemanager.manager.category.adapter.RecentImagemodelAdapter
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.FileUtils.SpaceType
@@ -28,7 +25,6 @@ import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.io.File
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -112,11 +108,11 @@ class RecentFragment : Fragment() {
         val homeFragment = HomeFragment()
         val settingsFragment = SettingsFragment()
         itemStorage.setOnClickListener {
-            (requireActivity() as MainActivity).starNewFragment(homeFragment)
+            (requireActivity() as MainActivity).startNewFragment(homeFragment)
         }
 
         ivSettings.setOnClickListener {
-            (requireActivity() as MainActivity).starNewFragment(settingsFragment)
+            (requireActivity() as MainActivity).startNewFragment(settingsFragment)
         }
     }
 

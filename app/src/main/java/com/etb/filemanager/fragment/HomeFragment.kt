@@ -178,8 +178,17 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         })
     }
 
+    fun onNewIntent(uri: Uri) {
+        val file = uri.path?.let { File(it) }
+        if (file != null) {
+            if (file.isDirectory){
+                navigateTo(file.path)
+            }
+        }
+    }
 
-    @SuppressLint("NotifyDataSetChanged")
+
+                @SuppressLint("NotifyDataSetChanged")
     override fun onItemSelectedActionSort(itemSelected: Int, itemSelectedFolderFirst: Boolean) {
         itemSelectedSort = itemSelected
         if (::adapter.isInitialized) {
@@ -695,17 +704,26 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         when (item?.itemId) {
             R.id.action_cut -> {
                 cutFile(fileModel.get(0))
+                finishActionMode()
             }
 
-            R.id.action_copy -> {}
+            R.id.action_copy -> {
+                finishActionMode()
+            }
             R.id.action_delete -> {
                 confirmDeleteFile(fileModel.get(0), true)
+                finishActionMode()
             }
 
-            R.id.action_archive -> {}
-            R.id.action_share -> {}
+            R.id.action_archive -> {
+                finishActionMode()
+            }
+            R.id.action_share -> {
+                finishActionMode()
+            }
             R.id.action_select_all -> {
                 selectFiles(fileModel, true)
+                finishActionMode()
             }
 
             else -> return super.onOptionsItemSelected(item!!)
@@ -725,7 +743,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 val mPreviousPath = managerUtil.getPreviousPath()
                 if (mCurrentPath == BASE_PATH) {
                     val recentFragment = RecentFragment()
-                    (requireActivity() as MainActivity).starNewFragment(recentFragment)
+                    (requireActivity() as MainActivity).startNewFragment(recentFragment)
 
                 } else {
                     listFilesAndFoldersInBackground(mPreviousPath)
@@ -829,6 +847,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         return null
     }
 
+    fun addSelectedFile(fileItem: FileModel){
+        selectedItems.add(fileItem)
+    }
+
 
     override fun selectFile(file: FileModel, selected: Boolean) {
         if (isSelectionMode) {
@@ -879,14 +901,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     override fun confirmDeleteFile(file: FileModel, multItems: Boolean) {
         val title = requireContext().getString(R.string.delete)
-        val text = if (multItems) "$title ${selectionTracker.selection.size()} items?" else file.fileName
+        val text = if (multItems) "$title ${selectionTracker.selection.size()} items?" else "$title \"${file.fileName}\"?"
         val textPositiveButton = requireContext().getString(R.string.dialog_ok)
 
         materialDialogUtils.createDialogInfo(title, text, textPositiveButton, requireContext(), true) { dialogResult ->
             val isConfirmed = dialogResult.confirmed
             if (isConfirmed) {
                 delete()
-                finishActionMode()
                 refresh()
 
             }
@@ -946,7 +967,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         when (action) {
 
             CreateFileAction.OPEN_WITH -> {
-
             }
 
             CreateFileAction.SELECT -> {
@@ -955,6 +975,15 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
             CreateFileAction.RENAME -> {
                 showRenameFileDialog(file)
+            }
+            CreateFileAction.DELETE -> {
+                addSelectedFile(file)
+                confirmDeleteFile(file, false)
+            }
+
+            CreateFileAction.SHARE -> {
+                fileUtil.shareFile(file.filePath, requireContext())
+
             }
 
             CreateFileAction.PROPERTIES -> {
@@ -1004,12 +1033,17 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             )
             add(
                 FileAction(
-                    R.drawable.ic_trash_24, requireContext().getString(R.string.delete), CreateFileAction.DELETE
+                    R.drawable.ic_share24, requireContext().getString(R.string.share), CreateFileAction.SHARE
                 )
             )
             add(
                 FileAction(
                     R.drawable.ic_edit_24, requireContext().getString(R.string.rename), CreateFileAction.RENAME
+                )
+            )
+            add(
+                FileAction(
+                    R.drawable.ic_trash_24, requireContext().getString(R.string.delete), CreateFileAction.DELETE
                 )
             )
 

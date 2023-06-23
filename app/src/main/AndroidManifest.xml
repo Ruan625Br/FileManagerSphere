@@ -17,6 +17,16 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.FileManager"
             tools:targetApi="31">
+        <provider
+                android:name="androidx.core.content.FileProvider"
+                android:authorities="com.etb.filemanager.fileprovider"
+                android:exported="false"
+                android:grantUriPermissions="true">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/file_paths" />
+        </provider>
+
         <activity
                 android:name=".activity.MainActivity"
                 android:exported="true">
@@ -24,7 +34,14 @@
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
+
             </intent-filter>
+            <intent-filter tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.document/directory" />
+            </intent-filter>
+
         </activity>
         <meta-data android:name="preloaded_fonts" android:resource="@array/preloaded_fonts"/>
     </application>

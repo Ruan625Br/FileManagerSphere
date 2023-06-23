@@ -3,8 +3,12 @@ package com.etb.filemanager.util.file
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.FileProvider
+import com.etb.filemanager.manager.adapter.FileModel
+import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -90,8 +94,29 @@ class FileUtil {
         }
     }
 
+    fun shareFile(path: String, context: Context){
+        val file = File(path)
+        val mimeType = getFileMimeType(path)
+        val uri = FileProvider.getUriForFile(context, "com.etb.filemanager.fileprovider", file)
+
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = if (file.isDirectory) "vnd.android.document/directory" else mimeType
+        intent.putExtra(Intent.EXTRA_STREAM, uri)
+        context.startActivity(intent)
+    }
 
 
+    private fun getFileMimeType(mPath: String): String? {
+        val path: Path = Paths.get(mPath)
+        val mimeType: String?
+        try {
+            mimeType = Files.probeContentType(path)
+        } catch (e: Exception) {
+            Log.e("Get File", "Erro: $e")
+            return null
+        }
+        return mimeType
+    }
 
 
 

@@ -1,24 +1,18 @@
 package com.etb.filemanager.activity
 
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.etb.filemanager.R
 import com.etb.filemanager.fragment.HomeFragment
 import com.etb.filemanager.fragment.StartedFragment
-import com.etb.filemanager.interfaces.settings.PopupSettingsListener
 import com.etb.filemanager.settings.PreferenceUtils
 import com.etb.filemanager.settings.preference.PopupSettings
 import com.etb.filemanager.util.file.style.StyleManager
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.MaterialToolbar
+import java.io.File
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,14 +29,39 @@ class MainActivity : AppCompatActivity() {
         preferenceUtils = PreferenceUtils(this)
         if (preferenceUtils.isNewUser()){
             val startedFragment = StartedFragment()
-            starNewFragment(startedFragment)
+            startNewFragment(startedFragment)
         }
 
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleOpenWithIntent(intent)
+    }
+
+    private fun handleOpenWithIntent(intent: Intent) {
+        if (intent.action == Intent.ACTION_VIEW) {
+            val uri = intent.data
+            if (uri != null) {
+                val file = File(uri.path)
+
+                val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view)
+                if (fragment is HomeFragment) {
+                    fragment.onNewIntent(uri)
+                } else{
+                    val homeFragment = HomeFragment()
+                    startNewFragment(homeFragment)
+                    homeFragment.onNewIntent(uri)
+                }
 
 
-    fun starNewFragment(fragment: Fragment) {
+            }
+        }
+    }
+
+
+
+    fun startNewFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
      //   transaction.setCustomAnimations(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left, R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
         transaction.replace(R.id.fragment_container_view, fragment)
