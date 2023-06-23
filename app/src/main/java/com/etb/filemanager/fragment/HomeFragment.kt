@@ -35,7 +35,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
-import com.etb.filemanager.files.file.properties.ViewStateAdapter
+import com.etb.filemanager.files.file.properties.*
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.manager.FileListener
 import com.etb.filemanager.interfaces.settings.PopupSettingsListener
@@ -466,6 +466,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
         adapter.isActionMode = false
         isActionMode = false
+
         selectionTracker.clearSelection()
 
     }
@@ -939,7 +940,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         when (action) {
 
             CreateFileAction.OPEN_WITH -> {
-                showBottomSheetProperties()
+                showBottomSheetProperties(file)
             }
 
             CreateFileAction.SELECT -> {
@@ -1049,12 +1050,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         }
     }
 
-    private fun showBottomSheetProperties(){
+    private fun showBottomSheetProperties(fileItem: FileModel){
+
         val bottomSheetProperties = requireView().findViewById<FrameLayout>(R.id.standard_bottom_properties)
         val bottomSheetBehaviorroperties = BottomSheetBehavior.from(bottomSheetProperties)
 
+
         val fm: FragmentManager = requireActivity().supportFragmentManager
-        val sa = ViewStateAdapter(fm, lifecycle)
+        val sa = ViewStateAdapter(fm, lifecycle, fileItem, requireContext())
         val pa: ViewPager2 = requireView().findViewById(R.id.pager)
         pa.adapter = sa
 
