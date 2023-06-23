@@ -28,7 +28,7 @@ public class ViewStateAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         if (position == 0) {
-            return basicPropertiesFragment();
+            return BasicPropertiesFragment.newInstance("teste 1", "teste 2", new FilePropertiesUtil().getBasicProperties(fileItem));
         }
         return new BasicPropertiesFragment();
     }
@@ -36,10 +36,12 @@ public class ViewStateAdapter extends FragmentStateAdapter {
     @NonNull
     @NotNull
     public BasicPropertiesFragment basicPropertiesFragment() {
-        basicPropertiesFragment().addListProperties(new FilePropertiesUtil().getBasicProperties(fileItem));
+        BasicPropertiesFragment fragment = new BasicPropertiesFragment();
+        fragment.addListProperties(new FilePropertiesUtil().getBasicProperties(fileItem));
 
-        return basicPropertiesFragment();
+        return fragment;
     }
+
 
     @Override
     public int getItemCount() {

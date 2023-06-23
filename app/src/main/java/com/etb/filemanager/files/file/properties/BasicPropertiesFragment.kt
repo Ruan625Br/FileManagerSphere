@@ -1,7 +1,7 @@
 package com.etb.filemanager.files.file.properties
 
+
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,12 +10,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.etb.filemanager.R
-import com.etb.filemanager.ui.view.ReadOnlyEditText
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
+
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+private const val ARG_FILE_PROPERTIES = "fileProperties"
 
 /**
  * A simple [Fragment] subclass.
@@ -23,10 +23,11 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  * teste
  */
-class BasicPropertiesFragment : Fragment() {
+class BasicPropertiesFragment() : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var fileProperties: MutableList<FileProperties>? = null
 
     private lateinit var linearLayout: LinearLayout
 
@@ -35,6 +36,9 @@ class BasicPropertiesFragment : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+            fileProperties = it.getParcelableArrayList(ARG_FILE_PROPERTIES)
+
+
         }
     }
 
@@ -50,41 +54,43 @@ class BasicPropertiesFragment : Fragment() {
 
         linearLayout = requireView().findViewById(R.id.linearLayout)
 
+        fileProperties?.let { addListProperties(it) }
 
     }
 
     /**
-     *  Use [addListProperties] para adicionar uma lista de propriedades
-     *  na [BasicPropertiesFragment] através do [addProperties]
-     *  @param fileBasicProperties adicione uma [MutableList] do tipo [FileProperties] para adicionar as propriedades
-     *  @author Juan nascimento
+     * Adicione uma lista de propriedades ao [BasicPropertiesFragment] usando o método [addProperties].
+     *
+     * @param fileBasicProperties Uma lista mutável do tipo [FileProperties] contendo as propriedades a serem adicionadas.
+     * @author Juan Nascimento
      */
 
     fun addListProperties(fileBasicProperties: MutableList<FileProperties>){
         for (properties in fileBasicProperties){
-            addProperties(properties.title, properties.propertie)
+            addProperties(properties.title, properties.property)
         }
     }
 
 
 
     /**
-     * O [addProperties] serve para adicionar propiedade no layout principal.
-     * para adicionar varias propriedades ultileze o [addListProperties]
+     * Adicione uma propriedade ao layout principal.
+     * Para adicionar várias propriedades, utilize o método [addListProperties].
      *
-     * @param title Titulo da propiedade
-     * @param text Texto da propiedade
-     *
+     * @param title O título da propriedade.
+     * @param text O texto da propriedade.
+     * @see addListProperties
      * @author Juan Nascimento
-     * */
-    fun addProperties(title: String, text: String){
+     */
+    @SuppressLint("InflateParams")
+    private fun addProperties(title: String, text: String){
         val inflater = LayoutInflater.from(requireContext())
         val filePropertiesItem = inflater.inflate(R.layout.file_properties_item, null)
         val tvTitle = filePropertiesItem.findViewById<TextView>(R.id.tvTitle)
         val tvText = filePropertiesItem.findViewById<TextView>(R.id.tvText)
 
-        tvTitle.setText(title)
-        tvText.setText(text)
+        tvTitle.text = title
+        tvText.text = text
 
 
         linearLayout.addView(filePropertiesItem)
@@ -93,11 +99,12 @@ class BasicPropertiesFragment : Fragment() {
 
     companion object {
           @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(param1: String, param2: String, fileProperties: MutableList<FileProperties>) =
             BasicPropertiesFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
+                    putParcelableArrayList(ARG_FILE_PROPERTIES, ArrayList(fileProperties))
                 }
             }
     }
