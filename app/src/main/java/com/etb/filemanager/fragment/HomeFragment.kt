@@ -945,7 +945,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         when (action) {
 
             CreateFileAction.OPEN_WITH -> {
-                showBottomSheetProperties(file)
+
             }
 
             CreateFileAction.SELECT -> {
@@ -954,6 +954,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
             CreateFileAction.RENAME -> {
                 showRenameFileDialog(file)
+            }
+
+            CreateFileAction.PROPERTIES -> {
+                showBottomSheetProperties(file)
             }
 
             else -> {}
@@ -1007,6 +1011,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                     R.drawable.ic_edit_24, requireContext().getString(R.string.rename), CreateFileAction.RENAME
                 )
             )
+
+            add(
+                FileAction(
+                    R.drawable.ic_info_24,
+                    requireContext().getString(R.string.file_item_action_properties),
+                    CreateFileAction.PROPERTIES
+                )
+            )
         }
 
         standardBottomSheet = requireView().findViewById(R.id.standard_bottom_sheet)
@@ -1055,10 +1067,15 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showBottomSheetProperties(fileItem: FileModel) {
 
         val bottomSheetProperties = requireView().findViewById<FrameLayout>(R.id.standard_bottom_properties)
         val bottomSheetBehaviorProperties = BottomSheetBehavior.from(bottomSheetProperties)
+
+        val tvFileItemTitle = requireView().findViewById<TextView>(R.id.tvItemTitle)
+
+        tvFileItemTitle.text = " \"${fileItem.fileName}\""
 
 
         val fm: FragmentManager = requireActivity().supportFragmentManager
@@ -1071,8 +1088,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
 
 
-        bottomSheetBehaviorProperties.peekHeight = 2000
-        bottomSheetBehaviorProperties.maxHeight = 2000
+        bottomSheetBehaviorProperties.peekHeight = 1000
+        bottomSheetBehaviorProperties.maxHeight = 1000
         bottomSheetBehaviorProperties.state = BottomSheetBehavior.STATE_EXPANDED
 
 
@@ -1084,15 +1101,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                     tabLayout.removeAllTabs()
 
                     pa.adapter = null
-                    /*pa?.let {
-                        it.removeAllViews()
-                    }*/
+
 
                 }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                // O slide do bottom sheet está sendo atualizado
+
             }
         })
 

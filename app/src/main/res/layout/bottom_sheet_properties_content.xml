@@ -23,9 +23,18 @@
                  app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="16dp"
                     app:layout_constraintEnd_toEndOf="parent">
+                <TextView
+                android:id="@+id/tvItemTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/download"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="20sp"/>
                 <com.google.android.material.tabs.TabLayout
                         android:id="@+id/tabLayout"
                         android:layout_width="match_parent"
+                        app:tabMode="scrollable"
                         android:background="@android:color/transparent"
                         android:layout_height="wrap_content"/>
                 <View
