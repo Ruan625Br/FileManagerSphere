@@ -24,7 +24,6 @@ class PropertiesStateAdapter(fragmentManager: FragmentManager, lifecycle: Lifecy
 
     fun basicPropertiesFragment(): BasicPropertiesFragment {
 
-        basicPropertiesFragment().addListProperties(FilePropertiesUtil().getBasicProperties(fileItem))
         return basicPropertiesFragment()
     }
 }

@@ -7,16 +7,13 @@ import androidx.lifecycle.ViewModel
 import com.etb.filemanager.manager.files.filelist.TypeOperation
 
 class PropertiesViewModel : ViewModel() {
-    private val _fragment = MutableLiveData<Fragment>()
-    private val _startOperation = MutableLiveData<TypeOperation>()
 
-    val fragment: LiveData<Fragment>
-        get() = _fragment
+    private val _tabTitleLiveData = MutableLiveData<String>()
+    val tabTitleLiveData: LiveData<String> = _tabTitleLiveData
 
-
-
-    val startOperation: LiveData<TypeOperation>
-        get() = _startOperation
+    fun addNewTab(title: String) {
+        _tabTitleLiveData.value = title
+    }
 
 
 

@@ -3,14 +3,18 @@ package com.etb.filemanager.files.file.properties
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
-
+import com.etb.filemanager.files.file.common.mime.MidiaType
 
 
 private const val ARG_PARAM1 = "param1"
@@ -65,12 +69,11 @@ class BasicPropertiesFragment() : Fragment() {
      * @author Juan Nascimento
      */
 
-    fun addListProperties(fileBasicProperties: MutableList<FileProperties>){
-        for (properties in fileBasicProperties){
-            addProperties(properties.title, properties.property)
+    fun addListProperties(fileBasicProperties: MutableList<FileProperties>) {
+        for (properties in fileBasicProperties) {
+            addProperties(properties.title, properties.property, properties.isMedia, properties.mediaType, properties.mediaPath)
         }
     }
-
 
 
     /**
@@ -83,22 +86,47 @@ class BasicPropertiesFragment() : Fragment() {
      * @author Juan Nascimento
      */
     @SuppressLint("InflateParams")
-    private fun addProperties(title: String, text: String){
+    private fun addProperties(
+        title: String, text: String, isMedia: Boolean,
+        mediaType: MidiaType = MidiaType.VIDEO,
+        mediaPath: String = ""
+    ) {
         val inflater = LayoutInflater.from(requireContext())
+        val inflaterMedia = LayoutInflater.from(requireContext())
+
         val filePropertiesItem = inflater.inflate(R.layout.file_properties_item, null)
+        val filePropertiesItemMedia = inflaterMedia.inflate(R.layout.file_properties_item_media, null)
+
         val tvTitle = filePropertiesItem.findViewById<TextView>(R.id.tvTitle)
         val tvText = filePropertiesItem.findViewById<TextView>(R.id.tvText)
 
-        tvTitle.text = title
-        tvText.text = text
+        val ivMedia = filePropertiesItemMedia.findViewById<ImageView>(R.id.iv_preview)
+
+        if (isMedia) {
+            when (mediaType) {
+                MidiaType.IMAGE -> loadImage(mediaPath, ivMedia)
+                MidiaType.VIDEO -> loadImage(mediaPath, ivMedia)
+                else -> {}
+            }
+            linearLayout.addView(filePropertiesItemMedia)
+        } else {
+            tvTitle.text = title
+            tvText.text = text
 
 
-        linearLayout.addView(filePropertiesItem)
+            linearLayout.addView(filePropertiesItem)
+        }
+    }
+
+    private fun loadImage(path: String, imageView: ImageView) {
+        Glide.with(requireContext()).load(path).diskCacheStrategy(DiskCacheStrategy.ALL)
+            .apply(RequestOptions().override(50, 50)).apply(RequestOptions().placeholder(R.drawable.ic_image))
+            .into(imageView)
 
     }
 
     companion object {
-          @JvmStatic
+        @JvmStatic
         fun newInstance(param1: String, param2: String, fileProperties: MutableList<FileProperties>) =
             BasicPropertiesFragment().apply {
                 arguments = Bundle().apply {

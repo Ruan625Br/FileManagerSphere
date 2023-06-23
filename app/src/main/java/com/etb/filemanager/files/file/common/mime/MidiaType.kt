@@ -1,10 +1,10 @@
 package com.etb.filemanager.files.file.common.mime
 
-enum class MidiaType {
-    IMAGE,
-    VIDEO,
-    MUSIC,
-    APK
+enum class MidiaType(val displayName: String) {
+    IMAGE("Imagem"),
+    VIDEO("Video"),
+    MUSIC("Musica"),
+    APK("Aplicativo")
 }
 
 fun getMidiaType(mimeType: String): MidiaType? {

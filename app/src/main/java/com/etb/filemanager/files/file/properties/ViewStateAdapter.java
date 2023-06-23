@@ -12,39 +12,31 @@ import com.etb.filemanager.manager.adapter.FileModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class ViewStateAdapter extends FragmentStateAdapter {
 
     private final FileModel fileItem;
-    private final Context context;
 
-    public ViewStateAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, FileModel fileModel, Context context) {
+    public ViewStateAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, FileModel fileModel) {
         super(fragmentManager, lifecycle);
         fileItem = fileModel;
-        this.context = context;
+
     }
 
     @NonNull
     @NotNull
     @Override
     public Fragment createFragment(int position) {
-        if (position == 0) {
-            return BasicPropertiesFragment.newInstance("teste 1", "teste 2", new FilePropertiesUtil().getBasicProperties(fileItem));
-        }
-        return new BasicPropertiesFragment();
+        return Objects.requireNonNull(new PropertiesFragment().getFragmentPropriedades(position, fileItem));
+
     }
 
-    @NonNull
-    @NotNull
-    public BasicPropertiesFragment basicPropertiesFragment() {
-        BasicPropertiesFragment fragment = new BasicPropertiesFragment();
-        fragment.addListProperties(new FilePropertiesUtil().getBasicProperties(fileItem));
 
-        return fragment;
-    }
 
 
     @Override
     public int getItemCount() {
-        return 1;
+        return 2;
     }
 }

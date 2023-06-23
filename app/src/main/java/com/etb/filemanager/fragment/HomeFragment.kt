@@ -108,6 +108,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     private var showHiddenFiles = false
 
     private lateinit var viewModel: FileListViewModel
+     val propertiesViewModel = PropertiesViewModel()
 
     private val selectedItems = mutableListOf<FileModel>()
     private var isSelectionMode = false
@@ -1079,13 +1080,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
 
         val fm: FragmentManager = requireActivity().supportFragmentManager
-        val sa = ViewStateAdapter(fm, lifecycle, fileItem, requireContext())
+        val sa = ViewStateAdapter(fm, lifecycle, fileItem)
         val pa: ViewPager2 = requireView().findViewById(R.id.pager)
         pa.adapter = sa
 
         val tabLayout = requireView().findViewById<TabLayout>(R.id.tabLayout)
-        tabLayout.addTab(tabLayout.newTab().setText("Básico"))
 
+            tabLayout.addTab(tabLayout.newTab().setText("Básico"))
+            tabLayout.addTab(tabLayout.newTab().setText("Extra"))
 
 
         bottomSheetBehaviorProperties.peekHeight = 1000
@@ -1113,7 +1115,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
 
     }
-
 
     private fun observeSettings() {
         settingsViewModel.settingsState.observe(viewLifecycleOwner) { settingsState ->
