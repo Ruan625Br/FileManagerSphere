@@ -52,7 +52,7 @@ class FilePropertiesUtil {
         basicProperties.add(FileProperties("Caminho", fileItem.filePath))
         basicProperties.add(FileProperties("Tipo", getFileMimeType(fileItem.filePath).toString()))
         basicProperties.add(FileProperties(fileTitle, fileTitle))
-        basicProperties.add(FileProperties("Última Modificaçãõ", FileUtils.getInstance().getFormatDateFile(fileItem.filePath, false)))
+        basicProperties.add(FileProperties("Última Modificação", FileUtils.getInstance().getFormatDateFile(fileItem.filePath, false)))
 
         return basicProperties
     }
