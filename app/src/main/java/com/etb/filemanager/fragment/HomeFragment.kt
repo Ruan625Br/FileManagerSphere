@@ -224,7 +224,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                             createDialgRestriction()
 
                         }
-                    } catch (ec: Exception){
+                    } catch (ec: Exception) {
                         Log.e("Dialog", "ERRO: $e")
 
                     }
@@ -238,16 +238,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     }
 
-    private fun createDialgRestriction(){
+    private fun createDialgRestriction() {
         val title = requireContext().getString(R.string.restriction_folder)
         val text = requireContext().getString(R.string.e_restriction_folder)
         val textPositiveButton = requireContext().getString(R.string.dialog_ok)
 
         materialDialogUtils.createDialogInfo(
-            title,
-            text,
-            textPositiveButton,
-            requireContext(), false
+            title, text, textPositiveButton, requireContext(), false
         ) { dialogResult ->
             val isConfirmed = dialogResult.confirmed
             if (isConfirmed) {
@@ -532,7 +529,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 refresh()
             }
 
-            R.id.action_select_all -> { selectFiles(fileModel, true)}
+            R.id.action_select_all -> {
+                selectFiles(fileModel, true)
+            }
+
             R.id.action_navigate_to -> {
                 createDialogNavigateTo()
             }
@@ -542,7 +542,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             R.id.action_share -> {}
-            R.id.action_copy_path -> { fileUtil.copyTextToClipboard(requireContext(), mCurrentPath, true)}
+            R.id.action_copy_path -> {
+                fileUtil.copyTextToClipboard(requireContext(), mCurrentPath, true)
+            }
+
             else -> return super.onOptionsItemSelected(item)
         }
         activity?.invalidateOptionsMenu()
@@ -613,8 +616,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             if (data != null) {
                 data.data?.let { treeUri ->
                     requireContext().contentResolver.takePersistableUriPermission(
-                        treeUri,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                        treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                     )
                     val path = getFolderPathFromUri(treeUri)
                     if (path != null) {
@@ -701,7 +703,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
             R.id.action_archive -> {}
             R.id.action_share -> {}
-            R.id.action_select_all -> { selectFiles(fileModel, true)}
+            R.id.action_select_all -> {
+                selectFiles(fileModel, true)
+            }
+
             else -> return super.onOptionsItemSelected(item!!)
         }
         return true
@@ -825,11 +830,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
 
     override fun selectFile(file: FileModel, selected: Boolean) {
-        if (isSelectionMode){
+        if (isSelectionMode) {
             selectionTracker.select(file.id)
             selectedItems.add(file)
 
-        } else{
+        } else {
             initSelectionTracker()
             selectionTracker.select(file.id)
             selectedItems.add(file)
@@ -838,18 +843,18 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     override fun selectFiles(files: MutableList<FileModel>, selected: Boolean) {
-     if (isSelectionMode){
-         for (file in files){
-             selectionTracker.select(file.id)
-             selectedItems.add(file)
-         }
-     } else{
-         initSelectionTracker()
-         for (file in files){
-             selectionTracker.select(file.id)
-             selectedItems.add(file)
-         }
-     }
+        if (isSelectionMode) {
+            for (file in files) {
+                selectionTracker.select(file.id)
+                selectedItems.add(file)
+            }
+        } else {
+            initSelectionTracker()
+            for (file in files) {
+                selectionTracker.select(file.id)
+                selectedItems.add(file)
+            }
+        }
     }
 
     override fun openFile(file: FileModel) {
@@ -1050,10 +1055,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         }
     }
 
-    private fun showBottomSheetProperties(fileItem: FileModel){
+    private fun showBottomSheetProperties(fileItem: FileModel) {
 
         val bottomSheetProperties = requireView().findViewById<FrameLayout>(R.id.standard_bottom_properties)
-        val bottomSheetBehaviorroperties = BottomSheetBehavior.from(bottomSheetProperties)
+        val bottomSheetBehaviorProperties = BottomSheetBehavior.from(bottomSheetProperties)
 
 
         val fm: FragmentManager = requireActivity().supportFragmentManager
@@ -1062,13 +1067,36 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         pa.adapter = sa
 
         val tabLayout = requireView().findViewById<TabLayout>(R.id.tabLayout)
-        tabLayout.addTab(tabLayout.newTab().setText("Basico"))
+        tabLayout.addTab(tabLayout.newTab().setText("Básico"))
 
 
 
-        bottomSheetBehaviorroperties.peekHeight = 2000
-        bottomSheetBehaviorroperties.maxHeight = 2000
-        bottomSheetBehaviorroperties.state = BottomSheetBehavior.STATE_EXPANDED
+        bottomSheetBehaviorProperties.peekHeight = 2000
+        bottomSheetBehaviorProperties.maxHeight = 2000
+        bottomSheetBehaviorProperties.state = BottomSheetBehavior.STATE_EXPANDED
+
+
+        bottomSheetBehaviorProperties.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+
+                    tabLayout.clearOnTabSelectedListeners()
+                    tabLayout.removeAllTabs()
+
+                    pa.adapter = null
+                    /*pa?.let {
+                        it.removeAllViews()
+                    }*/
+
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                // O slide do bottom sheet está sendo atualizado
+            }
+        })
+
+
     }
 
 

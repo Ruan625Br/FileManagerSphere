@@ -1,7 +1,6 @@
 package com.etb.filemanager.files.file.properties
 
 import android.util.Log
-import androidx.fragment.app.Fragment
 import com.etb.filemanager.manager.adapter.FileModel
 import com.etb.filemanager.manager.util.FileUtils
 import java.io.File
@@ -11,17 +10,27 @@ import java.nio.file.Paths
 
 class FilePropertiesUtil {
 
-    private val fragmentProperties = mutableListOf<Fragment>();
-    fun addFragmentProperties(fragment: Fragment){
-        fragmentProperties.add(fragment)
+    private val listTabTitle: MutableList<String> = mutableListOf()
+
+    fun getTabTitle(position: Int): String {
+        if (listTabTitle != null){
+
+            return listTabTitle[position]
+
+
+        }
+        return "null"
     }
 
-    fun getFragmentProperties(position: Int): Fragment{
-        return fragmentProperties[position]
+    private fun addTabTitle(title: String) {
+        listTabTitle.add(title)
     }
 
 
-    fun getFileMimeType(mPath: String): String? {
+    fun getFileProperties(fileItem: FileModel){
+}
+
+    private fun getFileMimeType(mPath: String): String? {
         val path: Path = Paths.get(mPath)
         val mimeType: String?
         try {
@@ -33,25 +42,26 @@ class FilePropertiesUtil {
         return mimeType
     }
     fun getBasicProperties(fileItem: FileModel): MutableList<FileProperties>{
-        val mFile: File = File(fileItem.filePath)
-        var fSize = FileUtils.getInstance().getFileSize(mFile)
-        var fileSize: String
-        var fileTitle: String
+        addTabTitle("Básico")
+        val mFile = File(fileItem.filePath)
+        val fSize = FileUtils.getInstance().getFileSizeFormatted(mFile.length())
+        val fileSize: String
+        val fileTitle: String
         if (fileItem.isDirectory){
 
-            val items = mFile.list().size
+            val items = mFile.list()?.size
             fileTitle = "Conteúdo"
-            fileSize = "$items itens, totalizando $fSize"
+            fileSize = "$items itens"
         } else{
             fileTitle = "Tamanho"
-            fileSize = fSize.toString()
+            fileSize = fSize
         }
 
         val basicProperties = mutableListOf<FileProperties>()
         basicProperties.add(FileProperties("Nome", fileItem.fileName))
         basicProperties.add(FileProperties("Caminho", fileItem.filePath))
         basicProperties.add(FileProperties("Tipo", getFileMimeType(fileItem.filePath).toString()))
-        basicProperties.add(FileProperties(fileTitle, fileTitle))
+        basicProperties.add(FileProperties(fileTitle, fileSize))
         basicProperties.add(FileProperties("Última Modificação", FileUtils.getInstance().getFormatDateFile(fileItem.filePath, false)))
 
         return basicProperties
