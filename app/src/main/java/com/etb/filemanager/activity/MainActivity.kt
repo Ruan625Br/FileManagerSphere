@@ -3,6 +3,7 @@ package com.etb.filemanager.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         popupSettings = PopupSettings(this)
         preferenceUtils = PreferenceUtils(this)
         if (preferenceUtils.isNewUser()){
+            preferenceUtils.newUser = false
             val startedFragment = StartedFragment()
             startNewFragment(startedFragment)
         }
@@ -43,22 +45,20 @@ class MainActivity : AppCompatActivity() {
         if (intent.action == Intent.ACTION_VIEW) {
             val uri = intent.data
             if (uri != null) {
-                val file = File(uri.path)
+                val file = uri.path?.let { File(it) }
+                Log.i("Chegou", "path ${file!!.path}")
+
 
                 val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view)
                 if (fragment is HomeFragment) {
                     fragment.onNewIntent(uri)
-                } else{
-                    val homeFragment = HomeFragment()
+                } else {
+                    val homeFragment = HomeFragment.newInstance(uri)
                     startNewFragment(homeFragment)
-                    homeFragment.onNewIntent(uri)
                 }
-
-
             }
         }
     }
-
 
 
     fun startNewFragment(fragment: Fragment) {
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-    fun startTheme(){
+    private fun startTheme(){
         val styleManager = StyleManager()
 
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)

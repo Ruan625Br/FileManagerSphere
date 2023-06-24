@@ -65,14 +65,11 @@ import java.util.*
 import kotlin.streams.toList
 
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
+private const val ARG_FILE_URI = "fileUri"
 
 class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.ActionMode.Callback, FileListener {
 
-    private var param1: String? = null
-    private var param2: String? = null
+    private var fileUri: Uri? = null
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: FileModelAdapter
@@ -108,7 +105,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     private var showHiddenFiles = false
 
     private lateinit var viewModel: FileListViewModel
-     val propertiesViewModel = PropertiesViewModel()
+    val propertiesViewModel = PropertiesViewModel()
 
     private val selectedItems = mutableListOf<FileModel>()
     private var isSelectionMode = false
@@ -117,8 +114,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            fileUri = it.getParcelable(ARG_FILE_URI)
         }
         setHasOptionsMenu(true)
     }
@@ -167,7 +163,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         fileAdapterListenerUtil = FileAdapterListenerUtil.getInstance()
         selectPreferenceUtils.setListener(this, requireContext())
 
-        listFilesAndFoldersInBackground(BASE_PATH)
+        val mFile = fileUri?.path?.let { File(it) }
+        val path = fileUri?.let { fileUtil.getFilePathFromUri(requireContext(), it) }
+        if (mFile != null) {
+            listFilesAndFoldersInBackground(if (mFile.isDirectory) path.toString() else BASE_PATH)
+        } else{
+            listFilesAndFoldersInBackground(BASE_PATH)
+
+        }
 
 
     }
@@ -179,16 +182,12 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     fun onNewIntent(uri: Uri) {
-        val file = uri.path?.let { File(it) }
-        if (file != null) {
-            if (file.isDirectory){
-                navigateTo(file.path)
-            }
-        }
+        navigateTo(fileUtil.getFilePathFromUri(requireContext(), uri).toString())
+
     }
 
 
-                @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint("NotifyDataSetChanged")
     override fun onItemSelectedActionSort(itemSelected: Int, itemSelectedFolderFirst: Boolean) {
         itemSelectedSort = itemSelected
         if (::adapter.isInitialized) {
@@ -568,16 +567,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
+         * @param fileUri File uri.
          * @return A new instance of fragment HomeFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) = HomeFragment().apply {
+        fun newInstance(fileUri: Uri) = HomeFragment().apply {
             arguments = Bundle().apply {
-                putString(ARG_PARAM1, param1)
-                putString(ARG_PARAM2, param2)
+                putParcelable(ARG_FILE_URI, fileUri)
             }
         }
 
@@ -710,6 +706,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             R.id.action_copy -> {
                 finishActionMode()
             }
+
             R.id.action_delete -> {
                 confirmDeleteFile(fileModel.get(0), true)
                 finishActionMode()
@@ -718,9 +715,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             R.id.action_archive -> {
                 finishActionMode()
             }
+
             R.id.action_share -> {
                 finishActionMode()
             }
+
             R.id.action_select_all -> {
                 selectFiles(fileModel, true)
                 finishActionMode()
@@ -847,7 +846,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         return null
     }
 
-    fun addSelectedFile(fileItem: FileModel){
+    fun addSelectedFile(fileItem: FileModel) {
         selectedItems.add(fileItem)
     }
 
@@ -901,7 +900,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     override fun confirmDeleteFile(file: FileModel, multItems: Boolean) {
         val title = requireContext().getString(R.string.delete)
-        val text = if (multItems) "$title ${selectionTracker.selection.size()} items?" else "$title \"${file.fileName}\"?"
+        val text =
+            if (multItems) "$title ${selectionTracker.selection.size()} items?" else "$title \"${file.fileName}\"?"
         val textPositiveButton = requireContext().getString(R.string.dialog_ok)
 
         materialDialogUtils.createDialogInfo(title, text, textPositiveButton, requireContext(), true) { dialogResult ->
@@ -976,6 +976,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             CreateFileAction.RENAME -> {
                 showRenameFileDialog(file)
             }
+
             CreateFileAction.DELETE -> {
                 addSelectedFile(file)
                 confirmDeleteFile(file, false)
@@ -1120,8 +1121,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
         val tabLayout = requireView().findViewById<TabLayout>(R.id.tabLayout)
 
-            tabLayout.addTab(tabLayout.newTab().setText("Básico"))
-            tabLayout.addTab(tabLayout.newTab().setText("Extra"))
+        tabLayout.addTab(tabLayout.newTab().setText("Básico"))
+        tabLayout.addTab(tabLayout.newTab().setText("Extra"))
 
 
         bottomSheetBehaviorProperties.peekHeight = 1000
