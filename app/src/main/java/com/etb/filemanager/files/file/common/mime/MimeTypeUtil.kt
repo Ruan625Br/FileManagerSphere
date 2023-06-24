@@ -1,5 +1,7 @@
 package com.etb.filemanager.files.file.common.mime
 
+import java.nio.file.Path
+
 
 class MimeTypeUtil {
 
@@ -12,6 +14,13 @@ class MimeTypeUtil {
         return iconResourceId
 
 
+    }
+
+
+    fun isSpecificFileType(mimeType: String, type: MimeTypeIcon): Boolean {
+        val iconMimeType = getIconByMimeType(mimeType)
+
+        return iconMimeType == type.resourceId
     }
 
 

@@ -110,9 +110,28 @@ class FileUtil {
         intent.putExtra(Intent.EXTRA_STREAM, uri)
         context.startActivity(intent)
     }
+    fun actionOpenWith(path: String, context: Context) {
+        val file = File(path)
+        val uri = FileProvider.getUriForFile(context, "com.etb.filemanager.fileprovider", file)
+        val mimeType = getMimeType(uri, context)
+
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            type = if (file.isDirectory) "vnd.android.document/directory" else mimeType
+            putExtra(Intent.EXTRA_STREAM, uri)
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+
+        context.startActivity(intent)
+    }
 
 
-    private fun getFileMimeType(mPath: String): String? {
+
+    fun getMimeType(uri: Uri,context: Context): String? {
+        val cRes = context.contentResolver
+
+        return cRes.getType(uri)
+    }
+     fun getFileMimeType(mPath: String): String? {
         val path: Path = Paths.get(mPath)
         val mimeType: String?
         try {
@@ -142,7 +161,11 @@ class FileUtil {
 
 
 
-    enum class TypeFile() {
+
+
+
+
+enum class TypeFile() {
         FILE, FOLDER
     }
 }

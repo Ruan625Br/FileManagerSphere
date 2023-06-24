@@ -35,6 +35,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
+import com.etb.filemanager.files.file.common.mime.MimeTypeIcon
+import com.etb.filemanager.files.file.common.mime.MimeTypeUtil
 import com.etb.filemanager.files.file.properties.*
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.manager.FileListener
@@ -46,6 +48,7 @@ import com.etb.filemanager.manager.adapter.ManagerUtil
 import com.etb.filemanager.manager.file.CreateFileAction
 import com.etb.filemanager.manager.file.FileAction
 import com.etb.filemanager.manager.file.FileOptionAdapter
+import com.etb.filemanager.manager.files.editor.EditorFragment
 import com.etb.filemanager.manager.files.filelist.*
 import com.etb.filemanager.manager.selection.FileItemDetailsLookup
 import com.etb.filemanager.manager.selection.FileItemKeyProvider
@@ -886,7 +889,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     override fun openFileWith(file: FileModel) {
-        TODO("Not yet implemented")
+            val path = file.filePath
+        if (!file.isDirectory && MimeTypeUtil().isSpecificFileType(fileUtil.getFileMimeType(path).toString(), MimeTypeIcon.CODE)){
+            val editorFragment = EditorFragment.newInstance(path)
+            (requireActivity() as MainActivity).startNewFragment(editorFragment)
+
+
+        }
     }
 
     override fun cutFile(file: FileModel) {
@@ -967,6 +976,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         when (action) {
 
             CreateFileAction.OPEN_WITH -> {
+                fileUtil.actionOpenWith(file.filePath, requireContext())
             }
 
             CreateFileAction.SELECT -> {
@@ -1073,6 +1083,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
+    @SuppressLint("SetTextI18n")
     private fun createBottomSheetOperation(typeOperation: TypeOperation) {
 
 

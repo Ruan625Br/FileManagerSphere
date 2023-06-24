@@ -151,6 +151,8 @@ class FileModelAdapter(
             if (!isActionMode) {
                 if (fileViewModel.isDirectory) {
                     listener.openFile(fileViewModel)
+                } else{
+                    listener.openFileWith(fileViewModel)
                 }
                 holder.itemView.isActivated = false
                 holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
