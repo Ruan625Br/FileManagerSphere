@@ -15,10 +15,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -61,6 +58,8 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.*
 import java.io.File
 import java.nio.file.*
@@ -103,7 +102,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     private lateinit var standardBottomSheet: FrameLayout
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
+    private lateinit var standardBottomSheetOp: FrameLayout
     private lateinit var standardBehaviorOperation: BottomSheetBehavior<FrameLayout>
+    private lateinit var bottomSheetProperties: FrameLayout
+    private lateinit var bottomSheetBehaviorProperties: BottomSheetBehavior<FrameLayout>
+    private lateinit var bottomSheetRename: FrameLayout
+    private lateinit var bottomSheetBehaviorRename: BottomSheetBehavior<FrameLayout>
+
     private lateinit var settingsViewModel: SettingsViewModel
     private var showHiddenFiles = false
 
@@ -134,6 +139,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initAllBottomSheet()
 
 
         settingsViewModel = SettingsViewModel(requireContext())
@@ -170,7 +176,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val path = fileUri?.let { fileUtil.getFilePathFromUri(requireContext(), it) }
         if (mFile != null) {
             listFilesAndFoldersInBackground(if (mFile.isDirectory) path.toString() else BASE_PATH)
-        } else{
+        } else {
             listFilesAndFoldersInBackground(BASE_PATH)
 
         }
@@ -723,9 +729,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 finishActionMode()
             }
 
+            R.id.action_rename -> {
+                if (selectedItems.size <= 0) showRenameFileDialog(selectedItems[0]) else showBottomSheetRenameMultipleFiles()
+                finishActionMode()
+            }
+
             R.id.action_select_all -> {
                 selectFiles(fileModel, true)
-                finishActionMode()
             }
 
             else -> return super.onOptionsItemSelected(item!!)
@@ -889,8 +899,12 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     override fun openFileWith(file: FileModel) {
-            val path = file.filePath
-        if (!file.isDirectory && MimeTypeUtil().isSpecificFileType(fileUtil.getFileMimeType(path).toString(), MimeTypeIcon.CODE)){
+        val path = file.filePath
+        if (!file.isDirectory && MimeTypeUtil().isSpecificFileType(
+                fileUtil.getFileMimeType(path).toString(),
+                MimeTypeIcon.CODE
+            )
+        ) {
             val editorFragment = EditorFragment.newInstance(path)
             (requireActivity() as MainActivity).startNewFragment(editorFragment)
 
@@ -1067,8 +1081,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             )
         }
 
-        standardBottomSheet = requireView().findViewById(R.id.standard_bottom_sheet)
-        standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
 
         val rvAction = requireView().findViewById<RecyclerView>(R.id.recyclerView2)
         val tvItemTitle = requireView().findViewById<TextView>(R.id.tv_title)
@@ -1085,10 +1097,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     @SuppressLint("SetTextI18n")
     private fun createBottomSheetOperation(typeOperation: TypeOperation) {
-
-
-        val standardBottomSheetOp = requireView().findViewById<FrameLayout>(R.id.standard_bottom_operations)
-        standardBehaviorOperation = BottomSheetBehavior.from(standardBottomSheetOp)
 
         val ivCloseOp = requireView().findViewById<ImageView>(R.id.iv_close_op)
         val ivStartOp = requireView().findViewById<ImageView>(R.id.iv_start_op)
@@ -1114,11 +1122,26 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         }
     }
 
+    private fun initAllBottomSheet() {
+        standardBottomSheet = requireView().findViewById(R.id.standard_bottom_sheet)
+        standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
+        standardBottomSheetOp = requireView().findViewById(R.id.standard_bottom_operations)
+        standardBehaviorOperation = BottomSheetBehavior.from(standardBottomSheetOp)
+        bottomSheetProperties = requireView().findViewById(R.id.standard_bottom_properties)
+        bottomSheetBehaviorProperties = BottomSheetBehavior.from(bottomSheetProperties)
+        bottomSheetRename = requireView().findViewById(R.id.bottomSheetRename)
+        bottomSheetBehaviorRename = BottomSheetBehavior.from(bottomSheetRename)
+
+        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        standardBehaviorOperation.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetBehaviorProperties.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetBehaviorRename.state = BottomSheetBehavior.STATE_HIDDEN
+
+
+    }
+
     @SuppressLint("SetTextI18n")
     private fun showBottomSheetProperties(fileItem: FileModel) {
-
-        val bottomSheetProperties = requireView().findViewById<FrameLayout>(R.id.standard_bottom_properties)
-        val bottomSheetBehaviorProperties = BottomSheetBehavior.from(bottomSheetProperties)
 
         val tvFileItemTitle = requireView().findViewById<TextView>(R.id.tvItemTitle)
 
@@ -1161,6 +1184,78 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
 
     }
+
+    private fun showBottomSheetRenameMultipleFiles() {
+
+        val listInputEditText = mutableListOf<TextInputEditText>()
+        val selectedFiles = mutableListOf<FileModel>()
+        val listPath = mutableListOf<String>()
+        val layout = requireView().findViewById<LinearLayout>(R.id.linearLayout)
+        val tvTitle = requireView().findViewById<TextView>(R.id.tv_title_rename)
+
+
+        val btnRename = requireView().findViewById<Button>(R.id.btn_rename)
+
+        for (fileItem in selectedItems) {
+             if (!selectedFiles.contains(fileItem)){
+                 selectedFiles.add(fileItem)
+            }
+        }
+
+        tvTitle.text = resources.getQuantityString(R.plurals.renamingItems, 1, selectedFiles.size)
+        for (file in selectedFiles){
+            val inflater = LayoutInflater.from(requireContext())
+
+            val view = inflater.inflate(R.layout.layout_basic_dialog, null)
+            val textInputLayout = view.findViewById<TextInputLayout>(R.id.eInputLayout)
+            val textInputEditText = view.findViewById<TextInputEditText>(R.id.eInputEditText)
+
+            textInputEditText.setText(file.fileName)
+            layout.addView(view)
+            listInputEditText.add(textInputEditText)
+            listPath.add(file.filePath)
+        }
+
+        btnRename.setOnClickListener {
+            bottomSheetBehaviorRename.state = BottomSheetBehavior.STATE_HIDDEN
+
+            CoroutineScope(Dispatchers.IO).launch {
+                for ((index, file) in listPath.withIndex()) {
+                    val newName = listInputEditText[index].text.toString()
+                    FileUtil().renameFile(file, newName)
+                }
+
+
+                withContext(Dispatchers.Main) {
+                    refresh()
+                }
+            }
+        }
+
+        bottomSheetBehaviorRename.peekHeight = 1000
+        bottomSheetBehaviorRename.maxHeight = 1000
+        bottomSheetBehaviorRename.state = BottomSheetBehavior.STATE_EXPANDED
+
+        bottomSheetBehaviorRename.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+
+                    selectedItems.clear()
+                    selectedFiles.clear()
+                    layout.removeAllViews()
+
+
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
+        })
+
+
+    }
+
 
     private fun observeSettings() {
         settingsViewModel.settingsState.observe(viewLifecycleOwner) { settingsState ->

@@ -77,4 +77,9 @@
     <string name="e_restriction_folder">Os conteúdos desta pasta não podem ser exibidos devido à restrições do android
     </string>
 
+    <plurals name="renamingItems">
+        <item quantity="one">Renomeando %d itens</item>
+        <item quantity="other">%d itens renomeados com sucesso</item>
+    </plurals>
+
 </resources>
