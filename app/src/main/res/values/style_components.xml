@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Components.Widget.Button" parent="TextAppearance.AppCompat.Widget.Button">
+        <item name="android:width">300dp</item>
+        <item name="android:height">60dp</item>
+        <item name="background">@drawable/background_style_button</item>
+        <item name="android:textColor">?attr/colorPrimaryInverse</item>
+    </style>
+</resources>
