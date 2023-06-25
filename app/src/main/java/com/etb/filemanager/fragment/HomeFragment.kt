@@ -3,6 +3,7 @@ package com.etb.filemanager.fragment
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import androidx.appcompat.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -56,7 +57,9 @@ import com.etb.filemanager.ui.view.FabMenu
 import com.etb.filemanager.util.file.FileUtil
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -119,6 +122,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     private var isSelectionMode = false
     private val REQUEST_CODE = 6
 
+    private var progressDialog: AlertDialog? = null
+    private var isProgressDialogShowing = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -1219,14 +1224,29 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         btnRename.setOnClickListener {
             bottomSheetBehaviorRename.state = BottomSheetBehavior.STATE_HIDDEN
 
+            val totalFiles = listPath.size
+            var completedFiles = 0
+
             CoroutineScope(Dispatchers.IO).launch {
                 for ((index, file) in listPath.withIndex()) {
                     val newName = listInputEditText[index].text.toString()
                     FileUtil().renameFile(file, newName)
+                    val mFile = File(file)
+
+                    completedFiles++
+                    val progress = (completedFiles.toFloat() / totalFiles.toFloat()) * 100
+
+                    withContext(Dispatchers.Main){
+                        val title = resources.getQuantityString(R.plurals.renamingItems, 1, totalFiles)
+                        val msg = "Renomeando \"${mFile.name}\" para \"$newName\""
+                        updateProgress(title, msg, progress.toInt())
+                    }
+
                 }
 
 
                 withContext(Dispatchers.Main) {
+                    progressDialog?.cancel()
                     refresh()
                 }
             }
@@ -1272,6 +1292,31 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
         viewModel.deleteFilesAndFolders(filePaths)
         selectedItems.clear()
+    }
+
+
+    fun updateProgress(title: String, msg: String, progress: Int) {
+        if (!isProgressDialogShowing) {
+            val inflater = LayoutInflater.from(context)
+            val dialogView = inflater.inflate(R.layout.basic_dialog_progress, null)
+            val lProgress = dialogView.findViewById<LinearProgressIndicator>(R.id.progressindicator)
+
+            lProgress.progress = progress
+
+            val builder = MaterialAlertDialogBuilder(requireContext())
+                .setView(dialogView)
+                .setTitle(title)
+                .setMessage(msg)
+                .setCancelable(false)
+
+            progressDialog = builder.create()
+            progressDialog?.show()
+            isProgressDialogShowing = true
+        } else {
+            progressDialog?.setMessage(msg)
+            val lProgress = progressDialog?.findViewById<LinearProgressIndicator>(R.id.progressindicator)
+            lProgress?.progress = progress
+        }
     }
 
 

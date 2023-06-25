@@ -72,6 +72,7 @@ class MaterialDialogUtils {
         val lProgress = dialogView.findViewById<LinearProgressIndicator>(R.id.progressindicator)
 
 
+
         lProgress.progress = progress
 
 
