@@ -156,21 +156,37 @@ class FileUtil {
         val stringBuilder = StringBuilder()
         try {
             val file = filePath?.let { File(it) }
-            val fis = FileInputStream(file)
-            val isr = InputStreamReader(fis)
-            val bufferedReader = BufferedReader(isr)
-            var line: String?
-            while (bufferedReader.readLine().also { line = it } != null) {
-                stringBuilder.append(line).append("\n")
+            if (file != null && file.length() > 0) {
+                val fis = FileInputStream(file)
+                val isr = InputStreamReader(fis)
+                val bufferedReader = BufferedReader(isr)
+                var line: String?
+                while (bufferedReader.readLine().also { line = it } != null) {
+                    stringBuilder.append(line).append("\n")
+                }
+                bufferedReader.close()
+                isr.close()
+                fis.close()
+            } else{
+                return ""
             }
-            bufferedReader.close()
-            isr.close()
-            fis.close()
         } catch (e: IOException) {
             Log.e("Erro ao ler arquivo", "Erro: " + e.message)
             return "Ocorreu um erro ao ler o arquivo."
         }
         return stringBuilder.toString()
+    }
+
+    fun saveFile(filePath: String, content: String): Boolean {
+        return try {
+            val writer = FileWriter(filePath)
+            writer.write(content)
+            writer.close()
+            true
+        } catch (e: IOException) {
+            Log.i("Save file", "Erro: ${e.message}")
+            false
+        }
     }
 
 

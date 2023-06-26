@@ -77,8 +77,9 @@ public class CodeEditorViewModel extends AndroidViewModel {
         return mSourceFile;
     }
 
-    public void saveFile(@NonNull String content) {
-        // Implement your file saving logic here
+    public boolean saveFile(@NonNull String content) {
+        FileUtil fileUtil= new FileUtil();
+        return fileUtil.saveFile(mSourceFile.getPath(), content);
     }
 
     public boolean isReadOnly() {
@@ -123,4 +124,6 @@ public class CodeEditorViewModel extends AndroidViewModel {
         }
         return null;
     }
+
+
 }

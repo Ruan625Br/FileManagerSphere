@@ -43,6 +43,9 @@ import androidx.transition.TransitionManager;
 import com.etb.filemanager.R;
 import com.etb.filemanager.activity.MainActivity;
 import com.etb.filemanager.fragment.HomeFragment;
+import com.etb.filemanager.fragment.RecentFragment;
+import com.etb.filemanager.manager.util.MaterialDialogUtils;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -65,6 +68,8 @@ import io.github.rosemoe.sora.widget.DirectAccessProps;
 import io.github.rosemoe.sora.widget.SymbolInputView;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.github.rosemoe.sora.widget.EditorSearcher.SearchOptions;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 import java.nio.file.Paths;
 import java.util.Objects;
@@ -76,6 +81,8 @@ import java.util.regex.PatternSyntaxException;
 public class CodeEditorFragment extends Fragment {
     public static final String ARG_OPTIONS = "options";
 
+
+
     public static class Options implements Parcelable {
         @Nullable
         public final Uri uri;
@@ -86,6 +93,7 @@ public class CodeEditorFragment extends Fragment {
         public final boolean readOnly;
         public final boolean javaSmaliToggle;
         public final boolean enableSharing;
+
 
         private Options(@Nullable Uri uri, @Nullable String title, @Nullable String subtitle, boolean readOnly,
                         boolean javaSmaliToggle, boolean enableSharing) {
@@ -213,6 +221,9 @@ public class CodeEditorFragment extends Fragment {
     private MenuItem mShareMenu;
     private CodeEditorViewModel mViewModel;
     private boolean mTextModified = false;
+
+    private MaterialToolbar topAppBar;
+
     private final ActivityResultLauncher<Intent> mSaveOpenedFile = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -226,7 +237,7 @@ public class CodeEditorFragment extends Fragment {
                     if (uri == null) return;
                     int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION
                             | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    saveFile(mEditor.getText().toString(), uri);
+                    saveFile(mEditor.getText().toString());
                     if (takeFlags != 0) {
                         // Make this URI the current URI
                         mOptions = new Options.Builder(mOptions)
@@ -254,12 +265,26 @@ public class CodeEditorFragment extends Fragment {
                         .setPositiveButton(R.string.no, null)
                         .setNegativeButton(R.string.yes, (dialog, which) -> {
                             setEnabled(false);
-                            requireActivity().onBackPressed();
+                            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                            boolean fragmentPopped = fragmentManager.popBackStackImmediate();
+                            if (!fragmentPopped) {
+                                RecentFragment recentFragment = new RecentFragment();
+                                MainActivity activity = (MainActivity) requireActivity();
+                                activity.startNewFragment(recentFragment);
+
+                            }
                         })
                         .setNeutralButton(R.string.save_and_exit, (dialog, which) -> {
                             saveFile(mEditor.getText().toString());
                             setEnabled(false);
-                            requireActivity().onBackPressed();
+                            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                            boolean fragmentPopped = fragmentManager.popBackStackImmediate();
+                            if (!fragmentPopped) {
+                                RecentFragment recentFragment = new RecentFragment();
+                                MainActivity activity = (MainActivity) requireActivity();
+                                activity.startNewFragment(recentFragment);
+
+                            }
                         })
                         .show();
                 return;
@@ -270,9 +295,9 @@ public class CodeEditorFragment extends Fragment {
             FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
             boolean fragmentPopped = fragmentManager.popBackStackImmediate();
             if (!fragmentPopped) {
-                HomeFragment homeFragment = new HomeFragment();
+                RecentFragment recentFragment = new RecentFragment();
                 MainActivity activity = (MainActivity) requireActivity();
-                activity.startNewFragment(homeFragment);
+                activity.startNewFragment(recentFragment);
 
             }
         }
@@ -292,6 +317,9 @@ public class CodeEditorFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        topAppBar = view.findViewById(R.id.topAppBar);
+
+        initToolbar();
         mViewModel = new ViewModelProvider(this).get(CodeEditorViewModel.class);
         mOptions = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_OPTIONS, Options.class));
         mViewModel.setOptions(mOptions);
@@ -328,7 +356,6 @@ public class CodeEditorFragment extends Fragment {
         if (mOptions.readOnly) {
             mSymbolInputView.setVisibility(View.GONE);
         }
-        // Setup search widget
         mSearchWidget = view.findViewById(R.id.search_container);
         mSearchView = view.findViewById(R.id.search_bar);
         mSearchView.addTextChangedListener(new TextWatcher() {
@@ -685,14 +712,40 @@ public class CodeEditorFragment extends Fragment {
         mSearchResultCount.setText(getResources().getQuantityString(R.plurals.search_results, count, count));
     }
 
+
+
     private void saveFile(String content) {
-        saveFile(content, null);
+        if (mViewModel == null) return;
+        if (!mViewModel.saveFile(content)) {
+            String fileName = mViewModel.getFilename();
+            String textPositiveButton = requireContext().getString(R.string.dialog_ok);
+
+            String saveFileError = getResources().getString(R.string.save_file_error);
+            String errorMessage = getResources().getQuantityString(R.plurals.an_error_message_occurred, 1, 1, fileName);
+
+            MaterialDialogUtils materialDialogUtils = new MaterialDialogUtils();
+            materialDialogUtils.createDialogInfo(
+                    saveFileError,
+                    errorMessage,
+                    textPositiveButton,
+                    requireContext(),
+                    false,
+                    new Function1<MaterialDialogUtils.DialogInfoResult, Unit>() {
+                        @Override
+                        public Unit invoke(MaterialDialogUtils.DialogInfoResult dialogResult) {
+                            if (dialogResult.getConfirmed()) {
+                                // Lógica a ser executada se dialogResult for confirmado
+
+                            }
+                            return null;
+                        }
+                    }
+            );
+
+
+        }
     }
 
-    private void saveFile(String content, @Nullable Uri uri) {
-        if (mViewModel == null) return;
-      //  mViewModel.saveFile(content, uri == null ? null : Paths.get(uri));
-    }
 
     @NonNull
     public Language getLanguage(@Nullable String language) {
@@ -764,4 +817,11 @@ public class CodeEditorFragment extends Fragment {
                 .setType("*/*")
                 .putExtra(Intent.EXTRA_TITLE, mViewModel.getFilename());
     }
+
+    private void initToolbar() {
+        AppCompatActivity activity = (AppCompatActivity) requireActivity();
+        activity.setSupportActionBar(topAppBar);
+    }
+
+
 }

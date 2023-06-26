@@ -16,25 +16,25 @@
     <item
             android:id="@+id/action_undo"
             android:icon="@drawable/ic_undo"
-            android:title="Voltar"
+            android:title="@string/undo"
             app:showAsAction="never" />
 
     <item
             android:id="@+id/action_redo"
             android:icon="@drawable/ic_redo"
-            android:title="Ir"
+            android:title="@string/redo"
             app:showAsAction="never" />
 
     <item
             android:id="@+id/action_save"
             android:icon="@drawable/ic_content_save"
-            android:title="Salvar"
+            android:title="@string/save"
             app:showAsAction="ifRoom" />
 
     <item
             android:id="@+id/action_save_as"
-            android:icon="@drawable/ic_content_save"
-            android:title="Salvar como"
+            app:icon="@drawable/ic_content_save"
+            android:title="@string/save_as"
             app:showAsAction="never" />
 
     <item

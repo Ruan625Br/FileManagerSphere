@@ -101,4 +101,19 @@
     <string name="search">Pesquisar</string>
     <string name="java">Java</string>
 
+    <string name="undo">Desfazer</string>
+    <string name="redo">Refazer</string>
+    <string name="save">Salvar</string>
+    <string name="save_as">Salvar como</string>
+    <string name="wrap">Wrap</string>
+
+    <string name="replacement_text">Replacement</string>
+    <string name="code_editor">Editor de codigos</string>
+
+    <string name="save_file_error">Erro ao salvar arquivo</string>
+    <plurals name="an_error_message_occurred">
+        <item quantity="one">Ocorreu um erro ao salvar o arquivo "%s"</item>
+        <item quantity="other">Ocorreram %d erros ao salvar o arquivo "%s"</item>
+    </plurals>
+
 </resources>

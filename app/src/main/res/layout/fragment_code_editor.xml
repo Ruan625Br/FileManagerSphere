@@ -36,7 +36,7 @@
                 android:id="@+id/search_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="8dp"
+                android:paddingHorizontal="@dimen/padding_medium"
                 android:paddingVertical="8dp"
                 android:orientation="vertical"
                 android:visibility="gone"
@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     app:hintEnabled="true"
                     android:hint="@string/search"
-                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_settings"
                     >
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -66,6 +66,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:hintEnabled="true"
+                    android:hint="@string/replacement_text"
                    >
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -101,6 +102,8 @@
                         android:layout_weight="0"
                         android:layout_gravity="center_vertical"
                         android:contentDescription="@string/replace"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        app:icon="@drawable/ic_find_and_replace_all"
                         app:iconSize="30dp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -108,7 +111,10 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_weight="0"
+                        style="@style/Widget.Material3.Button.IconButton"
+
                         android:layout_gravity="center_vertical"
+                        app:icon="@drawable/ic_find_and_replace"
                         app:iconSize="30dp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -116,7 +122,10 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_weight="0"
+                        style="@style/Widget.Material3.Button.IconButton"
+
                         android:layout_gravity="center_vertical"
+                        app:icon="@drawable/ic_expand_less"
                         app:iconSize="30dp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -124,6 +133,8 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_weight="0"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        app:icon="@drawable/ic_expand_more"
                         android:layout_gravity="center_vertical"
                         app:iconSize="30dp" />
 

@@ -916,8 +916,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
             val options = CodeEditorFragment.Options.Builder()
                 .setUri(fileUri)
-                .setTitle("E meu titulo")
-                .setSubtitle("subtitle")
+                .setTitle(requireContext().getString(R.string.code_editor))
+                .setSubtitle(file.fileName)
                 .setEnableSharing(true)
                 .setJavaSmaliToggle(true)
                 .setReadOnly(false)
