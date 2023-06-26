@@ -9,7 +9,8 @@
         <item>Tema verde modo escuro</item>
         <item>Tema azul modo claro</item>
         <item>Tema azul modo escuro</item>
-        <item>Tema vermelho</item>
+        <item>Tema vermelho modo claro</item>
+        <item>Tema vermelho modo escuro</item>
     </string-array>
 
     <string-array name="themes_values">
@@ -21,7 +22,8 @@
         <item>GREEN_THEME_DARK</item>
         <item>BLUE_THEME_LIGHT</item>
         <item>BLUE_THEME_DARK</item>
-        <item>RED_THEME</item>
+        <item>RED_THEME_LIGHT</item>
+        <item>RED_THEME_DARK</item>
     </string-array>
 
 </resources>

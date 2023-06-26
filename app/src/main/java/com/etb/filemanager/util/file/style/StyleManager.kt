@@ -20,7 +20,8 @@ class StyleManager {
             OptionStyle.GREEN_THEME_DARK -> setGreenDarkTheme(context)
             OptionStyle.BLUE_THEME_LIGHT -> setLightBlueTheme(context)
             OptionStyle.BLUE_THEME_DARK -> setDarkBlueTheme(context)
-            OptionStyle.RED_THEME -> setRedTheme()
+            OptionStyle.RED_THEME_LIGHT -> setLightRedTheme(context)
+            OptionStyle.RED_THEME_DARK -> setDarkRedTheme(context)
         }
     }
 
@@ -57,8 +58,11 @@ class StyleManager {
         context.setTheme(R.style.AppThemeBlue_Dark)
     }
 
-    private fun setRedTheme() {
-        // Logic to set "Red theme"
+    private fun setLightRedTheme(context: Context) {
+        context.setTheme(R.style.AppThemeRed_light)
+    }
+    private fun setDarkRedTheme(context: Context) {
+        context.setTheme(R.style.AppThemeRed_Dark)
     }
 
 
@@ -71,6 +75,7 @@ class StyleManager {
         GREEN_THEME_DARK,
         BLUE_THEME_LIGHT,
         BLUE_THEME_DARK,
-        RED_THEME
+        RED_THEME_LIGHT,
+        RED_THEME_DARK
     }
 }
