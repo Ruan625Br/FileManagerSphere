@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/action_java_smali_toggle"
+            android:title="@string/java"
+            app:showAsAction="always" />
+
+    <item
+            android:id="@+id/action_search"
+            android:icon="@drawable/ic_search"
+            android:title="@string/search"
+            app:showAsAction="ifRoom" />
+
+    <item
+            android:id="@+id/action_undo"
+            android:icon="@drawable/ic_undo"
+            android:title="Voltar"
+            app:showAsAction="never" />
+
+    <item
+            android:id="@+id/action_redo"
+            android:icon="@drawable/ic_redo"
+            android:title="Ir"
+            app:showAsAction="never" />
+
+    <item
+            android:id="@+id/action_save"
+            android:icon="@drawable/ic_content_save"
+            android:title="Salvar"
+            app:showAsAction="ifRoom" />
+
+    <item
+            android:id="@+id/action_save_as"
+            android:icon="@drawable/ic_content_save"
+            android:title="Salvar como"
+            app:showAsAction="never" />
+
+    <item
+            android:id="@+id/action_wrap"
+            android:title="wrap"
+            app:showAsAction="never" />
+
+    <item
+            android:id="@+id/action_share"
+            android:title="@string/share"
+            app:showAsAction="never" />
+
+</menu>

@@ -83,4 +83,22 @@
         <item quantity="other">%d</item>
     </plurals>
 
+    <string name="exit_confirmation">Confirmação de saída</string>
+    <string name="file_modified_are_you_sure">O arquivo foi modificado. Tem certeza?</string>
+    <string name="no">Não</string>
+    <string name="yes">Sim</string>
+    <string name="save_and_exit">Salvar e sair</string>
+    <string name="search_option_match_case">Ignorar maiúsculas/minúsculas</string>
+    <string name="search_option_regex">Expressão regular</string>
+    <string name="search_option_whole_word">Palavra inteira</string>
+
+
+    <plurals name="search_results">
+        <item quantity="one">%d result</item>
+        <item quantity="other">%d results</item>
+    </plurals>
+
+    <string name="search">Pesquisar</string>
+    <string name="java">Java</string>
+
 </resources>

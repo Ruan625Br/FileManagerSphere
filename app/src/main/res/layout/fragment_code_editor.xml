@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+                                              xmlns:app="http://schemas.android.com/apk/res-auto"
+                                              xmlns:tools="http://schemas.android.com/tools"
+                                              android:id="@+id/editor_container"
+                                              android:layout_width="match_parent"
+                                              android:layout_height="match_parent"
+                                              android:fitsSystemWindows="true"
+                                              android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimaryContainer"
+            android:theme="?attr/actionBarTheme"
+            android:minHeight="?attr/actionBarSize" android:id="@+id/topAppBar"
+            app:menu="@menu/menu_code_editor_actions" app:title="@string/app_name"
+           />
+
+
+    <io.github.rosemoe.sora.widget.CodeEditor
+            android:id="@+id/editor"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+
+            app:lnPanelPosition="center"
+            app:lnPanelPositionMode="follow" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:orientation="vertical">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/search_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="8dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/search_bar_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintEnabled="true"
+                    android:hint="@string/search"
+                    app:endIconMode="custom"
+                    >
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/search_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        tools:text="@tools:sample/full_names" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/replace_bar_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintEnabled="true"
+                   >
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/replace_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        tools:text="@tools:sample/full_names" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/search_result_count"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"
+                        android:paddingHorizontal="16dp"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        tools:text="10 results" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/replace_all_button"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="0"
+                        android:layout_gravity="center_vertical"
+                        android:contentDescription="@string/replace"
+                        app:iconSize="30dp" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/replace_button"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="0"
+                        android:layout_gravity="center_vertical"
+                        app:iconSize="30dp" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/previous_button"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="0"
+                        android:layout_gravity="center_vertical"
+                        app:iconSize="30dp" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/next_button"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="0"
+                        android:layout_gravity="center_vertical"
+                        app:iconSize="30dp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <io.github.rosemoe.sora.widget.SymbolInputView
+                    android:id="@+id/symbol_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp" />
+
+        </HorizontalScrollView>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/position"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="13sp"
+                    android:gravity="center"
+                    tools:text="108:39" />
+
+            <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/line_separator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="13sp"
+                    android:gravity="center"
+                    tools:text="LF" />
+
+            <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tab_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="13sp"
+                    android:gravity="center"
+                    tools:text="4 spaces" />
+
+            <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/language"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="13sp"
+                    android:gravity="center"
+                    tools:text="Java" />
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/lock"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="13dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingTop="0dp"
+                    android:paddingBottom="0dp"
+                    app:icon="@drawable/ic_unlock"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    app:iconSize="13dp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

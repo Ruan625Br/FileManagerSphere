@@ -5,17 +5,11 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.FileProvider
-import androidx.documentfile.provider.DocumentFile
-import com.etb.filemanager.manager.adapter.FileModel
-import java.io.File
-import java.io.IOException
-import java.net.URLDecoder
+import java.io.*
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -158,14 +152,30 @@ class FileUtil {
         return filePath
     }
 
+    fun readFileAsString(filePath: String?): String {
+        val stringBuilder = StringBuilder()
+        try {
+            val file = filePath?.let { File(it) }
+            val fis = FileInputStream(file)
+            val isr = InputStreamReader(fis)
+            val bufferedReader = BufferedReader(isr)
+            var line: String?
+            while (bufferedReader.readLine().also { line = it } != null) {
+                stringBuilder.append(line).append("\n")
+            }
+            bufferedReader.close()
+            isr.close()
+            fis.close()
+        } catch (e: IOException) {
+            Log.e("Erro ao ler arquivo", "Erro: " + e.message)
+            return "Ocorreu um erro ao ler o arquivo."
+        }
+        return stringBuilder.toString()
+    }
 
 
 
-
-
-
-
-enum class TypeFile() {
+    enum class TypeFile() {
         FILE, FOLDER
     }
 }

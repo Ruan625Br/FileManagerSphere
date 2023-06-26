@@ -1,9 +1,9 @@
 package com.etb.filemanager.fragment
 
 import android.Manifest
+import android.R.attr.subtitle
 import android.annotation.SuppressLint
 import android.app.Activity
-import androidx.appcompat.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -19,6 +19,7 @@ import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.documentfile.provider.DocumentFile
@@ -43,6 +44,7 @@ import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
 import com.etb.filemanager.manager.adapter.FileModel
 import com.etb.filemanager.manager.adapter.FileModelAdapter
 import com.etb.filemanager.manager.adapter.ManagerUtil
+import com.etb.filemanager.manager.editor.CodeEditorFragment
 import com.etb.filemanager.manager.file.CreateFileAction
 import com.etb.filemanager.manager.file.FileAction
 import com.etb.filemanager.manager.file.FileOptionAdapter
@@ -910,8 +912,21 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 MimeTypeIcon.CODE
             )
         ) {
-            val editorFragment = EditorFragment.newInstance(path)
-            (requireActivity() as MainActivity).startNewFragment(editorFragment)
+            val fileUri = Uri.fromFile(File(path))
+
+            val options = CodeEditorFragment.Options.Builder()
+                .setUri(fileUri)
+                .setTitle("E meu titulo")
+                .setSubtitle("subtitle")
+                .setEnableSharing(true)
+                .setJavaSmaliToggle(true)
+                .setReadOnly(false)
+                .build()
+            val fragment = CodeEditorFragment()
+            val args = Bundle()
+            args.putParcelable(CodeEditorFragment.ARG_OPTIONS, options)
+            fragment.arguments = args
+            (requireActivity() as MainActivity).startNewFragment(fragment)
 
 
         }
