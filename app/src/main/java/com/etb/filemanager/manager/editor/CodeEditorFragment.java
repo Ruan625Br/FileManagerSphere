@@ -727,7 +727,7 @@ public class CodeEditorFragment extends Fragment {
             materialDialogUtils.createDialogInfo(
                     saveFileError,
                     errorMessage,
-                    textPositiveButton,
+                    textPositiveButton, "",
                     requireContext(),
                     false,
                     new Function1<MaterialDialogUtils.DialogInfoResult, Unit>() {

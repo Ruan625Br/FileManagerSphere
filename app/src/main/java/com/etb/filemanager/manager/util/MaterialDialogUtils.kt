@@ -43,6 +43,7 @@ class MaterialDialogUtils {
         title: String,
         message: String,
         textPositiveButton: String,
+        textNegativeButon: String = "null",
         context: Context,
         cancelable: Boolean,
         callback: (DialogInfoResult) -> Unit
@@ -56,7 +57,8 @@ class MaterialDialogUtils {
 
             }
         if (cancelable) {
-            mDialog.setNegativeButton(R.string.dialog_cancel) { _, _ ->
+            mDialog.setCancelable(false)
+            mDialog.setNegativeButton(textNegativeButon) { _, _ ->
                 callback(DialogInfoResult(false))
             }
         }
@@ -79,4 +81,30 @@ class MaterialDialogUtils {
         MaterialAlertDialogBuilder(context).setTitle(title).setView(dialogView).setCancelable(false).show()
 
     }
+
+    @SuppressLint("InflateParams", "SuspiciousIndentation")
+    fun createDialogOperation(
+        title: String,
+        message: String,
+        textPositiveButton: String,
+        context: Context,
+        cancelable: Boolean,
+        callback: (DialogInfoResult) -> Unit
+    ) {
+
+
+        val mDialog = MaterialAlertDialogBuilder(context).setTitle(title).setMessage(message)
+            .setPositiveButton(textPositiveButton) { dialog, which ->
+                callback(DialogInfoResult(true))
+
+
+            }
+        if (cancelable) {
+            mDialog.setNegativeButton(R.string.dialog_cancel) { _, _ ->
+                callback(DialogInfoResult(false))
+            }
+        }
+        mDialog.show()
+    }
+
 }

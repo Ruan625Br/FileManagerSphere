@@ -255,9 +255,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 mCurrentPath = mPath
                 launch(Dispatchers.Main) {
                     updateData(fileEntries)
-                    withContext(Dispatchers.IO) {
-                        monitorDirectory(mPath)
-                    }
                 }
             } catch (e: Exception) {
                 if (e is AccessDeniedException) {
@@ -288,7 +285,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val textPositiveButton = requireContext().getString(R.string.dialog_ok)
 
         materialDialogUtils.createDialogInfo(
-            title, text, textPositiveButton, requireContext(), false
+           title, text, textPositiveButton,"", requireContext(), false
         ) { dialogResult ->
             val isConfirmed = dialogResult.confirmed
             if (isConfirmed) {
@@ -969,7 +966,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             if (multItems) "$title ${selectionTracker.selection.size()} items?" else "$title \"${file.fileName}\"?"
         val textPositiveButton = requireContext().getString(R.string.dialog_ok)
 
-        materialDialogUtils.createDialogInfo(title, text, textPositiveButton, requireContext(), true) { dialogResult ->
+        materialDialogUtils.createDialogInfo(title, text, textPositiveButton,"", requireContext(), true) { dialogResult ->
             val isConfirmed = dialogResult.confirmed
             if (isConfirmed) {
                 delete()
