@@ -204,11 +204,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
         viewModel.operationProgress.observe(viewLifecycleOwner){ progress ->
 
-                updateProgress("dialogTitle", "dialogMsg", progress)
+                updateProgress(dialogTitle, dialogMsg, progress)
 
         }
         viewModel.cancelOperationProgress.observe(viewLifecycleOwner){ cancel ->
-         //   progressDialog?.cancel()
+           progressDialog?.cancel()
         }
     }
 

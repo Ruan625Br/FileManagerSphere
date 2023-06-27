@@ -123,6 +123,18 @@ class FileModelAdapter(
         currentPath = fileViewModel.filePath
 
 
+      if (isActionMode) {
+            if (selectionTracker?.isSelected(itemDetails.selectionKey)!!) {
+                holder.itemView.isActivated = true
+                holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
+            } else {
+                holder.itemView.isActivated = false
+                holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
+            }
+        } else {
+            holder.itemView.isActivated = false
+            holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
+        }
 
 
         holder.itemFile.setOnLongClickListener {
@@ -140,22 +152,10 @@ class FileModelAdapter(
             if (!isActionMode) {
                 if (fileViewModel.isDirectory) {
                     listener.openFile(fileViewModel)
-                } else{
+                } else {
                     listener.openFileWith(fileViewModel)
                 }
-                holder.itemView.isActivated = false
-                holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
-
-
-            } else {
-                if (selectionTracker?.isSelected(itemDetails.selectionKey)!!) {
-                    holder.itemView.isActivated = true
-                    holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
-                } else {
-                    holder.itemView.isActivated = false
-                    holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
-                }
-                   }
+            }
 
 
 

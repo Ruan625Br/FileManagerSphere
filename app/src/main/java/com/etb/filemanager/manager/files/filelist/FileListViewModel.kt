@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.etb.filemanager.R
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
@@ -36,10 +36,10 @@ class FileListViewModel : ViewModel() {
      val operationMsg: LiveData<String>
         get() = _operationMsg
 
-    fun deleteFilesAndFolders(filePaths: List<String>){
+    fun deleteFilesAndFolders(filePaths: List<String>) {
         viewModelScope.launch {
             _operationProgress.value = 0
-            for ((index, path) in filePaths.withIndex()){
+            for ((index, path) in filePaths.withIndex()) {
                 DeleteOperation.deleteFilesOrDir(path)
                 _operationProgress.value = ((index + 1) * 100) / filePaths.size
             }
@@ -49,38 +49,60 @@ class FileListViewModel : ViewModel() {
 
 
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun moveFiles(sourceFiles: List<File>, destinationDir: File, context: Context) {
-        val executorService = Executors.newFixedThreadPool(4)
+        viewModelScope.launch {
+            val totalFiles = sourceFiles.size
+            var completedFiles = 0
 
-        val tasks = sourceFiles.mapIndexed { index, sourceFile ->
-            Callable<Unit> {
-                val destinationFile = destinationDir.resolve(sourceFile.name)
+            val tasks = sourceFiles.map { sourceFile ->
+                async(Dispatchers.IO) {
+                    val destinationFile = destinationDir.resolve(sourceFile.name)
 
-                try {
-                    val progress = ((index + 1) * 100) / sourceFiles.size
-                    val title = context.resources.getQuantityString(R.plurals.movingItems, 1, sourceFiles.size)
-                    val numItems = sourceFiles.size
-                    val msg = context.resources.getQuantityString(R.plurals.movingItems, numItems, numItems, sourceFile.name, destinationFile.path)
-                    _operationProgress.value = progress
-                    _operationTitle.value = title
-                    _operationMsg.value = msg
+                    try {
+                        completedFiles++
+                        val progress = (completedFiles.toFloat() / totalFiles.toFloat()) * 100
+                        val title = context.resources.getQuantityString(R.plurals.movingItems, 1, sourceFiles.size)
+                        val numItems = sourceFiles.size
+                        val msg = context.resources.getQuantityString(
+                            R.plurals.movingItems,
+                            numItems,
+                            numItems,
+                            sourceFile.name,
+                            destinationFile.path
+                        )
 
-                    Files.move(sourceFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                        withContext(Dispatchers.Main) {
+                            _operationTitle.value = title
+                            _operationMsg.value = msg
+                            _operationProgress.value = progress.toInt()
+                        }
 
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error: $e")
+                        Files.move(
+                            sourceFile.toPath(),
+                            destinationFile.toPath(),
+                            StandardCopyOption.REPLACE_EXISTING
+                        )
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error: $e")
+                    }
                 }
             }
-        }
 
-        try {
-            executorService.invokeAll(tasks)
-            Toast.makeText(context, "Arquivos movidos com sucesso", Toast.LENGTH_LONG).show()
-        } catch (e: InterruptedException) {
-            Log.e(TAG, "${e.message}")
-        } finally {
-            _cancelOperationProgress.postValue(Unit)
-            executorService.shutdown()
+            try {
+                awaitAll(*tasks.toTypedArray())
+
+                withContext(Dispatchers.Main) {
+                    _cancelOperationProgress.value = Unit
+                    Toast.makeText(context, "Arquivos movidos com sucesso", Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error: $e")
+            } finally {
+                withContext(Dispatchers.Main) {
+                    _cancelOperationProgress.value = Unit
+                }
+            }
         }
     }
 
@@ -107,3 +129,4 @@ enum class TypeOperation(){
     CUT,
    // COPY,
 }
+
