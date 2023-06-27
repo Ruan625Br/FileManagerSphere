@@ -82,6 +82,11 @@
         <item quantity="two">%d items renomeados de</item>
         <item quantity="other">%d</item>
     </plurals>
+    <plurals name="movingItems">
+        <item quantity="one">Movendo %d items</item>
+        <item quantity="other">Movendo %d items: Movendo "%s" para "%s"</item>
+
+    </plurals>
 
     <string name="exit_confirmation">Confirmação de saída</string>
     <string name="file_modified_are_you_sure">O arquivo foi modificado. Tem certeza?</string>

@@ -9,12 +9,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            tools:layout_editor_absoluteY="-26dp" tools:layout_editor_absoluteX="0dp"
     >
     <com.google.android.material.bottomsheet.BottomSheetDragHandleView android:layout_width="match_parent"
                                                                        android:layout_height="wrap_content"/>
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:padding="8dp">
             <ImageView
                     android:layout_width="wrap_content"

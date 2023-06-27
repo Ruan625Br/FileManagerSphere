@@ -86,5 +86,7 @@
     <color name="category_icon_green">#00BC35</color>
     <color name="category_icon_light_red">#FF5E54</color>
     <color name="category_icon_red">#FF3636</color>
+    <color name="gray_400">#FFBDBDBD</color>
+    <color name="gray_600">#FF757575</color>
 
 </resources>

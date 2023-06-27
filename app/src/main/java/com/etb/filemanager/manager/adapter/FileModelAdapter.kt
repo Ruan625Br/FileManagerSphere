@@ -59,6 +59,7 @@ class FileModelAdapter(
     var selectionTracker: SelectionTracker<Long>? = null
 
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileModelAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.file_item, parent, false)
         return ViewHolder(view)
@@ -122,18 +123,6 @@ class FileModelAdapter(
         currentPath = fileViewModel.filePath
 
 
-      if (isActionMode) {
-            if (selectionTracker?.isSelected(itemDetails.selectionKey)!!) {
-                holder.itemView.isActivated = true
-                holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
-            } else {
-                holder.itemView.isActivated = false
-                holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
-            }
-        } else {
-            holder.itemView.isActivated = false
-            holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
-        }
 
 
         holder.itemFile.setOnLongClickListener {
@@ -249,6 +238,8 @@ class FileModelAdapter(
 
 
     }
+
+
 
 
     fun removeFile(fileName: String) {

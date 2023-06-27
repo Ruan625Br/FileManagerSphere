@@ -192,9 +192,24 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     private fun initObeserveViewModel() {
-        viewModel.deletionProgress.observe(viewLifecycleOwner, androidx.lifecycle.Observer { progress ->
+        var dialogTitle = "Null"
+        var dialogMsg = "Null"
 
-        })
+        viewModel.operationTitle.observe(viewLifecycleOwner){ operationTitle ->
+            dialogTitle = operationTitle
+        }
+        viewModel.operationMsg.observe(viewLifecycleOwner){ operationMsg ->
+            dialogMsg = operationMsg
+        }
+
+        viewModel.operationProgress.observe(viewLifecycleOwner){ progress ->
+
+                updateProgress("dialogTitle", "dialogMsg", progress)
+
+        }
+        viewModel.cancelOperationProgress.observe(viewLifecycleOwner){ cancel ->
+         //   progressDialog?.cancel()
+        }
     }
 
     fun onNewIntent(uri: Uri) {
@@ -1122,7 +1137,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val ivStartOp = requireView().findViewById<ImageView>(R.id.iv_start_op)
         val tvTitleOp = requireView().findViewById<TextView>(R.id.tv_title_op)
 
-        val sourceFiles = selectedItems.map { it.filePath }
+        val sourceFiles = selectedItems.map { it.file }
 
 
         standardBehaviorOperation.peekHeight = 300
@@ -1133,7 +1148,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
         ivStartOp.setOnClickListener {
             val destinationDir = File(mCurrentPath)
-            viewModel.initOperation(typeOperation, sourceFiles, destinationDir)
+            viewModel.initOperation(typeOperation, sourceFiles, destinationDir, requireContext())
             standardBehaviorOperation.state = BottomSheetBehavior.STATE_HIDDEN
         }
 

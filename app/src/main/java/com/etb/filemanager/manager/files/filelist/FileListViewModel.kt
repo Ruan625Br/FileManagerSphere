@@ -1,75 +1,85 @@
 package com.etb.filemanager.manager.files.filelist
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.etb.filemanager.R
 import kotlinx.coroutines.launch
 import java.io.File
-import java.io.InterruptedIOException
-import java.nio.file.CopyOption
 import java.nio.file.Files
-import java.nio.file.Path
+import java.nio.file.StandardCopyOption
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
-import kotlin.io.path.Path
-import kotlin.io.path.moveTo
 
 class FileListViewModel : ViewModel() {
     private val TAG = "FileViewModel"
 
-    private val _deletionProgress = MutableLiveData<Int>()
+    private val _operationTitle = MutableLiveData<String>()
+    private val _operationMsg = MutableLiveData<String>()
+    private val _operationProgress = MutableLiveData<Int>()
     private val _startOperation = MutableLiveData<TypeOperation>()
+    private val _cancelOperationProgress = MutableLiveData<Unit>()
 
-    val deletionProgress: LiveData<Int>
-        get() = _deletionProgress
+    val operationProgress: LiveData<Int>
+        get() = _operationProgress
 
     val startOperation: LiveData<TypeOperation>
         get() = _startOperation
+    val cancelOperationProgress: LiveData<Unit>
+        get() = _cancelOperationProgress
+    val operationTitle: LiveData<String>
+        get() = _operationTitle
+     val operationMsg: LiveData<String>
+        get() = _operationMsg
 
     fun deleteFilesAndFolders(filePaths: List<String>){
         viewModelScope.launch {
-            _deletionProgress.value = 0
+            _operationProgress.value = 0
             for ((index, path) in filePaths.withIndex()){
                 DeleteOperation.deleteFilesOrDir(path)
-                _deletionProgress.value = ((index + 1) * 100) / filePaths.size
+                _operationProgress.value = ((index + 1) * 100) / filePaths.size
             }
-            _deletionProgress.value = 100
+            _operationProgress.value = 100
         }
     }
 
-    fun moveFiles(sourceFiles: List<String>, destinationDir: File){
+
+
+    fun moveFiles(sourceFiles: List<File>, destinationDir: File, context: Context) {
         val executorService = Executors.newFixedThreadPool(4)
 
-        val tasks = sourceFiles.mapIndexed { index, mFile ->
+        val tasks = sourceFiles.mapIndexed { index, sourceFile ->
             Callable<Unit> {
-
-                val destinationFile = Path(destinationDir.absolutePath)
-                val file = Path(mFile)
+                val destinationFile = destinationDir.resolve(sourceFile.name)
 
                 try {
-                    file.moveTo(destinationFile)
-                //    Files.move(file,destinationFile)
                     val progress = ((index + 1) * 100) / sourceFiles.size
-                    _deletionProgress.postValue(progress)
-                }catch (e: Exception){
-                    Log.e(TAG, "Erro: $e")
-                   /* file.moveTo(destinationFile, true)
-                    val progress = ((index + 1) * 100) / sourceFiles.size
-                    _deletionProgress.postValue(progress)
-*/
+                    val title = context.resources.getQuantityString(R.plurals.movingItems, 1, sourceFiles.size)
+                    val numItems = sourceFiles.size
+                    val msg = context.resources.getQuantityString(R.plurals.movingItems, numItems, numItems, sourceFile.name, destinationFile.path)
+                    _operationProgress.value = progress
+                    _operationTitle.value = title
+                    _operationMsg.value = msg
+
+                    Files.move(sourceFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error: $e")
                 }
-
-
             }
         }
 
         try {
             executorService.invokeAll(tasks)
-        }catch (e: InterruptedIOException){
+            Toast.makeText(context, "Arquivos movidos com sucesso", Toast.LENGTH_LONG).show()
+        } catch (e: InterruptedException) {
             Log.e(TAG, "${e.message}")
         } finally {
+            _cancelOperationProgress.postValue(Unit)
             executorService.shutdown()
         }
     }
@@ -78,9 +88,9 @@ class FileListViewModel : ViewModel() {
         _startOperation.postValue(typeOperation)
     }
 
-    fun initOperation(typeOperation: TypeOperation, sourceFiles: List<String>, destinationDir: File){
+    fun initOperation(typeOperation: TypeOperation, sourceFiles: List<File>, destinationDir: File, context: Context){
         when(typeOperation){
-            TypeOperation.CUT -> { moveFiles(sourceFiles, destinationDir)}
+            TypeOperation.CUT -> { moveFiles(sourceFiles, destinationDir, context)}
         }
     }
 
