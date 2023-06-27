@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources>
+
+
+
+    <!-- Preferences -->
+    <style name="Preference.M3" parent="Preference.Material">
+        <item name="android:layout">@layout/m3_preference</item>
+    </style>
+
+
+    <style name="Preference.M3.CheckBoxPreference" parent="Preference.CheckBoxPreference.Material">
+        <item name="android:layout">@layout/m3_preference</item>
+    </style>
+
+    <style name="Preference.M3.DialogPreference" parent="Preference.DialogPreference.Material">
+        <item name="android:layout">@layout/m3_preference</item>
+    </style>
+
+    <style name="Preference.M3.DialogPreference.EditTextPreference" parent="Preference.DialogPreference.EditTextPreference.Material">
+        <item name="android:layout">@layout/m3_preference</item>
+    </style>
+
+    <style name="Preference.M3.PreferenceScreen" parent="Preference.PreferenceScreen.Material">
+        <item name="android:layout">@layout/m3_preference</item>
+    </style>
+
+    <style name="Preference.M3.SwitchPreference" parent="Preference.SwitchPreference.Material">
+        <item name="android:layout">@layout/m3_preference_widget_material_switch</item>
+    </style>
+
+
+    <style name="Widget.AppTheme.CardView.ListItem" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">?attr/listItemCornerRadius</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+</resources>

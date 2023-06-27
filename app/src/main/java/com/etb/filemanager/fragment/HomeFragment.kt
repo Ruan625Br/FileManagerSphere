@@ -255,7 +255,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 mCurrentPath = mPath
                 launch(Dispatchers.Main) {
                     updateData(fileEntries)
-                    monitorPath(mPath)
+                    withContext(Dispatchers.IO) {
+                        monitorDirectory(mPath)
+                    }
                 }
             } catch (e: Exception) {
                 if (e is AccessDeniedException) {
@@ -273,6 +275,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 Log.e("ERRO AO LISTAR OS ARQUIVOS", "ERRO: $e")
 
             }
+            //como printar
+
 
         }
 
@@ -420,8 +424,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         recyclerView.scheduleLayoutAnimation()
     }
 
-    fun monitorDirectory(path: String) {
-        val diretoryPath = Paths.get(path)
+    suspend fun monitorDirectory(path: String) = withContext(Dispatchers.IO) {
+    val diretoryPath = Paths.get(path)
 
         try {
             val watchService = FileSystems.getDefault().newWatchService()
@@ -442,6 +446,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                         StandardWatchEventKinds.ENTRY_DELETE -> {
                             val fileName = event.context() as Path
                             adapter.removeFile(fileName.toString())
+                        }
+                        StandardWatchEventKinds.ENTRY_MODIFY -> {
+                            refresh()
                         }
                     }
                 }

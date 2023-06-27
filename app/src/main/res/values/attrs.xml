@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="listItemMarginVertical" format="dimension" />
+    <attr name="listItemMarginHorizontal" format="dimension" />
+    <attr name="listItemPaddingVertical" format="dimension" />
+    <attr name="listItemPaddingHorizontal" format="dimension" />
+    <attr name="listItemCornerRadius" format="dimension" />
+    <attr name="listItemIndicatorWidth" format="dimension" />
+
+    <attr name="materialAlertViewStyle" format="reference" />
+    <attr name="materialAlertDialogListItemTextStyle" format="reference" />
+    <attr name="materialFullScreenAlertDialogTheme" format="reference" />
+</resources>

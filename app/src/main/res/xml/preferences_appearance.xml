@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ListPreference
+            app:key="themes"
+            app:title="@string/themes_title"
+            app:entries="@array/themes_entries"
+            app:entryValues="@array/themes_values"
+            app:defaultValue="FOLLOW_SYSTEM"
+            app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false"/>
+</PreferenceScreen>

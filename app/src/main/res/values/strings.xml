@@ -120,5 +120,7 @@
         <item quantity="one">Ocorreu um erro ao salvar o arquivo "%s"</item>
         <item quantity="other">Ocorreram %d erros ao salvar o arquivo "%s"</item>
     </plurals>
+    <string name="reply_title">Default reply action</string>
+    <string name="pref_cat_appearance">Aparência</string>
 
 </resources>

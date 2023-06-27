@@ -208,5 +208,9 @@
         <item name="colorSurfaceInverse">@color/red_md_theme_dark_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/red_md_theme_dark_inversePrimary</item>
         <item name="windowActionModeOverlay">true</item>
+
+        <item name="preferenceScreenStyle">@style/Preference.M3.PreferenceScreen</item>
     </style>
+
+
 </resources>
