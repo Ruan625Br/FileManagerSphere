@@ -50,15 +50,18 @@ class FileListViewModel : ViewModel() {
 
 
 
+/*
     @OptIn(DelicateCoroutinesApi::class)
     fun moveFiles(sourceFiles: List<File>, destinationDir: File, context: Context) {
         viewModelScope.launch {
             val totalFiles = sourceFiles.size
             var completedFiles = 0
 
+
             val tasks = sourceFiles.map { sourceFile ->
                 async(Dispatchers.IO) {
                     val destinationFile = destinationDir.resolve(sourceFile.name)
+                    Log.i(TAG, "Path:: ${sourceFile.path}")
 
                     try {
                         completedFiles++
@@ -103,7 +106,7 @@ class FileListViewModel : ViewModel() {
                                                 withContext(Dispatchers.Main) {
                                                     val progress = (completedFiles.toFloat() / totalFiles.toFloat()) * 100
                                                     _operationTitle.value = title
-                                                    _operationMsg.value = msg
+                                                    _operationMsg.value = "\"msg\""
                                                     _operationProgress.value = progress.toInt()
                                                 }
                                                 Files.move(
@@ -136,7 +139,6 @@ class FileListViewModel : ViewModel() {
 
             try {
                 awaitAll(*tasks.toTypedArray())
-
                 withContext(Dispatchers.Main) {
                     _cancelOperationProgress.value = Unit
                     Toast.makeText(context, "Arquivos movidos com sucesso", Toast.LENGTH_LONG).show()
@@ -150,6 +152,117 @@ class FileListViewModel : ViewModel() {
             }
         }
     }
+*/
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun moveFiles(sourceFiles: List<File>, destinationDir: File, context: Context) {
+        viewModelScope.launch {
+            val totalFiles = sourceFiles.size
+            var completedFiles = 0
+
+            val tasks = sourceFiles.map { sourceFile ->
+                async(Dispatchers.IO) {
+                    val destinationFile = destinationDir.resolve(sourceFile.name)
+                    Log.i(TAG, "Path:: ${sourceFile.path}")
+
+                    try {
+                        completedFiles++
+                        val progress = (completedFiles.toFloat() / totalFiles.toFloat()) * 100
+                        val title = context.resources.getQuantityString(R.plurals.movingItems, 1, sourceFiles.size - 1)
+                        val numItems = sourceFiles.size - 1
+                        val msg = context.resources.getQuantityString(
+                            R.plurals.movingItems,
+                            numItems,
+                            numItems,
+                            sourceFile.name,
+                            destinationFile.path
+                        )
+
+                        withContext(Dispatchers.Main) {
+                            _operationTitle.value = title
+                            _operationMsg.value = msg
+                            _operationProgress.value = progress.toInt()
+                        }
+
+                        if (sourceFile.isDirectory) {
+                            Files.move(sourceFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                        } else {
+                            Files.move(sourceFile.toPath(), destinationFile.toPath())
+                        }
+                    } catch (e: Exception) {
+                        if (e is java.nio.file.FileAlreadyExistsException){
+                            // Tratamento para arquivo ou diretório já existente
+                            try {
+                                val title = context.resources.getQuantityString(R.plurals.plurals_file_already_exists, 1)
+                                val msg = context.resources.getQuantityString(R.plurals.plurals_file_already_exists, 2, sourceFile.name)
+                                val textPositiveButton = context.getString(R.string.replace)
+                                val textNegativeButton = context.getString(R.string.skip)
+
+                                withContext(Dispatchers.Main) {
+                                    MaterialDialogUtils().createDialogInfo(
+                                        title, msg, textPositiveButton, textNegativeButton, context, true
+                                    ) { dialogResult ->
+                                        val isConfirmed = dialogResult.confirmed
+                                        val currentFile = sourceFile
+                                        if (isConfirmed) {
+                                            launch(Dispatchers.IO) {
+                                                try {
+                                                    withContext(Dispatchers.Main) {
+                                                        val progress = (completedFiles.toFloat() / totalFiles.toFloat()) * 100
+                                                        _operationTitle.value = title
+                                                        _operationMsg.value = "\"msg\""
+                                                        _operationProgress.value = progress.toInt()
+                                                    }
+                                                    if (sourceFile.isDirectory) {
+                                                        Files.move(
+                                                            sourceFile.toPath(),
+                                                            destinationFile.toPath(),
+                                                            StandardCopyOption.REPLACE_EXISTING
+                                                        )
+                                                    } else {
+                                                        Files.move(
+                                                            sourceFile.toPath(),
+                                                            destinationFile.toPath(),
+                                                            StandardCopyOption.REPLACE_EXISTING
+                                                        )
+                                                    }
+                                                } catch (e: Exception) {
+                                                    Log.e(TAG, "Error 2: $e")
+                                                }
+                                            }
+                                        }
+                                        val listFiles = sourceFiles.toMutableList()
+                                        if (!listFiles.isEmpty()) {
+                                            listFiles.remove(currentFile)
+                                            moveFiles(listFiles.toList(), destinationFile, context)
+                                        }
+                                    }
+                                }
+                            } catch (e: Exception){
+                                Log.e(TAG, "Error 1: $e")
+                            }
+                        }
+                        Log.e(TAG, "Error: $e")
+                    }
+                }
+            }
+
+            try {
+                awaitAll(*tasks.toTypedArray())
+                withContext(Dispatchers.Main) {
+                    _cancelOperationProgress.value = Unit
+                    Toast.makeText(context, "Arquivos movidos com sucesso", Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error: $e")
+            } finally {
+                withContext(Dispatchers.Main) {
+                    _cancelOperationProgress.value = Unit
+                }
+            }
+        }
+    }
+
 
     fun startOperation(typeOperation: TypeOperation){
         _startOperation.postValue(typeOperation)

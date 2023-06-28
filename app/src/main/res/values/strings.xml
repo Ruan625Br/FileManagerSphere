@@ -125,7 +125,7 @@
 
     <plurals name="plurals_file_already_exists">
         <item quantity="one">Substituir arquivo</item>
-        <item quantity="other">O arquivo ""%s"" já existe na pasta de destino, deseja substituí-lo?</item>
+        <item quantity="other">O arquivo "\"%s\"" já existe na pasta de destino, deseja substituí-lo?</item>
     </plurals>
     <string name="replace">Substitui</string>
     <string name="skip">Pular</string>
