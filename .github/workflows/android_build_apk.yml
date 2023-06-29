@@ -1,0 +1,27 @@
+name: Build & Publish Release APK
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  Gradle:
+    runs-on: windows-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+      - name: setup jdk
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Make Gradle executable
+        run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+      - name: Build Release APK
+        run: .\gradlew assembleRelease
+      - name: Releasing using Hub
+        uses: r0user/release-apk@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.FILEMANAGER_TOKEN }}
+          APP_FOLDER: app
