@@ -334,6 +334,71 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         setRecyclerViewAnimation()
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
+    fun replaceList(mPath: String) {
+
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val fileEntries = Files.list(Paths.get(mPath)).use { it.toList() }
+                mCurrentPath = mPath
+                launch(Dispatchers.Main) {
+                    replaceData(fileEntries)
+                }
+            } catch (e: Exception) {
+                if (e is AccessDeniedException) {
+                    try {
+                        launch(Dispatchers.Main) {
+                            createDialgRestriction()
+
+                        }
+                    } catch (ec: Exception) {
+                        Log.e("Dialog", "ERRO: $e")
+
+                    }
+
+                }
+                Log.e("ERRO AO LISTAR OS ARQUIVOS", "ERRO: $e")
+
+            }
+            //como printar
+
+
+        }
+
+    }
+
+    fun replaceData(fileEntries: List<Path>){
+
+
+        fileModel.clear()
+        val fileUtil = FileUtil()
+
+        for (path in fileEntries) {
+            val fileName = path.fileName.toString()
+            val filePath = path.toAbsolutePath().toString()
+            val isDirectory = Files.isDirectory(path)
+            val fileExtension = fileUtil.getFileExtension(path)
+            val fileLength = fileUtil.getFileSize(path)
+            val file = path.toFile()
+
+            if (!showHiddenFiles && fileName.toString().startsWith(".")) {
+                continue
+            }
+            fileModel.add(
+                FileModel(
+                    UUID.randomUUID().mostSignificantBits,
+                    fileName,
+                    filePath,
+                    isDirectory,
+                    fileExtension,
+                    fileLength,
+                    file
+                )
+            )
+        }
+       adapter.replaceList(fileModel)
+    }
+
     private fun initFabClick() {
         val mFab: FloatingActionButton = requireView().findViewById(R.id.mfab)
         val mFabCreateFile: FloatingActionButton = requireView().findViewById(R.id.fab_create_file)
@@ -807,10 +872,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     fun navigateTo(path: String) {
-
         coroutineScope.launch {
             managerUtil.addToPathStack(path)
             listFilesAndFoldersInBackground(path)
+           //replaceList(path)
 
         }
 
@@ -913,12 +978,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     override fun openFile(file: FileModel) {
         val pickOptions = viewModel.pickOptions
-        if (pickOptions != null){
             if (file.isDirectory){
                 navigateTo(file.filePath)
             }
-            return
-        }
     }
 
     override fun openFileWith(file: FileModel) {

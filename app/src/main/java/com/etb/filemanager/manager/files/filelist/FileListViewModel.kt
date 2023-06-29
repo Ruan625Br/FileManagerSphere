@@ -346,9 +346,6 @@ class FileListViewModel : ViewModel() {
             _pickOptionsLiveData.value = value
         }
 
-    private val tra
-    fun navigateTo(lastState: Parcelable, path: Path)
-
 }
     enum class TypeOperation() {
         CUT,

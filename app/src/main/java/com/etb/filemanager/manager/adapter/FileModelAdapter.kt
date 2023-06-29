@@ -12,9 +12,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -24,10 +21,8 @@ import com.etb.filemanager.R
 import com.etb.filemanager.files.file.common.mime.MidiaType
 import com.etb.filemanager.files.file.common.mime.MimeTypeUtil
 import com.etb.filemanager.files.file.common.mime.getMidiaType
-import com.etb.filemanager.fragment.HomeFragment
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.manager.FileListener
-import com.etb.filemanager.interfaces.settings.PopupSettingsListener
 import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
 import com.etb.filemanager.manager.files.filelist.FileItemSet
 import com.etb.filemanager.manager.files.filelist.PickOptions
@@ -47,7 +42,7 @@ import java.util.*
 
 class FileModelAdapter(
     private var fileModels: MutableList<FileModel>, private val mContext: Context, private val listener: FileListener
-) :AnimatedListAdapter<FileModel, FileModelAdapter.ViewHolder>(CALLBACK) {
+) : AnimatedListAdapter<FileModel, FileModelAdapter.ViewHolder>(CALLBACK) {
 
     private val fileUtils: FileUtils = FileUtils.getInstance()
     private val basePath = "/storage/emulated/0"
@@ -70,32 +65,32 @@ class FileModelAdapter(
     private val filePositionMap = mutableMapOf<String, Int>()
 
 
-
-    fun replaceSelectedFiles(files: FileItemSet){
+    fun replaceSelectedFiles(files: FileItemSet) {
         val changedFiles = fileItemSetOf()
-            val iterator = selectedFiles.iterator()
-        while (iterator.hasNext()){
+        val iterator = selectedFiles.iterator()
+        while (iterator.hasNext()) {
             val file = iterator.next()
-            if (file !in files){
+            if (file !in files) {
                 iterator.remove()
                 changedFiles.add(file)
             }
         }
-        for (file in files){
-            if (file !in selectedFiles){
+        for (file in files) {
+            if (file !in selectedFiles) {
                 selectedFiles.add(file)
                 changedFiles.add(file)
             }
         }
-        for (file in changedFiles){
+        for (file in changedFiles) {
 
             val position = filePositionMap[file.filePath]
             position?.let { notifyItemChanged(it, PAYLOAD_STATE_CHANGED) }
         }
 
     }
+
     fun selectFile(file: FileModel) {
-        if (!isFileSelectable(file)){
+        if (!isFileSelectable(file)) {
             return
         }
         val selected = file in selectedFiles
@@ -115,14 +110,28 @@ class FileModelAdapter(
         listener.selectFiles(files, true)
     }
 
-    private fun isFileSelectable(file: FileModel): Boolean{
+    private fun isFileSelectable(file: FileModel): Boolean {
         val pickOptions = pickOptions ?: return true
-        return if (pickOptions.pickDirectory){
+        return if (pickOptions.pickDirectory) {
             file.isDirectory
         } else {
             !file.isDirectory
         }
     }
+
+    fun replaceList(list: MutableList<FileModel>) {
+        super.replace(list, true)
+        rebuildFilePositionMap()
+    }
+
+     fun rebuildFilePositionMap() {
+        filePositionMap.clear()
+        for (index in 0 until itemCount) {
+            val file = getItem(index)
+            filePositionMap[file.filePath] = index
+        }
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileModelAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.file_item, parent, false)
@@ -176,17 +185,11 @@ class FileModelAdapter(
             }
 
         }
-        //  val itemDetails = Details(fileViewModel, position)
-        // holder.itemDetails = itemDetails
-
 
         selectPreferenceUtils = SelectPreferenceUtils.getInstance()
         fileAdapterListenerUtil = FileAdapterListenerUtil.getInstance()
 
         currentPath = file.filePath
-
-
-
 
 
         holder.titleFile.text = file.fileName
@@ -202,8 +205,8 @@ class FileModelAdapter(
         holder.itemFile.setOnLongClickListener {
             if (selectedFiles.isEmpty()) {
                 selectFile(file)
-            } else{
-                listener.showBottomSheet(file)
+            } else {
+                listener.openFile(file)
             }
             true
         }
@@ -332,11 +335,9 @@ class FileModelAdapter(
     companion object {
         private val PAYLOAD_STATE_CHANGED = Any()
 
-        private val CALLBACK = object : DiffUtil.ItemCallback<FileModel>(){
+        private val CALLBACK = object : DiffUtil.ItemCallback<FileModel>() {
             override fun areItemsTheSame(oldItem: FileModel, newItem: FileModel): Boolean =
                 oldItem.filePath == newItem.filePath
-
-
 
 
             @SuppressLint("DiffUtilEquals")
