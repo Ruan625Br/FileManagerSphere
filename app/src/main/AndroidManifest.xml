@@ -17,6 +17,11 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.FileManager"
             tools:targetApi="31">
+
+        <provider
+                android:name=".files.app.AppProvider"
+                android:authorities="@string/app_provider_authority"
+                android:exported="false" />
         <provider
                 android:name="androidx.core.content.FileProvider"
                 android:authorities="com.etb.filemanager.fileprovider"

@@ -11,7 +11,7 @@ class FileItemDetailsLookup(private val recyclerView: RecyclerView) : ItemDetail
         return view?.let {
             val viewHolder = recyclerView.getChildViewHolder(view)
             if (viewHolder is FileModelAdapter.ViewHolder) {
-                return viewHolder.itemDetails
+               // return viewHolder.itemDetails
             }
             return null
         }

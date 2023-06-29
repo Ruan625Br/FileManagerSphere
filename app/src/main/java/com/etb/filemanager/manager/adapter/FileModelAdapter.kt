@@ -12,7 +12,10 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -21,11 +24,15 @@ import com.etb.filemanager.R
 import com.etb.filemanager.files.file.common.mime.MidiaType
 import com.etb.filemanager.files.file.common.mime.MimeTypeUtil
 import com.etb.filemanager.files.file.common.mime.getMidiaType
+import com.etb.filemanager.fragment.HomeFragment
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.manager.FileListener
 import com.etb.filemanager.interfaces.settings.PopupSettingsListener
 import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
-import com.etb.filemanager.manager.selection.Details
+import com.etb.filemanager.manager.files.filelist.FileItemSet
+import com.etb.filemanager.manager.files.filelist.PickOptions
+import com.etb.filemanager.manager.files.filelist.fileItemSetOf
+import com.etb.filemanager.manager.files.ui.AnimatedListAdapter
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.util.file.style.ColorUtil
 import com.etb.filemanager.util.file.style.IconUtil
@@ -40,11 +47,9 @@ import java.util.*
 
 class FileModelAdapter(
     private var fileModels: MutableList<FileModel>, private val mContext: Context, private val listener: FileListener
-) : RecyclerView.Adapter<FileModelAdapter.ViewHolder>() {
+) :AnimatedListAdapter<FileModel, FileModelAdapter.ViewHolder>(CALLBACK) {
 
     private val fileUtils: FileUtils = FileUtils.getInstance()
-    private lateinit var popupSettings: PopupSettingsListener
-    private var pathStack = Stack<String>()
     private val basePath = "/storage/emulated/0"
     private var currentPath = basePath
 
@@ -53,12 +58,71 @@ class FileModelAdapter(
 
 
     private val selectedItems = mutableListOf<FileModel>()
-    var isActionMode = false
     private val mainScope = MainScope()
 
-    var selectionTracker: SelectionTracker<Long>? = null
+    var pickOptions: PickOptions? = null
+        set(value) {
+            field = value
+            notifyItemRangeChanged(0, itemCount, PAYLOAD_STATE_CHANGED)
+        }
+
+    private val selectedFiles = fileItemSetOf()
+    private val filePositionMap = mutableMapOf<String, Int>()
 
 
+
+    fun replaceSelectedFiles(files: FileItemSet){
+        val changedFiles = fileItemSetOf()
+            val iterator = selectedFiles.iterator()
+        while (iterator.hasNext()){
+            val file = iterator.next()
+            if (file !in files){
+                iterator.remove()
+                changedFiles.add(file)
+            }
+        }
+        for (file in files){
+            if (file !in selectedFiles){
+                selectedFiles.add(file)
+                changedFiles.add(file)
+            }
+        }
+        for (file in changedFiles){
+
+            val position = filePositionMap[file.filePath]
+            position?.let { notifyItemChanged(it, PAYLOAD_STATE_CHANGED) }
+        }
+
+    }
+    fun selectFile(file: FileModel) {
+        if (!isFileSelectable(file)){
+            return
+        }
+        val selected = file in selectedFiles
+        val pickOptions = pickOptions
+        if (!selected && pickOptions != null && !pickOptions.allowMultiple) {
+            listener.clearSelectedFiles()
+        }
+        listener.selectFile(file, !selected)
+    }
+
+    fun selectAllFiles() {
+        val files = fileItemSetOf()
+        for (index in 0 until itemCount) {
+            val file = getItem(index)
+            files.add(file)
+        }
+        listener.selectFiles(files, true)
+    }
+
+    private fun isFileSelectable(file: FileModel): Boolean{
+        val pickOptions = pickOptions ?: return true
+        return if (pickOptions.pickDirectory){
+            file.isDirectory
+        } else {
+            !file.isDirectory
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileModelAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.file_item, parent, false)
@@ -70,17 +134,16 @@ class FileModelAdapter(
     @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onBindViewHolder(holder: FileModelAdapter.ViewHolder, position: Int) {
-        val fileViewModel = fileModels[position]
+        val file = fileModels[position]
         val mimeTypeUtil = MimeTypeUtil()
-        val filePath = fileViewModel.filePath
+        val filePath = file.filePath
         val colorUtil = ColorUtil()
         val iconUtil = IconUtil()
+        val mimeType = getFileMimeType(file.filePath)
+        val checked = file in selectedFiles
 
 
-        val mimeType = getFileMimeType(fileViewModel.filePath)
-
-
-        if (!fileViewModel.isDirectory) {
+        if (!file.isDirectory) {
 
             if (mimeType != null && mimeType.isMimeTypeMedia()) {
                 val midiaType = getMidiaType(mimeType)
@@ -113,55 +176,45 @@ class FileModelAdapter(
             }
 
         }
-        val itemDetails = Details(fileViewModel, position)
-        holder.itemDetails = itemDetails
+        //  val itemDetails = Details(fileViewModel, position)
+        // holder.itemDetails = itemDetails
 
 
         selectPreferenceUtils = SelectPreferenceUtils.getInstance()
         fileAdapterListenerUtil = FileAdapterListenerUtil.getInstance()
 
-        currentPath = fileViewModel.filePath
+        currentPath = file.filePath
 
 
-      if (isActionMode) {
-            if (selectionTracker?.isSelected(itemDetails.selectionKey)!!) {
-                holder.itemView.isActivated = true
-                holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
-            } else {
-                holder.itemView.isActivated = false
-                holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
-            }
-        } else {
-            holder.itemView.isActivated = false
-            holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
-        }
 
 
-        holder.itemFile.setOnLongClickListener {
-            if (!isActionMode) {
-                listener.showBottomSheet(fileViewModel)
-            }
 
-            true
-        }
-
-
-        holder.titleFile.text = fileViewModel.fileName
+        holder.titleFile.text = file.fileName
 
         holder.itemFile.setOnClickListener {
-            if (!isActionMode) {
-                if (fileViewModel.isDirectory) {
-                    listener.openFile(fileViewModel)
-                } else {
-                    listener.openFileWith(fileViewModel)
-                }
+            if (selectedFiles.isEmpty()) {
+                listener.openFile(file)
+
+            } else {
+                selectFile(file)
             }
-
-
-
         }
+        holder.itemFile.setOnLongClickListener {
+            if (selectedFiles.isEmpty()) {
+                selectFile(file)
+            } else{
+                listener.showBottomSheet(file)
+            }
+            true
+        }
+        holder.itemBorder.setOnClickListener { selectFile(file) }
 
-        if (fileViewModel.isDirectory) {
+        if (checked) {
+            holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
+        } else {
+            holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
+        }
+        if (file.isDirectory) {
             holder.dateFile.visibility = View.GONE
             holder.sizeFile.visibility = View.GONE
 
@@ -171,14 +224,11 @@ class FileModelAdapter(
         } else {
             holder.dateFile.visibility = View.VISIBLE
             holder.sizeFile.visibility = View.VISIBLE
-            holder.dateFile.text = fileUtils.getFormatDateFile(fileViewModel.filePath, true)
-            holder.sizeFile.text = fileUtils.getFileSizeFormatted(fileViewModel.fileSize)
+            holder.dateFile.text = fileUtils.getFormatDateFile(file.filePath, true)
+            holder.sizeFile.text = fileUtils.getFileSizeFormatted(file.fileSize)
 
 
         }
-
-
-
 
 
     }
@@ -225,7 +275,7 @@ class FileModelAdapter(
 
 
     class ViewHolder(ItemFileView: View) : RecyclerView.ViewHolder(ItemFileView) {
-        lateinit var itemDetails: Details
+        // lateinit var itemDetails: Details
 
 
         val titleFile: TextView = itemView.findViewById(R.id.tv_file_title)
@@ -238,8 +288,6 @@ class FileModelAdapter(
 
 
     }
-
-
 
 
     fun removeFile(fileName: String) {
@@ -264,7 +312,6 @@ class FileModelAdapter(
     }
 
 
-
     fun setSelectedItem(item: FileModel) {
         mainScope.launch {
             if (selectedItems.contains(item)) {
@@ -277,6 +324,24 @@ class FileModelAdapter(
                     notifyItemChanged(position) // Notifica o Adapter sobre a mudança no item específico
                 }
             }
+
+        }
+
+    }
+
+    companion object {
+        private val PAYLOAD_STATE_CHANGED = Any()
+
+        private val CALLBACK = object : DiffUtil.ItemCallback<FileModel>(){
+            override fun areItemsTheSame(oldItem: FileModel, newItem: FileModel): Boolean =
+                oldItem.filePath == newItem.filePath
+
+
+
+
+            @SuppressLint("DiffUtilEquals")
+            override fun areContentsTheSame(oldItem: FileModel, newItem: FileModel): Boolean =
+                oldItem == newItem
 
         }
 
