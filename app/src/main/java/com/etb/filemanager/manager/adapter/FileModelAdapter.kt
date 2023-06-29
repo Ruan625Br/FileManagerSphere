@@ -97,17 +97,30 @@ class FileModelAdapter(
         val pickOptions = pickOptions
         if (!selected && pickOptions != null && !pickOptions.allowMultiple) {
             listener.clearSelectedFiles()
+
         }
         listener.selectFile(file, !selected)
+        toggleItemSelection(fileModels.indexOf(file))
     }
 
     fun selectAllFiles() {
         val files = fileItemSetOf()
+        val selectedFiles = selectedFiles.toSet() // Salva os itens já selecionados antes do "selectAll"
         for (index in 0 until itemCount) {
-            val file = getItem(index)
+            val file = fileModels.get(index)
             files.add(file)
         }
         listener.selectFiles(files, true)
+        for (index in files.indices) {
+            toggleItemSelection(index)
+        }
+        for (file in selectedFiles) {
+            val index = fileModels.indexOf(file)
+            if (index != -1) {
+                toggleItemSelection(index)
+            }
+        }
+        notifyDataSetChanged()
     }
 
     private fun isFileSelectable(file: FileModel): Boolean {
@@ -118,6 +131,22 @@ class FileModelAdapter(
             !file.isDirectory
         }
     }
+
+    fun toggleItemSelection(position: Int) {
+        val file = fileModels[position]
+        file.isSelected = !file.isSelected
+        notifyItemChanged(position)
+    }
+    @SuppressLint("NotifyDataSetChanged")
+     fun clearItemSelection() {
+        for (index in 0 until itemCount) {
+            val file = fileModels.get(index)
+
+            file.isSelected = false
+        }
+        notifyDataSetChanged()
+    }
+
 
     fun replaceList(list: MutableList<FileModel>) {
         super.replace(list, true)
@@ -149,7 +178,8 @@ class FileModelAdapter(
         val colorUtil = ColorUtil()
         val iconUtil = IconUtil()
         val mimeType = getFileMimeType(file.filePath)
-        val checked = file in selectedFiles
+        val checked = selectedFiles.contains(file)
+        Log.i("TESTEEE", "Sla: $checked")
 
 
         if (!file.isDirectory) {
@@ -206,13 +236,13 @@ class FileModelAdapter(
             if (selectedFiles.isEmpty()) {
                 selectFile(file)
             } else {
-                listener.openFile(file)
+                listener.showBottomSheet(file)
             }
             true
         }
         holder.itemBorder.setOnClickListener { selectFile(file) }
 
-        if (checked) {
+        if (checked || file.isSelected) {
             holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
         } else {
             holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)

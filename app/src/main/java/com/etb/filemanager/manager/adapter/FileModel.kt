@@ -10,6 +10,7 @@ import java.nio.file.Path
 @Parcelize
 class FileModel(
     var id: Long, var fileName: String, var filePath: @WriteWith<ParcelableParceler> String, var isDirectory: Boolean, var fileExtension: String, var fileSize: Long,
-    var file: File
+    var file: File,
+    var isSelected: Boolean = false
 
 ) : Parcelable

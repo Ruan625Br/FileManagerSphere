@@ -26,7 +26,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -367,7 +366,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     }
 
-    fun replaceData(fileEntries: List<Path>){
+    fun replaceData(fileEntries: List<Path>) {
 
 
         fileModel.clear()
@@ -396,7 +395,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 )
             )
         }
-       adapter.replaceList(fileModel)
+        adapter.replaceList(fileModel)
     }
 
     private fun initFabClick() {
@@ -475,9 +474,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     @SuppressLint("NotifyDataSetChanged")
     fun refreshAdapter() {
         val controller = AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_file_fade_in_anim)
-    //    recyclerView.layoutAnimation = controller
+        //    recyclerView.layoutAnimation = controller
         adapter.notifyDataSetChanged()
-       // recyclerView.scheduleLayoutAnimation()
+        // recyclerView.scheduleLayoutAnimation()
 
     }
 
@@ -555,6 +554,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     private fun updateActionMode() {
         startActionMode()
         val files = viewModel.selectedFiles
+        if (files.isEmpty()) {
+            finishActionMode()
+            return
+        }
         val title = "${files.size} selecionado(s)"
         actionMode?.title = title
 
@@ -574,9 +577,12 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     @SuppressLint("NotifyDataSetChanged")
     private fun finishActionMode() {
 
+        clearSelectedFiles()
+        if (::adapter.isInitialized) adapter.clearItemSelection()
         actionMode?.finish()
         isActionMode = false
-        clearSelectedFiles()
+
+
     }
 
 
@@ -642,6 +648,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
             R.id.action_select_all -> {
                 //selectFiles(fileModel, true)
+                adapter.selectAllFiles()
             }
 
             R.id.action_navigate_to -> {
@@ -828,7 +835,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             R.id.action_select_all -> {
-                //   selectFiles(fileModel, true)
+                adapter.selectAllFiles()
             }
 
             else -> return super.onOptionsItemSelected(item!!)
@@ -875,7 +882,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         coroutineScope.launch {
             managerUtil.addToPathStack(path)
             listFilesAndFoldersInBackground(path)
-           //replaceList(path)
+            //replaceList(path)
 
         }
 
@@ -898,56 +905,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     private fun onSelectedFilesChanged(files: FileItemSet) {
-         topAppBar.title = "teste ${viewModel.selectedFiles.size}"
+        updateActionMode()
         if (::adapter.isInitialized) adapter.replaceSelectedFiles(files)
     }
 
 
-    /* private fun initSelectionTracker() {
-         isSelectionMode = true
-         selectedItems.clear()
-         selectionTracker = SelectionTracker.Builder<Long>(
-             "selection-files",
-             recyclerView,
-             FileItemKeyProvider(fileModel),
-             FileItemDetailsLookup(recyclerView),
-             StorageStrategy.createLongStorage()
-         ).build()
-
-
-         startActionMode()
-         updateActionModeTitle(1)
-
-
-
-
-         (recyclerView.adapter as FileModelAdapter).selectionTracker = selectionTracker
-
-         selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
-             override fun onItemStateChanged(key: Long, selected: Boolean) {
-                 super.onItemStateChanged(key, selected)
-                 val fileItem = getFileItemByKey(key)
-
-                 if (selected) {
-                     fileItem?.let { selectedItems.add(it) }
-                 } else {
-                     selectedItems.remove(fileItem)
-                 }
-
-                 val selectedItemCount = selectionTracker.selection.size() ?: 0
-
-
-                 if (selectedItemCount <= 0) {
-                     finishActionMode()
-                 } else {
-                     updateActionModeTitle(selectedItemCount)
-                 }
-
-
-             }
-         })
-     }
- */
     private fun getFileItemByKey(key: Long): FileModel? {
         for (item in fileModel) {
             if (item.id == key) {
@@ -958,13 +920,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
 
-
     fun addSelectedFile(fileItem: FileModel) {
         selectedItems.add(fileItem)
     }
 
     override fun clearSelectedFiles() {
-
         viewModel.clearSelectedFiles()
     }
 
@@ -978,9 +938,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     override fun openFile(file: FileModel) {
         val pickOptions = viewModel.pickOptions;
-            if (file.isDirectory){
-                navigateTo(file.filePath)
-            }
+        if (file.isDirectory) {
+            navigateTo(file.filePath)
+        }
     }
 
     override fun openFileWith(file: FileModel) {
