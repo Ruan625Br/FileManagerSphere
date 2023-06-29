@@ -977,7 +977,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     override fun openFile(file: FileModel) {
-        val pickOptions = viewModel.pickOptions
+        val pickOptions = viewModel.pickOptions;
             if (file.isDirectory){
                 navigateTo(file.filePath)
             }
