@@ -3,7 +3,10 @@ package com.etb.filemanager.manager.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.ColorFilter
 import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,9 +21,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
+import com.etb.filemanager.databinding.FileItemBinding
 import com.etb.filemanager.files.file.common.mime.MidiaType
 import com.etb.filemanager.files.file.common.mime.MimeTypeUtil
 import com.etb.filemanager.files.file.common.mime.getMidiaType
+import com.etb.filemanager.files.util.layoutInflater
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.manager.FileListener
 import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
@@ -28,6 +33,8 @@ import com.etb.filemanager.manager.files.filelist.FileItemSet
 import com.etb.filemanager.manager.files.filelist.PickOptions
 import com.etb.filemanager.manager.files.filelist.fileItemSetOf
 import com.etb.filemanager.manager.files.ui.AnimatedListAdapter
+import com.etb.filemanager.manager.files.ui.CheckableItemBackground
+import com.etb.filemanager.manager.files.ui.SelectableMaterialCardView
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.util.file.style.ColorUtil
 import com.etb.filemanager.util.file.style.IconUtil
@@ -48,10 +55,6 @@ class FileModelAdapter(
     private val fileUtils: FileUtils = FileUtils.getInstance()
     private val basePath = "/storage/emulated/0"
     private var currentPath = basePath
-
-    private lateinit var selectPreferenceUtils: SelectPreferenceUtils
-    private lateinit var fileAdapterListenerUtil: FileAdapterListenerUtil
-
 
     var pickOptions: PickOptions? = null
         set(value) {
@@ -176,12 +179,15 @@ class FileModelAdapter(
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileModelAdapter.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.file_item, parent, false)
-        return ViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(
+            FileItemBinding.inflate(parent.context.layoutInflater, parent, false)
+        ).apply {
+           binding.itemFile.background = CheckableItemBackground.create(binding.itemFile.context)
 
 
-    }
+
+        }
 
     override fun onBindViewHolder(holder: FileModelAdapter.ViewHolder, position: Int){
         throw UnsupportedOperationException()
@@ -189,12 +195,15 @@ class FileModelAdapter(
     override fun onBindViewHolder(holder: FileModelAdapter.ViewHolder, position: Int, payloads: List<Any>) {
         bindViewHolderAnimation(holder)
         val file = getItem(position)
+        val binding = holder.binding
         val mimeTypeUtil = MimeTypeUtil()
         val filePath = file.filePath
         val colorUtil = ColorUtil()
         val iconUtil = IconUtil()
         val mimeType = getFileMimeType(file.filePath)
         val selected = file in selectedFiles
+        binding.itemFile.isChecked = selected
+        Log.i("TEESTEEEE", "AQUI: $selected")
         if (payloads.isNotEmpty()){
             return
         }
@@ -206,15 +215,15 @@ class FileModelAdapter(
                 val midiaType = getMidiaType(mimeType)
                 when (midiaType) {
                     MidiaType.IMAGE -> {
-                        loadImage(filePath, holder)
+                        loadImage(filePath, binding)
                     }
 
                     MidiaType.VIDEO -> {
-                        loadImage(filePath, holder)
+                        loadImage(filePath, binding)
                     }
 
                     else -> {
-                        loadImage(filePath, holder)
+                        loadImage(filePath, binding)
                     }
                 }
             } else {
@@ -225,24 +234,21 @@ class FileModelAdapter(
 
                 val iconResourceId = mimeType?.let { mimeTypeUtil.getIconByMimeType(it) } ?: icFile
 
-                holder.iconFile.setColorFilter(tint, PorterDuff.Mode.SRC_IN)
+                binding.iconFile.setColorFilter(tint, PorterDuff.Mode.SRC_IN)
 
                 Glide.with(mContext).load(iconResourceId).diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .apply(RequestOptions().placeholder(icFile)).into(holder.iconFile)
+                    .apply(RequestOptions().placeholder(icFile)).into(binding.iconFile)
 
             }
 
         }
 
-        selectPreferenceUtils = SelectPreferenceUtils.getInstance()
-        fileAdapterListenerUtil = FileAdapterListenerUtil.getInstance()
-
         currentPath = file.filePath
 
+      //  binding.itemFile.isSelected = checked
+        binding.fileTitle.text = file.fileName
 
-        holder.titleFile.text = file.fileName
-
-        holder.itemFile.setOnClickListener {
+        binding.itemFile.setOnClickListener {
             if (selectedFiles.isEmpty()) {
                 listener.openFile(file)
 
@@ -250,7 +256,7 @@ class FileModelAdapter(
                 selectFile(file)
             }
         }
-        holder.itemFile.setOnLongClickListener {
+        binding.itemFile.setOnLongClickListener {
             if (selectedFiles.isEmpty()) {
                 selectFile(file)
             } else {
@@ -258,29 +264,28 @@ class FileModelAdapter(
             }
             true
         }
-        holder.itemBorder.setOnClickListener { selectFile(file) }
+        binding.itemBorder.setOnClickListener { selectFile(file) }
 
-        if (selected || file.isSelected) {
+        /*if (selected || file.isSelected) {
             holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
         } else {
             holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
-        }
+        }*/
         if (file.isDirectory) {
-            holder.dateFile.visibility = View.GONE
-            holder.sizeFile.visibility = View.GONE
+            binding.fileDate.visibility = View.GONE
+            binding.fileSize.visibility = View.GONE
 
-            holder.iconPreview.visibility = View.GONE
-            holder.iconFile.setImageDrawable(iconUtil.getIconFolder(mContext))
+            binding.iconPreview.visibility = View.GONE
+            binding.iconFile.setImageDrawable(iconUtil.getIconFolder(mContext))
 
         } else {
-            holder.dateFile.visibility = View.VISIBLE
-            holder.sizeFile.visibility = View.VISIBLE
-            holder.dateFile.text = fileUtils.getFormatDateFile(file.filePath, true)
-            holder.sizeFile.text = fileUtils.getFileSizeFormatted(file.fileSize)
+            binding.fileDate.visibility = View.VISIBLE
+            binding.fileSize.visibility = View.VISIBLE
+            binding.fileDate.text = fileUtils.getFormatDateFile(file.filePath, true)
+            binding.fileSize.text = fileUtils.getFileSizeFormatted(file.fileSize)
 
 
         }
-
 
     }
 
@@ -296,20 +301,15 @@ class FileModelAdapter(
         return mimeType
     }
 
-    fun Int.setTintResource(context: Context, color: Int) {
-        val drawable = AppCompatResources.getDrawable(context, this)
-        drawable?.setTint(color)
-    }
 
-
-    private fun loadImage(path: String, holder: ViewHolder) {
+    private fun loadImage(path: String, binding: FileItemBinding) {
         val iconUtil = IconUtil()
-        holder.iconFile.visibility = View.GONE
-        holder.iconPreview.visibility = View.VISIBLE
-        holder.itemBorder.background = iconUtil.getBorderPreview(mContext)
+        binding.iconFile.visibility = View.GONE
+        binding.iconPreview.visibility = View.VISIBLE
+        binding.itemBorder.background = iconUtil.getBorderPreview(mContext)
         Glide.with(mContext).load(path).diskCacheStrategy(DiskCacheStrategy.ALL)
             .apply(RequestOptions().override(50, 50)).apply(RequestOptions().placeholder(R.drawable.ic_image))
-            .into(holder.iconPreview)
+            .into(binding.iconPreview)
 
 
     }
@@ -321,18 +321,7 @@ class FileModelAdapter(
     }
 
 
-    class ViewHolder(ItemFileView: View) : RecyclerView.ViewHolder(ItemFileView) {
-        // lateinit var itemDetails: Details
-
-
-        val titleFile: TextView = itemView.findViewById(R.id.tv_file_title)
-        val dateFile: TextView = itemView.findViewById(R.id.tv_file_date)
-        val sizeFile: TextView = itemView.findViewById(R.id.tv_file_size)
-        val iconFile: ImageView = itemView.findViewById(R.id.iv_icon_file)
-        val itemFile: LinearLayout = itemView.findViewById(R.id.item_file)
-        val itemBorder: LinearLayout = itemView.findViewById(R.id.linearLayout2)
-        val iconPreview: ImageView = itemView.findViewById(R.id.iv_preview)
-
+    class ViewHolder(val binding: FileItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
     }
 

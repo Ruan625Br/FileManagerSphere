@@ -18,16 +18,11 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
 import android.widget.Toast
-import androidx.annotation.AnimRes
-import androidx.annotation.ArrayRes
-import androidx.annotation.BoolRes
-import androidx.annotation.DimenRes
-import androidx.annotation.Dimension
-import androidx.annotation.IntegerRes
-import androidx.annotation.InterpolatorRes
-import androidx.annotation.PluralsRes
-import androidx.annotation.StyleRes
+import androidx.annotation.*
 import androidx.appcompat.view.ContextThemeWrapper
+import com.etb.filemanager.files.file.common.mime.compat.obtainStyledAttributesCompat
+import com.etb.filemanager.files.file.common.mime.compat.use
+import com.google.android.material.R
 
 val Context.activity: Activity?
     get() {
@@ -145,3 +140,18 @@ val Context.longAnimTime: Int
 
 fun Context.withheme(@StyleRes themeRes: Int): Context =
     if (themeRes != 0) ContextThemeWrapper(this, themeRes) else this
+@ColorInt
+fun Context.getColorByAttr(@AttrRes attr: Int): Int =
+    getColorStateListByAttr(attr).defaultColor
+
+@SuppressLint("RestrictedApi")
+fun Context.getColorStateListByAttr(@AttrRes attr: Int): ColorStateList =
+    obtainStyledAttributesCompat(attrs = intArrayOf(attr)).use { it.getColorStateList(0) }
+
+fun Context.getColorFromRes(atrr: Int): Int{
+    val attrs = intArrayOf(atrr)
+    val typedArray = this.obtainStyledAttributes(attrs)
+    val tint = typedArray.getColor(0, 0)
+    typedArray.recycle()
+    return tint
+}

@@ -6,16 +6,18 @@
       android:padding="4dp"
         android:layout_width="match_parent">
 
-    <LinearLayout
+    <com.etb.filemanager.manager.files.ui.SelectableMaterialCardView
             android:layout_height="75dp"
             android:layout_width="match_parent"
             android:padding="8dp"
             android:clickable="true"
-            android:id="@+id/item_file" app:layout_constraintEnd_toEndOf="parent"
+            android:checkable="true"
+            app:cardCornerRadius="20dp"
+            android:id="@+id/itemFile" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-            android:foreground="?selectableItemBackground"
-            android:background="@drawable/background_file_item"
+            app:cardBackgroundColor="?attr/colorOnSecondary"
             app:layout_constraintBottom_toBottomOf="parent">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_height="match_parent"
@@ -24,66 +26,65 @@
             <ImageView
                     android:layout_width="45dp"
                     android:layout_height="45dp" app:srcCompat="@drawable/ic_cj"
-                    android:id="@+id/iv_preview" android:scaleType="centerCrop"
+                    android:id="@+id/iconPreview" android:scaleType="centerCrop"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
-                    app:layout_constraintTop_toTopOf="@+id/linearLayout2"
-                    app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"/>
+                    app:layout_constraintEnd_toEndOf="@+id/itemBorder"
+                    app:layout_constraintTop_toTopOf="@+id/itemBorder"
+                    app:layout_constraintBottom_toBottomOf="@+id/itemBorder"/>
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="56dp"
                     android:gravity="center"
+                    android:layout_marginStart="10dp"
                     android:background="@drawable/background_icon_item"
 
                     android:layout_height="55dp" app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintVertical_bias="0.47" android:id="@+id/linearLayout2">
+                    app:layout_constraintVertical_bias="0.47" android:id="@+id/itemBorder">
                 <ImageView
                         android:layout_height="30dp"
                         android:layout_width="29dp"
                         android:src="@drawable/ic_folder_1"
                         android:layout_centerVertical="true"
-                        android:id="@+id/iv_icon_file" />
+                        android:id="@+id/iconFile" />
             </LinearLayout>
             <TextView
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:padding="2dp"
-                    android:text="File title"
-                    android:id="@+id/tv_file_title"
-                    app:layout_constraintStart_toEndOf="@+id/linearLayout2" app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/fileTitle"
+                    app:layout_constraintStart_toEndOf="@+id/itemBorder" app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.039" app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="8dp"/>
             <TextView
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:layout_toEndOf="@id/tv_file_date"
-                    android:layout_below="@id/tv_file_title"
+                    android:layout_toEndOf="@id/fileDate"
+                    android:layout_below="@id/fileTitle"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:text="@string/_16_kb"
-                    android:id="@+id/tv_file_size" android:visibility="gone" tools:visibility="visible"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_file_title" app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/fileSize" android:visibility="gone" tools:visibility="visible"
+                    app:layout_constraintTop_toBottomOf="@+id/fileTitle" app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintHorizontal_bias="0.189"/>
             <TextView
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:layout_below="@id/tv_file_title"
+                    android:layout_below="@id/fileTitle"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:text="@string/_24_de_mar"
-                    android:id="@+id/tv_file_date" android:visibility="gone" tools:visibility="visible"
+                    android:id="@+id/fileDate" android:visibility="gone" tools:visibility="visible"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintVertical_bias="0.953"
-                    app:layout_constraintStart_toEndOf="@+id/tv_file_size"
+                    app:layout_constraintStart_toEndOf="@+id/fileSize"
                     app:layout_constraintHorizontal_bias="0.928"/>
 
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
+    </com.etb.filemanager.manager.files.ui.SelectableMaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

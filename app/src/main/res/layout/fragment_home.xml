@@ -12,7 +12,7 @@
             android:layout_height="match_parent"
             tools:listitem="@layout/file_item"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="65dp"
             android:id="@+id/recyclerView" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="1.0"
