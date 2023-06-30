@@ -34,6 +34,7 @@ import com.etb.filemanager.util.file.style.IconUtil
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import java.lang.UnsupportedOperationException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -41,7 +42,7 @@ import java.util.*
 
 
 class FileModelAdapter(
-    private var fileModels: MutableList<FileModel>, private val mContext: Context, private val listener: FileListener
+    /*private var fileModels: MutableList<FileModel>*/ private val mContext: Context, private val listener: FileListener
 ) : AnimatedListAdapter<FileModel, FileModelAdapter.ViewHolder>(CALLBACK) {
 
     private val fileUtils: FileUtils = FileUtils.getInstance()
@@ -51,9 +52,6 @@ class FileModelAdapter(
     private lateinit var selectPreferenceUtils: SelectPreferenceUtils
     private lateinit var fileAdapterListenerUtil: FileAdapterListenerUtil
 
-
-    private val selectedItems = mutableListOf<FileModel>()
-    private val mainScope = MainScope()
 
     var pickOptions: PickOptions? = null
         set(value) {
@@ -89,7 +87,7 @@ class FileModelAdapter(
 
     }
 
-    fun selectFile(file: FileModel) {
+   private fun selectFile(file: FileModel) {
         if (!isFileSelectable(file)) {
             return
         }
@@ -100,14 +98,13 @@ class FileModelAdapter(
 
         }
         listener.selectFile(file, !selected)
-        toggleItemSelection(fileModels.indexOf(file))
     }
 
-    fun selectAllFiles() {
+   /* fun selectAllFiles() {
         val files = fileItemSetOf()
         val selectedFiles = selectedFiles.toSet() // Salva os itens já selecionados antes do "selectAll"
         for (index in 0 until itemCount) {
-            val file = fileModels.get(index)
+            val file = getItem(index)
             files.add(file)
         }
         listener.selectFiles(files, true)
@@ -122,7 +119,7 @@ class FileModelAdapter(
         }
         notifyDataSetChanged()
     }
-
+*/
     private fun isFileSelectable(file: FileModel): Boolean {
         val pickOptions = pickOptions ?: return true
         return if (pickOptions.pickDirectory) {
@@ -132,23 +129,40 @@ class FileModelAdapter(
         }
     }
 
+    fun selectAllFiles() {
+
+        val files = fileItemSetOf()
+        for (index in 0 until itemCount) {
+            val file = getItem(index)
+            if (isFileSelectable(file)) {
+                files.add(file)
+            }
+        }
+        listener.selectFiles(files, true)
+    }
+
     fun toggleItemSelection(position: Int) {
-        val file = fileModels[position]
+        val file = getItem(position)
         file.isSelected = !file.isSelected
-        notifyItemChanged(position)
+        //notifyItemChanged(position)
     }
     @SuppressLint("NotifyDataSetChanged")
      fun clearItemSelection() {
         for (index in 0 until itemCount) {
-            val file = fileModels.get(index)
+            val file = getItem(index)
 
             file.isSelected = false
         }
-        notifyDataSetChanged()
+       // notifyDataSetChanged()
+    }
+
+    @Deprecated("", ReplaceWith("replaceList(list)"))
+    override fun replace(list: List<FileModel>, clear: Boolean) {
+        throw UnsupportedOperationException()
     }
 
 
-    fun replaceList(list: MutableList<FileModel>) {
+    fun replaceList(list: List<FileModel>) {
         super.replace(list, true)
         rebuildFilePositionMap()
     }
@@ -169,17 +183,21 @@ class FileModelAdapter(
 
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    @SuppressLint("UseCompatLoadingForDrawables")
-    override fun onBindViewHolder(holder: FileModelAdapter.ViewHolder, position: Int) {
-        val file = fileModels[position]
+    override fun onBindViewHolder(holder: FileModelAdapter.ViewHolder, position: Int){
+        throw UnsupportedOperationException()
+    }
+    override fun onBindViewHolder(holder: FileModelAdapter.ViewHolder, position: Int, payloads: List<Any>) {
+        bindViewHolderAnimation(holder)
+        val file = getItem(position)
         val mimeTypeUtil = MimeTypeUtil()
         val filePath = file.filePath
         val colorUtil = ColorUtil()
         val iconUtil = IconUtil()
         val mimeType = getFileMimeType(file.filePath)
-        val checked = selectedFiles.contains(file)
-        Log.i("TESTEEE", "Sla: $checked")
+        val selected = file in selectedFiles
+        if (payloads.isNotEmpty()){
+            return
+        }
 
 
         if (!file.isDirectory) {
@@ -242,7 +260,7 @@ class FileModelAdapter(
         }
         holder.itemBorder.setOnClickListener { selectFile(file) }
 
-        if (checked || file.isSelected) {
+        if (selected || file.isSelected) {
             holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
         } else {
             holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
@@ -302,10 +320,6 @@ class FileModelAdapter(
         return mediaMimeTypes.any { mimeType.startsWith(it) }
     }
 
-    override fun getItemCount(): Int {
-        return fileModels.size
-    }
-
 
     class ViewHolder(ItemFileView: View) : RecyclerView.ViewHolder(ItemFileView) {
         // lateinit var itemDetails: Details
@@ -322,45 +336,13 @@ class FileModelAdapter(
 
     }
 
-
-    fun removeFile(fileName: String) {
-        val fileToRemove = fileModels.firstOrNull { it.fileName == fileName }
-        if (fileToRemove != null) {
-            val position = fileModels.indexOf(fileToRemove)
-            fileModels.removeAt(position)
-            notifyItemRemoved(position)
-        }
-
+    override fun clear() {
+        super.clear()
+        rebuildFilePositionMap()
     }
 
-
-    fun removeSelectedItem(item: FileModel) {
-        val position = fileModels.indexOf(item)
-        if (position != -1) {
-            fileModels[position] = item
-            selectedItems.remove(item)
-            notifyItemChanged(position)
-        }
-
-    }
-
-
-    fun setSelectedItem(item: FileModel) {
-        mainScope.launch {
-            if (selectedItems.contains(item)) {
-                removeSelectedItem(item)
-            } else {
-                val position = fileModels.indexOf(item) // Encontra a posição do item na lista do Adapter
-                if (position != -1) {
-                    fileModels[position] = item // Atualiza o item na lista do Adapter
-                    selectedItems.add(item)
-                    notifyItemChanged(position) // Notifica o Adapter sobre a mudança no item específico
-                }
-            }
-
-        }
-
-    }
+    override val isAnimationEnabled: Boolean
+        get() = true
 
     companion object {
         private val PAYLOAD_STATE_CHANGED = Any()

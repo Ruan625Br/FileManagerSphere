@@ -4,14 +4,14 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.etb.filemanager.R
+import com.etb.filemanager.files.util.CloseableLiveData
+import com.etb.filemanager.files.util.Stateful
 import com.etb.filemanager.manager.adapter.FileModel
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import kotlinx.coroutines.*
+import java.io.Closeable
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -20,6 +20,13 @@ import java.nio.file.StandardCopyOption
 
 class FileListViewModel : ViewModel() {
     private val TAG = "FileViewModel"
+
+    private val trailLiveData = TrailLiveData()
+    val hasTrail: Boolean
+        get() = trailLiveData.value != null
+    val pendingState: Parcelable?
+        get() = trailLiveData.value?.pendigSate
+
 
     private val _operationTitle = MutableLiveData<String>()
     private val _operationMsg = MutableLiveData<String>()
@@ -312,23 +319,23 @@ class FileListViewModel : ViewModel() {
                 selectedFiles!!.remove(file)
             }
         }
-        if (changed){
+        if (changed) {
             _selectedFilesLiveData.postValue(selectedFiles)
         }
     }
 
-    fun clearSelectedFiles(){
+    fun clearSelectedFiles() {
         val selectedFiles = _selectedFilesLiveData.value
-        if (selectedFiles!!.isEmpty()){
+        if (selectedFiles!!.isEmpty()) {
             return
         }
         selectedFiles.clear()
         _selectedFilesLiveData.postValue(selectedFiles)
     }
 
-    fun replaceSelectedFiles(files: FileItemSet){
+    fun replaceSelectedFiles(files: FileItemSet) {
         val selectedFiles = _selectedFilesLiveData.value
-        if (selectedFiles == files){
+        if (selectedFiles == files) {
             return
         }
         selectedFiles?.clear()
@@ -346,10 +353,65 @@ class FileListViewModel : ViewModel() {
             _pickOptionsLiveData.value = value
         }
 
-}
-    enum class TypeOperation() {
-        CUT,
-        // COPY,
+
+    fun navigateTo(lastState: Parcelable, path: Path) = trailLiveData.navigateTo(lastState, path)
+    fun resetTo(path: Path) = trailLiveData.resetTo(path)
+    fun navigateUp(): Boolean = trailLiveData.navigateUp()
+
+    val currentPathLiveData = trailLiveData.map { it.currentPath }
+
+    val currentPath: Path?
+        get() = currentPathLiveData.value
+
+    private val _fileListLiveData = FileListSwitchMapLiveData(currentPathLiveData)
+    val fileListLiveData: LiveData<Stateful<List<FileModel>>>
+        get() = _fileListLiveData
+    val fileListStateful: Stateful<List<FileModel>>
+        get() = _fileListLiveData.value!!
+
+
+    private class FileListSwitchMapLiveData(
+        private val pathLiveData: LiveData<Path>
+    ) : MediatorLiveData<Stateful<List<FileModel>>>(), Closeable {
+        private var liveData: CloseableLiveData<Stateful<List<FileModel>>>? = null
+
+        init {
+            addSource(pathLiveData) {
+                updateSource()
+            }
+        }
+        private fun updateSource() {
+            liveData?.let {
+                removeSource(it)
+                it.close()
+            }
+            val path = pathLiveData.value
+            val liveData =  FileListLiveData(path!!)
+
+
+            this.liveData = liveData
+            addSource(liveData) { value = it }
+        }
+
+        fun reload() {
+            when (val liveData = liveData) {
+                is FileListLiveData -> liveData.loadValue()
+            }
+        }
+
+        override fun close() {
+            liveData?.let {
+                removeSource(it)
+                it.close()
+                this.liveData = null
+            }
+        }
     }
+}
+
+enum class TypeOperation() {
+    CUT,
+    // COPY,
+}
 
 

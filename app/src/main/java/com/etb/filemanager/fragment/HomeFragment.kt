@@ -35,6 +35,10 @@ import com.etb.filemanager.activity.MainActivity
 import com.etb.filemanager.files.file.common.mime.MimeTypeIcon
 import com.etb.filemanager.files.file.common.mime.MimeTypeUtil
 import com.etb.filemanager.files.file.properties.*
+import com.etb.filemanager.files.util.Failure
+import com.etb.filemanager.files.util.Loading
+import com.etb.filemanager.files.util.Stateful
+import com.etb.filemanager.files.util.Success
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.manager.FileListener
 import com.etb.filemanager.interfaces.settings.PopupSettingsListener
@@ -64,6 +68,8 @@ import kotlinx.coroutines.*
 import java.io.File
 import java.nio.file.*
 import java.util.*
+import kotlin.io.path.Path
+import kotlin.io.path.pathString
 import kotlin.streams.toList
 
 
@@ -177,17 +183,26 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val mFile = fileUri?.path?.let { File(it) }
         val path = fileUri?.let { fileUtil.getFilePathFromUri(requireContext(), it) }
         if (mFile != null) {
-            listFilesAndFoldersInBackground(if (mFile.isDirectory) path.toString() else BASE_PATH)
+           // listFilesAndFoldersInBackground(if (mFile.isDirectory) path.toString() else BASE_PATH)
         } else {
-            listFilesAndFoldersInBackground(BASE_PATH)
+           // listFilesAndFoldersInBackground(BASE_PATH)
 
         }
+        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        adapter = FileModelAdapter( requireContext(), this)
+        recyclerView.adapter = adapter
 
 
     }
 
     private fun observeViewModel() {
+
+        viewModel.currentPathLiveData.observe(viewLifecycleOwner) { onCurrentPathChanged(it)}
         viewModel.selectedFilesLiveData.observe(viewLifecycleOwner) { onSelectedFilesChanged(it) }
+        viewModel.fileListLiveData.observe(viewLifecycleOwner) { onFileListChanged(it) }
+        viewModel.resetTo(Paths.get(BASE_PATH))
+
+
     }
 
 
@@ -326,9 +341,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         }
         selectPreferenceUtils.sortFilesAuto(fileModel, requireContext())
 
-        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+      /*  recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         adapter = FileModelAdapter(fileModel, requireContext(), this)
-        recyclerView.adapter = adapter
+        recyclerView.adapter = adapter*/
         setRecyclerViewAnimation()
     }
 
@@ -502,12 +517,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                         StandardWatchEventKinds.ENTRY_CREATE -> {
                             val file = event.context() as Path
                             val fileName = file.toString()
-                            addNewItemAdapter("$path/$fileName")
                         }
 
                         StandardWatchEventKinds.ENTRY_DELETE -> {
                             val fileName = event.context() as Path
-                            adapter.removeFile(fileName.toString())
                         }
 
                         StandardWatchEventKinds.ENTRY_MODIFY -> {
@@ -549,6 +562,37 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         refreshAdapter()
     }
 
+    private fun onFileListChanged(stateful: Stateful<List<FileModel>>){
+        val files = stateful.value
+        when{
+            stateful is Failure -> topAppBar.title = "Erro"
+            stateful is Loading -> topAppBar.title = "Carregando.."
+            else -> topAppBar.title = "Foi man"
+        }
+        val hasFiles = !files.isNullOrEmpty()
+        val throwable = (stateful as? Failure)?.throwable
+
+
+        if (files != null){
+            updateAdapterFileList()
+        } else{
+            adapter.clear()
+        }
+        if (stateful is Success){
+            viewModel.pendingState
+                ?.let { recyclerView.layoutManager!!.onRestoreInstanceState(it) }
+        }
+
+    }
+    private fun onCurrentPathChanged(path: Path){
+        updateActionMode()
+    }
+
+
+    private fun updateAdapterFileList() {
+        var files = viewModel.fileListStateful.value ?: return
+        adapter.replaceList(files)
+    }
 
     private fun updateActionMode() {
         startActionMode()
@@ -852,20 +896,22 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
 
-                val mPreviousPath = managerUtil.getPreviousPath()
-                if (mCurrentPath == BASE_PATH) {
+                /* val mPreviousPath = managerUtil.getPreviousPath()
+                 if (mCurrentPath == BASE_PATH) {
+                     val recentFragment = RecentFragment()
+                     (requireActivity() as MainActivity).startNewFragment(recentFragment)
+
+                 } else {
+                     listFilesAndFoldersInBackground(mPreviousPath)
+                     mCurrentPath = mPreviousPath
+
+                 }*/
+                if (!viewModel.navigateUp()){
                     val recentFragment = RecentFragment()
                     (requireActivity() as MainActivity).startNewFragment(recentFragment)
 
-                } else {
-                    listFilesAndFoldersInBackground(mPreviousPath)
-                    mCurrentPath = mPreviousPath
-
                 }
 
-                Log.e("Pasta anterior", "Pasta $mPreviousPath")
-                Log.e("Pasta atual", "Pasta $mCurrentPath")
-                Log.e("Pasta base", "Pasta $BASE_PATH")
 
             }
         }
@@ -879,12 +925,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     fun navigateTo(path: String) {
-        coroutineScope.launch {
+        /*coroutineScope.launch {
             managerUtil.addToPathStack(path)
             listFilesAndFoldersInBackground(path)
             //replaceList(path)
 
-        }
+        }*/
+        val state = recyclerView.layoutManager!!.onSaveInstanceState()
+        viewModel.navigateTo(state!!, Path(path))
 
     }
 

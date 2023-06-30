@@ -75,8 +75,13 @@ dependencies {
     implementation 'org.tukaani:xz:1.9'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.6'
     implementation 'dev.rikka.rikkax.preference:simplemenu-preference:1.0.3'
-    // Shizuku-API 13.1.0 requires core library desugaring.
-    //noinspection GradleDependency
+
     implementation 'dev.rikka.shizuku:api:12.2.0'
+
+    //implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidx_lifecycle_version"
+// https://mvnrepository.com/artifact/androidx.lifecycle/lifecycle-viewmodel-ktx
+    runtimeOnly("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+
 
 }
