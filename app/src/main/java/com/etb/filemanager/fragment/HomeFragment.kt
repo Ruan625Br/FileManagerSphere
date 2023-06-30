@@ -115,7 +115,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     private lateinit var viewModel: FileListViewModel
     val propertiesViewModel = PropertiesViewModel()
 
-    private val selectedItems = mutableListOf<FileModel>()
     private var isSelectionMode = false
     private val REQUEST_CODE = 6
 
@@ -830,7 +829,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             R.id.action_rename -> {
-                if (selectedItems.size <= 0) showRenameFileDialog(selectedItems[0]) else showBottomSheetRenameMultipleFiles()
+                val selectedFile = viewModel.selectedFiles.toMutableList()
+                if (viewModel.selectedFiles.size == 1) showRenameFileDialog(selectedFile[0]) else showBottomSheetRenameMultipleFiles()
                 finishActionMode()
             }
 
@@ -920,9 +920,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
 
-    fun addSelectedFile(fileItem: FileModel) {
-        selectedItems.add(fileItem)
-    }
 
     override fun clearSelectedFiles() {
         viewModel.clearSelectedFiles()
@@ -1067,7 +1064,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             CreateFileAction.DELETE -> {
-                addSelectedFile(file)
                 confirmDeleteFile(file, false)
             }
 
@@ -1167,7 +1163,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val ivStartOp = requireView().findViewById<ImageView>(R.id.iv_start_op)
         val tvTitleOp = requireView().findViewById<TextView>(R.id.tv_title_op)
 
-        val sourceFiles = selectedItems.map { it.file }
+        val sourceFiles = viewModel.selectedFiles.map { it.file }
 
 
         standardBehaviorOperation.peekHeight = 300
@@ -1261,7 +1257,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
         val btnRename = requireView().findViewById<Button>(R.id.btn_rename)
 
-        for (fileItem in selectedItems) {
+
+        for (fileItem in viewModel.selectedFiles) {
             if (!selectedFiles.contains(fileItem)) {
                 selectedFiles.add(fileItem)
             }
@@ -1320,7 +1317,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_HIDDEN) {
 
-                    selectedItems.clear()
+                    finishActionMode()
                     selectedFiles.clear()
                     layout.removeAllViews()
 
@@ -1348,10 +1345,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     private fun delete() {
-        val filePaths = selectedItems.map { it.filePath }
+        val filePaths = viewModel.selectedFiles.map { it.filePath }
 
         viewModel.deleteFilesAndFolders(filePaths)
-        selectedItems.clear()
+
     }
 
 
