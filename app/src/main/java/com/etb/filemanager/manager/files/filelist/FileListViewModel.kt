@@ -1,21 +1,12 @@
 package com.etb.filemanager.manager.files.filelist
 
-import android.content.Context
 import android.os.Parcelable
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.*
-import com.etb.filemanager.R
 import com.etb.filemanager.files.util.CloseableLiveData
 import com.etb.filemanager.files.util.Stateful
 import com.etb.filemanager.manager.adapter.FileModel
-import com.etb.filemanager.manager.util.MaterialDialogUtils
-import kotlinx.coroutines.*
 import java.io.Closeable
-import java.io.File
-import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.StandardCopyOption
 
 
 class FileListViewModel : ViewModel() {
@@ -26,116 +17,6 @@ class FileListViewModel : ViewModel() {
         get() = trailLiveData.value != null
     val pendingState: Parcelable?
         get() = trailLiveData.value?.pendigSate
-
-
-
-
-
-
-
-    /*
-        @OptIn(DelicateCoroutinesApi::class)
-        fun moveFiles(sourceFiles: List<File>, destinationDir: File, context: Context) {
-            viewModelScope.launch {
-                val totalFiles = sourceFiles.size
-                var completedFiles = 0
-
-
-                val tasks = sourceFiles.map { sourceFile ->
-                    async(Dispatchers.IO) {
-                        val destinationFile = destinationDir.resolve(sourceFile.name)
-                        Log.i(TAG, "Path:: ${sourceFile.path}")
-
-                        try {
-                            completedFiles++
-                            val progress = (completedFiles.toFloat() / totalFiles.toFloat()) * 100
-                            val title = context.resources.getQuantityString(R.plurals.movingItems, 1, sourceFiles.size)
-                            val numItems = sourceFiles.size
-                            val msg = context.resources.getQuantityString(
-                                R.plurals.movingItems,
-                                numItems,
-                                numItems,
-                                sourceFile.name,
-                                destinationFile.path
-                            )
-
-                            withContext(Dispatchers.Main) {
-                                _operationTitle.value = title
-                                _operationMsg.value = msg
-                                _operationProgress.value = progress.toInt()
-                            }
-
-                            Files.move(
-                                sourceFile.toPath(),
-                                destinationFile.toPath()
-                            )
-                        } catch (e: Exception) {
-                            if (e is java.nio.file.FileAlreadyExistsException){
-                                try {
-                                    val title = context.resources.getQuantityString(R.plurals.plurals_file_already_exists,1)
-                                    val msg = context.resources.getQuantityString(R.plurals.plurals_file_already_exists, 2, sourceFile.name)
-                                    val textPositiveButton = context.getString(R.string.replace)
-                                    val textNegativeButton = context.getString(R.string.skip)
-
-                                    withContext(Dispatchers.Main){
-                                    MaterialDialogUtils().createDialogInfo(
-                                        title, msg, textPositiveButton, textNegativeButton, context, true
-                                    ) { dialogResult ->
-                                        val isConfirmed = dialogResult.confirmed
-                                        val currentFile = sourceFile
-                                        if (isConfirmed) {
-                                            launch(Dispatchers.IO) {
-                                                try {
-                                                    withContext(Dispatchers.Main) {
-                                                        val progress = (completedFiles.toFloat() / totalFiles.toFloat()) * 100
-                                                        _operationTitle.value = title
-                                                        _operationMsg.value = "\"msg\""
-                                                        _operationProgress.value = progress.toInt()
-                                                    }
-                                                    Files.move(
-                                                        sourceFile.toPath(),
-                                                        destinationFile.toPath(),
-                                                        StandardCopyOption.REPLACE_EXISTING
-                                                    )
-                                                } catch (e: Exception) {
-                                                    Log.e(TAG, "Error 2: $e")
-
-                                                }
-                                            }
-                                        }
-                                        val listFiles = sourceFiles.toMutableList()
-                                        if (!listFiles.isEmpty()) {
-                                            listFiles.remove(currentFile)
-                                            moveFiles(listFiles.toList(), destinationFile, context)
-                                        }
-
-                                    }
-                                    }
-                                } catch (e: Exception){
-                                    Log.e(TAG, "Error 1: $e")
-                                }
-                            }
-                            Log.e(TAG, "Error: $e")
-                        }
-                    }
-                }
-
-                try {
-                    awaitAll(*tasks.toTypedArray())
-                    withContext(Dispatchers.Main) {
-                        _cancelOperationProgress.value = Unit
-                        Toast.makeText(context, "Arquivos movidos com sucesso", Toast.LENGTH_LONG).show()
-                    }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error: $e")
-                } finally {
-                    withContext(Dispatchers.Main) {
-                        _cancelOperationProgress.value = Unit
-                    }
-                }
-            }
-        }
-    */
 
 
 
@@ -220,6 +101,7 @@ class FileListViewModel : ViewModel() {
         val path = currentPath
         _fileListLiveData.reload()
     }
+
     private class FileListSwitchMapLiveData(
         private val pathLiveData: LiveData<Path>
     ) : MediatorLiveData<Stateful<List<FileModel>>>(), Closeable {
@@ -230,13 +112,14 @@ class FileListViewModel : ViewModel() {
                 updateSource()
             }
         }
+
         private fun updateSource() {
             liveData?.let {
                 removeSource(it)
                 it.close()
             }
             val path = pathLiveData.value
-            val liveData =  FileListLiveData(path!!)
+            val liveData = FileListLiveData(path!!)
 
 
             this.liveData = liveData
