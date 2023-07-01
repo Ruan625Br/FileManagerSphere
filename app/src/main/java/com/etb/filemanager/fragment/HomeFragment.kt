@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -21,6 +22,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -146,6 +148,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            requestStoragePermission()
+        } else{
+            requestFilesPermission()
+        }
         initAllBottomSheet()
 
 
@@ -172,9 +179,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
         initFabClick()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            requestStoragePermission()
-        }
+
 
 
         selectPreferenceUtils = SelectPreferenceUtils.getInstance()
@@ -453,7 +458,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (Environment.isExternalStorageManager()) {
-                // A permissão já foi concedida
             } else {
                 val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
                 val uri = Uri.fromParts("package", requireContext().packageName, null)
@@ -465,8 +469,36 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                     Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE
                 ), 1
             )
+        } else{
+
         }
 
+
+    }
+
+    private fun requestFilesPermission(){
+        val READ_WRITE_PERMISSION_REQUEST_CODE = 1
+
+        if (ContextCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Se as permissões não estão concedidas, solicite-as
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ),
+                READ_WRITE_PERMISSION_REQUEST_CODE
+            )
+        } else {
+        }
 
     }
 
