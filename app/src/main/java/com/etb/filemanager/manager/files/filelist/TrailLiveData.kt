@@ -21,6 +21,7 @@ class TrailLiveData : LiveData<TrailData>() {
     fun navigateUp(): Boolean{
         val oldTrailData = value ?: return false
         val trailData = oldTrailData.navigateUp() ?: return false
+        value = trailData
         return true
     }
 

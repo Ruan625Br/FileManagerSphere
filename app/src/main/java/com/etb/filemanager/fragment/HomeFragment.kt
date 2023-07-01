@@ -118,7 +118,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     private lateinit var viewModel: FileListViewModel
     val propertiesViewModel = PropertiesViewModel()
 
-    private var isSelectionMode = false
     private val REQUEST_CODE = 6
 
     private var progressDialog: AlertDialog? = null
@@ -301,7 +300,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         ) { dialogResult ->
             val isConfirmed = dialogResult.confirmed
             if (isConfirmed) {
-                managerUtil.getPreviousPath()
+                //managerUtil.getPreviousPath()
 
             }
         }
@@ -570,12 +569,12 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val throwable = (stateful as? Failure)?.throwable
 
         if (throwable != null){
-            Log.e("Homwwwww", "Erro: ${throwable.message}")
             val error = throwable.toString()
             if (hasFiles){
-                Log.e("asls", "errrrrr, $error")
+                createDialgRestriction()
+
             } else{
-                Log.e("asls", "errrrrr, $error")
+                createDialgRestriction()
 
             }
         }
@@ -607,8 +606,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             finishActionMode()
             return
         }
-        val title = "${files.size} selecionado(s)"
-        actionMode?.title = title
+        actionMode?.title = getQuantityString(R.plurals.file_list_selected_count_format, files.size, files.size)
 
     }
 
@@ -723,7 +721,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             R.id.action_select_all -> {
-                //selectFiles(fileModel, true)
                 adapter.selectAllFiles()
             }
 
@@ -773,33 +770,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         startActivity(intent)
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    private fun requestDocumentPermission(folder: String) {
-        val storageManager = requireActivity().getSystemService(Context.STORAGE_SERVICE) as StorageManager
-        val intent = storageManager.primaryStorageVolume.createOpenDocumentTreeIntent()
-        val targetDirectory = "Android%2F$folder"
-        var uri = intent.getParcelableExtra<Uri>("android.provider.INITIAL_URI") as? Uri
-        var scheme = uri.toString()
-        scheme += "%3A$targetDirectory"
-        uri = Uri.parse(scheme)
-        intent.putExtra("android.provider.INITIAL_URI", uri)
-        startActivityForResult(intent, REQUEST_CODE)
-        //  startActivity(intent)
-
-        /*val takeUriPermission = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val intent = result.data
-                if (intent != null) {
-                    intent.data?.let { treeUri ->
-
-                        navigateTo(treeUri.path.toString())
-                    }
-                }
-            }
-        }
-
-        takeUriPermission.launch(Intent(requireActivity(), MainActivity::class.java))*/
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -822,16 +792,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     }
 
-    private fun getPathFromTreeUri(treeUri: Uri): String? {
-        val documentId = DocumentsContract.getTreeDocumentId(treeUri)
-        val parts = documentId.split(":")
-        if (parts.size >= 2) {
-            val storageId = parts[0]
-            val path = parts[1]
-            return "/storage/emulated/0/$path"
-        }
-        return null
-    }
 
     private fun getFolderPathFromUri(uri: Uri): String? {
         val docUri = DocumentsContract.buildDocumentUriUsingTree(uri, DocumentsContract.getTreeDocumentId(uri))
@@ -848,16 +808,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         return null
     }
 
-    private fun readSDK30(treeUri: Uri) {
-        val tree = DocumentFile.fromTreeUri(requireContext(), treeUri)!!
-        val uriList = arrayListOf<Uri>()
-        listFiles(tree).forEach { uri ->
-            uriList.add(uri)
-            Log.i("Uri Log:", uri.toString())
-            // navigateTo(uri.path.toString())
-        }
-
-    }
 
     private fun listFiles(folder: DocumentFile): List<Uri> {
         return if (folder.isDirectory) {
@@ -928,24 +878,12 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         super.onAttach(context)
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-
-                /* val mPreviousPath = managerUtil.getPreviousPath()
-                 if (mCurrentPath == BASE_PATH) {
-                     val recentFragment = RecentFragment()
-                     (requireActivity() as MainActivity).startNewFragment(recentFragment)
-
-                 } else {
-                     listFilesAndFoldersInBackground(mPreviousPath)
-                     mCurrentPath = mPreviousPath
-
-                 }*/
                 if (!viewModel.navigateUp()){
                     val recentFragment = RecentFragment()
                     (requireActivity() as MainActivity).startNewFragment(recentFragment)
+                    requireActivity().finish()
 
                 }
-
-
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -954,18 +892,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     fun refresh() {
-        listFilesAndFoldersInBackground(mCurrentPath)
+            viewModel.reload()
     }
 
     fun navigateTo(path: String) {
-        /*coroutineScope.launch {
-            managerUtil.addToPathStack(path)
-            listFilesAndFoldersInBackground(path)
-            //replaceList(path)
-
-        }*/
+          //  managerUtil.addToPathStack(path)
         val state = recyclerView.layoutManager!!.onSaveInstanceState()
-        viewModel.navigateTo(state!!, Path(path))
+        viewModel.navigateTo(state!!, Paths.get(path))
 
     }
 

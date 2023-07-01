@@ -130,18 +130,23 @@
     <string name="replace">Substitui</string>
     <string name="skip">Pular</string>
 
-    <string name="empty">Vazio</string>
-    <string name="loading">Carregando</string>
-    <string name="error">Erro</string>
+    <string name="empty">vazio</string>
+    <string name="loading">carregando</string>
+    <string name="error">erro</string>
 
     <string name="file_list_subtitle_separator">,\u0020</string>
     <plurals name="file_list_subtitle_directory_count_format">
-        <item quantity="one">%1$,d folder</item>
-        <item quantity="other">%1$,d folders</item>
+        <item quantity="one">%1$,d pasta</item>
+        <item quantity="other">%1$,d pastas</item>
     </plurals>
     <plurals name="file_list_subtitle_file_count_format">
-        <item quantity="one">%1$,d file</item>
-        <item quantity="other">%1$,d files</item>
+        <item quantity="one">%1$,d arquivo</item>
+        <item quantity="other">%1$,d arquivos</item>
+    </plurals>
+
+    <plurals name="file_list_selected_count_format">
+        <item quantity="one">%1$,d selecionado</item>
+        <item quantity="other">%1$,d selecionados</item>
     </plurals>
 
 

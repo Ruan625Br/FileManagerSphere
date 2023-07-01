@@ -286,13 +286,6 @@ class FileListViewModel : ViewModel() {
         }
     }
 
-    /*fun Path.moveTo(target: Path): Path{
-
-    }
-    fun Path.moveTo(target: Path, overwrite: Boolean = false): Path{
-
-    }*/
-
     private val _selectedFilesLiveData = MutableLiveData(fileItemSetOf())
     val selectedFilesLiveData: LiveData<FileItemSet>
         get() = _selectedFilesLiveData
@@ -369,7 +362,10 @@ class FileListViewModel : ViewModel() {
     val fileListStateful: Stateful<List<FileModel>>
         get() = _fileListLiveData.value!!
 
-
+    fun reload() {
+        val path = currentPath
+        _fileListLiveData.reload()
+    }
     private class FileListSwitchMapLiveData(
         private val pathLiveData: LiveData<Path>
     ) : MediatorLiveData<Stateful<List<FileModel>>>(), Closeable {

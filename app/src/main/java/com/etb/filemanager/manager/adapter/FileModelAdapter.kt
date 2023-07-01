@@ -49,7 +49,7 @@ import java.util.*
 
 
 class FileModelAdapter(
-    /*private var fileModels: MutableList<FileModel>*/ private val mContext: Context, private val listener: FileListener
+   private val mContext: Context, private val listener: FileListener
 ) : AnimatedListAdapter<FileModel, FileModelAdapter.ViewHolder>(CALLBACK) {
 
     private val fileUtils: FileUtils = FileUtils.getInstance()
@@ -103,26 +103,6 @@ class FileModelAdapter(
         listener.selectFile(file, !selected)
     }
 
-   /* fun selectAllFiles() {
-        val files = fileItemSetOf()
-        val selectedFiles = selectedFiles.toSet() // Salva os itens já selecionados antes do "selectAll"
-        for (index in 0 until itemCount) {
-            val file = getItem(index)
-            files.add(file)
-        }
-        listener.selectFiles(files, true)
-        for (index in files.indices) {
-            toggleItemSelection(index)
-        }
-        for (file in selectedFiles) {
-            val index = fileModels.indexOf(file)
-            if (index != -1) {
-                toggleItemSelection(index)
-            }
-        }
-        notifyDataSetChanged()
-    }
-*/
     private fun isFileSelectable(file: FileModel): Boolean {
         val pickOptions = pickOptions ?: return true
         return if (pickOptions.pickDirectory) {
@@ -144,11 +124,6 @@ class FileModelAdapter(
         listener.selectFiles(files, true)
     }
 
-    fun toggleItemSelection(position: Int) {
-        val file = getItem(position)
-        file.isSelected = !file.isSelected
-        //notifyItemChanged(position)
-    }
     @SuppressLint("NotifyDataSetChanged")
      fun clearItemSelection() {
         for (index in 0 until itemCount) {
@@ -156,7 +131,6 @@ class FileModelAdapter(
 
             file.isSelected = false
         }
-       // notifyDataSetChanged()
     }
 
     @Deprecated("", ReplaceWith("replaceList(list)"))
@@ -186,13 +160,12 @@ class FileModelAdapter(
            binding.itemFile.background = CheckableItemBackground.create(binding.itemFile.context)
 
 
-
         }
 
-    override fun onBindViewHolder(holder: FileModelAdapter.ViewHolder, position: Int){
+    override fun onBindViewHolder(holder: ViewHolder, position: Int){
         throw UnsupportedOperationException()
     }
-    override fun onBindViewHolder(holder: FileModelAdapter.ViewHolder, position: Int, payloads: List<Any>) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: List<Any>) {
         bindViewHolderAnimation(holder)
         val file = getItem(position)
         val binding = holder.binding
@@ -245,7 +218,6 @@ class FileModelAdapter(
 
         currentPath = file.filePath
 
-      //  binding.itemFile.isSelected = checked
         binding.fileTitle.text = file.fileName
 
         binding.itemFile.setOnClickListener {
@@ -266,11 +238,7 @@ class FileModelAdapter(
         }
         binding.itemBorder.setOnClickListener { selectFile(file) }
 
-        /*if (selected || file.isSelected) {
-            holder.itemFile.background = iconUtil.getBackgroundItemSelected(mContext)
-        } else {
-            holder.itemFile.background = iconUtil.getBackgroundItemNormal(mContext)
-        }*/
+
         if (file.isDirectory) {
             binding.fileDate.visibility = View.GONE
             binding.fileSize.visibility = View.GONE
@@ -330,8 +298,6 @@ class FileModelAdapter(
         rebuildFilePositionMap()
     }
 
-    override val isAnimationEnabled: Boolean
-        get() = true
 
     companion object {
         private val PAYLOAD_STATE_CHANGED = Any()
