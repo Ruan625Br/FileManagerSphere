@@ -11,9 +11,5 @@ import java.nio.file.spi.FileSystemProvider
 @Throws(IOException::class)
 fun Path.newDirectoryStream(): DirectoryStream<Path> = Files.newDirectoryStream(this)
 
-@Throws(IOException::class)
-fun Path.observe(intervalMillis: Long): PathObservable =
-    (provider as PathObservableProvider).observe(this, intervalMillis)
-
 val Path.provider: FileSystemProvider
     get() = fileSystem.provider()

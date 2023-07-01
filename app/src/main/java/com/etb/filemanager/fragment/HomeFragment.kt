@@ -27,6 +27,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -184,7 +185,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
            // listFilesAndFoldersInBackground(BASE_PATH)
 
         }
-        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        recyclerView.layoutManager = GridLayoutManager(requireActivity(), 1)
         adapter = FileModelAdapter( requireContext(), this)
         recyclerView.adapter = adapter
 
@@ -250,11 +251,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         (requireActivity() as AppCompatActivity).setSupportActionBar(topAppBar)
     }
 
-    private fun updateProgressUI(progress: Int) {
-        Log.i("HomeFragment", "Update ui")
-        materialDialogUtils.createDialogProgress("Movendo", "teste", progress, requireContext())
-
-    }
 
 
     @OptIn(DelicateCoroutinesApi::class)

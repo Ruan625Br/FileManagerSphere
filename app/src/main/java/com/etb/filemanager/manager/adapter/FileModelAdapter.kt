@@ -56,6 +56,15 @@ class FileModelAdapter(
     private val basePath = "/storage/emulated/0"
     private var currentPath = basePath
 
+    private lateinit var _comparator: Comparator<FileModel>
+    var comparator: Comparator<FileModel>
+        get() = _comparator
+        set(value) {
+            _comparator = value
+            super.replace(list.sortedWith(value), true)
+            rebuildFilePositionMap()
+        }
+
     var pickOptions: PickOptions? = null
         set(value) {
             field = value
@@ -140,7 +149,7 @@ class FileModelAdapter(
 
 
     fun replaceList(list: List<FileModel>) {
-        super.replace(list, true)
+        super.replace(list, false)
         rebuildFilePositionMap()
     }
 

@@ -9,7 +9,6 @@
     <com.etb.filemanager.manager.files.ui.SelectableMaterialCardView
             android:layout_height="75dp"
             android:layout_width="match_parent"
-            android:padding="8dp"
             android:clickable="true"
             android:checkable="true"
             app:cardCornerRadius="20dp"
@@ -17,7 +16,10 @@
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
             app:cardBackgroundColor="?attr/colorOnSecondary"
             app:layout_constraintBottom_toBottomOf="parent">
-
+        <LinearLayout
+                android:layout_height="73dp"
+                android:layout_width="match_parent"
+                android:padding="8dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_height="match_parent"
@@ -36,7 +38,6 @@
                     android:orientation="vertical"
                     android:layout_width="56dp"
                     android:gravity="center"
-                    android:layout_marginStart="10dp"
                     android:background="@drawable/background_icon_item"
 
                     android:layout_height="55dp" app:layout_constraintStart_toStartOf="parent"
@@ -54,10 +55,11 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:padding="2dp"
+                    android:text="@string/app_name"
                     android:id="@+id/fileTitle"
                     app:layout_constraintStart_toEndOf="@+id/itemBorder" app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.039" app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="8dp"/>
+                    app:layout_constraintHorizontal_bias="0.038" app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.194"/>
             <TextView
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
@@ -66,9 +68,9 @@
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:text="@string/_16_kb"
                     android:id="@+id/fileSize" android:visibility="gone" tools:visibility="visible"
-                    app:layout_constraintTop_toBottomOf="@+id/fileTitle" app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHorizontal_bias="0.189"/>
+                    app:layout_constraintHorizontal_bias="0.212"/>
             <TextView
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
@@ -78,13 +80,12 @@
                     android:id="@+id/fileDate" android:visibility="gone" tools:visibility="visible"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintVertical_bias="0.953"
+                    app:layout_constraintVertical_bias="0.837"
                     app:layout_constraintStart_toEndOf="@+id/fileSize"
-                    app:layout_constraintHorizontal_bias="0.928"/>
-
+                    app:layout_constraintHorizontal_bias="0.972"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
     </com.etb.filemanager.manager.files.ui.SelectableMaterialCardView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
