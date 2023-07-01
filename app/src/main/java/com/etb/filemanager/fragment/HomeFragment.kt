@@ -48,6 +48,7 @@ import com.etb.filemanager.manager.editor.CodeEditorFragment
 import com.etb.filemanager.manager.file.CreateFileAction
 import com.etb.filemanager.manager.file.FileAction
 import com.etb.filemanager.manager.file.FileOptionAdapter
+import com.etb.filemanager.manager.files.filecoroutine.FileCoroutineViewModel
 import com.etb.filemanager.manager.files.filelist.*
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.MaterialDialogUtils
@@ -117,6 +118,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     private var showHiddenFiles = false
 
     private lateinit var viewModel: FileListViewModel
+    private lateinit var coroutineViewModel: FileCoroutineViewModel
+
     val propertiesViewModel = PropertiesViewModel()
 
     private val REQUEST_CODE = 6
@@ -147,7 +150,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
 
         settingsViewModel = SettingsViewModel(requireContext())
-        viewModel = ViewModelProvider(this).get(FileListViewModel::class.java)
+        viewModel = ViewModelProvider(this)[FileListViewModel::class.java]
+        coroutineViewModel = ViewModelProvider(this)[FileCoroutineViewModel::class.java]
 
 
         showHiddenFiles = settingsViewModel.getActionShowHiddenFiles()
@@ -203,25 +207,17 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
 
+
     private fun observeOperationViewModel() {
-        var dialogTitle = "Null"
-        var dialogMsg = "Null"
 
-        viewModel.operationTitle.observe(viewLifecycleOwner) { operationTitle ->
-            dialogTitle = operationTitle
-        }
-        viewModel.operationMsg.observe(viewLifecycleOwner) { operationMsg ->
-            dialogMsg = operationMsg
+        coroutineViewModel.operationInfo.observe(viewLifecycleOwner) { info ->
+            if (info.progress != null){
+                updateProgress(info.title, info.message, info.message.toInt())
+            }else{
+                progressDialog?.cancel()
+            }
         }
 
-        viewModel.operationProgress.observe(viewLifecycleOwner) { progress ->
-
-            updateProgress(dialogTitle, dialogMsg, progress)
-
-        }
-        viewModel.cancelOperationProgress.observe(viewLifecycleOwner) { cancel ->
-            progressDialog?.cancel()
-        }
     }
 
     fun onNewIntent(uri: Uri) {
@@ -422,7 +418,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 val enteredText = dialogResult.text
                 if (isConfirmed) {
                     if (fileUtils.createFileAndFolder(mCurrentPath, enteredText, FileUtils.CreationOption.FILE)) {
-                        addNewItemAdapter("$mCurrentPath/$enteredText")
                         Toast.makeText(requireContext(), "Criado $enteredText com sucesso", Toast.LENGTH_LONG).show()
 
                     }
@@ -443,7 +438,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                     if (fileUtil.createFolder(mCurrentPath, enteredText)) {
                         Toast.makeText(requireContext(), "Criado pasta $enteredText com sucesso", Toast.LENGTH_LONG)
                             .show()
-                        addNewItemAdapter("$mCurrentPath/$enteredText")
 
                     }
                 }
@@ -491,67 +485,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val controller = AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_file_fade_in_anim)
         recyclerView.layoutAnimation = controller
         recyclerView.scheduleLayoutAnimation()
-    }
-
-    suspend fun monitorDirectory(path: String) = withContext(Dispatchers.IO) {
-        val diretoryPath = Paths.get(path)
-
-        try {
-            val watchService = FileSystems.getDefault().newWatchService()
-            diretoryPath.register(
-                watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE
-            )
-
-            while (true) {
-                val key = watchService.take()
-                for (event in key.pollEvents()) {
-                    when (event.kind()) {
-                        StandardWatchEventKinds.ENTRY_CREATE -> {
-                            val file = event.context() as Path
-                            val fileName = file.toString()
-                        }
-
-                        StandardWatchEventKinds.ENTRY_DELETE -> {
-                            val fileName = event.context() as Path
-                        }
-
-                        StandardWatchEventKinds.ENTRY_MODIFY -> {
-                            refresh()
-                        }
-                    }
-                }
-                key.reset()
-            }
-        } catch (e: Exception) {
-            Log.e("MONITOR", "ERRO $e")
-        }
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun addNewItemAdapter(path: String) {
-        val itemFile: Path = Paths.get(path)
-
-        val fileName = itemFile.fileName.toString()
-        val filePath = itemFile.toAbsolutePath().toString()
-        val isDirectory = Files.isDirectory(itemFile)
-        val fileExtension = fileUtil.getFileExtension(itemFile)
-        val fileLength = fileUtil.getFileSize(itemFile)
-        val file = itemFile.toFile()
-        if (!showHiddenFiles && fileName.toString().startsWith(".")) {
-            return
-        }
-
-        val newItem = FileModel(
-            UUID.randomUUID().mostSignificantBits,
-            fileName,
-            filePath,
-            isDirectory,
-            fileExtension,
-            fileLength,
-            file,
-        )
-        fileModel.add(newItem)
-        refreshAdapter()
     }
 
     private fun onFileListChanged(stateful: Stateful<List<FileModel>>){
@@ -839,7 +772,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             R.id.action_delete -> {
-                confirmDeleteFile(fileModel.get(0), true)
+               // confirmDeleteFile()
                 finishActionMode()
             }
 
@@ -986,10 +919,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         TODO("Not yet implemented")
     }
 
-    override fun confirmDeleteFile(file: FileModel, multItems: Boolean) {
-        val title = requireContext().getString(R.string.delete)
-        val text =
-            if (multItems) "$title ${selectionTracker.selection.size()} items?" else "$title \"${file.fileName}\"?"
+    override fun confirmDeleteFile(file: FileItemSet) {
+        val title = getString(R.string.delete)
+        val text = getQuantityString(R.plurals.file_list_delete_count_format, file.size, file.size)
         val textPositiveButton = requireContext().getString(R.string.dialog_ok)
 
         materialDialogUtils.createDialogInfo(
@@ -1002,9 +934,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         ) { dialogResult ->
             val isConfirmed = dialogResult.confirmed
             if (isConfirmed) {
-                delete()
-                refresh()
-
+               // delete()
             }
         }
 
@@ -1018,9 +948,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         materialDialogUtils.createBasicMaterial(title, text, textPositiveButton, requireContext()) { dialogResult ->
             val isConfirmed = dialogResult.confirmed
             val enteredText = dialogResult.text
-            if (isConfirmed && enteredText != mCurrentPath) {
+            if (isConfirmed) {
                 fileUtil.renameFile(file.filePath, enteredText)
-                adapter.notifyDataSetChanged()
             }
         }
     }
@@ -1074,7 +1003,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             CreateFileAction.DELETE -> {
-                confirmDeleteFile(file, false)
+                confirmDeleteFile(viewModel.selectedFiles)
             }
 
             CreateFileAction.SHARE -> {
@@ -1093,16 +1022,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     }
 
-    suspend fun monitorPath(path: String) {
-        val directory = File(path)
-
-        val watchChannel = directory.asWatchChannel(mode = Mode.Recursive)
-
-        // Iniciar a observação da pasta
-        for (event in watchChannel) {
-            Log.i("Evento: ${event.kind}", "- Pasta: ${event.file}")
-        }
-    }
 
     private fun showBottomSheetMoreActionFile(fileItem: FileModel) {
 
@@ -1184,7 +1103,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
         ivStartOp.setOnClickListener {
             val destinationDir = File(mCurrentPath)
-            viewModel.initOperation(typeOperation, sourceFiles, destinationDir, requireContext())
+           // viewModel.initOperation(typeOperation, sourceFiles, destinationDir, requireContext())
             standardBehaviorOperation.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -1260,7 +1179,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
         val listInputEditText = mutableListOf<TextInputEditText>()
         val selectedFiles = mutableListOf<FileModel>()
-        val listPath = mutableListOf<String>()
+        val paths = mutableListOf<Path>()
         val layout = requireView().findViewById<LinearLayout>(R.id.linearLayout)
         val tvTitle = requireView().findViewById<TextView>(R.id.tv_title_rename)
 
@@ -1285,15 +1204,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             textInputEditText.setText(file.fileName)
             layout.addView(view)
             listInputEditText.add(textInputEditText)
-            listPath.add(file.filePath)
-        }
+            paths.add(Paths.get(file.filePath))
+         }
 
         btnRename.setOnClickListener {
             bottomSheetBehaviorRename.state = BottomSheetBehavior.STATE_HIDDEN
-
-            val totalFiles = listPath.size
-            var completedFiles = 0
-
+          val newNames = listInputEditText.map { it.text.toString() }
+          coroutineViewModel.rename(paths.toList(), newNames.toList(), requireContext())
+            /*
             CoroutineScope(Dispatchers.IO).launch {
                 for ((index, file) in listPath.withIndex()) {
                     val newName = listInputEditText[index].text.toString()
@@ -1317,6 +1235,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                     refresh()
                 }
             }
+*/
         }
 
         bottomSheetBehaviorRename.peekHeight = 1000
@@ -1354,10 +1273,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     }
 
-    private fun delete() {
-        val filePaths = viewModel.selectedFiles.map { it.filePath }
-
-        viewModel.deleteFilesAndFolders(filePaths)
+    private fun delete(files: FileItemSet) {
 
     }
 

@@ -78,13 +78,13 @@
     </string>
 
     <plurals name="renamingItems">
-        <item quantity="one">Renomeando %d items</item>
+        <item quantity="one">Renomeando %d itens</item>
         <item quantity="two">%d items renomeados de</item>
         <item quantity="other">%d</item>
     </plurals>
     <plurals name="movingItems">
-        <item quantity="one">Movendo %d items</item>
-        <item quantity="other">Movendo %d items: Movendo "%s" para "%s"</item>
+        <item quantity="one">Movendo %d itens</item>
+        <item quantity="other">Movendo %d itens: Movendo "%s" para "%s"</item>
 
     </plurals>
 
@@ -148,6 +148,18 @@
         <item quantity="one">%1$,d selecionado</item>
         <item quantity="other">%1$,d selecionados</item>
     </plurals>
+    <plurals name="file_list_delete_count_format">
+        <item quantity="one">Excluir "\"%s\""?</item>
+        <item quantity="other">Excluir %1$,d itens?/</item>
+    </plurals>
+    <plurals name="files_files_renaming_count_format">
+        <item quantity="one">Renomeando "\"%s\""</item>
+        <item quantity="other">Renomeando %1$d itens</item>
+    </plurals>
+    <plurals name="files_files_renaming_msg_count_format">
+        <item quantity="other">Renomeando "\"%2s\"" para "\"%3s\""</item>
+    </plurals>
+
 
 
 </resources>
