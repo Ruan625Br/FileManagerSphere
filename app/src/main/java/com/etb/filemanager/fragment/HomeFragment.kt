@@ -35,10 +35,7 @@ import com.etb.filemanager.activity.MainActivity
 import com.etb.filemanager.files.file.common.mime.MimeTypeIcon
 import com.etb.filemanager.files.file.common.mime.MimeTypeUtil
 import com.etb.filemanager.files.file.properties.*
-import com.etb.filemanager.files.util.Failure
-import com.etb.filemanager.files.util.Loading
-import com.etb.filemanager.files.util.Stateful
-import com.etb.filemanager.files.util.Success
+import com.etb.filemanager.files.util.*
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.manager.FileListener
 import com.etb.filemanager.interfaces.settings.PopupSettingsListener
@@ -563,16 +560,25 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     private fun onFileListChanged(stateful: Stateful<List<FileModel>>){
-        val files = stateful.value
+        val files = if (stateful is Failure) null else stateful.value
         when{
-            stateful is Failure -> topAppBar.title = "Erro"
-            stateful is Loading -> topAppBar.title = "Carregando.."
-            else -> topAppBar.title = "Foi man"
+            stateful is Failure -> topAppBar.subtitle = R.string.error.toString()
+             stateful is Loading -> topAppBar.subtitle = R.string.loading.toString()
+            else -> topAppBar.subtitle = getSubtitle(files!!)
         }
         val hasFiles = !files.isNullOrEmpty()
         val throwable = (stateful as? Failure)?.throwable
 
+        if (throwable != null){
+            Log.e("Homwwwww", "Erro: ${throwable.message}")
+            val error = throwable.toString()
+            if (hasFiles){
+                Log.e("asls", "errrrrr, $error")
+            } else{
+                Log.e("asls", "errrrrr, $error")
 
+            }
+        }
         if (files != null){
             updateAdapterFileList()
         } else{
@@ -604,6 +610,33 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val title = "${files.size} selecionado(s)"
         actionMode?.title = title
 
+    }
+
+    private fun getSubtitle(files: List<FileModel>): String {
+        val directoryCount = files.count { it.isDirectory }
+        val fileCount = files.size - directoryCount
+        val directoryCountText = if (directoryCount > 0) {
+            getQuantityString(
+                R.plurals.file_list_subtitle_directory_count_format, directoryCount, directoryCount
+            )
+        } else {
+            null
+        }
+        val fileCountText = if (fileCount > 0) {
+            getQuantityString(
+                R.plurals.file_list_subtitle_file_count_format, fileCount, fileCount
+            )
+        } else {
+            null
+        }
+        return when {
+            !directoryCountText.isNullOrEmpty() && !fileCountText.isNullOrEmpty() ->
+                (directoryCountText + getString(R.string.file_list_subtitle_separator)
+                        + fileCountText)
+            !directoryCountText.isNullOrEmpty() -> directoryCountText
+            !fileCountText.isNullOrEmpty() -> fileCountText
+            else -> getString(R.string.empty)
+        }
     }
 
 

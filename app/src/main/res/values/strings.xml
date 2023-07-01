@@ -130,4 +130,19 @@
     <string name="replace">Substitui</string>
     <string name="skip">Pular</string>
 
+    <string name="empty">Vazio</string>
+    <string name="loading">Carregando</string>
+    <string name="error">Erro</string>
+
+    <string name="file_list_subtitle_separator">,\u0020</string>
+    <plurals name="file_list_subtitle_directory_count_format">
+        <item quantity="one">%1$,d folder</item>
+        <item quantity="other">%1$,d folders</item>
+    </plurals>
+    <plurals name="file_list_subtitle_file_count_format">
+        <item quantity="one">%1$,d file</item>
+        <item quantity="other">%1$,d files</item>
+    </plurals>
+
+
 </resources>
