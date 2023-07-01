@@ -490,8 +490,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     private fun onFileListChanged(stateful: Stateful<List<FileModel>>){
         val files = if (stateful is Failure) null else stateful.value
         when{
-            stateful is Failure -> topAppBar.subtitle = R.string.error.toString()
-             stateful is Loading -> topAppBar.subtitle = R.string.loading.toString()
+            stateful is Failure -> topAppBar.subtitle = getString(R.string.error)
+             stateful is Loading -> topAppBar.subtitle = getString(R.string.loading)
             else -> topAppBar.subtitle = getSubtitle(files!!)
         }
         val hasFiles = !files.isNullOrEmpty()
