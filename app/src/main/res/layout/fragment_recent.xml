@@ -27,7 +27,7 @@
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.902"/>
         <TextView
                 android:id="@+id/tv_space_free"
-                android:layout_width="60dp"
+                android:layout_width="77dp"
                 android:layout_height="26dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
@@ -35,9 +35,10 @@
                 android:textSize="22sp"
                 android:textColor="?attr/colorOnSurfaceInverse"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="44dp" app:layout_constraintStart_toEndOf="@+id/tv_space_used"
-                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.855"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout" app:layout_constraintVertical_bias="0.076"/>
+                app:layout_constraintStart_toEndOf="@+id/tv_space_used"
+                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.875"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.66"
+                android:gravity="center"/>
         <LinearLayout
                 android:layout_width="77dp"
                 android:layout_height="21dp"
@@ -49,7 +50,8 @@
                 android:gravity="center_horizontal|center_vertical" android:id="@+id/linearLayout"
                 app:layout_constraintStart_toEndOf="@+id/cp_space"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
+                app:layout_constraintBottom_toTopOf="@+id/tv_space_free" app:layout_constraintHorizontal_bias="0.551"
+                app:layout_constraintVertical_bias="1.0">
 
             <TextView
                     android:id="@+id/free_space"
@@ -89,9 +91,10 @@
                     android:gravity="top"
             />
         </LinearLayout>
+
         <TextView
                 android:id="@+id/tv_space_used"
-                android:layout_width="60dp"
+                android:layout_width="77dp"
                 android:layout_height="26dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
@@ -99,9 +102,9 @@
                 android:textSize="22sp"
                 android:textColor="?attr/colorOnSurfaceInverse"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="24dp"
-                android:layout_marginBottom="56dp"/>
-
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.666"
+                android:gravity="center"/>
         <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -213,15 +216,15 @@
             android:layout_alignParentTop="true"
             android:background="@drawable/rectangle_4"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="5dp"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.338">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="0.677" app:layout_constraintBottom_toTopOf="@+id/linearLayout4">
         <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
                 tools:listitem="@layout/category_file_item"
                 android:id="@+id/recyclerView" app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintVertical_bias="0.0" android:contentDescription="@string/app_name"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -229,11 +232,11 @@
             android:text="Recent Images"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/textView8"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
-            android:layout_marginTop="15dp" app:layout_constraintTop_toBottomOf="@+id/rectangle_4"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.103"
-            app:layout_constraintVertical_bias="0.0"/>
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.103"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.75" app:layout_constraintBottom_toBottomOf="parent"/>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="379dp"
@@ -241,9 +244,10 @@
             android:layout_height="188dp"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:id="@+id/linearLayout4" app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-            app:layout_constraintVertical_bias="1.0"
-            app:layout_constraintHorizontal_bias="0.483" android:layout_marginBottom="10dp" android:padding="5dp">
+            android:id="@+id/linearLayout4"
+            app:layout_constraintVertical_bias="0.975"
+            android:padding="5dp"
+            app:layout_constraintTop_toTopOf="parent">
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" tools:listitem="@layout/recent_image_item"
