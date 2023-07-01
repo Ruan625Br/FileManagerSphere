@@ -16,15 +16,15 @@ import java.util.concurrent.Future
 class FileListLiveData(private val path: Path) : CloseableLiveData<Stateful<List<FileModel>>>() {
     private var future: Future<Unit>? = null
 
-   // private val observer: PathObserver
+    private var observer: DirectoryObserver
 
     @Volatile
     private var isChangedWhileInactive = false
 
     init {
         loadValue()
-       // observer = PathObserver(path) { onChangeObserved() }
-        onChangeObserved()
+        observer = DirectoryObserver(path) { onChangeObserved() }
+
     }
 
     fun loadValue() {
@@ -69,7 +69,7 @@ class FileListLiveData(private val path: Path) : CloseableLiveData<Stateful<List
     }
 
     override fun close() {
-       // observer.close()
+        observer.close()
         future?.cancel(true)
     }
 }
