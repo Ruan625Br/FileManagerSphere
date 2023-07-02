@@ -213,6 +213,7 @@
 
         <item name="preferenceScreenStyle">@style/Preference.M3.PreferenceScreen</item>
         <item name="switchPreferenceCompatStyle">@style/Preference.M3.SwitchPreferenceCompat</item>
+        <item name="preferenceStyle">@style/Preference.M3</item>
     </style>
 
 

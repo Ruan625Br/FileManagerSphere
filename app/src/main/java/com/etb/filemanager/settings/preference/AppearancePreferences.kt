@@ -1,7 +1,6 @@
 package com.etb.filemanager.settings.preference
 
 import android.os.Bundle
-import android.util.Log
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
@@ -27,7 +26,7 @@ class AppearancePreferences : PreferenceFragmentCompat() {
         var appThemeSummary = themesEntries.get(mCurrentTheIndex)
 
 
-
+       //App theme
         val appTheme = findPreference<Preference>("app_theme")
             ?: throw IllegalArgumentException("Preference not found: app_theme")
 
@@ -52,14 +51,17 @@ class AppearancePreferences : PreferenceFragmentCompat() {
                         true
         }
 
-/*
-        val switchAnimFileList = findPreference<SwitchPreferenceCompat>("switch_anim_file_list")
-                 switchAnimFileList?.isChecked = animFileList
-        switchAnimFileList?.setOnPreferenceClickListener { checked ->
-            Preferences.Appearance.setAnimFileList(switchAnimFileList.isChecked)
+
+        //Animation in file list
+  /*      val switchAnimFileList = findPreference<SwitchPreference>("anim_file_list")
+                 switchAnimFileList!!.isChecked = animFileList
+
+        switchAnimFileList.setOnPreferenceChangeListener { preference, isEnabled ->
+            if (isEnabled as Boolean) {
+                Preferences.Appearance.setAnimFileList(switchAnimFileList.isChecked)
+            }
             true
-        }
-*/
+        }*/
     }
 
     private fun restartActivity() {

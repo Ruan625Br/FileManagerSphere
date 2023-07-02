@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -36,6 +38,7 @@ import com.etb.filemanager.manager.files.ui.AnimatedListAdapter
 import com.etb.filemanager.manager.files.ui.CheckableItemBackground
 import com.etb.filemanager.manager.files.ui.SelectableMaterialCardView
 import com.etb.filemanager.manager.util.FileUtils
+import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.util.file.style.ColorUtil
 import com.etb.filemanager.util.file.style.IconUtil
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -174,8 +177,8 @@ class FileModelAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int){
         throw UnsupportedOperationException()
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: List<Any>) {
-        bindViewHolderAnimation(holder)
         val file = getItem(position)
         val binding = holder.binding
         val mimeTypeUtil = MimeTypeUtil()
@@ -190,6 +193,7 @@ class FileModelAdapter(
             return
         }
 
+        bindViewHolderAnimation(holder)
 
         if (!file.isDirectory) {
 
@@ -266,6 +270,7 @@ class FileModelAdapter(
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getFileMimeType(mPath: String): String? {
         val path: Path = Paths.get(mPath)
         val mimeType: String?
@@ -307,6 +312,8 @@ class FileModelAdapter(
         rebuildFilePositionMap()
     }
 
+    override val isAnimationEnabled: Boolean
+        get() = Preferences.Appearance.isEnabledAnimFileList()
 
     companion object {
         private val PAYLOAD_STATE_CHANGED = Any()

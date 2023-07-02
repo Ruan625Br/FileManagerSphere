@@ -5,20 +5,8 @@
             app:key="appearance_prefs"
             app:icon="@drawable/ic_palette_swatch"
             app:title="@string/pref_cat_appearance"
+            app:summary="@string/pref_appearance_description"
             android:fragment="com.etb.filemanager.settings.preference.AppearancePreferences"
           />
-    <PreferenceCategory
-            android:title="@string/category_aparencia">
-        <ListPreference
-                app:key="themes"
-                app:title="@string/themes_title"
-                app:entries="@array/themes_entries"
-                app:entryValues="@array/themes_values"
-                app:defaultValue="FOLLOW_SYSTEM"
-                app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false"/>
-
-
-
-    </PreferenceCategory>
 
 </PreferenceScreen>

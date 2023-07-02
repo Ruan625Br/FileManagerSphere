@@ -3,10 +3,5 @@
                   xmlns:app="http://schemas.android.com/apk/res-auto">
     <Preference
             app:key="app_theme"
-            app:title="@string/themes_title"
-             app:iconSpaceReserved="false"/>
-    <SwitchPreferenceCompat
-            android:title="Switch preference"
-            android:key="switch_anim_file_list"
-            app:iconSpaceReserved="false"/>
+            app:title="@string/themes_title"/>
 </PreferenceScreen>

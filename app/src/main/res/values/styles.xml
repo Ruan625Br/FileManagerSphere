@@ -3,7 +3,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 
-
     <!-- Preferences -->
     <style name="Preference.M3" parent="Preference.Material">
         <item name="android:layout">@layout/m3_preference</item>
@@ -36,8 +35,4 @@
     </style>
 
 
-    <style name="Widget.AppTheme.CardView.ListItem" parent="Widget.Material3.CardView.Elevated">
-        <item name="cardCornerRadius">?attr/listItemCornerRadius</item>
-        <item name="cardElevation">0dp</item>
-    </style>
 </resources>

@@ -161,6 +161,8 @@
     </plurals>
 
 
+    <string name="pref_appearance_description">Tema, animações, recursos, etc.</string>
+    <string name="pref_anim_in_file_list">Animação na lista de arquivos</string>
 
     <bool name="default_is_enabled_anim_in_file_list">true</bool>
 </resources>
