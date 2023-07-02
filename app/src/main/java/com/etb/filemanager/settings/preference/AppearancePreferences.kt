@@ -3,8 +3,6 @@ package com.etb.filemanager.settings.preference
 import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreference
-import androidx.preference.SwitchPreferenceCompat
 import com.etb.filemanager.R
 import com.etb.filemanager.util.file.style.StyleManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

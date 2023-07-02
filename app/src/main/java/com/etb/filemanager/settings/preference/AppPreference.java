@@ -33,7 +33,11 @@ public class AppPreference {
     @Keep
     public enum PreferenceKey {
         PREF_APP_THEME_STR,
-        PREF_APP_ANIM_FILES_LIST_BOOL,;
+        PREF_APP_ANIM_FILES_LIST_BOOL,
+
+        //Behavior
+        PREF_DEFAULT_FOLDER_STR,
+        ;
 
         private static final String[] sKeys = new String[values().length];
         @Type
@@ -259,6 +263,8 @@ public class AppPreference {
                 return StyleManager.OptionStyle.FOLLOW_SYSTEM.name();
             case PREF_APP_ANIM_FILES_LIST_BOOL:
                 return mContext.getResources().getBoolean(R.bool.default_is_enabled_anim_in_file_list);
+            case PREF_DEFAULT_FOLDER_STR:
+                return mContext.getResources().getString(R.string.pref_default_folder);
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

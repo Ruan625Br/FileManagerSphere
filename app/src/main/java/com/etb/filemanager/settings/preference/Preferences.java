@@ -20,4 +20,16 @@ public class Preferences {
             AppPreference.set(AppPreference.PreferenceKey.PREF_APP_ANIM_FILES_LIST_BOOL, isEnabled);
         }
     }
+
+    public static final class Behavior {
+        public static String getDefaultFolder() {
+            return AppPreference.getString(AppPreference.PreferenceKey.PREF_DEFAULT_FOLDER_STR);
+        }
+
+        public static void setDefaultFolder(String defaultFolder) {
+            AppPreference.set(AppPreference.PreferenceKey.PREF_DEFAULT_FOLDER_STR, defaultFolder);
+        }
+    }
+
+
 }

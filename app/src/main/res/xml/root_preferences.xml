@@ -8,5 +8,11 @@
             app:summary="@string/pref_appearance_description"
             android:fragment="com.etb.filemanager.settings.preference.AppearancePreferences"
           />
+    <Preference
+            app:key="behavior_prefs"
+            app:title="@string/pref_behavior_title"
+            app:summary="@string/pref_behavior_description"
+            android:fragment="com.etb.filemanager.settings.preference.BehaviorPreferences"
+          />
 
 </PreferenceScreen>

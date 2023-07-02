@@ -5,8 +5,10 @@ import androidx.lifecycle.*
 import com.etb.filemanager.files.util.CloseableLiveData
 import com.etb.filemanager.files.util.Stateful
 import com.etb.filemanager.manager.adapter.FileModel
+import com.etb.filemanager.settings.preference.Preferences
 import java.io.Closeable
 import java.nio.file.Path
+import java.nio.file.Paths
 
 
 class FileListViewModel : ViewModel() {
@@ -17,8 +19,6 @@ class FileListViewModel : ViewModel() {
         get() = trailLiveData.value != null
     val pendingState: Parcelable?
         get() = trailLiveData.value?.pendigSate
-
-
 
 
     private val _selectedFilesLiveData = MutableLiveData(fileItemSetOf())
@@ -84,7 +84,8 @@ class FileListViewModel : ViewModel() {
 
     fun navigateTo(lastState: Parcelable, path: Path) = trailLiveData.navigateTo(lastState, path)
     fun resetTo(path: Path) = trailLiveData.resetTo(path)
-    fun navigateUp(): Boolean = trailLiveData.navigateUp()
+    fun navigateUp(): Boolean =
+        if (currentPath != Paths.get(Preferences.Behavior.getDefaultFolder())) trailLiveData.navigateUp() else false
 
     val currentPathLiveData = trailLiveData.map { it.currentPath }
 

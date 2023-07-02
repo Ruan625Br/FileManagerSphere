@@ -55,6 +55,7 @@ import com.etb.filemanager.manager.files.filelist.*
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.PopupSettings
+import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.ui.view.FabMenu
 import com.etb.filemanager.util.file.FileUtil
 import com.google.android.material.appbar.MaterialToolbar
@@ -206,7 +207,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         viewModel.currentPathLiveData.observe(viewLifecycleOwner) { onCurrentPathChanged(it)}
         viewModel.selectedFilesLiveData.observe(viewLifecycleOwner) { onSelectedFilesChanged(it) }
         viewModel.fileListLiveData.observe(viewLifecycleOwner) { onFileListChanged(it) }
-        viewModel.resetTo(Paths.get(BASE_PATH))
+        viewModel.resetTo(Paths.get(Preferences.Behavior.getDefaultFolder()))
 
 
     }
@@ -254,6 +255,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
 
 
+    @SuppressLint("NewApi")
     @OptIn(DelicateCoroutinesApi::class)
     fun listFilesAndFoldersInBackground(mPath: String) {
 
@@ -303,6 +305,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         }
     }
 
+    @SuppressLint("NewApi")
     fun updateData(fileEntries: List<Path>) {
 
 
@@ -842,7 +845,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 if (!viewModel.navigateUp()){
                     val recentFragment = RecentFragment()
                     (requireActivity() as MainActivity).startNewFragment(recentFragment)
-                    requireActivity().finish()
 
                 }
             }
