@@ -34,7 +34,7 @@ class BehaviorPreferences : PreferenceFragmentCompat(){
         val title = requireContext().getString(R.string.pref_behavior_set_default_folder_title)
         prefDefaulFolder.setOnPreferenceClickListener { preference ->
             val parent = dialogView.parent as? ViewGroup
-            parent?.removeView(dialogView) // Remover a view do pai atual
+            parent?.removeView(dialogView)
             eInputEditText.setText(currentDefaultFolder)
 
             MaterialAlertDialogBuilder(requireContext())
