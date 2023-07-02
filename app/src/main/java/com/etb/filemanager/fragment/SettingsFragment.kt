@@ -4,6 +4,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
+import androidx.annotation.NonNull
+import androidx.annotation.Nullable
 import androidx.preference.PreferenceFragmentCompat
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
