@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
 
 
@@ -28,6 +28,11 @@
 
     <style name="Preference.M3.SwitchPreference" parent="Preference.SwitchPreference.Material">
         <item name="android:layout">@layout/m3_preference_widget_material_switch</item>
+    </style>
+
+    <style name="Preference.M3.SwitchPreferenceCompat" parent="@style/Preference.SwitchPreferenceCompat.Material"
+           tools:ignore="ResourceCycle">
+        <item name="widgetLayout">@layout/m3_preference_widget_material_switch</item>
     </style>
 
 

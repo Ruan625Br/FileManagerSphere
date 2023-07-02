@@ -2,14 +2,21 @@ package com.etb.filemanager.fragment
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import androidx.preference.PreferenceFragmentCompat
 import com.etb.filemanager.R
+import com.etb.filemanager.activity.MainActivity
+import com.etb.filemanager.files.util.BundleParceler
 import com.etb.filemanager.util.file.style.StyleManager
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val styleManager = StyleManager()
+
+
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -36,17 +43,16 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                styleManager.setTheme(optionStyle, requireContext())
                restartActivity()
 
-               Log.i("SettingsFragment", "Valor atual: $styleString ")
-
            }
        }
     }
+
 
     private fun restartActivity() {
         val intent = requireActivity().intent
         requireActivity().finish()
         startActivity(intent)
     }
-
-
 }
+
+

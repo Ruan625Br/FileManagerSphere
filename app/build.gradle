@@ -68,8 +68,6 @@ dependencies {
     implementation("io.github.Rosemoe.sora-editor:editor")
     implementation("io.github.Rosemoe.sora-editor:language-textmate")
 
-    implementation("androidx.preference:preference-ktx:1.2.0")
-
     implementation 'commons-net:commons-net:3.9.0'
     implementation 'org.apache.commons:commons-compress:1.20'
     implementation 'org.tukaani:xz:1.9'
@@ -79,9 +77,12 @@ dependencies {
     implementation 'dev.rikka.shizuku:api:12.2.0'
 
     //implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidx_lifecycle_version"
-// https://mvnrepository.com/artifact/androidx.lifecycle/lifecycle-viewmodel-ktx
+  // https://mvnrepository.com/artifact/androidx.lifecycle/lifecycle-viewmodel-ktx
     runtimeOnly("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation 'androidx.preference:preference-ktx:1.2.0'
+
+    //Ui
+    implementation 'me.zhanghai.android.fastscroll:library:1.2.0'
 
 
 }

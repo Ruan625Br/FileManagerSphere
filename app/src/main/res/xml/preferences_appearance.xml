@@ -8,4 +8,8 @@
             app:entryValues="@array/themes_values"
             app:defaultValue="FOLLOW_SYSTEM"
             app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false"/>
+    <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:title="Switch preference"
+            android:key="switch_preference_1" app:iconSpaceReserved="false"/>
 </PreferenceScreen>

@@ -6,9 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.FragmentManager
 import androidx.preference.PreferenceManager
 import com.etb.filemanager.R
 import com.etb.filemanager.fragment.HomeFragment
+import com.etb.filemanager.fragment.SettingsFragment
 import com.etb.filemanager.fragment.StartedFragment
 import com.etb.filemanager.settings.PreferenceUtils
 import com.etb.filemanager.settings.preference.PopupSettings
