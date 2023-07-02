@@ -162,4 +162,5 @@
 
 
 
+    <bool name="default_is_enabled_anim_in_file_list">true</bool>
 </resources>

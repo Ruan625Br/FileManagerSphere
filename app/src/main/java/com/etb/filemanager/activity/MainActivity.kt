@@ -15,6 +15,7 @@ import com.etb.filemanager.fragment.SettingsFragment
 import com.etb.filemanager.fragment.StartedFragment
 import com.etb.filemanager.settings.PreferenceUtils
 import com.etb.filemanager.settings.preference.PopupSettings
+import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.util.file.style.StyleManager
 import java.io.File
 
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity() {
 
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val styleString = sharedPreferences.getString("themes", StyleManager.OptionStyle.FOLLOW_SYSTEM.name)
-        val optionStyle = StyleManager.OptionStyle.valueOf(styleString ?: StyleManager.OptionStyle.FOLLOW_SYSTEM.name)
+        val optionStyle = StyleManager.OptionStyle.valueOf(Preferences.Appearance.getAppTheme())
         styleManager.setTheme(optionStyle, this)
 
     }

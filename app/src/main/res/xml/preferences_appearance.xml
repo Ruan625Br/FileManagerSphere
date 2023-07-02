@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:app="http://schemas.android.com/apk/res-auto">
-    <ListPreference
-            app:key="themes"
+    <Preference
+            app:key="app_theme"
             app:title="@string/themes_title"
-            app:entries="@array/themes_entries"
-            app:entryValues="@array/themes_values"
-            app:defaultValue="FOLLOW_SYSTEM"
-            app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false"/>
+             app:iconSpaceReserved="false"/>
     <SwitchPreferenceCompat
-            android:defaultValue="false"
             android:title="Switch preference"
-            android:key="switch_preference_1" app:iconSpaceReserved="false"/>
+            android:key="switch_anim_file_list"
+            app:iconSpaceReserved="false"/>
 </PreferenceScreen>
