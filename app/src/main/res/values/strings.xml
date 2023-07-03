@@ -150,7 +150,7 @@
     </plurals>
     <plurals name="file_list_delete_count_format">
         <item quantity="one">Excluir "\"%s\""?</item>
-        <item quantity="other">Excluir %1$,d itens?/</item>
+        <item quantity="other">Excluir %1$,d itens?</item>
     </plurals>
     <plurals name="files_files_renaming_count_format">
         <item quantity="one">Renomeando "\"%s\""</item>

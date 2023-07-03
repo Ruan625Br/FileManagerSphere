@@ -1,8 +1,10 @@
 package com.etb.filemanager.fragment
 
 import android.Manifest
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -17,6 +19,7 @@ import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -50,7 +53,9 @@ import com.etb.filemanager.manager.file.CreateFileAction
 import com.etb.filemanager.manager.file.FileAction
 import com.etb.filemanager.manager.file.FileOptionAdapter
 import com.etb.filemanager.manager.files.filecoroutine.FileCoroutineViewModel
+import com.etb.filemanager.manager.files.filecoroutine.FileOperation
 import com.etb.filemanager.manager.files.filelist.*
+import com.etb.filemanager.manager.files.services.FileOperationService
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.PopupSettings
@@ -69,7 +74,7 @@ import kotlinx.coroutines.*
 import java.io.File
 import java.nio.file.*
 import java.util.*
-import kotlin.streams.toList
+import kotlin.collections.ArrayList
 
 
 private const val ARG_FILE_URI = "fileUri"
@@ -251,38 +256,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
 
-    @SuppressLint("NewApi")
-    @OptIn(DelicateCoroutinesApi::class)
-    fun listFilesAndFoldersInBackground(mPath: String) {
-
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                val fileEntries = Files.list(Paths.get(mPath)).use { it.toList() }
-                mCurrentPath = mPath
-                launch(Dispatchers.Main) {
-                }
-            } catch (e: Exception) {
-                if (e is AccessDeniedException) {
-                    try {
-                        launch(Dispatchers.Main) {
-                            createDialgRestriction()
-
-                        }
-                    } catch (ec: Exception) {
-                        Log.e("Dialog", "ERRO: $e")
-
-                    }
-
-                }
-                Log.e("ERRO AO LISTAR OS ARQUIVOS", "ERRO: $e")
-
-            }
-            //como printar
-
-
-        }
-
-    }
 
     private fun createDialgRestriction() {
         val title = requireContext().getString(R.string.restriction_folder)
@@ -722,7 +695,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             R.id.action_delete -> {
-                // confirmDeleteFile()
+                confirmDeleteFile(viewModel.selectedFiles)
                 finishActionMode()
             }
 
@@ -868,21 +841,24 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     override fun confirmDeleteFile(file: FileItemSet) {
+        val files = file.toList()
+        val paths = files.map { it.filePath }
         val title = getString(R.string.delete)
         val text = getQuantityString(R.plurals.file_list_delete_count_format, file.size, file.size)
-        val textPositiveButton = requireContext().getString(R.string.dialog_ok)
+        val textPositiveButton = requireContext().getString(R.string.delete)
+        val textNegativeButton = requireContext().getString(R.string.dialog_cancel)
 
         materialDialogUtils.createDialogInfo(
             title,
             text,
             textPositiveButton,
-            "",
+            textNegativeButton,
             requireContext(),
             true
         ) { dialogResult ->
             val isConfirmed = dialogResult.confirmed
             if (isConfirmed) {
-                // delete()
+                 delete(paths)
             }
         }
 
@@ -1221,10 +1197,52 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     }
 
-    private fun delete(files: FileItemSet) {
-
+    private fun delete(paths: List<String>) {
+        askPermission()
+        val intent = Intent(requireContext(), FileOperationService::class.java)
+        intent.putStringArrayListExtra("sourcePaths", ArrayList<String>(paths))
+        intent.putExtra("destinationPath", "null")
+        intent.putExtra("operation", FileOperation.DELETE)
+        ContextCompat.startForegroundService(requireContext(), intent)
     }
 
+
+    private fun askPermission() {
+        when {
+            ContextCompat.checkSelfPermission(
+                requireActivity(), POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED -> {
+            }
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                POST_NOTIFICATIONS
+            ) -> {
+                startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().packageName)
+                })
+            }
+            else -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    requestPermissionLauncher.launch(
+                        POST_NOTIFICATIONS
+                    )
+                }
+            }
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+        } else {
+        }
+    }
+
+    fun Fragment.getParentActivity(): AppCompatActivity? {
+        return activity as? AppCompatActivity
+    }
 
     fun updateProgress(title: String, msg: String, progress: Int) {
         if (!isProgressDialogShowing) {

@@ -57,7 +57,7 @@ class MaterialDialogUtils {
 
             }
         if (cancelable) {
-            mDialog.setCancelable(false)
+            mDialog.setCancelable(true)
             mDialog.setNegativeButton(textNegativeButon) { _, _ ->
                 callback(DialogInfoResult(false))
             }
