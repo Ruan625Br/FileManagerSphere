@@ -17,10 +17,10 @@ class AppearancePreferences : PreferenceFragmentCompat() {
         val themesEntries = requireContext().resources.getStringArray(R.array.themes_entries)
         val themesValues = requireContext().resources.getStringArray(R.array.themes_values)
 
-        mCurrentTheme = Preferences.Appearance.getAppTheme()
+        mCurrentTheme = Preferences.Appearance.appTheme
         val mCurrentTheIndex = themesValues.indexOf(mCurrentTheme)
 
-        val animFileList = Preferences.Appearance.isEnabledAnimFileList()
+        val animFileList = Preferences.Appearance.isAnimationEnabledForFileList
         var appThemeSummary = themesEntries.get(mCurrentTheIndex)
 
 
@@ -35,7 +35,7 @@ class AppearancePreferences : PreferenceFragmentCompat() {
                 .setSingleChoiceItems(themesEntries, mCurrentTheIndex) { dialog, which ->
                      if (which != mCurrentTheIndex){
                          val theme = StyleManager.OptionStyle.valueOf(themesValues[which])
-                         Preferences.Appearance.setAppTheme(theme.name)
+                         Preferences.Appearance.appTheme = theme.name
                          StyleManager().setTheme(theme, requireContext())
                           restartActivity()
                      }

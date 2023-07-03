@@ -8,23 +8,25 @@ import kotlinx.parcelize.WriteWith
 import java.io.File
 import java.nio.file.Path
 import java.util.*
+import kotlin.io.path.*
 
 @Parcelize
 class FileModel(
     var id: Long, var fileName: String, var filePath: @WriteWith<ParcelableParceler> String, var isDirectory: Boolean, var fileExtension: String, var fileSize: Long,
     var file: File,
-    var isSelected: Boolean = false
+    var isHidden: Boolean
 
 ) : Parcelable
 
 @WorkerThread
 fun Path.loadFileItem(): FileModel {
-    val file = File(this.toString())
-    val fileName = file.name
-    val filePath = this.toString()
-    val isDirectory = file.isDirectory
-    val fileExtension = file.extension
-    val fileSize = file.length()
+    val file = toFile()
+    val fileName = name
+    val filePath = pathString
+    val isDirectory = isDirectory()
+    val fileExtension = extension
+    val fileSize = fileSize()
+    val isHidden = isHidden()
 
-    return FileModel(  UUID.randomUUID().mostSignificantBits, fileName, filePath, isDirectory, fileExtension, fileSize, file)
+    return FileModel(UUID.randomUUID().mostSignificantBits, fileName, filePath, isDirectory, fileExtension, fileSize, file, isHidden)
 }

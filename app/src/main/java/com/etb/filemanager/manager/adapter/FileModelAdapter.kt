@@ -59,9 +59,15 @@ class FileModelAdapter(
     private val basePath = "/storage/emulated/0"
     private var currentPath = basePath
 
+    private val defaultComparator: Comparator<FileModel> = compareBy<FileModel> { it.fileName }.thenBy { it.fileName }
     private lateinit var _comparator: Comparator<FileModel>
     var comparator: Comparator<FileModel>
-        get() = _comparator
+        get()  {
+            if (!::_comparator.isInitialized) {
+                _comparator = defaultComparator
+            }
+            return _comparator
+        }
         set(value) {
             _comparator = value
             super.replace(list.sortedWith(value), true)
@@ -141,7 +147,6 @@ class FileModelAdapter(
         for (index in 0 until itemCount) {
             val file = getItem(index)
 
-            file.isSelected = false
         }
     }
 
@@ -152,7 +157,7 @@ class FileModelAdapter(
 
 
     fun replaceList(list: List<FileModel>) {
-        super.replace(list, false)
+        super.replace(list.sortedWith(comparator), false)
         rebuildFilePositionMap()
     }
 
@@ -313,7 +318,7 @@ class FileModelAdapter(
     }
 
     override val isAnimationEnabled: Boolean
-        get() = Preferences.Appearance.isEnabledAnimFileList()
+        get() = Preferences.Appearance.isAnimationEnabledForFileList
 
     companion object {
         private val PAYLOAD_STATE_CHANGED = Any()

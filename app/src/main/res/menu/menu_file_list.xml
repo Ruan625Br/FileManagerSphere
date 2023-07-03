@@ -11,6 +11,7 @@
                       android:title="@string/file_list_action_sort_by_last_modified"/>
             </group>
             <item android:id="@+id/action_sort_order_ascending"
+                  android:checkable="true"
                   android:title="@string/file_list_action_sort_order_ascending"/>
             <item android:id="@+id/action_sort_directories_first"
                   android:checkable="true"

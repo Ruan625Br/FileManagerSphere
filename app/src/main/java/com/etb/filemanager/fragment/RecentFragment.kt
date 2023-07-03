@@ -24,9 +24,7 @@ import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.FileUtils.SpaceType
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -93,10 +91,13 @@ class RecentFragment : Fragment() {
     }
     @OptIn(DelicateCoroutinesApi::class)
     fun setRecentImages() {
-        GlobalScope.launch {
-            val recyclerView = requireView().findViewById<RecyclerView>(R.id.recy_recents_images)
-            val recentImage = fileUtils.getRecentImages(requireContext())
+        val recyclerView = requireView().findViewById<RecyclerView>(R.id.recy_recents_images)
 
+        val mainScope = CoroutineScope(Dispatchers.Main)
+        mainScope.launch {
+            val recentImage = withContext(Dispatchers.IO) {
+                fileUtils.getRecentImages(requireContext())
+            }
 
             recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
             val adapter = RecentImagemodelAdapter(recentImage, requireContext())

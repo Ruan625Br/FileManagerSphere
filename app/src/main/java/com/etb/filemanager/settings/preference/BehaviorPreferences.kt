@@ -22,7 +22,7 @@ class BehaviorPreferences : PreferenceFragmentCompat(){
 
 
         val prefDefaulFolder = findPreference<Preference>("default_folder")
-        val currentDefaultFolder = Preferences.Behavior.getDefaultFolder()
+        val currentDefaultFolder = Preferences.Behavior.defaultFolder
 
 
         prefDefaulFolder!!.summary = currentDefaultFolder
@@ -46,7 +46,7 @@ class BehaviorPreferences : PreferenceFragmentCompat(){
                 val path = File(enteredText)
                 if (enteredText != currentDefaultFolder && path.exists()){
                     preference.summary = enteredText
-                    Preferences.Behavior.setDefaultFolder(enteredText)
+                    Preferences.Behavior.defaultFolder = enteredText
                 }
 
             }.setNegativeButton(R.string.dialog_cancel) { _, _ ->

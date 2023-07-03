@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.os.storage.StorageManager
 import android.provider.DocumentsContract
 import android.provider.Settings
 import android.util.Log
@@ -70,8 +69,6 @@ import kotlinx.coroutines.*
 import java.io.File
 import java.nio.file.*
 import java.util.*
-import kotlin.io.path.Path
-import kotlin.io.path.pathString
 import kotlin.streams.toList
 
 
@@ -151,7 +148,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         super.onViewCreated(view, savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requestStoragePermission()
-        } else{
+        } else {
             requestFilesPermission()
         }
         initAllBottomSheet()
@@ -190,36 +187,36 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val mFile = fileUri?.path?.let { File(it) }
         val path = fileUri?.let { fileUtil.getFilePathFromUri(requireContext(), it) }
         if (mFile != null) {
-           // listFilesAndFoldersInBackground(if (mFile.isDirectory) path.toString() else BASE_PATH)
+            // listFilesAndFoldersInBackground(if (mFile.isDirectory) path.toString() else BASE_PATH)
         } else {
-           // listFilesAndFoldersInBackground(BASE_PATH)
+            // listFilesAndFoldersInBackground(BASE_PATH)
 
         }
         recyclerView.layoutManager = GridLayoutManager(requireActivity(), 1)
-        adapter = FileModelAdapter( requireContext(), this)
+        adapter = FileModelAdapter(requireContext(), this)
         recyclerView.adapter = adapter
 
 
     }
 
     private fun observeViewModel() {
-
-        viewModel.currentPathLiveData.observe(viewLifecycleOwner) { onCurrentPathChanged(it)}
+        viewModel.currentPathLiveData.observe(viewLifecycleOwner) { onCurrentPathChanged(it) }
         viewModel.selectedFilesLiveData.observe(viewLifecycleOwner) { onSelectedFilesChanged(it) }
         viewModel.fileListLiveData.observe(viewLifecycleOwner) { onFileListChanged(it) }
-        viewModel.resetTo(Paths.get(Preferences.Behavior.getDefaultFolder()))
+        viewModel.resetTo(Paths.get(Preferences.Behavior.defaultFolder))
+        viewModel.showHiddenFilesLiveData.observe(viewLifecycleOwner){onShowHiddenFilesChanged()}
+        viewModel.sortOptionsLiveData.observe(viewLifecycleOwner) { onSortOptionsChanged() }
 
 
     }
 
 
-
     private fun observeOperationViewModel() {
 
         coroutineViewModel.operationInfo.observe(viewLifecycleOwner) { info ->
-            if (info.progress != null){
+            if (info.progress != null) {
                 updateProgress(info.title, info.message, info.message.toInt())
-            }else{
+            } else {
                 progressDialog?.cancel()
             }
         }
@@ -254,7 +251,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
 
-
     @SuppressLint("NewApi")
     @OptIn(DelicateCoroutinesApi::class)
     fun listFilesAndFoldersInBackground(mPath: String) {
@@ -264,7 +260,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 val fileEntries = Files.list(Paths.get(mPath)).use { it.toList() }
                 mCurrentPath = mPath
                 launch(Dispatchers.Main) {
-                    updateData(fileEntries)
                 }
             } catch (e: Exception) {
                 if (e is AccessDeniedException) {
@@ -305,108 +300,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         }
     }
 
-    @SuppressLint("NewApi")
-    fun updateData(fileEntries: List<Path>) {
-
-
-        fileModel.clear()
-        val fileUtil = FileUtil()
-
-        for (path in fileEntries) {
-            val fileName = path.fileName.toString()
-            val filePath = path.toAbsolutePath().toString()
-            val isDirectory = Files.isDirectory(path)
-            val fileExtension = fileUtil.getFileExtension(path)
-            val fileLength = fileUtil.getFileSize(path)
-            val file = path.toFile()
-
-            if (!showHiddenFiles && fileName.toString().startsWith(".")) {
-                continue
-            }
-            fileModel.add(
-                FileModel(
-                    UUID.randomUUID().mostSignificantBits,
-                    fileName,
-                    filePath,
-                    isDirectory,
-                    fileExtension,
-                    fileLength,
-                    file
-                )
-            )
-        }
-        selectPreferenceUtils.sortFilesAuto(fileModel, requireContext())
-
-      /*  recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        adapter = FileModelAdapter(fileModel, requireContext(), this)
-        recyclerView.adapter = adapter*/
-        setRecyclerViewAnimation()
-    }
-
-    @OptIn(DelicateCoroutinesApi::class)
-    fun replaceList(mPath: String) {
-
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                val fileEntries = Files.list(Paths.get(mPath)).use { it.toList() }
-                mCurrentPath = mPath
-                launch(Dispatchers.Main) {
-                    replaceData(fileEntries)
-                }
-            } catch (e: Exception) {
-                if (e is AccessDeniedException) {
-                    try {
-                        launch(Dispatchers.Main) {
-                            createDialgRestriction()
-
-                        }
-                    } catch (ec: Exception) {
-                        Log.e("Dialog", "ERRO: $e")
-
-                    }
-
-                }
-                Log.e("ERRO AO LISTAR OS ARQUIVOS", "ERRO: $e")
-
-            }
-            //como printar
-
-
-        }
-
-    }
-
-    fun replaceData(fileEntries: List<Path>) {
-
-
-        fileModel.clear()
-        val fileUtil = FileUtil()
-
-        for (path in fileEntries) {
-            val fileName = path.fileName.toString()
-            val filePath = path.toAbsolutePath().toString()
-            val isDirectory = Files.isDirectory(path)
-            val fileExtension = fileUtil.getFileExtension(path)
-            val fileLength = fileUtil.getFileSize(path)
-            val file = path.toFile()
-
-            if (!showHiddenFiles && fileName.toString().startsWith(".")) {
-                continue
-            }
-            fileModel.add(
-                FileModel(
-                    UUID.randomUUID().mostSignificantBits,
-                    fileName,
-                    filePath,
-                    isDirectory,
-                    fileExtension,
-                    fileLength,
-                    file
-                )
-            )
-        }
-        adapter.replaceList(fileModel)
-    }
+  fun onShowHiddenFilesChanged(){
+      updateAdapterFileList()
+  }
 
     private fun initFabClick() {
         val mFab: FloatingActionButton = requireView().findViewById(R.id.mfab)
@@ -472,14 +368,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                     Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE
                 ), 1
             )
-        } else{
+        } else {
 
         }
 
 
     }
 
-    private fun requestFilesPermission(){
+    private fun requestFilesPermission() {
         val READ_WRITE_PERMISSION_REQUEST_CODE = 1
 
         if (ContextCompat.checkSelfPermission(
@@ -522,44 +418,48 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         recyclerView.scheduleLayoutAnimation()
     }
 
-    private fun onFileListChanged(stateful: Stateful<List<FileModel>>){
+    private fun onFileListChanged(stateful: Stateful<List<FileModel>>) {
         val files = if (stateful is Failure) null else stateful.value
-        when{
+        when {
             stateful is Failure -> topAppBar.subtitle = getString(R.string.error)
-             stateful is Loading -> topAppBar.subtitle = getString(R.string.loading)
+            stateful is Loading -> topAppBar.subtitle = getString(R.string.loading)
             else -> topAppBar.subtitle = getSubtitle(files!!)
         }
         val hasFiles = !files.isNullOrEmpty()
         val throwable = (stateful as? Failure)?.throwable
 
-        if (throwable != null){
+        if (throwable != null) {
             val error = throwable.toString()
-            if (hasFiles){
+            if (hasFiles) {
                 createDialgRestriction()
 
-            } else{
+            } else {
                 createDialgRestriction()
 
             }
         }
-        if (files != null){
+        if (files != null) {
             updateAdapterFileList()
-        } else{
+        } else {
             adapter.clear()
         }
-        if (stateful is Success){
+        if (stateful is Success) {
             viewModel.pendingState
                 ?.let { recyclerView.layoutManager!!.onRestoreInstanceState(it) }
         }
 
     }
-    private fun onCurrentPathChanged(path: Path){
+
+    private fun onCurrentPathChanged(path: Path) {
         updateActionMode()
     }
 
 
     private fun updateAdapterFileList() {
         var files = viewModel.fileListStateful.value ?: return
+        if (!Preferences.Popup.showHiddenFiles){
+            files = files.filterNot { it.isHidden }
+        }
         adapter.replaceList(files)
     }
 
@@ -595,6 +495,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             !directoryCountText.isNullOrEmpty() && !fileCountText.isNullOrEmpty() ->
                 (directoryCountText + getString(R.string.file_list_subtitle_separator)
                         + fileCountText)
+
             !directoryCountText.isNullOrEmpty() -> directoryCountText
             !fileCountText.isNullOrEmpty() -> fileCountText
             else -> getString(R.string.empty)
@@ -611,6 +512,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         actionMode = (activity as AppCompatActivity?)!!.startSupportActionMode(this)
     }
 
+    fun onSortOptionsChanged() {
+        val fileSortOptions = FileSortOptions(
+            Preferences.Popup.sortBy,
+            Preferences.Popup.orderFiles,
+            Preferences.Popup.isDirectoriesFirst
+        )
+        adapter.comparator = fileSortOptions.createComparator()
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun finishActionMode() {
@@ -635,11 +544,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val itemSortByType = menu.findItem(R.id.action_sort_by_type)
         val itemSortBySize = menu.findItem(R.id.action_sort_by_size)
         val itemSortByLastModified = menu.findItem(R.id.action_sort_by_last_modified)
+        val itemSortOrderAscending = menu.findItem(R.id.action_sort_order_ascending)
         val itemSortDirectoriesFirst = menu.findItem(R.id.action_sort_directories_first)
         val itemShowHiddenFiles = menu.findItem(R.id.action_show_hidden_files)
 
-        itemSortDirectoriesFirst.isChecked = popupSettings.getActionSortFolderFirst()
-        itemShowHiddenFiles.isChecked = popupSettings.getActionShowHiddenFiles()
+        itemSortOrderAscending.isChecked = (Preferences.Popup.orderFiles == FileSortOptions.Order.ASCENDING)
+        itemSortDirectoriesFirst.isChecked = Preferences.Popup.isDirectoriesFirst
+        itemShowHiddenFiles.isChecked = Preferences.Popup.showHiddenFiles
 
         val menuItems: MutableList<MenuItem> = ArrayList()
         itemSortByName?.let { menuItems.add(it) }
@@ -647,36 +558,40 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         itemSortBySize?.let { menuItems.add(it) }
         menuItems.add(itemSortByLastModified)
 
-        for (position in menuItems.indices) {
-            val menuItem = menuItems[position]
-            val test = popupSettings.itemIsSelectedActionSort(position)
-            if (test) {
-                menuItem.isChecked = true
-            }
+        val checkedSortByItem = when (Preferences.Popup.sortBy) {
+            FileSortOptions.SortBy.NAME -> itemSortByName
+            FileSortOptions.SortBy.TYPE -> itemSortByType
+            FileSortOptions.SortBy.SIZE -> itemSortBySize
+            FileSortOptions.SortBy.LAST_MODIFIED -> itemSortByLastModified
         }
+        checkedSortByItem.isChecked = true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_sort_by_name -> {
-                popupSettings.setItemSelectedActionSort(0)
+                viewModel.setSortBy(FileSortOptions.SortBy.NAME)
+            true
             }
 
             R.id.action_sort_by_type -> {
-                popupSettings.setItemSelectedActionSort(1)
+                viewModel.setSortBy(FileSortOptions.SortBy.TYPE)
+                true
             }
 
             R.id.action_sort_by_size -> {
-                popupSettings.setItemSelectedActionSort(2)
+               viewModel.setSortBy(FileSortOptions.SortBy.SIZE)
             }
 
             R.id.action_sort_by_last_modified -> {
-                popupSettings.setItemSelectedActionSort(3)
+                    viewModel.setSortBy(FileSortOptions.SortBy.LAST_MODIFIED)
             }
 
-            R.id.action_sort_order_ascending -> {}
+            R.id.action_sort_order_ascending -> {
+                viewModel.setOrderFiles()
+            }
             R.id.action_sort_directories_first -> {
-                popupSettings.setSelectedActionSortFolderFirst()
+                viewModel.setDirectoriesFirst()
             }
 
             R.id.action_sort_path_specific -> {}
@@ -693,12 +608,12 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             R.id.action_show_hidden_files -> {
-                settingsViewModel.setSelectedActionShowHiddenFiles()
+                viewModel.setShowHiddenFiles(!Preferences.Popup.showHiddenFiles)
             }
 
             R.id.action_share -> {}
             R.id.action_copy_path -> {
-                fileUtil.copyTextToClipboard(requireContext(), mCurrentPath, true)
+                fileUtil.copyTextToClipboard(requireContext(), viewModel.currentPathLiveData.value.toString(), true)
             }
 
             else -> return super.onOptionsItemSelected(item)
@@ -807,7 +722,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             R.id.action_delete -> {
-               // confirmDeleteFile()
+                // confirmDeleteFile()
                 finishActionMode()
             }
 
@@ -842,7 +757,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         super.onAttach(context)
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (!viewModel.navigateUp()){
+                if (!viewModel.navigateUp()) {
                     val recentFragment = RecentFragment()
                     (requireActivity() as MainActivity).startNewFragment(recentFragment)
 
@@ -855,11 +770,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     fun refresh() {
-            viewModel.reload()
+        viewModel.reload()
     }
 
     fun navigateTo(path: String) {
-          //  managerUtil.addToPathStack(path)
+        //  managerUtil.addToPathStack(path)
         val state = recyclerView.layoutManager!!.onSaveInstanceState()
         viewModel.navigateTo(state!!, Paths.get(path))
 
@@ -895,7 +810,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         }
         return null
     }
-
 
 
     override fun clearSelectedFiles() {
@@ -968,7 +882,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         ) { dialogResult ->
             val isConfirmed = dialogResult.confirmed
             if (isConfirmed) {
-               // delete()
+                // delete()
             }
         }
 
@@ -1137,7 +1051,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
         ivStartOp.setOnClickListener {
             val destinationDir = File(mCurrentPath)
-           // viewModel.initOperation(typeOperation, sourceFiles, destinationDir, requireContext())
+            // viewModel.initOperation(typeOperation, sourceFiles, destinationDir, requireContext())
             standardBehaviorOperation.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -1239,12 +1153,12 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             layout.addView(view)
             listInputEditText.add(textInputEditText)
             paths.add(Paths.get(file.filePath))
-         }
+        }
 
         btnRename.setOnClickListener {
             bottomSheetBehaviorRename.state = BottomSheetBehavior.STATE_HIDDEN
-          val newNames = listInputEditText.map { it.text.toString() }
-          coroutineViewModel.rename(paths.toList(), newNames.toList(), requireContext())
+            val newNames = listInputEditText.map { it.text.toString() }
+            coroutineViewModel.rename(paths.toList(), newNames.toList(), requireContext())
             /*
             CoroutineScope(Dispatchers.IO).launch {
                 for ((index, file) in listPath.withIndex()) {

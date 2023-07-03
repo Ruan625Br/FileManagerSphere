@@ -168,6 +168,8 @@
     <string name="pref_behavior_description">Pasta padrão, Modo de exibição, etc.</string>
     <string name="pref_anim_in_file_list">Animação na lista de arquivos</string>
 
-    <string name="pref_default_folder">/storage/emulated/0</string>
+    <string name="default_pref_default_folder">/storage/emulated/0</string>
     <bool name="default_is_enabled_anim_in_file_list">true</bool>
+    <bool name="default_is_directories_first">true</bool>
+    <bool name="default_show_hidden_file">false</bool>
 </resources>

@@ -85,7 +85,7 @@ class FileListViewModel : ViewModel() {
     fun navigateTo(lastState: Parcelable, path: Path) = trailLiveData.navigateTo(lastState, path)
     fun resetTo(path: Path) = trailLiveData.resetTo(path)
     fun navigateUp(): Boolean =
-        if (currentPath != Paths.get(Preferences.Behavior.getDefaultFolder())) trailLiveData.navigateUp() else false
+        if (currentPath != Paths.get(Preferences.Behavior.defaultFolder)) trailLiveData.navigateUp() else false
 
     val currentPathLiveData = trailLiveData.map { it.currentPath }
 
@@ -141,6 +141,35 @@ class FileListViewModel : ViewModel() {
             }
         }
     }
+
+    private val _sortOptionsLiveData = MutableLiveData<Unit>()
+    private val _showHiddenFilesLiveData = MutableLiveData<Unit>()
+    val showHiddenFilesLiveData: LiveData<Unit> = _showHiddenFilesLiveData
+    val sortOptionsLiveData: LiveData<Unit> = _sortOptionsLiveData
+
+    fun setSortBy(sortBy: FileSortOptions.SortBy) {
+        Preferences.Popup.sortBy = sortBy
+        _sortOptionsLiveData.value = Unit
+
+    }
+
+    fun setOrderFiles() {
+        val currentOrder = Preferences.Popup.orderFiles
+        val newOrder = if (currentOrder == FileSortOptions.Order.ASCENDING) FileSortOptions.Order.DESCENDING else FileSortOptions.Order.ASCENDING
+        Preferences.Popup.orderFiles = newOrder
+        _sortOptionsLiveData.value = Unit
+    }
+    fun setDirectoriesFirst() {
+        Preferences.Popup.isDirectoriesFirst = !Preferences.Popup.isDirectoriesFirst
+        _sortOptionsLiveData.value = Unit
+    }
+
+    fun setShowHiddenFiles(value: Boolean){
+        Preferences.Popup.showHiddenFiles = value
+        _showHiddenFilesLiveData.value = Unit
+
+    }
+
 }
 
 enum class TypeOperation() {

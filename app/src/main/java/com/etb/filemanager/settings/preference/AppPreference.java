@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.etb.filemanager.R;
 import com.etb.filemanager.files.util.ArrayUtils;
 import com.etb.filemanager.files.util.ContextUtils;
+import com.etb.filemanager.manager.files.filelist.FileSortOptions;
 import com.etb.filemanager.util.file.style.StyleManager;
 
 import java.lang.annotation.Retention;
@@ -32,11 +33,18 @@ public class AppPreference {
 
     @Keep
     public enum PreferenceKey {
+        //
         PREF_APP_THEME_STR,
         PREF_APP_ANIM_FILES_LIST_BOOL,
 
         //Behavior
         PREF_DEFAULT_FOLDER_STR,
+
+        //Popup
+        PREF_SORT_BY_STR,
+        PREF_DIRECTORIES_FIRST_BOOL,
+        PREF_ORDER_FILES_STR,
+        PREF_SHOW_HIDDEN_FILE_BOOL
         ;
 
         private static final String[] sKeys = new String[values().length];
@@ -264,8 +272,15 @@ public class AppPreference {
             case PREF_APP_ANIM_FILES_LIST_BOOL:
                 return mContext.getResources().getBoolean(R.bool.default_is_enabled_anim_in_file_list);
             case PREF_DEFAULT_FOLDER_STR:
-                return mContext.getResources().getString(R.string.pref_default_folder);
-        }
+                return mContext.getResources().getString(R.string.default_pref_default_folder);
+            case PREF_SORT_BY_STR:
+                return FileSortOptions.SortBy.NAME.name();
+            case PREF_DIRECTORIES_FIRST_BOOL:
+                return mContext.getResources().getBoolean(R.bool.default_is_directories_first);
+            case PREF_ORDER_FILES_STR:
+                return FileSortOptions.Order.ASCENDING.name();
+            case PREF_SHOW_HIDDEN_FILE_BOOL:
+                return mContext.getResources().getBoolean(R.bool.default_show_hidden_file);        }
         throw new IllegalArgumentException("Pref key not found.");
     }
 
