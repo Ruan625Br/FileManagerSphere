@@ -10,6 +10,10 @@
     <string name="file_list_action_sort_order_ascending">Crescente</string>
     <string name="file_list_action_sort_directories_first">Pastas primeiro</string>
     <string name="file_list_action_sort_path_specific">Somente pata esta pasta</string>
+    <plurals name="file_list_action_toggle_grid">
+        <item quantity="one">Alternar visualização de list</item>
+        <item quantity="other">Alternar visualização de grade</item>
+    </plurals>
     <string name="refresh">Atualizar</string>
     <string name="select_all">Selecionar tudo</string>
     <string name="file_list_action_navigate_to">Ir para</string>
@@ -173,4 +177,5 @@
     <bool name="default_is_enabled_anim_in_file_list">true</bool>
     <bool name="default_is_directories_first">true</bool>
     <bool name="default_show_hidden_file">false</bool>
+    <bool name="default_grid_toggle">false</bool>
 </resources>

@@ -42,9 +42,10 @@ public class AppPreference {
 
         //Popup
         PREF_SORT_BY_STR,
-        PREF_DIRECTORIES_FIRST_BOOL,
         PREF_ORDER_FILES_STR,
-        PREF_SHOW_HIDDEN_FILE_BOOL
+        PREF_DIRECTORIES_FIRST_BOOL,
+        PREF_SHOW_HIDDEN_FILE_BOOL,
+        PREF_GRID_TOGGLE_BOOL
         ;
 
         private static final String[] sKeys = new String[values().length];
@@ -280,7 +281,10 @@ public class AppPreference {
             case PREF_ORDER_FILES_STR:
                 return FileSortOptions.Order.ASCENDING.name();
             case PREF_SHOW_HIDDEN_FILE_BOOL:
-                return mContext.getResources().getBoolean(R.bool.default_show_hidden_file);        }
+                return mContext.getResources().getBoolean(R.bool.default_show_hidden_file);
+            case PREF_GRID_TOGGLE_BOOL:
+                return mContext.getResources().getBoolean(R.bool.default_grid_toggle);
+        }
         throw new IllegalArgumentException("Pref key not found.");
     }
 

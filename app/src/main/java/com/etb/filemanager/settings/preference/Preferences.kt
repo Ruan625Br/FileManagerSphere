@@ -47,5 +47,8 @@ class Preferences {
             set(value) {
                 AppPreference.set(AppPreference.PreferenceKey.PREF_SHOW_HIDDEN_FILE_BOOL, value)
             }
+        var isGridEnabled: Boolean
+            get() = AppPreference.getBoolean(AppPreference.PreferenceKey.PREF_GRID_TOGGLE_BOOL)
+            set(value) {AppPreference.set(AppPreference.PreferenceKey.PREF_GRID_TOGGLE_BOOL, value)}
     }
 }

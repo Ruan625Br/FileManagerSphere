@@ -144,8 +144,10 @@ class FileListViewModel : ViewModel() {
 
     private val _sortOptionsLiveData = MutableLiveData<Unit>()
     private val _showHiddenFilesLiveData = MutableLiveData<Unit>()
+    private val _toggleGridLiveData = MutableLiveData<Boolean>()
     val showHiddenFilesLiveData: LiveData<Unit> = _showHiddenFilesLiveData
     val sortOptionsLiveData: LiveData<Unit> = _sortOptionsLiveData
+    val toggleGridLiveData: LiveData<Boolean> = _toggleGridLiveData
 
     fun setSortBy(sortBy: FileSortOptions.SortBy) {
         Preferences.Popup.sortBy = sortBy
@@ -168,6 +170,12 @@ class FileListViewModel : ViewModel() {
         Preferences.Popup.showHiddenFiles = value
         _showHiddenFilesLiveData.value = Unit
 
+    }
+
+    fun setGriToggle(){
+        val isGridEnabled = !Preferences.Popup.isGridEnabled
+        Preferences.Popup.isGridEnabled = isGridEnabled
+        _toggleGridLiveData.value = isGridEnabled
     }
 
 }

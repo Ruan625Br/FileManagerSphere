@@ -1,5 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools" tools:ignore="AlwaysShowAction">
+
     <item android:id="@+id/action_sort" android:icon="@drawable/sort_icon_control_normal_24dp"
           android:orderInCategory="100" android:title="@string/sort" app:showAsAction="always">
         <menu>
@@ -18,6 +19,8 @@
                   android:title="@string/file_list_action_sort_directories_first"/>
             <item android:id="@+id/action_sort_path_specific"
                   android:title="@string/file_list_action_sort_path_specific"/>
+            <item android:id="@+id/action_toggle_grid"
+                  android:title="@string/set"/>
         </menu>
     </item>
     <item android:id="@+id/action_refresh" android:orderInCategory="100" android:title="@string/refresh"
