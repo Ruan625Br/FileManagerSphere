@@ -34,8 +34,7 @@ import androidx.transition.TransitionManager
             val translationXHolder = PropertyValuesHolder.ofFloat(View.TRANSLATION_X, deltaX.toFloat())
             val translationYHolder = PropertyValuesHolder.ofFloat(View.TRANSLATION_Y, deltaY.toFloat())
             val animator = ObjectAnimator.ofPropertyValuesHolder(child, translationXHolder, translationYHolder)
-            animator.duration = transition.duration / 2
-            animator.interpolator = AccelerateDecelerateInterpolator()
+            animator.duration = transition.duration / 4
             animators.add(animator)
         }
     }
