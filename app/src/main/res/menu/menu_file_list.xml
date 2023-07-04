@@ -1,8 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools" tools:ignore="AlwaysShowAction">
 
+    <item
+            android:id="@+id/app_bar_search"
+            android:icon="@drawable/ic_search"
+            android:title="Search"
+            app:showAsAction="collapseActionView|ifRoom"
+            app:actionViewClass="androidx.appcompat.widget.SearchView"
+           />
     <item android:id="@+id/action_sort" android:icon="@drawable/sort_icon_control_normal_24dp"
-          android:orderInCategory="100" android:title="@string/sort" app:showAsAction="always">
+          android:orderInCategory="101" android:title="@string/sort" app:showAsAction="always">
         <menu>
             <group android:checkableBehavior="single">
                 <item android:id="@+id/action_sort_by_name" android:title="@string/file_list_action_sort_by_name"/>
