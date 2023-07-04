@@ -133,6 +133,8 @@
     <string name="empty">vazio</string>
     <string name="loading">carregando</string>
     <string name="error">erro</string>
+    <string name="error_occurred">Erro</string>
+    <string name="error_occurred_during_operation">Ocorreu um erro durante a  operação</string>
 
     <string name="file_list_subtitle_separator">,\u0020</string>
     <plurals name="file_list_subtitle_directory_count_format">
@@ -143,7 +145,6 @@
         <item quantity="one">%1$,d arquivo</item>
         <item quantity="other">%1$,d arquivos</item>
     </plurals>
-
     <plurals name="file_list_selected_count_format">
         <item quantity="one">%1$,d selecionado</item>
         <item quantity="other">%1$,d selecionados</item>

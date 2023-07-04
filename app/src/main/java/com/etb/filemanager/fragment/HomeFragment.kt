@@ -197,7 +197,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             // listFilesAndFoldersInBackground(BASE_PATH)
 
         }
-        recyclerView.layoutManager = GridLayoutManager(requireActivity(), 1)
+        recyclerView.layoutManager = GridLayoutManager(requireActivity(), 2)
         adapter = FileModelAdapter(requireContext(), this)
         recyclerView.adapter = adapter
 
@@ -709,7 +709,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
             R.id.action_rename -> {
                 val selectedFile = viewModel.selectedFiles.toMutableList()
-                if (viewModel.selectedFiles.size == 1) showRenameFileDialog(selectedFile[0]) else showBottomSheetRenameMultipleFiles()
+                if (viewModel.selectedFiles.size == 1) showRenameFileDialog(selectedFile[0]) else showBottomSheetRenameMultipleFiles(viewModel.selectedFiles)
                 finishActionMode()
             }
 
@@ -873,7 +873,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             val isConfirmed = dialogResult.confirmed
             val enteredText = dialogResult.text
             if (isConfirmed) {
-                fileUtil.renameFile(file.filePath, enteredText)
             }
         }
     }
@@ -1099,7 +1098,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     }
 
-    private fun showBottomSheetRenameMultipleFiles() {
+    private fun showBottomSheetRenameMultipleFiles(files: FileItemSet) {
 
         val listInputEditText = mutableListOf<TextInputEditText>()
         val selectedFiles = mutableListOf<FileModel>()
@@ -1111,7 +1110,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val btnRename = requireView().findViewById<Button>(R.id.btn_rename)
 
 
-        for (fileItem in viewModel.selectedFiles) {
+        for (fileItem in files.toMutableList()) {
             if (!selectedFiles.contains(fileItem)) {
                 selectedFiles.add(fileItem)
             }
@@ -1134,32 +1133,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         btnRename.setOnClickListener {
             bottomSheetBehaviorRename.state = BottomSheetBehavior.STATE_HIDDEN
             val newNames = listInputEditText.map { it.text.toString() }
-            coroutineViewModel.rename(paths.toList(), newNames.toList(), requireContext())
-            /*
-            CoroutineScope(Dispatchers.IO).launch {
-                for ((index, file) in listPath.withIndex()) {
-                    val newName = listInputEditText[index].text.toString()
-                    FileUtil().renameFile(file, newName)
-                    val mFile = File(file)
+            rename(paths.toList(), newNames)
 
-                    completedFiles++
-                    val progress = (completedFiles.toFloat() / totalFiles.toFloat()) * 100
-
-                    withContext(Dispatchers.Main) {
-                        val title = resources.getQuantityString(R.plurals.renamingItems, 1, totalFiles)
-                        val msg = "Renomeando \"${mFile.name}\" para \"$newName\""
-                        updateProgress(title, msg, progress.toInt())
-                    }
-
-                }
-
-
-                withContext(Dispatchers.Main) {
-                    progressDialog?.cancel()
-                    refresh()
-                }
-            }
-*/
         }
 
         bottomSheetBehaviorRename.peekHeight = 1000
@@ -1203,6 +1178,15 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         intent.putStringArrayListExtra("sourcePaths", ArrayList<String>(paths))
         intent.putExtra("destinationPath", "null")
         intent.putExtra("operation", FileOperation.DELETE)
+        ContextCompat.startForegroundService(requireContext(), intent)
+    }
+
+    private fun rename(paths: List<Path>, newNames: List<String>){
+        val mPaths = paths.map { it.toAbsolutePath().toString() }
+        val intent = Intent(requireContext(), FileOperationService::class.java)
+        intent.putStringArrayListExtra("sourcePaths", ArrayList<String>(mPaths))
+        intent.putStringArrayListExtra("newNames", ArrayList<String>(newNames))
+        intent.putExtra("operation", FileOperation.RENAME)
         ContextCompat.startForegroundService(requireContext(), intent)
     }
 

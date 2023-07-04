@@ -29,6 +29,7 @@ class FileOperationService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val sourcePath = intent?.getStringArrayListExtra("sourcePaths")?.toList()
+        val newNames = intent?.getStringArrayListExtra("newNames")?.toList()
         val destinationPath = intent?.getStringExtra("destinationPath")
         val operation = intent?.getSerializableExtra("operation") as FileOperation
 
@@ -42,6 +43,7 @@ class FileOperationService : Service() {
                 applicationContext,
                 operation,
                 sourcePath!!,
+                newNames!!,
                 true,
                 destinationPath.toString(),
                 { progress ->
