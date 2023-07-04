@@ -182,8 +182,8 @@ class FileModelAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int){
         throw UnsupportedOperationException()
     }
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: List<Any>) {
+        bindViewHolderAnimation(holder)
         val file = getItem(position)
         val binding = holder.binding
         val mimeTypeUtil = MimeTypeUtil()
@@ -192,15 +192,15 @@ class FileModelAdapter(
         val iconUtil = IconUtil()
         val mimeType = getFileMimeType(file.filePath)
         val selected = file in selectedFiles
+        val isDirectory = file.isDirectory
         binding.itemFile.isChecked = selected
         Log.i("TEESTEEEE", "AQUI: $selected")
         if (payloads.isNotEmpty()){
             return
         }
 
-        bindViewHolderAnimation(holder)
 
-        if (!file.isDirectory) {
+        if (!isDirectory) {
 
             if (mimeType != null && mimeType.isMimeTypeMedia()) {
                 val midiaType = getMidiaType(mimeType)
@@ -290,6 +290,7 @@ class FileModelAdapter(
 
 
     private fun loadImage(path: String, binding: FileItemBinding) {
+
         val iconUtil = IconUtil()
         binding.iconFile.visibility = View.GONE
         binding.iconPreview.visibility = View.VISIBLE

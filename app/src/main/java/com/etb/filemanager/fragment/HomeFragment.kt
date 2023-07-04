@@ -1071,7 +1071,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         tabLayout.addTab(tabLayout.newTab().setText("Básico"))
         tabLayout.addTab(tabLayout.newTab().setText("Extra"))
 
-
+       bottomSheetProperties.isFocusableInTouchMode = true
+        bottomSheetProperties.requestFocus()
         bottomSheetBehaviorProperties.peekHeight = 1000
         bottomSheetBehaviorProperties.maxHeight = 1000
         bottomSheetBehaviorProperties.state = BottomSheetBehavior.STATE_EXPANDED
