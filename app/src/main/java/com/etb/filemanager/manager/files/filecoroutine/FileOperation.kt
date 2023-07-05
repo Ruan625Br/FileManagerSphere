@@ -25,12 +25,13 @@ suspend fun performFileOperation(
 ) {
     withContext(Dispatchers.IO) {
         try {
+
             when (operation) {
-                FileOperation.DELETE -> deleteFile(sourcePath!!)
-                FileOperation.CREATE -> create(sourcePath!!, createDir!!)
-                FileOperation.RENAME -> rename(sourcePath!!, newNames!!)
-                FileOperation.MOVE -> move(sourcePath!!, destinationPath!!)
-                FileOperation.COPY -> create(sourcePath!!, createDir!!)
+                FileOperation.DELETE -> deleteFile(sourcePath!!, progressListener)
+                FileOperation.CREATE -> create(sourcePath!!, createDir!!, progressListener)
+                FileOperation.RENAME -> rename(sourcePath!!, newNames!!, progressListener)
+                FileOperation.MOVE -> move(sourcePath!!, destinationPath!!, progressListener)
+                FileOperation.COPY -> create(sourcePath!!, createDir!!, progressListener)
             }
             completionListener(true)
         } catch (e: Exception) {
@@ -40,12 +41,20 @@ suspend fun performFileOperation(
 }
 
 @OptIn(ExperimentalPathApi::class)
-private fun deleteFile(paths: List<String>) {
+private fun deleteFile(
+    paths: List<String>,
+    progressListener: (Int) -> Unit
+) {
+    var completedFiles = 0
+    val totalFiles = paths.size
+
     for (path in paths) {
         val mPath = Paths.get(path)
         try {
             mPath.deleteRecursively()
-
+            completedFiles++
+            val progress = (completedFiles * 100 / totalFiles).toInt()
+            sendProgress(progressListener, progress)
         } catch (e: IOException) {
             try {
                 showOperationDialog()
@@ -56,13 +65,23 @@ private fun deleteFile(paths: List<String>) {
     }
 }
 
-private fun create(paths: List<String>, dir: Boolean) {
+
+private fun create(
+    paths: List<String>,
+    dir: Boolean,
+    progressListener: (Int) -> Unit
+) {
+    var completedFiles = 0
+    val totalFiles = paths.size
+
     for (path in paths) {
         val mPath = Paths.get(path)
         if (!mPath.exists()) {
             try {
                 if (dir) mPath.createDirectory() else mPath.createFile()
-
+                completedFiles++
+                val progress = (completedFiles * 100 / totalFiles).toInt()
+                sendProgress(progressListener, progress)
             } catch (e: IOException) {
                 try {
                     showOperationDialog()
@@ -74,13 +93,24 @@ private fun create(paths: List<String>, dir: Boolean) {
     }
 }
 
-private fun rename(paths: List<String>, newNames: List<String>) {
+private fun rename(
+    paths: List<String>,
+    newNames: List<String>,
+    progressListener: (Int) -> Unit
+) {
+    var completedFiles = 0
+    val totalFiles = paths.size
+
     for ((index, mPath) in paths.withIndex()) {
         val path = Paths.get(mPath)
         val newPath = path.resolveSibling(newNames[index])
         moveAtomically(path, newPath)
+        completedFiles++
+        val progress = (completedFiles * 100 / totalFiles).toInt()
+        sendProgress(progressListener, progress)
     }
 }
+
 
 private fun moveAtomically(source: Path, target: Path) {
     try {
@@ -91,8 +121,15 @@ private fun moveAtomically(source: Path, target: Path) {
     }
 }
 
-private fun move(paths: List<String>, destinationPath: String) {
+private fun move(paths: List<String>, destinationPath: String, progressListener: (Int) -> Unit) {
     try {
+        var completedSize = 0L
+        var totalSize = 0L
+
+        for (path in paths){
+            val sourcePath = Paths.get(path)
+            totalSize += Files.size(sourcePath)
+        }
         for (path in paths) {
             val sourcePath = Paths.get(path)
             val destinationFolderPath = Paths.get(destinationPath)
@@ -106,7 +143,14 @@ private fun move(paths: List<String>, destinationPath: String) {
             }
 
             try {
+
+                val fileSize = Files.size(sourcePath)
+                completedSize += fileSize
+                val progress = (completedSize * 100 / totalSize).toInt()
+                sendProgress(progressListener, progress)
                 Files.move(sourcePath, destinationFilePath, StandardCopyOption.REPLACE_EXISTING)
+
+
             } catch (e: IOException) {
                 Log.e("FILEOP", "Erro: $e")
             }
@@ -149,6 +193,9 @@ private fun showConfirmationDialog(fileName: String): Boolean {
     return isConfirmed
 }
 
+private fun sendProgress(progressListener: (Int) -> Unit, progress: Int) {
+    progressListener(progress)
+}
 
 enum class FileOperation {
     DELETE, CREATE, RENAME, MOVE, COPY

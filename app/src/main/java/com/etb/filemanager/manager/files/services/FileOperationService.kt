@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.IBinder
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
@@ -27,6 +28,7 @@ class FileOperationService : Service() {
         return null
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val sourcePath = intent?.getStringArrayListExtra("sourcePaths")?.toList()
         val newNames = intent?.getStringArrayListExtra("newNames")?.toList()
@@ -75,11 +77,12 @@ class FileOperationService : Service() {
         serviceJob.cancel()
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("ObsoleteSdkInt")
     private fun createNotificationBuilder(): NotificationCompat.Builder {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val importance = NotificationManager.IMPORTANCE_LOW
+            val importance = NotificationManager.IMPORTANCE_HIGH
             val chanel = NotificationChannel(CHANEL_ID, CHANEL_NAME, importance)
             notificationManager.createNotificationChannel(chanel)
         }
@@ -102,7 +105,7 @@ class FileOperationService : Service() {
                     )
                 )
                 .setContentIntent(pendingIntent)
-                .setProgress(100, 0, true)
+               .setProgress(100, 0, false)
                 .setOngoing(true)
 
         } else{
@@ -117,7 +120,7 @@ class FileOperationService : Service() {
                     )
                 )
                 .setContentIntent(pendingIntent)
-                .setProgress(100, 0, true)
+                .setProgress(100, 0, false)
                 .setOngoing(true)
 
         }
