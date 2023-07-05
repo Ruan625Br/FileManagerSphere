@@ -13,3 +13,12 @@ fun Path.newDirectoryStream(): DirectoryStream<Path> = Files.newDirectoryStream(
 
 val Path.provider: FileSystemProvider
     get() = fileSystem.provider()
+
+
+fun AutoCloseable.closeSafe() {
+    try {
+        close()
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}

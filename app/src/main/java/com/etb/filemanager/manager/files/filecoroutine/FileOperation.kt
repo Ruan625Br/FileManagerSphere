@@ -1,6 +1,7 @@
 package com.etb.filemanager.manager.files.filecoroutine
 
 import android.content.Context
+import android.util.Log
 import com.etb.filemanager.R
 import com.etb.filemanager.files.util.ContextUtils
 import com.etb.filemanager.manager.util.MaterialDialogUtils
@@ -8,10 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.io.InterruptedIOException
-import java.nio.file.LinkOption
-import java.nio.file.Path
-import java.nio.file.Paths
-import java.nio.file.StandardCopyOption
+import java.nio.file.*
 import kotlin.io.path.*
 
 
@@ -20,8 +18,8 @@ suspend fun performFileOperation(
     operation: FileOperation,
     sourcePath: List<String>?,
     newNames: List<String>?,
-    createDir: Boolean,
-    destinationPath: String,
+    createDir: Boolean?,
+    destinationPath: String?,
     progressListener: (Int) -> Unit,
     completionListener: (Boolean) -> Unit
 ) {
@@ -29,10 +27,10 @@ suspend fun performFileOperation(
         try {
             when (operation) {
                 FileOperation.DELETE -> deleteFile(sourcePath!!)
-                FileOperation.CREATE -> create(sourcePath!!, createDir)
+                FileOperation.CREATE -> create(sourcePath!!, createDir!!)
                 FileOperation.RENAME -> rename(sourcePath!!, newNames!!)
-                FileOperation.MOVE -> create(sourcePath!!, createDir)
-                FileOperation.COPY -> create(sourcePath!!, createDir)
+                FileOperation.MOVE -> move(sourcePath!!, destinationPath!!)
+                FileOperation.COPY -> create(sourcePath!!, createDir!!)
             }
             completionListener(true)
         } catch (e: Exception) {
@@ -52,7 +50,7 @@ private fun deleteFile(paths: List<String>) {
             try {
                 showOperationDialog()
             } catch (e: Exception) {
-
+                e.printStackTrace()
             }
         }
     }
@@ -69,7 +67,7 @@ private fun create(paths: List<String>, dir: Boolean) {
                 try {
                     showOperationDialog()
                 } catch (e: Exception) {
-
+                    e.printStackTrace()
                 }
             }
         }
@@ -93,6 +91,31 @@ private fun moveAtomically(source: Path, target: Path) {
     }
 }
 
+private fun move(paths: List<String>, destinationPath: String) {
+    try {
+        for (path in paths) {
+            val sourcePath = Paths.get(path)
+            val destinationFolderPath = Paths.get(destinationPath)
+            val destinationFilePath = destinationFolderPath.resolve(sourcePath.fileName)
+
+            if (Files.exists(destinationFilePath)) {
+                val dialogResult = showConfirmationDialog(sourcePath.fileName.toString())
+                if (dialogResult) {
+                    continue
+                }
+            }
+
+            try {
+                Files.move(sourcePath, destinationFilePath, StandardCopyOption.REPLACE_EXISTING)
+            } catch (e: IOException) {
+                Log.e("FILEOP", "Erro: $e")
+            }
+        }
+    } catch (e: InterruptedException) {
+        Log.e("EROOOO", "Erro: $e")
+    }
+}
+
 private fun showOperationDialog() {
     val mContext = ContextUtils.getContext()
     val title = mContext.getString(R.string.error_occurred)
@@ -100,12 +123,7 @@ private fun showOperationDialog() {
     val textPositiveButton = mContext.getString(R.string.ok)
 
     MaterialDialogUtils().createDialogInfo(
-        title,
-        message,
-        textPositiveButton,
-        "",
-        mContext,
-        false
+        title, message, textPositiveButton, "", mContext, false
     ) { dialogResult ->
         val isConfirmed = dialogResult.confirmed
         if (isConfirmed) {
@@ -114,11 +132,24 @@ private fun showOperationDialog() {
     }
 }
 
+private fun showConfirmationDialog(fileName: String): Boolean {
+    val mContext = ContextUtils.getContext()
+    val title = mContext.getString(R.string.warning)
+    val message = "O arquivo '$fileName' já existe. Deseja substituí-lo?"
+
+    val textPositiveButton = mContext.getString(R.string.ok)
+    val textNegativeButton = mContext.getString(R.string.skip)
+    var isConfirmed = false
+    MaterialDialogUtils().createDialogInfo(
+        title, message, textPositiveButton, "", mContext, false
+    ) { dialogResult ->
+        isConfirmed = dialogResult.confirmed
+
+    }
+    return isConfirmed
+}
+
 
 enum class FileOperation {
-    DELETE,
-    CREATE,
-    RENAME,
-    MOVE,
-    COPY
+    DELETE, CREATE, RENAME, MOVE, COPY
 }

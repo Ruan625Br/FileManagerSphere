@@ -11,7 +11,7 @@ interface FileListener {
     fun selectFiles(files: FileItemSet, selected: Boolean)
     fun openFile(file: FileModel)
     fun openFileWith(file: FileModel)
-    fun cutFile(file: FileModel)
+    fun cutFile(file: FileItemSet)
     fun copyFile(file: FileModel)
     fun confirmDeleteFile(file: FileItemSet)
     fun showRenameFileDialog(file: FileModel)

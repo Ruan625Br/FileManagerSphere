@@ -1,46 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                                                   android:layout_height="match_parent"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto">
+                                                     xmlns:tools="http://schemas.android.com/tools"
+                                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                     android:layout_width="match_parent"
+                                                     android:layout_height="match_parent">
+
     <FrameLayout
             android:id="@+id/standard_bottom_operations"
             style="@style/Widget.Material3.BottomSheet"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-            tools:layout_editor_absoluteY="-26dp" tools:layout_editor_absoluteX="0dp"
-    >
-    <com.google.android.material.bottomsheet.BottomSheetDragHandleView android:layout_width="match_parent"
-                                                                       android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="150dp"
                 android:padding="8dp">
+
             <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" app:srcCompat="@drawable/baseline_close_24"
                     android:id="@+id/iv_close_op"
-                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_title_op" app:layout_constraintHorizontal_bias="0.0"
-                    android:layout_marginTop="60dp"
-            />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/baseline_close_24"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="6dp"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_title_op"
+                    app:layout_constraintHorizontal_bias="0.139" app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintVertical_bias="0.658"/>
+
             <TextView
+                    android:id="@+id/tv_title_op"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="TextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/tv_title_op"
-                    android:textSize="18sp" app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="64dp"
+                    android:textSize="18sp"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.398"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHorizontal_bias="0.498"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintVertical_bias="0.642"/>
             <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" app:srcCompat="@drawable/paste_icon_control_normal_24dp"
                     android:id="@+id/iv_start_op"
-                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="60dp" android:layout_marginEnd="16dp"
-                    app:layout_constraintStart_toEndOf="@+id/tv_title_op" app:layout_constraintHorizontal_bias="0.926"
-            />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/paste_icon_control_normal_24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintStart_toEndOf="@+id/tv_title_op"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintVertical_bias="0.642"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

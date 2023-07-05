@@ -89,6 +89,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     private lateinit var fileUtils: FileUtils
     private val fileUtil = FileUtil()
 
+   private lateinit var mFab: FloatingActionButton
+
 
     private var mCurrentPath = "/storage/emulated/0"
     private val BASE_PATH = "/storage/emulated/0"
@@ -157,7 +159,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         }
         initAllBottomSheet()
 
-
+        mFab = view.findViewById(R.id.mfab)
         settingsViewModel = SettingsViewModel(requireContext())
         viewModel = ViewModelProvider(this)[FileListViewModel::class.java]
         coroutineViewModel = ViewModelProvider(this)[FileCoroutineViewModel::class.java]
@@ -273,12 +275,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     private fun initFabClick() {
-        val mFab: FloatingActionButton = requireView().findViewById(R.id.mfab)
         val mFabCreateFile: FloatingActionButton = requireView().findViewById(R.id.fab_create_file)
         val mFabCreateFolder: FloatingActionButton = requireView().findViewById(R.id.fab_create_folder)
-        val fabMenu: FabMenu = FabMenu(requireContext(), mFab, mFabCreateFile, mFabCreateFolder)
+        val fabMenu = FabMenu(requireContext(), mFab, mFabCreateFile, mFabCreateFolder)
 
-        mFab.setOnClickListener { fabMenu.toggle() }
+        mFab.setOnClickListener {
+            fabMenu.toggle()
+        }
 
         mFabCreateFile.setOnClickListener {
             val title = requireContext().getString(R.string.dialog_new_file)
@@ -697,7 +700,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     override fun onActionItemClicked(mode: androidx.appcompat.view.ActionMode?, item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.action_cut -> {
-                cutFile(fileModel.get(0))
+                cutFile(viewModel.selectedFiles)
                 finishActionMode()
             }
 
@@ -844,9 +847,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         }
     }
 
-    override fun cutFile(file: FileModel) {
-        createBottomSheetOperation(TypeOperation.CUT)
-        finishActionMode()
+    override fun cutFile(file: FileItemSet) {
+        val mFiles = file.toMutableList()
+
+        createBottomSheetOperation(file)
     }
 
     override fun copyFile(file: FileModel) {
@@ -1022,24 +1026,25 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     @SuppressLint("SetTextI18n")
-    private fun createBottomSheetOperation(typeOperation: TypeOperation) {
+    private fun createBottomSheetOperation(files: FileItemSet) {
 
         val ivCloseOp = requireView().findViewById<ImageView>(R.id.iv_close_op)
         val ivStartOp = requireView().findViewById<ImageView>(R.id.iv_start_op)
         val tvTitleOp = requireView().findViewById<TextView>(R.id.tv_title_op)
 
-        val sourceFiles = viewModel.selectedFiles.map { it.file }
-
-
         standardBehaviorOperation.peekHeight = 300
-        standardBehaviorOperation.maxHeight = 300
+        standardBehaviorOperation.maxHeight = 500
         standardBehaviorOperation.state = BottomSheetBehavior.STATE_EXPANDED
 
-        tvTitleOp.text = "Movendo ${selectionTracker.selection.size()}"
+        tvTitleOp.text = "Movendo ${files.size} "
+        val mFiles = files.toMutableList()
+        val paths = mFiles.map { Paths.get(it.filePath) }
+
 
         ivStartOp.setOnClickListener {
-            val destinationDir = File(mCurrentPath)
-            // viewModel.initOperation(typeOperation, sourceFiles, destinationDir, requireContext())
+            val destinationDir = viewModel.currentPath?.toString()
+
+            destinationDir?.let { it1 -> move(paths, it1) }
             standardBehaviorOperation.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -1201,6 +1206,15 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         intent.putStringArrayListExtra("sourcePaths", ArrayList<String>(mPaths))
         intent.putStringArrayListExtra("newNames", ArrayList<String>(newNames))
         intent.putExtra("operation", FileOperation.RENAME)
+        ContextCompat.startForegroundService(requireContext(), intent)
+    }
+
+    private fun move(paths: List<Path>, destinationPath: String){
+        val mPaths = paths.map { it.toAbsolutePath().toString() }
+        val intent = Intent(requireContext(), FileOperationService::class.java)
+        intent.putStringArrayListExtra("sourcePaths", ArrayList(mPaths))
+        intent.putExtra("destinationPath", destinationPath)
+        intent.putExtra("operation", FileOperation.MOVE)
         ContextCompat.startForegroundService(requireContext(), intent)
     }
 

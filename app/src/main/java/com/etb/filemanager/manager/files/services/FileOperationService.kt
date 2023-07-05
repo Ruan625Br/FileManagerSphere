@@ -42,8 +42,8 @@ class FileOperationService : Service() {
             performFileOperation(
                 applicationContext,
                 operation,
-                sourcePath!!,
-                newNames!!,
+                sourcePath,
+                newNames,
                 true,
                 destinationPath.toString(),
                 { progress ->
