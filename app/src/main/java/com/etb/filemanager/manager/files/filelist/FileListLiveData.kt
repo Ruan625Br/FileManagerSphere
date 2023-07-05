@@ -11,12 +11,12 @@ import java.nio.file.DirectoryIteratorException
 import java.nio.file.Path
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Future
-
+import com.etb.filemanager.manager.files.filelist.DirectoryObserver
 
 class FileListLiveData(private val path: Path) : CloseableLiveData<Stateful<List<FileModel>>>() {
     private var future: Future<Unit>? = null
 
-    private var observer: DirectoryObserver
+    private val observer: DirectoryObserver
 
     @Volatile
     private var isChangedWhileInactive = false
