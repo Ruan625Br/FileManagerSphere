@@ -49,40 +49,35 @@ android {
 }
 
 dependencies {
-
+    // UI Libraries
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
+    implementation 'me.zhanghai.android.fastscroll:library:1.2.0'
+
+    // tests
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
 
+    // third-party libraries
     implementation 'com.github.bumptech.glide:glide:4.15.1'
-
     implementation(platform("io.github.Rosemoe.sora-editor:bom:0.21.1"))
     implementation("io.github.Rosemoe.sora-editor:editor")
     implementation("io.github.Rosemoe.sora-editor:language-textmate")
-
     implementation 'commons-net:commons-net:3.9.0'
     implementation 'org.apache.commons:commons-compress:1.20'
     implementation 'org.tukaani:xz:1.9'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.6'
     implementation 'dev.rikka.rikkax.preference:simplemenu-preference:1.0.3'
-
     implementation 'dev.rikka.shizuku:api:12.2.0'
-
-    //implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidx_lifecycle_version"
-  // https://mvnrepository.com/artifact/androidx.lifecycle/lifecycle-viewmodel-ktx
     runtimeOnly("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation 'androidx.preference:preference-ktx:1.2.0'
 
-    //Ui
-    implementation 'me.zhanghai.android.fastscroll:library:1.2.0'
-
-
+    // Apache Commons IO
+    implementation 'commons-io:commons-io:2.11.0'
 }
