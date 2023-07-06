@@ -187,4 +187,8 @@
     <bool name="default_is_directories_first">true</bool>
     <bool name="default_show_hidden_file">false</bool>
     <bool name="default_grid_toggle">false</bool>
+
+    <string name="radio_zip">.zip</string>
+    <string name="radio_tar_xz">.tar.xz</string>
+    <string name="radio_7z">.7z</string>
 </resources>

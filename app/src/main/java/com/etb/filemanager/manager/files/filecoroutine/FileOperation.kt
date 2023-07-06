@@ -227,6 +227,10 @@ private fun sendProgress(progressListener: (Int) -> Unit, progress: Int) {
     progressListener(progress)
 }
 
+private fun archive(){
+
+}
+
 enum class FileOperation {
     DELETE, CREATE, RENAME, MOVE, COPY
 }
