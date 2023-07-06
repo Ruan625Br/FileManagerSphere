@@ -89,7 +89,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     private lateinit var fileUtils: FileUtils
     private val fileUtil = FileUtil()
 
-   private lateinit var mFab: FloatingActionButton
+    private lateinit var mFab: FloatingActionButton
 
 
     private var mCurrentPath = "/storage/emulated/0"
@@ -207,7 +207,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         viewModel.resetTo(Paths.get(Preferences.Behavior.defaultFolder))
         viewModel.showHiddenFilesLiveData.observe(viewLifecycleOwner) { onShowHiddenFilesChanged() }
         viewModel.sortOptionsLiveData.observe(viewLifecycleOwner) { onSortOptionsChanged() }
-        viewModel.toggleGridLiveData.observe(viewLifecycleOwner) {onToggleGridChange(it)}
+        viewModel.toggleGridLiveData.observe(viewLifecycleOwner) { onToggleGridChange(it) }
 
 
     }
@@ -289,12 +289,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             val textPositiveButton = requireContext().getString(R.string.fab_menu_action_create_file)
 
             materialDialogUtils.createBasicMaterial(title, text, textPositiveButton, requireContext()) { dialogResult ->
-                val isConfirmed = dialogResult.confirmed
-                val enteredText = dialogResult.text
-                if (isConfirmed) {
-                    if (fileUtils.createFileAndFolder(mCurrentPath, enteredText, FileUtils.CreationOption.FILE)) {
-                        Toast.makeText(requireContext(), "Criado $enteredText com sucesso", Toast.LENGTH_LONG).show()
+                if (dialogResult.confirmed) {
+                    val enteredText = dialogResult.text
+                    val mPath = viewModel.currentPath
+                    val newPath = mPath?.resolve(enteredText)
 
+                    if (newPath != null) {
+                        create(listOf(newPath), false)
                     }
                 }
             }
@@ -307,13 +308,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             val textPositiveButton = requireContext().getString(R.string.fab_menu_action_create_folder)
 
             materialDialogUtils.createBasicMaterial(title, text, textPositiveButton, requireContext()) { dialogResult ->
-                val isConfirmed = dialogResult.confirmed
-                val enteredText = dialogResult.text
-                if (isConfirmed) {
-                    if (fileUtil.createFolder(mCurrentPath, enteredText)) {
-                        Toast.makeText(requireContext(), "Criado pasta $enteredText com sucesso", Toast.LENGTH_LONG)
-                            .show()
+                if (dialogResult.confirmed) {
+                    val enteredText = dialogResult.text
+                    val mPath = viewModel.currentPath
+                    val newPath = mPath?.resolve(enteredText)
 
+                    if (newPath != null) {
+                        create(listOf(newPath), true)
                     }
                 }
             }
@@ -340,7 +341,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 ), 1
             )
         } else {
-
+            requestFilesPermission()
         }
 
 
@@ -350,22 +351,15 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val READ_WRITE_PERMISSION_REQUEST_CODE = 1
 
         if (ContextCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
+                requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // Se as permissões não estão concedidas, solicite-as
             ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ),
-                READ_WRITE_PERMISSION_REQUEST_CODE
+                requireActivity(), arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ), READ_WRITE_PERMISSION_REQUEST_CODE
             )
         } else {
         }
@@ -420,8 +414,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             adapter.clear()
         }
         if (stateful is Success) {
-            viewModel.pendingState
-                ?.let { recyclerView.layoutManager!!.onRestoreInstanceState(it) }
+            viewModel.pendingState?.let { recyclerView.layoutManager!!.onRestoreInstanceState(it) }
         }
 
     }
@@ -468,9 +461,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             null
         }
         return when {
-            !directoryCountText.isNullOrEmpty() && !fileCountText.isNullOrEmpty() ->
-                (directoryCountText + getString(R.string.file_list_subtitle_separator)
-                        + fileCountText)
+            !directoryCountText.isNullOrEmpty() && !fileCountText.isNullOrEmpty() -> (directoryCountText + getString(R.string.file_list_subtitle_separator) + fileCountText)
 
             !directoryCountText.isNullOrEmpty() -> directoryCountText
             !fileCountText.isNullOrEmpty() -> fileCountText
@@ -490,9 +481,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     fun onSortOptionsChanged() {
         val fileSortOptions = FileSortOptions(
-            Preferences.Popup.sortBy,
-            Preferences.Popup.orderFiles,
-            Preferences.Popup.isDirectoriesFirst
+            Preferences.Popup.sortBy, Preferences.Popup.orderFiles, Preferences.Popup.isDirectoriesFirst
         )
         adapter.comparator = fileSortOptions.createComparator()
     }
@@ -546,7 +535,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             FileSortOptions.SortBy.LAST_MODIFIED -> itemSortByLastModified
         }
         checkedSortByItem.isChecked = true
-
 
 
     }
@@ -705,6 +693,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             R.id.action_copy -> {
+                copyFile(viewModel.selectedFiles)
                 finishActionMode()
             }
 
@@ -823,20 +812,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     override fun openFileWith(file: FileModel) {
         val path = file.filePath
         if (!file.isDirectory && MimeTypeUtil().isSpecificFileType(
-                fileUtil.getFileMimeType(path).toString(),
-                MimeTypeIcon.CODE
+                fileUtil.getFileMimeType(path).toString(), MimeTypeIcon.CODE
             )
         ) {
             val fileUri = Uri.fromFile(File(path))
 
-            val options = CodeEditorFragment.Options.Builder()
-                .setUri(fileUri)
-                .setTitle(requireContext().getString(R.string.code_editor))
-                .setSubtitle(file.fileName)
-                .setEnableSharing(true)
-                .setJavaSmaliToggle(true)
-                .setReadOnly(false)
-                .build()
+            val options = CodeEditorFragment.Options.Builder().setUri(fileUri)
+                .setTitle(requireContext().getString(R.string.code_editor)).setSubtitle(file.fileName)
+                .setEnableSharing(true).setJavaSmaliToggle(true).setReadOnly(false).build()
             val fragment = CodeEditorFragment()
             val args = Bundle()
             args.putParcelable(CodeEditorFragment.ARG_OPTIONS, options)
@@ -848,13 +831,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     override fun cutFile(file: FileItemSet) {
-        val mFiles = file.toMutableList()
-
-        createBottomSheetOperation(file)
+        createBottomSheetOperation(file, false)
     }
 
-    override fun copyFile(file: FileModel) {
-        TODO("Not yet implemented")
+    override fun copyFile(file: FileItemSet) {
+        createBottomSheetOperation(file, true)
     }
 
     override fun confirmDeleteFile(file: FileItemSet) {
@@ -866,12 +847,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val textNegativeButton = requireContext().getString(R.string.dialog_cancel)
 
         materialDialogUtils.createDialogInfo(
-            title,
-            text,
-            textPositiveButton,
-            textNegativeButton,
-            requireContext(),
-            true
+            title, text, textPositiveButton, textNegativeButton, requireContext(), true
         ) { dialogResult ->
             val isConfirmed = dialogResult.confirmed
             if (isConfirmed) {
@@ -1026,7 +1002,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     @SuppressLint("SetTextI18n")
-    private fun createBottomSheetOperation(files: FileItemSet) {
+    private fun createBottomSheetOperation(files: FileItemSet, copy: Boolean) {
 
         val ivCloseOp = requireView().findViewById<ImageView>(R.id.iv_close_op)
         val ivStartOp = requireView().findViewById<ImageView>(R.id.iv_start_op)
@@ -1035,8 +1011,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         standardBehaviorOperation.peekHeight = 300
         standardBehaviorOperation.maxHeight = 500
         standardBehaviorOperation.state = BottomSheetBehavior.STATE_EXPANDED
+        val file = files.toMutableList()[0]
+        val title = if (copy) {
+            getQuantityString(R.plurals.operation_copying_files, files.size, file.fileName)
+        } else {
+            getQuantityString(R.plurals.operation_moving_files, files.size, file.fileName)
 
-        tvTitleOp.text = "Movendo ${files.size} "
+        }
+        tvTitleOp.text = title
         val mFiles = files.toMutableList()
         val paths = mFiles.map { Paths.get(it.filePath) }
 
@@ -1044,7 +1026,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         ivStartOp.setOnClickListener {
             val destinationDir = viewModel.currentPath?.toString()
 
-            destinationDir?.let { it1 -> move(paths, it1) }
+            destinationDir?.let { it1 -> if (copy) copy(paths, it1) else move(paths, it1) }
             standardBehaviorOperation.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -1209,12 +1191,28 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         ContextCompat.startForegroundService(requireContext(), intent)
     }
 
-    private fun move(paths: List<Path>, destinationPath: String){
+    private fun move(paths: List<Path>, destinationPath: String) {
         val mPaths = paths.map { it.toAbsolutePath().toString() }
         val intent = Intent(requireContext(), FileOperationService::class.java)
         intent.putStringArrayListExtra("sourcePaths", ArrayList(mPaths))
         intent.putExtra("destinationPath", destinationPath)
         intent.putExtra("operation", FileOperation.MOVE)
+        ContextCompat.startForegroundService(requireContext(), intent)
+    }
+    private fun copy(paths: List<Path>, destinationPath: String) {
+        val mPaths = paths.map { it.toAbsolutePath().toString() }
+        val intent = Intent(requireContext(), FileOperationService::class.java)
+        intent.putStringArrayListExtra("sourcePaths", ArrayList(mPaths))
+        intent.putExtra("destinationPath", destinationPath)
+        intent.putExtra("operation", FileOperation.COPY)
+        ContextCompat.startForegroundService(requireContext(), intent)
+    }
+    private fun create(paths: List<Path>, createDir: Boolean) {
+        val mPaths = paths.map { it.toAbsolutePath().toString() }
+        val intent = Intent(requireContext(), FileOperationService::class.java)
+        intent.putStringArrayListExtra("sourcePaths", ArrayList(mPaths))
+        intent.putExtra("createDir", createDir)
+        intent.putExtra("operation", FileOperation.CREATE)
         ContextCompat.startForegroundService(requireContext(), intent)
     }
 
@@ -1227,8 +1225,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             ActivityCompat.shouldShowRequestPermissionRationale(
-                requireActivity(),
-                POST_NOTIFICATIONS
+                requireActivity(), POST_NOTIFICATIONS
             ) -> {
                 startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -1266,11 +1263,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
             lProgress.progress = progress
 
-            val builder = MaterialAlertDialogBuilder(requireContext())
-                .setView(dialogView)
-                .setTitle(title)
-                .setMessage(msg)
-                .setCancelable(false)
+            val builder =
+                MaterialAlertDialogBuilder(requireContext()).setView(dialogView).setTitle(title).setMessage(msg)
+                    .setCancelable(false)
 
             progressDialog = builder.create()
             progressDialog?.show()

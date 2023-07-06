@@ -33,6 +33,7 @@ class FileOperationService : Service() {
         val sourcePath = intent?.getStringArrayListExtra("sourcePaths")?.toList()
         val newNames = intent?.getStringArrayListExtra("newNames")?.toList()
         val destinationPath = intent?.getStringExtra("destinationPath")
+        val createDir = intent?.getBooleanExtra("createDir", false)
         val operation = intent?.getSerializableExtra("operation") as FileOperation
 
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -46,7 +47,7 @@ class FileOperationService : Service() {
                 operation,
                 sourcePath,
                 newNames,
-                true,
+                createDir,
                 destinationPath.toString(),
                 { progress ->
                     notificationBuilder.setProgress(100, progress, false)

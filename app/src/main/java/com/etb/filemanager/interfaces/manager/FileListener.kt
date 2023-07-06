@@ -12,7 +12,7 @@ interface FileListener {
     fun openFile(file: FileModel)
     fun openFileWith(file: FileModel)
     fun cutFile(file: FileItemSet)
-    fun copyFile(file: FileModel)
+    fun copyFile(file: FileItemSet)
     fun confirmDeleteFile(file: FileItemSet)
     fun showRenameFileDialog(file: FileModel)
     fun extractFile(file: FileModel)

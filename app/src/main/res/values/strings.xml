@@ -141,6 +141,14 @@
     <string name="warning">Aviso</string>
     <string name="error_occurred_during_operation">Ocorreu um erro durante a  operação</string>
 
+    <plurals name="operation_moving_files">
+        <item quantity="one">Movendo "\"%2s\""</item>
+        <item quantity="other">Movendo %1$,d itens</item>
+    </plurals>
+    <plurals name="operation_copying_files">
+        <item quantity="one">Copiando "\"%2s\""</item>
+        <item quantity="other">Copiando %1$,d itens</item>
+    </plurals>
     <string name="file_list_subtitle_separator">,\u0020</string>
     <plurals name="file_list_subtitle_directory_count_format">
         <item quantity="one">%1$,d pasta</item>
