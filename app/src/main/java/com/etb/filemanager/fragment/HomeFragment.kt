@@ -831,11 +831,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     override fun cutFile(file: FileItemSet) {
-        createBottomSheetOperation(file, false)
+        createBottomSheetOperation(file, false, null)
     }
 
     override fun copyFile(file: FileItemSet) {
-        createBottomSheetOperation(file, true)
+        createBottomSheetOperation(file, true, null)
     }
 
     override fun confirmDeleteFile(file: FileItemSet) {
@@ -866,6 +866,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             val isConfirmed = dialogResult.confirmed
             val enteredText = dialogResult.text
             if (isConfirmed) {
+                val path = Paths.get(file.filePath).toList()
+                val newName = enteredText.toString()
+                val newNames = listOf(newName)
+
+                rename(path, newNames)
             }
         }
     }
@@ -914,6 +919,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 selectFile(file, true)
             }
 
+            CreateFileAction.CUT -> {
+                createBottomSheetOperation(null, false, file)
+            }
+
+            CreateFileAction.COPY -> {
+                createBottomSheetOperation(null, true, file)
+            }
+
             CreateFileAction.RENAME -> {
                 showRenameFileDialog(file)
             }
@@ -959,7 +972,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             add(FileAction(R.drawable.ic_cut_24, requireContext().getString(R.string.cut), CreateFileAction.CUT))
             add(
                 FileAction(
-                    R.drawable.ic_copy_24, requireContext().getString(R.string.copy), CreateFileAction.RENAME
+                    R.drawable.ic_copy_24, requireContext().getString(R.string.copy), CreateFileAction.COPY
                 )
             )
             add(
@@ -1002,7 +1015,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     @SuppressLint("SetTextI18n")
-    private fun createBottomSheetOperation(files: FileItemSet, copy: Boolean) {
+    private fun createBottomSheetOperation(files: FileItemSet?, copy: Boolean, fileItem: FileModel?) {
 
         val ivCloseOp = requireView().findViewById<ImageView>(R.id.iv_close_op)
         val ivStartOp = requireView().findViewById<ImageView>(R.id.iv_start_op)
@@ -1011,16 +1024,36 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         standardBehaviorOperation.peekHeight = 300
         standardBehaviorOperation.maxHeight = 500
         standardBehaviorOperation.state = BottomSheetBehavior.STATE_EXPANDED
-        val file = files.toMutableList()[0]
-        val title = if (copy) {
-            getQuantityString(R.plurals.operation_copying_files, files.size, file.fileName)
-        } else {
-            getQuantityString(R.plurals.operation_moving_files, files.size, file.fileName)
+        val file: FileModel
+        val mFiles: MutableList<FileModel>
+        val paths: List<Path>
 
+
+        if (files == null) {
+            file = fileItem!!
+            paths = listOf(Paths.get(file.filePath))
+        } else {
+            paths = files.map { Paths.get(it.filePath) }
+            file = files.first()
         }
+        val quantity = paths.size
+        val title = if (copy) {
+            requireContext().resources.getQuantityString(
+                R.plurals.operation_copying_files,
+                quantity,
+                quantity,
+                file.fileName
+            )
+        } else {
+            requireContext().resources.getQuantityString(
+                R.plurals.operation_moving_files,
+                quantity,
+                quantity,
+                file.fileName
+            )
+        }
+
         tvTitleOp.text = title
-        val mFiles = files.toMutableList()
-        val paths = mFiles.map { Paths.get(it.filePath) }
 
 
         ivStartOp.setOnClickListener {
@@ -1199,6 +1232,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         intent.putExtra("operation", FileOperation.MOVE)
         ContextCompat.startForegroundService(requireContext(), intent)
     }
+
     private fun copy(paths: List<Path>, destinationPath: String) {
         val mPaths = paths.map { it.toAbsolutePath().toString() }
         val intent = Intent(requireContext(), FileOperationService::class.java)
@@ -1207,6 +1241,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         intent.putExtra("operation", FileOperation.COPY)
         ContextCompat.startForegroundService(requireContext(), intent)
     }
+
     private fun create(paths: List<Path>, createDir: Boolean) {
         val mPaths = paths.map { it.toAbsolutePath().toString() }
         val intent = Intent(requireContext(), FileOperationService::class.java)
@@ -1276,7 +1311,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             lProgress?.progress = progress
         }
     }
-
 
 
 }
