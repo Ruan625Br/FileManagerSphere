@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
 import com.etb.filemanager.R
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.util.file.style.StyleManager
@@ -25,6 +26,7 @@ class BehaviorPreferences : PreferenceFragmentCompat(){
         val currentDefaultFolder = Preferences.Behavior.defaultFolder
 
 
+        //Default folder
         prefDefaulFolder!!.summary = currentDefaultFolder
         val inflater = LayoutInflater.from(requireContext())
         val dialogView = inflater.inflate(R.layout.layout_basic_dialog, null)
@@ -55,6 +57,12 @@ class BehaviorPreferences : PreferenceFragmentCompat(){
 
         }
 
+        //Select file long click
+
+        val switchSelectFileLongClick = findPreference<SwitchPreferenceCompat>("select_file_long_click")
+        val selectFileLongClick = Preferences.Behavior.selectFileLongClick
+
+        switchSelectFileLongClick?.isChecked = selectFileLongClick
 
     }
 }

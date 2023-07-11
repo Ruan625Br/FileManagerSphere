@@ -176,6 +176,7 @@
 
     <string name="set">Definir</string>
     <string name="pref_behavior_default_folder_title">Pasta padrão</string>
+    <string name="pref_behavior_select_file_long_click">Selecionar arquivo no clique longo</string>
     <string name="pref_behavior_set_default_folder_title">Pasta padrão</string>
     <string name="pref_behavior_title">Comportamento</string>
     <string name="pref_appearance_description">Tema, animações, recursos, etc.</string>
@@ -187,6 +188,8 @@
     <bool name="default_is_directories_first">true</bool>
     <bool name="default_show_hidden_file">false</bool>
     <bool name="default_grid_toggle">false</bool>
+    <bool name="default_select_file_long_click">true</bool>
+
 
     <string name="radio_zip">.zip</string>
     <string name="radio_tar_xz">.tar.xz</string>

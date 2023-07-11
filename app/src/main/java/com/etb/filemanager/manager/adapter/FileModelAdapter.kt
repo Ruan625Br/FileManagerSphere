@@ -247,11 +247,16 @@ class FileModelAdapter(
             }
         }
         binding.itemFile.setOnLongClickListener {
-            if (selectedFiles.isEmpty()) {
-                selectFile(file)
-            } else {
+            if (Preferences.Behavior.selectFileLongClick){
+                if (selectedFiles.isEmpty()) {
+                    selectFile(file)
+                } else {
+                    listener.openFile(file)
+                }
+            } else{
                 listener.showBottomSheet(file)
             }
+
             true
         }
         binding.itemBorder.setOnClickListener { selectFile(file) }

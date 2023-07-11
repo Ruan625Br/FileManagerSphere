@@ -3,6 +3,11 @@
                   xmlns:app="http://schemas.android.com/apk/res-auto">
     <Preference
             app:key="default_folder"
+            app:iconSpaceReserved="false"
             app:title="@string/pref_behavior_default_folder_title"/>
+    <SwitchPreferenceCompat
+        app:key="select_file_long_click"
+        app:iconSpaceReserved="false"
+        app:title="@string/pref_behavior_select_file_long_click"/>
 
 </PreferenceScreen>

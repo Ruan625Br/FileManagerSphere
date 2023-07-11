@@ -23,6 +23,12 @@ class Preferences {
             set(defaultFolder) {
                 AppPreference.set(AppPreference.PreferenceKey.PREF_DEFAULT_FOLDER_STR, defaultFolder)
             }
+
+        var selectFileLongClick: Boolean
+            get() = AppPreference.getBoolean(AppPreference.PreferenceKey.PREF_SELECT_FILE_LONG_CLICK_BOOL)
+            set(value) {
+                AppPreference.set(AppPreference.PreferenceKey.PREF_SELECT_FILE_LONG_CLICK_BOOL, value)
+            }
     }
 
     object Popup {

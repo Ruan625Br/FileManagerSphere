@@ -39,6 +39,7 @@ public class AppPreference {
 
         //Behavior
         PREF_DEFAULT_FOLDER_STR,
+        PREF_SELECT_FILE_LONG_CLICK_BOOL,
 
         //Popup
         PREF_SORT_BY_STR,
@@ -284,6 +285,8 @@ public class AppPreference {
                 return mContext.getResources().getBoolean(R.bool.default_show_hidden_file);
             case PREF_GRID_TOGGLE_BOOL:
                 return mContext.getResources().getBoolean(R.bool.default_grid_toggle);
+            case PREF_SELECT_FILE_LONG_CLICK_BOOL:
+                return mContext.getResources().getBoolean(R.bool.default_select_file_long_click);
         }
         throw new IllegalArgumentException("Pref key not found.");
     }
