@@ -1,5 +1,6 @@
 package com.etb.filemanager.util.file
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -7,6 +8,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import java.io.*
@@ -60,8 +62,8 @@ class FileUtil {
         }
     }
 
-    fun isValidName( name: String): Boolean {
-        return  isValidNameFolder(name)
+    fun isValidName(name: String): Boolean {
+        return isValidNameFolder(name)
 
     }
 
@@ -79,8 +81,8 @@ class FileUtil {
         try {
             Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING)
         } catch (e: Exception) {
-           Log.e("Erro ao renomear", "Erro: ${e.message}")
-           Log.e("File", "sourcePath: $sourcePath\ntargetPath: $targetPath\nnewFileName: $newFileName")
+            Log.e("Erro ao renomear", "Erro: ${e.message}")
+            Log.e("File", "sourcePath: $sourcePath\ntargetPath: $targetPath\nnewFileName: $newFileName")
         }
     }
 
@@ -89,12 +91,12 @@ class FileUtil {
         val clipData = ClipData.newPlainText("label", text)
         clipboardManager.setPrimaryClip(clipData)
 
-        if (toast){
+        if (toast) {
             Toast.makeText(context, "\"$text\" Caminho Copiado", Toast.LENGTH_LONG).show()
         }
     }
 
-    fun shareFile(path: String, context: Context){
+    fun shareFile(path: String, context: Context) {
         val file = File(path)
         val mimeType = getFileMimeType(path)
         val uri = FileProvider.getUriForFile(context, "com.etb.filemanager.fileprovider", file)
@@ -104,28 +106,40 @@ class FileUtil {
         intent.putExtra(Intent.EXTRA_STREAM, uri)
         context.startActivity(intent)
     }
+
+    @SuppressLint("QueryPermissionsNeeded")
     fun actionOpenWith(path: String, context: Context) {
         val file = File(path)
-        val uri = FileProvider.getUriForFile(context, "com.etb.filemanager.fileprovider", file)
-        val mimeType = getMimeType(uri, context)
+        val uri = FileProvider.getUriForFile(context, context.packageName + ".fileprovider", file)
+        val mimeType = getMimeType(uri)
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
-            type = if (file.isDirectory) "vnd.android.document/directory" else mimeType
-            putExtra(Intent.EXTRA_STREAM, uri)
-            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK
+            setDataAndType(uri, mimeType)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
 
-        context.startActivity(intent)
+        if (intent.resolveActivity(context.packageManager) != null) {
+            context.startActivity(intent)
+        } else {
+            Toast.makeText(context, "Nenhum aplicativo encontrado para abrir o arquivo", Toast.LENGTH_SHORT).show()
+        }
     }
 
 
-
-    fun getMimeType(uri: Uri,context: Context): String? {
-        val cRes = context.contentResolver
-
-        return cRes.getType(uri)
+    fun getMimeType(uri: Uri): String? {
+        val path = uri.path
+        val file = File(path!!)
+        if (file.isDirectory) return "vnd.android.document/directory"
+        val lastDotIndex = path?.lastIndexOf(".")
+        if (lastDotIndex != null && lastDotIndex != -1) {
+            val extension = path.substring(lastDotIndex + 1)
+            val mimeTypeMap = MimeTypeMap.getSingleton()
+            return mimeTypeMap.getMimeTypeFromExtension(extension.lowercase())
+        }
+        return null
     }
-     fun getFileMimeType(mPath: String): String? {
+
+    fun getFileMimeType(mPath: String): String? {
         val path: Path = Paths.get(mPath)
         val mimeType: String?
         try {
@@ -167,7 +181,7 @@ class FileUtil {
                 bufferedReader.close()
                 isr.close()
                 fis.close()
-            } else{
+            } else {
                 return ""
             }
         } catch (e: IOException) {
@@ -188,7 +202,6 @@ class FileUtil {
             false
         }
     }
-
 
 
     enum class TypeFile() {
