@@ -698,7 +698,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             R.id.action_delete -> {
-                confirmDeleteFile(viewModel.selectedFiles)
+                confirmDeleteFile(viewModel.selectedFiles, null)
                 finishActionMode()
             }
 
@@ -838,13 +838,23 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         createBottomSheetOperation(file, true, null)
     }
 
-    override fun confirmDeleteFile(file: FileItemSet) {
-        val files = file.toList()
-        val paths = files.map { it.filePath }
+    override fun confirmDeleteFile(files: FileItemSet?, fileItem: FileModel?) {
+        val paths: List<String>
         val title = getString(R.string.delete)
-        val text = getQuantityString(R.plurals.file_list_delete_count_format, file.size, file.size)
         val textPositiveButton = requireContext().getString(R.string.delete)
         val textNegativeButton = requireContext().getString(R.string.dialog_cancel)
+        val file: FileModel
+
+        if (files == null){
+            paths = listOf(fileItem!!.filePath)
+            file = fileItem
+        } else{
+            val files = files.toList()
+             paths = files.map { it.filePath }
+            file = files.first()
+
+        }
+        val text = getQuantityString(R.plurals.file_list_delete_count_format, paths.size, paths.size, file.fileName)
 
         materialDialogUtils.createDialogInfo(
             title, text, textPositiveButton, textNegativeButton, requireContext(), true
@@ -866,9 +876,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             val isConfirmed = dialogResult.confirmed
             val enteredText = dialogResult.text
             if (isConfirmed) {
-                val path = Paths.get(file.filePath).toList()
-                val newName = enteredText.toString()
-                val newNames = listOf(newName)
+                val path = listOf(Paths.get(file.filePath))
+                val newNames = listOf(enteredText)
 
                 rename(path, newNames)
             }
@@ -932,7 +941,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             CreateFileAction.DELETE -> {
-                confirmDeleteFile(viewModel.selectedFiles)
+                confirmDeleteFile(null, file)
             }
 
             CreateFileAction.SHARE -> {
