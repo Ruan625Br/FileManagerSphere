@@ -329,6 +329,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (Environment.isExternalStorageManager()) {
+                //TODO()
             } else {
                 val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
                 val uri = Uri.fromParts("package", requireContext().packageName, null)
