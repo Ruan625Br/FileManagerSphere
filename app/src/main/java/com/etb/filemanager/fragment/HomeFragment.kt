@@ -178,7 +178,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
 
         observeSettings()
-            observeViewModel()
+        observeViewModel()
         observeOperationViewModel()
 
         initFabClick()
@@ -208,6 +208,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         viewModel.showHiddenFilesLiveData.observe(viewLifecycleOwner) { onShowHiddenFilesChanged() }
         viewModel.sortOptionsLiveData.observe(viewLifecycleOwner) { onSortOptionsChanged() }
         viewModel.toggleGridLiveData.observe(viewLifecycleOwner) { onToggleGridChange(it) }
+
+
     }
 
 
@@ -320,27 +322,27 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun requestStoragePermission() {
+        val permission = Manifest.permission.MANAGE_EXTERNAL_STORAGE
         val requestCode = 1
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 
-                if (Environment.isExternalStorageManager()) {
-                } else {
-                    val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
-                    val uri = Uri.fromParts("package", requireContext().packageName, null)
-                    intent.data = uri
-                    startActivity(intent)
-
-                    ActivityCompat.requestPermissions(
-                        requireActivity(), arrayOf<String>(
-                            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE
-                        ), requestCode
-                    )
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Environment.isExternalStorageManager()) {
             } else {
-                requestFilesPermission()
+                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                val uri = Uri.fromParts("package", requireContext().packageName, null)
+                intent.data = uri
+                startActivity(intent)
             }
-
+            ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf<String>(
+                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE
+                ), 1
+            )
+        } else {
+            requestFilesPermission()
+        }
 
 
     }
@@ -362,22 +364,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         } else {
         }
 
-    }
-
-    private fun checkPermission(): Boolean {
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)) {
-            return (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED)
-        } else {
-            return (ContextCompat.checkSelfPermission(
-                requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-                requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED)
-
-        }
     }
 
 
@@ -859,12 +845,12 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val textNegativeButton = requireContext().getString(R.string.dialog_cancel)
         val file: FileModel
 
-        if (files == null) {
+        if (files == null){
             paths = listOf(fileItem!!.filePath)
             file = fileItem
-        } else {
+        } else{
             val files = files.toList()
-            paths = files.map { it.filePath }
+             paths = files.map { it.filePath }
             file = files.first()
 
         }
@@ -1062,11 +1048,17 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val quantity = paths.size
         val title = if (copy) {
             requireContext().resources.getQuantityString(
-                R.plurals.operation_copying_files, quantity, quantity, file.fileName
+                R.plurals.operation_copying_files,
+                quantity,
+                quantity,
+                file.fileName
             )
         } else {
             requireContext().resources.getQuantityString(
-                R.plurals.operation_moving_files, quantity, quantity, file.fileName
+                R.plurals.operation_moving_files,
+                quantity,
+                quantity,
+                file.fileName
             )
         }
 
