@@ -6,6 +6,7 @@
                                                    android:layout_height="match_parent"
                                                    tools:context=".fragment.RecentFragment">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="379dp"
             android:layout_height="188dp"
@@ -14,8 +15,8 @@
             android:background="@drawable/rectangle_3"
             android:elevation="18dp"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.126" android:id="@+id/constraintLayout">
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/constraintLayout" android:layout_marginTop="68dp">
 
         <ImageView
                 android:src="@drawable/baseline_settings_24"
@@ -111,7 +112,7 @@
                 android:progress="75"
                 app:trackCornerRadius="10dp"
                 app:trackColor="?attr/colorPrimaryInverse"
-                app:indicatorColor="?attr/colorOnPrimary"           app:indicatorSize="100dp"
+                app:indicatorColor="?attr/colorOnPrimary" app:indicatorSize="100dp"
                 app:trackThickness="10dp" app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" android:id="@+id/cp_space"/>
@@ -134,21 +135,20 @@
                 android:layout_width="67dp"
                 android:layout_height="28dp" android:id="@+id/textView2"
                 app:layout_constraintEnd_toEndOf="@+id/cp_space" app:layout_constraintStart_toStartOf="@+id/cp_space"
-                android:textColor="?attr/colorOnSurfaceInverse" app:layout_constraintHorizontal_bias="0.523" android:textSize="16sp"
+                android:textColor="?attr/colorOnSurfaceInverse" app:layout_constraintHorizontal_bias="0.523"
+                android:textSize="16sp"
                 android:gravity="center_horizontal" app:layout_constraintTop_toTopOf="@+id/cp_space"
                 app:layout_constraintBottom_toBottomOf="@+id/cp_space" app:layout_constraintVertical_bias="0.814"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="377dp"
             android:layout_height="72dp"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             android:background="@drawable/background_storage"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout" android:id="@+id/c_internal_storage"
-            app:layout_constraintBottom_toTopOf="@+id/rectangle_4">
+            android:layout_marginTop="32dp" app:layout_constraintHorizontal_bias="0.529">
 
         <ImageView
                 android:src="@drawable/ic_mobile"
@@ -215,9 +215,9 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/rectangle_4"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/c_internal_storage" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintVertical_bias="0.677" app:layout_constraintBottom_toTopOf="@+id/linearLayout4">
+            android:layout_marginTop="32dp">
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -225,7 +225,7 @@
                 android:id="@+id/recyclerView" app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintVertical_bias="0.0" android:contentDescription="@string/app_name"/>
+                app:layout_constraintVertical_bias="1.0" android:contentDescription="@string/app_name"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <TextView
@@ -234,20 +234,17 @@
             android:layout_height="wrap_content" android:id="@+id/textView8"
 
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.103"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.75" app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintTop_toBottomOf="@+id/rectangle_4" android:layout_marginTop="16dp"/>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="379dp"
             android:background="@drawable/background_recents_images"
             android:layout_height="188dp"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/linearLayout4"
-            app:layout_constraintVertical_bias="0.975"
             android:padding="5dp"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/textView8" android:layout_marginTop="16dp">
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" tools:listitem="@layout/recent_image_item"
