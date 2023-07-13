@@ -10,11 +10,18 @@ class Preferences {
             set(theme) {
                 AppPreference.set(AppPreference.PreferenceKey.PREF_APP_THEME_STR, theme)
             }
+    }
+
+    object Interface {
+
         var isAnimationEnabledForFileList: Boolean
-            get() = AppPreference.getBoolean(AppPreference.PreferenceKey.PREF_APP_ANIM_FILES_LIST_BOOL)
+            get() = AppPreference.getBoolean(AppPreference.PreferenceKey.PREF_ANIM_FILES_LIST_BOOL)
             set(value) {
-                AppPreference.set(AppPreference.PreferenceKey.PREF_APP_ANIM_FILES_LIST_BOOL, value)
+                AppPreference.set(AppPreference.PreferenceKey.PREF_ANIM_FILES_LIST_BOOL, value)
             }
+        var isEnabledRoundedCorners: Boolean
+            get() = AppPreference.getBoolean(AppPreference.PreferenceKey.PREF_ROUNDED_CORNERS_BOOL)
+            set(value) { AppPreference.set(AppPreference.PreferenceKey.PREF_ROUNDED_CORNERS_BOOL, value)}
     }
 
     object Behavior {

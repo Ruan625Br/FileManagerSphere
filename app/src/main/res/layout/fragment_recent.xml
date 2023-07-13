@@ -8,15 +8,16 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="379dp"
-            android:layout_height="188dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:background="@drawable/rectangle_3"
+            android:background="?attr/colorPrimary"
             android:elevation="18dp"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/constraintLayout" android:layout_marginTop="68dp">
+            android:id="@+id/cBaseItems" android:layout_marginTop="88dp" android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp" app:layout_constraintHorizontal_bias="0.0">
 
         <ImageView
                 android:src="@drawable/baseline_settings_24"
@@ -25,7 +26,10 @@
                 app:tint="?attr/colorOnPrimary"
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.971" app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.902"/>
+                app:layout_constraintVertical_bias="0.902"
+                android:layout_marginEnd="4dp" android:layout_marginBottom="4dp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_space_free"/>
+
         <TextView
                 android:id="@+id/tv_space_free"
                 android:layout_width="77dp"
@@ -36,10 +40,11 @@
                 android:textSize="22sp"
                 android:textColor="?attr/colorOnSurfaceInverse"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tv_space_used"
-                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.875"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.66"
-                android:gravity="center"/>
+                app:layout_constraintStart_toEndOf="@+id/cp_space"
+                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.569"
+                app:layout_constraintVertical_bias="0.121"
+                android:gravity="center" android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout"/>
         <LinearLayout
                 android:layout_width="77dp"
                 android:layout_height="21dp"
@@ -51,8 +56,9 @@
                 android:gravity="center_horizontal|center_vertical" android:id="@+id/linearLayout"
                 app:layout_constraintStart_toEndOf="@+id/cp_space"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/tv_space_free" app:layout_constraintHorizontal_bias="0.551"
-                app:layout_constraintVertical_bias="1.0">
+                app:layout_constraintHorizontal_bias="0.568"
+                app:layout_constraintVertical_bias="0.502" app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="16dp" android:layout_marginEnd="16dp">
 
             <TextView
                     android:id="@+id/free_space"
@@ -77,8 +83,9 @@
                 android:gravity="center_horizontal|center_vertical"
                 app:layout_constraintEnd_toStartOf="@+id/cp_space"
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/tv_space_used" app:layout_constraintHorizontal_bias="0.271"
-                app:layout_constraintVertical_bias="0.988">
+                app:layout_constraintHorizontal_bias="0.16"
+                android:layout_marginStart="16dp" android:id="@+id/linearLayout5"
+                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginEnd="16dp">
 
             <TextView
                     android:id="@+id/used_space"
@@ -92,7 +99,6 @@
                     android:gravity="top"
             />
         </LinearLayout>
-
         <TextView
                 android:id="@+id/tv_space_used"
                 android:layout_width="77dp"
@@ -104,8 +110,10 @@
                 android:textColor="?attr/colorOnSurfaceInverse"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.666"
-                android:gravity="center"/>
+                app:layout_constraintVertical_bias="0.14"
+                android:gravity="center" app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
+                app:layout_constraintEnd_toStartOf="@+id/cp_space" app:layout_constraintHorizontal_bias="0.166"
+                android:layout_marginEnd="16dp"/>
         <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -115,7 +123,8 @@
                 app:indicatorColor="?attr/colorOnPrimary" app:indicatorSize="100dp"
                 app:trackThickness="10dp" app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" android:id="@+id/cp_space"/>
+                app:layout_constraintStart_toStartOf="parent" android:id="@+id/cp_space"
+                android:layout_marginTop="32dp" android:layout_marginBottom="32dp"/>
         <TextView
                 android:id="@+id/tv_space_total"
                 android:layout_width="70dp"
@@ -143,12 +152,13 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="377dp"
-            android:layout_height="72dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:background="@drawable/background_storage"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" android:id="@+id/c_internal_storage"
-            android:layout_marginTop="32dp" app:layout_constraintHorizontal_bias="0.529">
+            android:background="?attr/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@+id/cBaseItems" android:id="@+id/cInternalStorage"
+            android:layout_marginTop="32dp" app:layout_constraintHorizontal_bias="0.498"
+            android:layout_marginEnd="16dp" android:layout_marginStart="16dp">
 
         <ImageView
                 android:src="@drawable/ic_mobile"
@@ -157,21 +167,24 @@
                 android:id="@+id/imageView2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginStart="16dp" app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/textView" app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintVertical_bias="0.118"
-                app:tint="?attr/colorOnSurfaceInverse"/>
+                app:tint="?attr/colorOnSurfaceInverse" app:layout_constraintBottom_toTopOf="@+id/pb_space"
+                android:layout_marginTop="8dp" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="8dp"/>
         <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView"
                 android:text="@string/internal_st"
                 android:textSize="12sp"
                 tools:ignore="MissingConstraints"
                 android:textColor="?attr/colorOnSurfaceInverse" android:elegantTextHeight="false"
-                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_bias="0.12" android:layout_marginTop="5dp"/>
+                app:layout_constraintHorizontal_bias="0.12" android:layout_marginTop="8dp"
+                app:layout_constraintStart_toEndOf="@+id/imageView2" android:layout_marginStart="8dp"
+                android:layout_marginBottom="7dp" app:layout_constraintBottom_toTopOf="@+id/pb_space"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -180,9 +193,12 @@
                 android:textSize="9sp"
                 tools:ignore="MissingConstraints"
                 android:textColor="?attr/colorOnSurfaceInverse" android:elegantTextHeight="false"
-                app:layout_constraintEnd_toStartOf="@+id/textView4"
-                app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.059"
-                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="16dp"/>
+                app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/pb_space" android:layout_marginTop="16dp"
+                app:layout_constraintVertical_bias="0.0" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="8dp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -192,9 +208,12 @@
                 tools:ignore="MissingConstraints"
                 android:textColor="?attr/colorOnSurfaceInverse" android:elegantTextHeight="false"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="16dp" android:layout_marginEnd="16dp"/>
+                android:layout_marginBottom="8dp" android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/pb_space"
+                app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintVertical_bias="0.0" android:layout_marginEnd="8dp"/>
         <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:layout_width="342dp"
+                android:layout_width="0dp"
                 android:layout_height="11dp"
                 android:progress="75"
                 app:trackCornerRadius="10dp"
@@ -205,22 +224,22 @@
                 android:id="@+id/pb_space" app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintHorizontal_bias="0.485"
-        />
+                android:layout_marginEnd="8dp" android:layout_marginStart="8dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/rectangle_4"
-            android:layout_width="379dp"
-            android:layout_height="243dp"
-            android:layout_alignParentLeft="true"
+            android:id="@+id/cCategoryItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:background="@drawable/rectangle_4"
-            app:layout_constraintTop_toBottomOf="@+id/c_internal_storage" app:layout_constraintEnd_toEndOf="parent"
+            android:background="?attr/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@+id/cInternalStorage" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="32dp">
+            android:layout_marginTop="32dp" android:layout_marginEnd="16dp" android:layout_marginStart="16dp">
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 tools:listitem="@layout/category_file_item"
                 android:id="@+id/recyclerView" app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
@@ -230,24 +249,28 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
     <TextView
             android:text="Recent Images"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content" android:id="@+id/textView8"
-
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.1"
-            app:layout_constraintTop_toBottomOf="@+id/rectangle_4" android:layout_marginTop="16dp"/>
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="379dp"
-            android:background="@drawable/background_recents_images"
-            android:layout_height="188dp"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.29"
+            app:layout_constraintTop_toBottomOf="@+id/cCategoryItem" android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:background="?attr/colorPrimary"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/linearLayout4"
+            android:id="@+id/cRecentImage"
             android:padding="5dp"
-            app:layout_constraintTop_toBottomOf="@+id/textView8" android:layout_marginTop="16dp">
+            app:layout_constraintTop_toBottomOf="@+id/textView8" android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp" android:layout_marginStart="16dp">
         <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" tools:listitem="@layout/recent_image_item"
-                android:contentDescription="@string/_24_de_mar" android:id="@+id/recy_recents_images"/>
-    </LinearLayout>
+                android:layout_width="0dp"
+                android:layout_height="188dp" tools:listitem="@layout/recent_image_item"
+                android:contentDescription="@string/_24_de_mar" android:id="@+id/recy_recents_images"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+        />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

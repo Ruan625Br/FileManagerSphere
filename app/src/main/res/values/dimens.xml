@@ -11,4 +11,6 @@
     <dimen name="font_size_medium">12sp</dimen>
     <dimen name="font_size_small">10sp</dimen>
     <dimen name="font_size_smaller">9sp</dimen>
+
+    <dimen name="corner_radius_base">20dp</dimen>
 </resources>

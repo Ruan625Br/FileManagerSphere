@@ -3,16 +3,23 @@
 
     <Preference
             app:key="appearance_prefs"
-            app:icon="@drawable/ic_palette_swatch"
+            app:icon="@drawable/ic_palette_24"
             app:title="@string/pref_cat_appearance"
             app:summary="@string/pref_appearance_description"
             android:fragment="com.etb.filemanager.settings.preference.AppearancePreferences"
           />
     <Preference
+            app:key="interface_prefs"
+            app:icon="@drawable/ic_palette_swatch"
+            app:title="@string/pref_interface_title"
+            app:summary="@string/pref_interface_description"
+            android:fragment="com.etb.filemanager.settings.preference.InterfacePreferences"
+          />
+    <Preference
             app:key="behavior_prefs"
+            app:icon="@drawable/ic_config_24"
             app:title="@string/pref_behavior_title"
             app:summary="@string/pref_behavior_description"
             android:fragment="com.etb.filemanager.settings.preference.BehaviorPreferences"
           />
-
 </PreferenceScreen>

@@ -15,6 +15,7 @@ import com.etb.filemanager.files.util.asColor
 import com.etb.filemanager.files.util.getColorByAttr
 import com.etb.filemanager.files.util.shortAnimTime
 import com.etb.filemanager.files.util.withModulatedAlpha
+import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.util.file.style.IconUtil
 
 
@@ -40,7 +41,12 @@ object CheckableItemBackground {
 
             val background = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.background_file_item)!!)
             DrawableCompat.setTint(background, normalColor)
-            addState(intArrayOf(android.R.attr.state_checked), backgroundSelected )
-            addState(intArrayOf(), background)
+            if (Preferences.Interface.isEnabledRoundedCorners) {
+                addState(intArrayOf(android.R.attr.state_checked), backgroundSelected)
+                addState(intArrayOf(), background)
+            } else{
+                addState(intArrayOf(android.R.attr.state_checked), ColorDrawable(checkedColor))
+                addState(intArrayOf(), ColorDrawable(normalColor))
+            }
         }
 }}

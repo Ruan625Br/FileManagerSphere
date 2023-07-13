@@ -20,7 +20,6 @@ class AppearancePreferences : PreferenceFragmentCompat() {
         mCurrentTheme = Preferences.Appearance.appTheme
         val mCurrentTheIndex = themesValues.indexOf(mCurrentTheme)
 
-        val animFileList = Preferences.Appearance.isAnimationEnabledForFileList
         var appThemeSummary = themesEntries.get(mCurrentTheIndex)
 
 

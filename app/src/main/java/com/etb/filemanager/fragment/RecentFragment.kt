@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,11 +18,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
+import com.etb.filemanager.files.util.getColorByAttr
 import com.etb.filemanager.manager.category.adapter.CategoryFileModel
 import com.etb.filemanager.manager.category.adapter.CategoryFileModelAdapter
 import com.etb.filemanager.manager.category.adapter.RecentImagemodelAdapter
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.FileUtils.SpaceType
+import com.etb.filemanager.settings.preference.Preferences
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.*
@@ -44,6 +47,11 @@ class RecentFragment : Fragment() {
 
     private lateinit var fileUtils: FileUtils
 
+    private lateinit var cRecentImg: ConstraintLayout
+    private lateinit var cInternalStorage: ConstraintLayout
+    private lateinit var cCategoryFileItem: ConstraintLayout
+    private lateinit var cBaseItem: ConstraintLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -60,14 +68,36 @@ class RecentFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_recent, container, false)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        initStyleView()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        cBaseItem = view.findViewById(R.id.cBaseItems)
+        cInternalStorage = view.findViewById(R.id.cInternalStorage)
+        cCategoryFileItem = view.findViewById(R.id.cCategoryItem)
+        cRecentImg = view.findViewById(R.id.cRecentImage)
+
+        initStyleView()
 
         fileUtils = FileUtils()
         setStorageSpaceInGB()
         initCategoryItem()
         initClick()
         setRecentImages()
+
+        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
     }
 
    @SuppressLint("SuspiciousIndentation")
@@ -106,7 +136,7 @@ class RecentFragment : Fragment() {
     }
 
     fun initClick() {
-        val itemStorage = requireView().findViewById<ConstraintLayout>(R.id.c_internal_storage)
+        val itemStorage = requireView().findViewById<ConstraintLayout>(R.id.cInternalStorage)
         val ivSettings = requireView().findViewById<ImageView>(R.id.iv_settings)
         val homeFragment = HomeFragment()
         val settingsFragment = SettingsFragment()
@@ -116,6 +146,21 @@ class RecentFragment : Fragment() {
 
         ivSettings.setOnClickListener {
             (requireActivity() as MainActivity).startNewFragment(settingsFragment)
+        }
+    }
+
+    private fun initStyleView(){
+        if (Preferences.Interface.isEnabledRoundedCorners) {
+            val drawable = GradientDrawable()
+            val cornerRadius = requireContext().resources.getDimensionPixelSize(R.dimen.corner_radius_base).toFloat()
+            drawable.cornerRadius = cornerRadius
+            val colorPrimary = getColorByAttr(com.google.android.material.R.attr.colorPrimary)
+            drawable.setColor(colorPrimary)
+
+            cBaseItem.background = drawable
+            cInternalStorage.background = drawable
+            cCategoryFileItem.background = drawable
+            cRecentImg.background = drawable
         }
     }
 
@@ -157,16 +202,7 @@ class RecentFragment : Fragment() {
     }
 
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                requireActivity().finish()
-            }
-        }
 
-
-    }
 
     companion object {
         /**

@@ -324,7 +324,7 @@ class FileModelAdapter(
     }
 
     override val isAnimationEnabled: Boolean
-        get() = Preferences.Appearance.isAnimationEnabledForFileList
+        get() = Preferences.Interface.isAnimationEnabledForFileList
 
     companion object {
         private val PAYLOAD_STATE_CHANGED = Any()

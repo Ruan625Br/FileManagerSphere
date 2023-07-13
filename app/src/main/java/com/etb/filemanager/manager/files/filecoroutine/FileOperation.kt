@@ -4,9 +4,14 @@ import android.content.Context
 import android.util.Log
 import com.etb.filemanager.R
 import com.etb.filemanager.files.util.ContextUtils
+import com.etb.filemanager.manager.files.filecoroutine.CompressionType.*
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.apache.commons.compress.archivers.zip.ScatterZipOutputStream
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
+import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InterruptedIOException
 import java.nio.file.*
@@ -227,10 +232,30 @@ private fun sendProgress(progressListener: (Int) -> Unit, progress: Int) {
     progressListener(progress)
 }
 
-private fun archive(){
+private fun compressFiles(paths: List<String>, outputFilePath: String, compressionType: CompressionType){
+    val outputFile = File(outputFilePath)
+    val outputStream = FileOutputStream(outputFile)
 
+    outputStream.use {
+        when (compressionType) {
+            ZIP -> TODO()
+            TAR -> TODO()
+            GZIP -> TODO()
+            XZ -> TODO()
+            ZSTANDARD -> TODO()
+        }
+    }
 }
 
+
+
+enum class CompressionType{
+    ZIP,
+    TAR,
+    GZIP,
+    XZ,
+    ZSTANDARD
+}
 enum class FileOperation {
     DELETE, CREATE, RENAME, MOVE, COPY
 }

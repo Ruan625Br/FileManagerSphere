@@ -13,7 +13,8 @@
             android:orientation="vertical" android:gravity="center_horizontal|center_vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="16dp" app:layout_constraintHorizontal_bias="0.017">
+            android:layout_marginTop="16dp"
+            app:layout_constraintHorizontal_bias="0.017">
         <ImageView
                 android:layout_width="29dp"
                 android:layout_height="28dp"
