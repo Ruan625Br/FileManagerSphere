@@ -39,6 +39,7 @@ import com.etb.filemanager.manager.files.ui.CheckableItemBackground
 import com.etb.filemanager.manager.files.ui.SelectableMaterialCardView
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.settings.preference.Preferences
+import com.etb.filemanager.util.file.FileUtil
 import com.etb.filemanager.util.file.style.ColorUtil
 import com.etb.filemanager.util.file.style.IconUtil
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -190,18 +191,16 @@ class FileModelAdapter(
         val filePath = file.filePath
         val colorUtil = ColorUtil()
         val iconUtil = IconUtil()
-        val mimeType = getFileMimeType(file.filePath)
+        val mimeType = FileUtil().getMimeType(null, filePath)
         val selected = file in selectedFiles
         val isDirectory = file.isDirectory
         binding.itemFile.isChecked = selected
-        Log.i("TEESTEEEE", "AQUI: $selected")
         if (payloads.isNotEmpty()){
             return
         }
 
 
         if (!isDirectory) {
-
             if (mimeType != null && mimeType.isMimeTypeMedia()) {
                 val midiaType = getMidiaType(mimeType)
                 when (midiaType) {
@@ -230,7 +229,17 @@ class FileModelAdapter(
                 Glide.with(mContext).load(iconResourceId).diskCacheStrategy(DiskCacheStrategy.ALL)
                     .apply(RequestOptions().placeholder(icFile)).into(binding.iconFile)
 
+
             }
+
+        } else{
+            binding.fileDate.visibility = View.GONE
+            binding.fileSize.visibility = View.GONE
+            binding.iconFile.visibility = View.VISIBLE
+            binding.iconPreview.visibility = View.GONE
+            binding.iconFile.setImageDrawable(iconUtil.getIconFolder(mContext))
+            binding.itemBorder.background = iconUtil.getBorderNormal(mContext)
+
 
         }
 
@@ -262,22 +271,6 @@ class FileModelAdapter(
         binding.itemBorder.setOnClickListener { selectFile(file) }
 
 
-        if (file.isDirectory) {
-            binding.fileDate.visibility = View.GONE
-            binding.fileSize.visibility = View.GONE
-
-            binding.iconPreview.visibility = View.GONE
-            binding.iconFile.setImageDrawable(iconUtil.getIconFolder(mContext))
-
-        } else {
-            binding.fileDate.visibility = View.VISIBLE
-            binding.fileSize.visibility = View.VISIBLE
-            binding.fileDate.text = fileUtils.getFormatDateFile(file.filePath, true)
-            binding.fileSize.text = fileUtils.getFileSizeFormatted(file.fileSize)
-
-
-        }
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -308,7 +301,7 @@ class FileModelAdapter(
     }
 
     private fun String.isMimeTypeMedia(): Boolean {
-        val mediaMimeTypes = listOf("video/", "audio/", "image/", "apk")
+        val mediaMimeTypes = listOf("video/", "audio/", "image/")
         val mimeType = this.lowercase(Locale.getDefault())
         return mediaMimeTypes.any { mimeType.startsWith(it) }
     }

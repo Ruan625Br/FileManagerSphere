@@ -111,7 +111,7 @@ class FileUtil {
     fun actionOpenWith(path: String, context: Context) {
         val file = File(path)
         val uri = FileProvider.getUriForFile(context, context.packageName + ".fileprovider", file)
-        val mimeType = getMimeType(uri)
+        val mimeType = getMimeType(uri, null)
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
             setDataAndType(uri, mimeType)
@@ -126,12 +126,12 @@ class FileUtil {
     }
 
 
-    fun getMimeType(uri: Uri): String? {
-        val path = uri.path
+    fun getMimeType(uri: Uri?, mPath: String?): String? {
+        val path = if (uri == null) mPath else uri.path
         val file = File(path!!)
         if (file.isDirectory) return "vnd.android.document/directory"
-        val lastDotIndex = path?.lastIndexOf(".")
-        if (lastDotIndex != null && lastDotIndex != -1) {
+        val lastDotIndex = path.lastIndexOf(".")
+        if (lastDotIndex != -1) {
             val extension = path.substring(lastDotIndex + 1)
             val mimeTypeMap = MimeTypeMap.getSingleton()
             return mimeTypeMap.getMimeTypeFromExtension(extension.lowercase())

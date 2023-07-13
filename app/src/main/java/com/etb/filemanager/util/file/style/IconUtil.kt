@@ -37,6 +37,10 @@ class IconUtil {
     fun getBorderPreview(context: Context): Drawable {
         return context.getDrawable(R.drawable.background_border)!!
     }
+    @SuppressLint("UseCompatLoadingForDrawables")
+    fun getBorderNormal(context: Context): Drawable {
+        return context.getDrawable(R.drawable.background_icon_item)!!
+    }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     fun getBackgroundItemSelected(context: Context): Drawable {
