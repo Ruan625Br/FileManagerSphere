@@ -73,7 +73,7 @@ class RecentFragment : Fragment() {
         super.onResume()
 
         roundedCornersDrawable = null
-        initStyleView()
+        //initStyleView()
     }
 
 
@@ -85,7 +85,7 @@ class RecentFragment : Fragment() {
         cCategoryFileItem = view.findViewById(R.id.cCategoryItem)
         cRecentImg = view.findViewById(R.id.cRecentImage)
 
-        initStyleView()
+       // initStyleView()
 
         fileUtils = FileUtils()
         setStorageSpaceInGB()
