@@ -13,4 +13,7 @@
     <dimen name="font_size_smaller">9sp</dimen>
 
     <dimen name="corner_radius_base">20dp</dimen>
+
+    <dimen name="rounded_corner_medium">15dp</dimen>
+    <dimen name="rounded_corner_large">20dp</dimen>
 </resources>

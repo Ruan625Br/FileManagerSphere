@@ -153,9 +153,9 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="92dp"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:background="@drawable/tags_rounded_corners"
+            android:background="@drawable/internal_storage_rounded_corners"
             app:layout_constraintTop_toBottomOf="@+id/cBaseItems" android:id="@+id/cInternalStorage"
             android:layout_marginTop="32dp" app:layout_constraintHorizontal_bias="0.498"
             android:layout_marginEnd="16dp" android:layout_marginStart="16dp">
@@ -196,7 +196,7 @@
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/pb_space" android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/pb_space" android:layout_marginTop="8dp"
                 app:layout_constraintVertical_bias="0.0" app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="8dp"/>
         <TextView
@@ -208,7 +208,7 @@
                 tools:ignore="MissingConstraints"
                 android:textColor="?attr/colorOnSurfaceInverse" android:elegantTextHeight="false"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="8dp" android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" android:layout_marginTop="8dp"
                 app:layout_constraintTop_toBottomOf="@+id/pb_space"
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintVertical_bias="0.0" android:layout_marginEnd="8dp"/>
