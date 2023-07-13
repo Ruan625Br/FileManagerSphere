@@ -9,7 +9,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="188dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:background="?attr/colorPrimary"
@@ -153,7 +153,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="92dp"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             android:background="?attr/colorPrimary"
             app:layout_constraintTop_toBottomOf="@+id/cBaseItems" android:id="@+id/cInternalStorage"
@@ -239,7 +239,7 @@
             android:layout_marginTop="32dp" android:layout_marginEnd="16dp" android:layout_marginStart="16dp">
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="188dp"
                 tools:listitem="@layout/category_file_item"
                 android:id="@+id/recyclerView" app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
