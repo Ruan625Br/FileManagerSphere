@@ -11,6 +11,7 @@
             android:layout_width="match_parent"
             android:clickable="true"
             android:checkable="true"
+            app:cardCornerRadius="20dp"
             android:id="@+id/itemFile" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
             app:cardBackgroundColor="?attr/colorOnSecondary"

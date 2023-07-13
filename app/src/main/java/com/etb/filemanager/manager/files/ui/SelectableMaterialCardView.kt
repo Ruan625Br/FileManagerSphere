@@ -3,6 +3,7 @@ package com.etb.filemanager.manager.files.ui
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import com.etb.filemanager.settings.preference.Preferences
 import com.google.android.material.card.MaterialCardView
 
 
@@ -27,6 +28,12 @@ class SelectableMaterialCardView @JvmOverloads constructor(
          }
 
 
+    override fun setRadius(radius: Float) {
+        if (Preferences.Interface.isEnabledRoundedCorners){
+        val mRadius = 20f
+        super.setRadius(mRadius)
+        }
+    }
     override fun toggle() {
         _isChecked = !_isChecked
     }

@@ -47,6 +47,7 @@ class RecentFragment : Fragment() {
 
     private lateinit var fileUtils: FileUtils
 
+    private var roundedCornersDrawable: GradientDrawable? = null
     private lateinit var cRecentImg: ConstraintLayout
     private lateinit var cInternalStorage: ConstraintLayout
     private lateinit var cCategoryFileItem: ConstraintLayout
@@ -71,8 +72,10 @@ class RecentFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        roundedCornersDrawable = null
         initStyleView()
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -151,16 +154,19 @@ class RecentFragment : Fragment() {
 
     private fun initStyleView(){
         if (Preferences.Interface.isEnabledRoundedCorners) {
-            val drawable = GradientDrawable()
-            val cornerRadius = requireContext().resources.getDimensionPixelSize(R.dimen.corner_radius_base).toFloat()
-            drawable.cornerRadius = cornerRadius
-            val colorPrimary = getColorByAttr(com.google.android.material.R.attr.colorPrimary)
-            drawable.setColor(colorPrimary)
+            if (roundedCornersDrawable == null) {
+                val mCornerRadius = requireContext().resources.getDimensionPixelSize(R.dimen.corner_radius_base).toFloat()
+                val colorPrimary = getColorByAttr(com.google.android.material.R.attr.colorPrimary)
+                roundedCornersDrawable = GradientDrawable().apply {
+                    cornerRadius = mCornerRadius
+                    setColor(colorPrimary)
+                }
+            }
 
-            cBaseItem.background = drawable
-            cInternalStorage.background = drawable
-            cCategoryFileItem.background = drawable
-            cRecentImg.background = drawable
+            cBaseItem.background = roundedCornersDrawable
+            cInternalStorage.background = roundedCornersDrawable
+            cCategoryFileItem.background = roundedCornersDrawable
+            cRecentImg.background = roundedCornersDrawable
         }
     }
 
