@@ -206,4 +206,11 @@
     <string name="radio_zip">.zip</string>
     <string name="radio_tar_xz">.tar.xz</string>
     <string name="radio_7z">.7z</string>
+
+    <string name="compression_zip">.zip</string>
+    <string name="compression_tar">.tar</string>
+    <string name="compression_gzip">.gzip</string>
+    <string name="compression_xz">.tar.xz</string>
+    <string name="compression_zstandard">Zstandard</string>
+
 </resources>

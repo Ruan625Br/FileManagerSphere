@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
+import com.etb.filemanager.manager.files.filecoroutine.CompressionType
 import com.etb.filemanager.manager.files.filecoroutine.FileOperation
 import com.etb.filemanager.manager.files.filecoroutine.performFileOperation
 import kotlinx.coroutines.*
@@ -34,6 +35,7 @@ class FileOperationService : Service() {
         val newNames = intent?.getStringArrayListExtra("newNames")?.toList()
         val destinationPath = intent?.getStringExtra("destinationPath")
         val createDir = intent?.getBooleanExtra("createDir", false)
+        val compressionType = intent?.getSerializableExtra("compressionType") as? CompressionType
         val operation = intent?.getSerializableExtra("operation") as FileOperation
 
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -49,6 +51,7 @@ class FileOperationService : Service() {
                 newNames,
                 createDir,
                 destinationPath.toString(),
+                compressionType,
                 { progress ->
                     notificationBuilder.setProgress(100, progress, false)
                     notificationManager.notify(1, notificationBuilder.build())

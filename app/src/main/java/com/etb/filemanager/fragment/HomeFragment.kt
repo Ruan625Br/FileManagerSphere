@@ -56,6 +56,7 @@ import com.etb.filemanager.manager.files.filecoroutine.FileCoroutineViewModel
 import com.etb.filemanager.manager.files.filecoroutine.FileOperation
 import com.etb.filemanager.manager.files.filelist.*
 import com.etb.filemanager.manager.files.services.FileOperationService
+import com.etb.filemanager.manager.files.ui.ModalBottomSheetCompress
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.PopupSettings
@@ -704,6 +705,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
 
             R.id.action_archive -> {
+                compressFiles(viewModel.selectedFiles)
                 finishActionMode()
             }
 
@@ -959,6 +961,21 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
 
+    }
+
+    private fun compressFiles(files: FileItemSet){
+        val paths = files.map { it.filePath }
+        showBottomSheetCompressFiles(paths)
+    }
+
+    private fun showBottomSheetCompressFiles(paths: List<String>){
+
+        val modalBottomSheetCompress = ModalBottomSheetCompress()
+        modalBottomSheetCompress.arguments = Bundle().apply {
+            putString(ModalBottomSheetCompress.ARG_CURRENT_PATH, viewModel.currentPath.toString())
+            putStringArrayList(ModalBottomSheetCompress.ARG_PATHS, ArrayList(paths))
+        }
+            modalBottomSheetCompress.show(parentFragmentManager, ModalBottomSheetCompress.TAG)
     }
 
 

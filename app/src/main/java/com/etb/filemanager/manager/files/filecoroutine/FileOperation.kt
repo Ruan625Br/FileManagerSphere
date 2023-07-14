@@ -8,12 +8,19 @@ import com.etb.filemanager.manager.files.filecoroutine.CompressionType.*
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.apache.commons.compress.archivers.zip.ScatterZipOutputStream
+import newArchiveWriter
+import org.apache.commons.compress.archivers.ArchiveEntry
+import org.apache.commons.compress.archivers.ArchiveStreamFactory
+import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InterruptedIOException
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream
+import org.apache.commons.compress.compressors.CompressorStreamFactory
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream
+import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream
+import org.apache.commons.compress.compressors.zstandard.ZstdCompressorOutputStream
+import java.io.*
+import java.nio.channels.FileChannel
 import java.nio.file.*
 import kotlin.io.path.*
 
@@ -25,6 +32,7 @@ suspend fun performFileOperation(
     newNames: List<String>?,
     createDir: Boolean?,
     destinationPath: String?,
+    compressionType: CompressionType?,
     progressListener: (Int) -> Unit,
     completionListener: (Boolean) -> Unit
 ) {
@@ -37,6 +45,7 @@ suspend fun performFileOperation(
                 FileOperation.RENAME -> rename(sourcePath!!, newNames!!, progressListener)
                 FileOperation.MOVE -> move(sourcePath!!, destinationPath!!, progressListener)
                 FileOperation.COPY -> copy(sourcePath!!, destinationPath!!, progressListener)
+                FileOperation.COMPRESS -> compressFiles(sourcePath!!, destinationPath!!, compressionType!!)
             }
             completionListener(true)
         } catch (e: Exception) {
@@ -232,30 +241,120 @@ private fun sendProgress(progressListener: (Int) -> Unit, progress: Int) {
     progressListener(progress)
 }
 
-private fun compressFiles(paths: List<String>, outputFilePath: String, compressionType: CompressionType){
+private fun compressFiles(paths: List<String>, outputFilePath: String, compressionType: CompressionType) {
     val outputFile = File(outputFilePath)
     val outputStream = FileOutputStream(outputFile)
 
     outputStream.use {
         when (compressionType) {
-            ZIP -> TODO()
-            TAR -> TODO()
-            GZIP -> TODO()
-            XZ -> TODO()
-            ZSTANDARD -> TODO()
+            ZIP -> compressToZip(paths, outputFilePath)
+            TAR -> compressToTar(paths, outputFilePath)
+            GZIP -> compressToGzip(paths, outputFilePath)
+            XZ -> compressToXz(paths, outputFilePath)
+            ZSTANDARD -> compressToZstandard(paths, outputFilePath)
+            SEVENZ -> compressToSevenZ(paths, outputFilePath)
         }
     }
 }
 
+private fun compressToZip(filesToArchive: List<String>, outputFilePath: String) {
+
+    val outputChannel = File(outputFilePath).outputStream().channel
+    val archiveWriter = outputChannel.newArchiveWriter(ArchiveStreamFactory.ZIP)
+
+    for (filePath in filesToArchive) {
+        val file = File(filePath)
+        val entryName = file.name
+        archiveWriter.writeFile(file.toPath(), entryName)
+    }
+
+    archiveWriter.close()
+    outputChannel.close()
 
 
-enum class CompressionType{
-    ZIP,
-    TAR,
-    GZIP,
-    XZ,
-    ZSTANDARD
 }
+
+private fun compressToTar(filesToArchive: List<String>, outputFilePath: String) {
+    val outputChannel = File(outputFilePath).outputStream().channel
+    val archiveWriter = outputChannel.newArchiveWriter(ArchiveStreamFactory.TAR)
+
+    for (filePath in filesToArchive) {
+        val file = File(filePath)
+        val entryName = file.name
+        archiveWriter.writeFile(file.toPath(), entryName)
+    }
+
+    archiveWriter.close()
+    outputChannel.close()
+}
+
+private fun compressToGzip(filesToArchive: List<String>, outputFilePath: String) {
+    val outputChannel = FileChannel.open(File(outputFilePath).toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE)
+    val compressionType = CompressorStreamFactory.GZIP
+    val archiveType = ArchiveStreamFactory.ZIP
+    val archiveWriter = outputChannel.newArchiveWriter(archiveType, compressionType)
+
+    for (filePath in filesToArchive) {
+        val file = File(filePath)
+        val entryName = file.name
+        archiveWriter.writeFile(file.toPath(), entryName)
+    }
+
+    archiveWriter.close()
+    outputChannel.close()
+}
+
+private fun compressToXz(filesToArchive: List<String>, outputFilePath: String) {
+    val outputChannel = FileChannel.open(File(outputFilePath).toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE)
+   val compressionType = CompressorStreamFactory.XZ
+    val archiveType = ArchiveStreamFactory.TAR
+    val archiveWriter = outputChannel.newArchiveWriter(archiveType, compressionType)
+
+    for (filePath in filesToArchive) {
+        val file = File(filePath)
+        val entryName = file.name
+        archiveWriter.writeFile(file.toPath(), entryName)
+    }
+
+    archiveWriter.close()
+    outputChannel.close()
+}
+
+private fun compressToSevenZ(filesToArchive: List<String>, outputFilePath: String) {
+    val outputChannel = File(outputFilePath).outputStream().channel
+    val archiveWriter = outputChannel.newArchiveWriter(ArchiveStreamFactory.SEVEN_Z)
+
+    for (filePath in filesToArchive) {
+        val file = File(filePath)
+        val entryName = file.name
+        archiveWriter.writeFile(file.toPath(), entryName)
+    }
+
+    archiveWriter.close()
+    outputChannel.close()
+}
+
+private fun compressToZstandard(filesToArchive: List<String>, outputFilePath: String) {
+    val outputChannel = FileChannel.open(File(outputFilePath).toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE)
+    val compressionType = CompressorStreamFactory.ZSTANDARD
+    val archiveType = ArchiveStreamFactory.TAR
+    val archiveWriter = outputChannel.newArchiveWriter(archiveType, compressionType)
+
+    for (filePath in filesToArchive) {
+        val file = File(filePath)
+        val entryName = file.name
+        archiveWriter.writeFile(file.toPath(), entryName)
+    }
+
+    archiveWriter.close()
+    outputChannel.close()
+}
+
+
+enum class CompressionType {
+    ZIP, TAR, GZIP, XZ, SEVENZ, ZSTANDARD
+}
+
 enum class FileOperation {
-    DELETE, CREATE, RENAME, MOVE, COPY
+    DELETE, CREATE, RENAME, MOVE, COPY, COMPRESS
 }
