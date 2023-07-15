@@ -1,19 +1,29 @@
 package com.etb.filemanager.fragment
 
+import android.Manifest
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Environment
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
@@ -24,6 +34,7 @@ import com.etb.filemanager.manager.category.adapter.CategoryFileModelAdapter
 import com.etb.filemanager.manager.category.adapter.RecentImagemodelAdapter
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.FileUtils.SpaceType
+import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.Preferences
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -53,6 +64,7 @@ class RecentFragment : Fragment() {
     private lateinit var cCategoryFileItem: ConstraintLayout
     private lateinit var cBaseItem: ConstraintLayout
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -80,12 +92,15 @@ class RecentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
         cBaseItem = view.findViewById(R.id.cBaseItems)
         cInternalStorage = view.findViewById(R.id.cInternalStorage)
         cCategoryFileItem = view.findViewById(R.id.cCategoryItem)
         cRecentImg = view.findViewById(R.id.cRecentImage)
 
-       // initStyleView()
+        //requestStoragePermission()
+        // initStyleView()
 
         fileUtils = FileUtils()
         setStorageSpaceInGB()
@@ -103,25 +118,54 @@ class RecentFragment : Fragment() {
 
     }
 
-   @SuppressLint("SuspiciousIndentation")
-   fun initCategoryItem() {
-       val recyclerView = requireView().findViewById<RecyclerView>(R.id.recyclerView)
+    @SuppressLint("SuspiciousIndentation")
+    fun initCategoryItem() {
+        val recyclerView = requireView().findViewById<RecyclerView>(R.id.recyclerView)
 
-       val categoryFileModels = ArrayList<CategoryFileModel>()
-           categoryFileModels.add(CategoryFileModel(R.drawable.ic_image, "Images", "Sla", R.color.category_icon_blue))
-           categoryFileModels.add(CategoryFileModel(R.drawable.ic_video, "Video", "Sla", R.color.category_icon_orange))
-           categoryFileModels.add(CategoryFileModel(R.drawable.ic_document, "Document", "Sla", R.color.category_icon_purple))
-           categoryFileModels.add(CategoryFileModel(R.drawable.ic_music, "Music", "Sla", R.color.category_icon_pink))
-           categoryFileModels.add(CategoryFileModel(R.drawable.ic_archive, "Archive", "Sla", R.color.category_icon_light_green))
-           categoryFileModels.add(CategoryFileModel(R.drawable.ic_download, "Download", "Sla", R.color.category_icon_light_red))
-           categoryFileModels.add(CategoryFileModel(R.drawable.ic_whatsapp, "Whatsapp", "Sla", R.color.category_icon_green))
-           categoryFileModels.add(CategoryFileModel(R.drawable.ic_download, "Others", "Sla", R.color.category_icon_red))
+        val categoryFileModels = ArrayList<CategoryFileModel>()
+        categoryFileModels.add(CategoryFileModel(R.drawable.ic_image, "Images", "Sla", R.color.category_icon_blue))
+        categoryFileModels.add(CategoryFileModel(R.drawable.ic_video, "Video", "Sla", R.color.category_icon_orange))
+        categoryFileModels.add(
+            CategoryFileModel(
+                R.drawable.ic_document,
+                "Document",
+                "Sla",
+                R.color.category_icon_purple
+            )
+        )
+        categoryFileModels.add(CategoryFileModel(R.drawable.ic_music, "Music", "Sla", R.color.category_icon_pink))
+        categoryFileModels.add(
+            CategoryFileModel(
+                R.drawable.ic_archive,
+                "Archive",
+                "Sla",
+                R.color.category_icon_light_green
+            )
+        )
+        categoryFileModels.add(
+            CategoryFileModel(
+                R.drawable.ic_download,
+                "Download",
+                "Sla",
+                R.color.category_icon_light_red
+            )
+        )
+        categoryFileModels.add(
+            CategoryFileModel(
+                R.drawable.ic_whatsapp,
+                "Whatsapp",
+                "Sla",
+                R.color.category_icon_green
+            )
+        )
+        categoryFileModels.add(CategoryFileModel(R.drawable.ic_download, "Others", "Sla", R.color.category_icon_red))
 
-       recyclerView.layoutManager = GridLayoutManager(requireContext(), 4)
-       val adapter = CategoryFileModelAdapter(categoryFileModels, requireContext())
-       recyclerView.adapter = adapter
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 4)
+        val adapter = CategoryFileModelAdapter(categoryFileModels, requireContext())
+        recyclerView.adapter = adapter
 
     }
+
     @OptIn(DelicateCoroutinesApi::class)
     fun setRecentImages() {
         val recyclerView = requireView().findViewById<RecyclerView>(R.id.recy_recents_images)
@@ -141,10 +185,15 @@ class RecentFragment : Fragment() {
     fun initClick() {
         val itemStorage = requireView().findViewById<ConstraintLayout>(R.id.cInternalStorage)
         val ivSettings = requireView().findViewById<ImageView>(R.id.iv_settings)
-        val homeFragment = HomeFragment()
         val settingsFragment = SettingsFragment()
         itemStorage.setOnClickListener {
-            (requireActivity() as MainActivity).startNewFragment(homeFragment)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                requestPermissionLauncher.launch(Manifest.permission.MANAGE_EXTERNAL_STORAGE)
+            } else {
+                val permissions =
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                requestStoragePermissions.launch(permissions)
+            }
         }
 
         ivSettings.setOnClickListener {
@@ -152,10 +201,16 @@ class RecentFragment : Fragment() {
         }
     }
 
-    private fun initStyleView(){
+    private fun openListFiles() {
+        val homeFragment = HomeFragment()
+        (requireActivity() as MainActivity).startNewFragment(homeFragment)
+    }
+
+    private fun initStyleView() {
         if (Preferences.Interface.isEnabledRoundedCorners) {
             if (roundedCornersDrawable == null) {
-                val mCornerRadius = requireContext().resources.getDimensionPixelSize(R.dimen.corner_radius_base).toFloat()
+                val mCornerRadius =
+                    requireContext().resources.getDimensionPixelSize(R.dimen.corner_radius_base).toFloat()
                 val colorPrimary = getColorByAttr(com.google.android.material.R.attr.colorPrimary)
                 roundedCornersDrawable = GradientDrawable().apply {
                     cornerRadius = mCornerRadius
@@ -188,7 +243,7 @@ class RecentFragment : Fragment() {
         tvSpaceTotal.text = "$totalSpace GB"
         tvSpaceOf.text = "$freeSpace GB of $totalSpace GB"
 
-       /* cpSpace.progress = usedSpace
+        /* cpSpace.progress = usedSpace
         pbSpace.progress = usedSpace*/
         val animation = ObjectAnimator.ofInt(cpSpace, "progress", 0, usedSpace)
         animation.duration = 1000
@@ -207,7 +262,110 @@ class RecentFragment : Fragment() {
         animation.start()
     }
 
+    private fun requestStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            requestManageExternalPermission()
+        } else {
+            requestReadWritePermission()
+        }
 
+    }
+
+    private fun requestReadWritePermission() {
+        val readWritePermission = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        val READ_WRITE_PERMISSION_REQUEST_CODE = 1
+
+        if (arePermissionsGranted(readWritePermission)) {
+            openListFiles()
+            setRecentImages()
+        } else {
+            val title = getString(R.string.permission_required)
+            val message = getString(R.string.permission_required_body)
+            val textPositiveButton = getString(R.string.allow)
+            val textNegativeButton = getString(R.string.dialog_cancel)
+
+            MaterialDialogUtils().createDialogInfo(
+                title, message, textPositiveButton, textNegativeButton, requireContext(), true
+            ) { dialogResult ->
+                val isConfirmed = dialogResult.confirmed
+                if (isConfirmed) {
+                    ActivityCompat.requestPermissions(
+                        requireActivity(),
+                        readWritePermission,
+                        READ_WRITE_PERMISSION_REQUEST_CODE
+                    )
+                    requestStoragePermissions.launch(readWritePermission)
+
+                }
+            }
+        }
+    }
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun requestManageExternalPermission() {
+        if (Environment.isExternalStorageManager()) {
+            openListFiles()
+            setRecentImages()
+        } else {
+            val title = getString(R.string.permission_required)
+            val message = getString(R.string.permission_required_body)
+            val textPositiveButton = getString(R.string.allow)
+            val textNegativeButton = getString(R.string.dialog_cancel)
+
+            MaterialDialogUtils().createDialogInfo(
+                title, message, textPositiveButton, textNegativeButton, requireContext(), true
+            ) { dialogResult ->
+                val isConfirmed = dialogResult.confirmed
+                if (isConfirmed) {
+                    val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                    val uri = Uri.fromParts("package", requireContext().packageName, null)
+                    intent.data = uri
+                    startActivity(intent)
+                    requestPermissionLauncher.launch(Manifest.permission.MANAGE_EXTERNAL_STORAGE)
+                }
+            }
+
+        }
+    }
+    private fun arePermissionsGranted(permissions: Array<String>): Boolean {
+        for (permission in permissions) {
+            if (ContextCompat.checkSelfPermission(
+                    requireActivity(),
+                    permission
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private val requestStoragePermissions = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        permissions.entries.forEach {
+            val isGranted = it.value
+            if (isGranted) {
+                openListFiles()
+                setRecentImages()
+            } else{
+                requestStoragePermission()
+            }
+        }
+    }
+
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            openListFiles()
+        } else {
+            requestStoragePermission()
+        }
+    }
 
 
     companion object {

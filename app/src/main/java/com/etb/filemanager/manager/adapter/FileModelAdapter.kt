@@ -20,8 +20,12 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.etb.filemanager.R
 import com.etb.filemanager.databinding.FileItemBinding
 import com.etb.filemanager.files.file.common.mime.MidiaType
@@ -187,23 +191,21 @@ class FileModelAdapter(
         bindViewHolderAnimation(holder)
         val file = getItem(position)
         val binding = holder.binding
-        val mimeTypeUtil = MimeTypeUtil()
         val filePath = file.filePath
-        val colorUtil = ColorUtil()
-        val iconUtil = IconUtil()
-        val mimeType = FileUtil().getMimeType(null, filePath)
+        val mimeType = FileUtil().getMimeType(null,filePath)
         val selected = file in selectedFiles
         val isDirectory = file.isDirectory
+        currentPath = file.filePath
         binding.itemFile.isChecked = selected
         if (payloads.isNotEmpty()){
             return
         }
 
-
+        setVisibility(isDirectory, mimeType, binding)
         if (!isDirectory) {
             if (mimeType != null && mimeType.isMimeTypeMedia()) {
-                val midiaType = getMidiaType(mimeType)
-                when (midiaType) {
+                val mediaType = getMidiaType(mimeType)
+                when (mediaType) {
                     MidiaType.IMAGE -> {
                         loadImage(filePath, binding)
                     }
@@ -212,40 +214,21 @@ class FileModelAdapter(
                         loadImage(filePath, binding)
                     }
 
-                    else -> {
-                        loadImage(filePath, binding)
-                    }
+                 else ->{
+                     loadImage(filePath, binding)
+                 }
                 }
             } else {
-
-                val tint = colorUtil.getColorPrimaryInverse(mContext)
-                val icFile = mContext.getDrawable(R.drawable.file_generic_icon)
-                icFile?.setTint(tint)
-
-                val iconResourceId = mimeType?.let { mimeTypeUtil.getIconByMimeType(it) } ?: icFile
-
-                binding.iconFile.setColorFilter(tint, PorterDuff.Mode.SRC_IN)
-
-                Glide.with(mContext).load(iconResourceId).diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .apply(RequestOptions().placeholder(icFile)).into(binding.iconFile)
-
+                getIconByMimeType(mimeType, binding)
 
             }
 
-        } else{
-            binding.fileDate.visibility = View.GONE
-            binding.fileSize.visibility = View.GONE
-            binding.iconFile.visibility = View.VISIBLE
-            binding.iconPreview.visibility = View.GONE
-            binding.iconFile.setImageDrawable(iconUtil.getIconFolder(mContext))
-            binding.itemBorder.background = iconUtil.getBorderNormal(mContext)
-
-
         }
 
-        currentPath = file.filePath
 
         binding.fileTitle.text = file.fileName
+        binding.fileSize.text = FileUtils().getFileSizeFormatted(file.fileSize)
+        binding.fileDate.text = FileUtils().getFormatDateFile(filePath, true)
 
         binding.itemFile.setOnClickListener {
             if (selectedFiles.isEmpty()) {
@@ -286,16 +269,48 @@ class FileModelAdapter(
         return mimeType
     }
 
+    private fun setVisibility(isDir: Boolean, mimeType: String?, binding: FileItemBinding) {
+        val iconUtil = IconUtil()
+        val isMedia = mimeType?.isMimeTypeMedia()
+
+        binding.fileDate.visibility = if (isDir) View.GONE else View.VISIBLE
+        binding.fileSize.visibility = if (isDir) View.GONE else View.VISIBLE
+        binding.iconPreview.visibility = if (isMedia == true) View.VISIBLE else View.GONE
+            binding.iconFile.visibility = if (isMedia == true) View.GONE else View.VISIBLE
+
+
+        binding.itemBorder.background = if (isMedia == true) iconUtil.getBorderPreview(mContext) else iconUtil.getBorderNormal(mContext)
+        if (isDir) binding.iconFile.setImageDrawable(iconUtil.getIconFolder(mContext))
+    }
+
+
+    private fun getIconByMimeType(mimeType: String?, binding: FileItemBinding){
+        val tint = ColorUtil().getColorPrimaryInverse(mContext)
+        val icFile = mContext.getDrawable(R.drawable.file_generic_icon)
+        icFile?.setTint(tint)
+
+        val iconResourceId = mimeType?.let { MimeTypeUtil().getIconByMimeType(it) } ?: icFile
+
+        binding.iconFile.setColorFilter(tint, PorterDuff.Mode.SRC_IN)
+
+        Glide.with(mContext).load(iconResourceId).diskCacheStrategy(DiskCacheStrategy.ALL)
+            .apply(RequestOptions().placeholder(icFile)).into(binding.iconFile)
+
+    }
 
     private fun loadImage(path: String, binding: FileItemBinding) {
 
-        val iconUtil = IconUtil()
-        binding.iconFile.visibility = View.GONE
-        binding.iconPreview.visibility = View.VISIBLE
-        binding.itemBorder.background = iconUtil.getBorderPreview(mContext)
-        Glide.with(mContext).load(path).diskCacheStrategy(DiskCacheStrategy.ALL)
+        Glide.with(binding.iconPreview)
+            .clear(binding.iconPreview)
+        Glide.with(mContext).load(path).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .apply(RequestOptions().override(50, 50)).apply(RequestOptions().placeholder(R.drawable.ic_image))
             .into(binding.iconPreview)
+
+    }
+
+    private fun setPreview(preview: Drawable, placeholder: Drawable, binding: FileItemBinding){
+        Glide.with(mContext).load(preview).diskCacheStrategy(DiskCacheStrategy.ALL)
+            .apply(RequestOptions().placeholder(placeholder)).into(binding.iconFile)
 
 
     }

@@ -31,6 +31,7 @@ data class FileProperties(  var title: String,
     }
 
     companion object CREATOR : Parcelable.Creator<FileProperties> {
+        @RequiresApi(Build.VERSION_CODES.Q)
         override fun createFromParcel(parcel: Parcel): FileProperties {
             return FileProperties(parcel)
         }

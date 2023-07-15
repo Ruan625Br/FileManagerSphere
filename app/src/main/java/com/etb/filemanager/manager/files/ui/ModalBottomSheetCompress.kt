@@ -84,6 +84,8 @@ class ModalBottomSheetCompress : BottomSheetDialogFragment() {
 
                 compressFiles()
             }
+
+            dismiss()
         }
 
     }

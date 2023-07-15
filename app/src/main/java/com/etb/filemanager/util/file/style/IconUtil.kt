@@ -23,6 +23,22 @@ class IconUtil {
 
         return iconFolder
     }
+    @SuppressLint("UseCompatLoadingForDrawables")
+    fun getPreviewImage(context: Context): Drawable {
+        val colorPrimaryInverse = colorUtil.getColorPrimaryInverse(context)
+        val iconFolder: Drawable = context.getDrawable(R.drawable.file_image_icon)!!
+        colorUtil.setTintDrawable(colorPrimaryInverse, iconFolder)
+
+        return iconFolder
+    }
+    @SuppressLint("UseCompatLoadingForDrawables")
+    fun getPreviewVideo(context: Context): Drawable {
+        val colorPrimaryInverse = colorUtil.getColorPrimaryInverse(context)
+        val iconFolder: Drawable = context.getDrawable(R.drawable.file_video_icon)!!
+        colorUtil.setTintDrawable(colorPrimaryInverse, iconFolder)
+
+        return iconFolder
+    }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     fun getIconArchive(context: Context): Drawable {
