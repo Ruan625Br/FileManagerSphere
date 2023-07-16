@@ -36,4 +36,17 @@
         <item>reply_all</item>
     </string-array>
 
+    <string-array name="menu_type_items">
+        <item>.zip</item>
+        <item>.7z</item>
+        <item>.tar</item>
+        <item>.gzip</item>
+        <item>.xz</item>
+        <item>.gz</item>
+        <item>.zstd</item>
+        <item>.tar.xz</item>
+        <item>.tar.gz</item>
+        <item>.tar.zstd</item>
+    </string-array>
+
 </resources>

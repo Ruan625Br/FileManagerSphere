@@ -6,13 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.RadioGroup
 import androidx.core.content.ContextCompat
 import com.etb.filemanager.R
+import com.etb.filemanager.files.util.getStringArray
 import com.etb.filemanager.manager.files.filecoroutine.CompressionType
 import com.etb.filemanager.manager.files.filecoroutine.FileOperation
 import com.etb.filemanager.manager.files.services.FileOperationService
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
 import java.nio.file.Paths
 import kotlin.io.path.pathString
@@ -22,7 +23,7 @@ class ModalBottomSheetCompress : BottomSheetDialogFragment() {
     private var currentPath: String? = null
     private var paths: List<String>? = null
 
-    private lateinit var typeGroup: RadioGroup
+    private lateinit var autoCompleteTextView: MaterialAutoCompleteTextView
     private lateinit var btnCompress: Button
     private lateinit var eInputEditText: TextInputEditText
     private lateinit var compressionType: CompressionType
@@ -43,56 +44,40 @@ class ModalBottomSheetCompress : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        typeGroup = view.findViewById(R.id.typeGroup)
+        autoCompleteTextView = view.findViewById(R.id.autoCompleteTextView)
         btnCompress = view.findViewById(R.id.btnCompress)
         eInputEditText = view.findViewById(R.id.eInputEditText)
 
-        btnCompress.setOnClickListener {
-            if (eInputEditText.text != null) {
-                when (val typeId = typeGroup.checkedRadioButtonId) {
-                    R.id.zipRadio -> {
-                        extension = ".zip"
-                        compressionType = CompressionType.ZIP
-                    }
+        val menuTypeItems = getStringArray(R.array.menu_type_items)
+        val selectedIndex = 0
+        val mSelectedItem = menuTypeItems[selectedIndex]
 
-                    R.id.tarRadio -> {
-                        extension = ".tar"
-                        compressionType = CompressionType.TAR
-                    }
-
-                    R.id.sevenZRadio -> {
-                        extension = ".7z"
-                        compressionType = CompressionType.SEVENZ
-                    }
-
-                    R.id.gzipRadio -> {
-                        extension = ".gz"
-                        compressionType = CompressionType.GZIP
-                    }
-
-                    R.id.xzRadio -> {
-                        extension = ".xz"
-                        compressionType = CompressionType.XZ
-                    }
-                    R.id.tarXzRadio -> {
-                        extension = ".tar"
-                        compressionType = CompressionType.TARXZ
-                    }
-                    R.id.tarGzRadio -> {
-                        extension = ".tar"
-                        compressionType = CompressionType.TARGZ
-                    }
-
-                    R.id.zstdRadio -> {
-                        extension = ".zst"
-                        compressionType = CompressionType.ZSTD
-                    }
-                    else -> throw AssertionError(typeId)
-                }
-
-                compressFiles()
+        autoCompleteTextView.setText(mSelectedItem, false)
+        compressionType = CompressionType.ZIP
+        extension = mSelectedItem
+        autoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
+            val selectedItem = parent.getItemAtPosition(position) as String
+            extension = selectedItem
+             compressionType = when (position) {
+                0 -> CompressionType.ZIP
+                1 -> CompressionType.SEVENZ
+                2 -> CompressionType.TAR
+                3 -> CompressionType.GZIP
+                4 -> CompressionType.XZ
+                5 -> CompressionType.GZ
+                6 -> CompressionType.ZSTD
+                7 -> CompressionType.TARXZ
+                8 -> CompressionType.TARGZ
+                9 -> CompressionType.TARZSTD
+                else -> throw IllegalArgumentException("Invalid position: $position")
             }
+        }
 
+
+        btnCompress.setOnClickListener {
+                if (!eInputEditText.text.isNullOrEmpty()){
+                    compressFiles()
+                }
             dismiss()
         }
 

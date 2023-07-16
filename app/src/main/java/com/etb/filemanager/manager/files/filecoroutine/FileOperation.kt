@@ -8,6 +8,8 @@ import com.etb.filemanager.manager.files.filecoroutine.CompressionType.*
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import net.sf.sevenzipjbinding.ArchiveFormat
+import net.sf.sevenzipjbinding.SevenZip
 import newArchiveWriter
 import org.apache.commons.compress.archivers.ArchiveEntry
 import org.apache.commons.compress.archivers.ArchiveStreamFactory
@@ -17,6 +19,7 @@ import org.apache.commons.compress.compressors.CompressorStreamFactory
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream
 import java.io.*
+import java.lang.reflect.Method
 import java.nio.channels.FileChannel
 import java.nio.file.*
 import java.util.zip.ZipEntry
@@ -51,7 +54,7 @@ suspend fun performFileOperation(
                     progressListener
                 )
 
-                FileOperation.EXTRACT -> extractArchives(sourcePath!!, destinationPath!!)
+                FileOperation.EXTRACT -> {}
             }
             completionListener(true)
         } catch (e: Exception) {
@@ -248,7 +251,7 @@ private fun sendProgress(progressListener: (Int) -> Unit, progress: Int) {
 }
 
 
-class CompressFiles {
+ class CompressFiles {
 
     fun compressFiles(
         paths: List<String>,
@@ -268,8 +271,8 @@ class CompressFiles {
                 XZ -> TODO()
                 GZ -> TODO()
                 ZSTD -> TODO()
-                TARXZ -> compressToTarXz(paths, outputFilePath, progressListener)
-                TARGZ -> compressToTarGz(paths, outputFilePath, progressListener)
+                TARXZ -> TODO()
+                TARGZ -> TODO()
                 TARZSTD -> TODO()
             }
         }
@@ -352,197 +355,8 @@ class CompressFiles {
     }
 
 
-    private fun compressToTar(filesToArchive: List<String>, outputFilePath: String) {
-        val outputChannel = File(outputFilePath).outputStream().channel
-        val archiveWriter = outputChannel.newArchiveWriter(ArchiveStreamFactory.TAR)
-
-        for (filePath in filesToArchive) {
-            val file = File(filePath)
-            val entryName = file.name
-            archiveWriter.writeFile(file.toPath(), entryName)
-        }
-
-        archiveWriter.close()
-        outputChannel.close()
-    }
-
-    private fun compressToTarGz(filesToArchive: List<String>, outputFilePath: String, progressListener: (Int) -> Unit) {
-        totalFiles = 0
-        processedFiles = 0
-
-        val tarFile = File(outputFilePath)
-        val gzFile = File("$outputFilePath.gz")
-
-        TarArchiveOutputStream(GzipCompressorOutputStream(FileOutputStream(gzFile))).use { tarOutputStream ->
-            for (filePath in filesToArchive) {
-                val file = File(filePath)
-                if (file.exists()) {
-                    if (file.isDirectory) {
-                        addDirectoryToTar(file, file.name, tarOutputStream)
-                    } else {
-                        addFileToTar(file, "", tarOutputStream)
-                    }
-                }
-            }
-        }
-
-        progressListener(100)
-    }
-    private fun compressToTarXz(filesToArchive: List<String>, outputFilePath: String, progressListener: (Int) -> Unit) {
-        totalFiles = 0
-        processedFiles = 0
-
-        val tarFile = File(outputFilePath)
-        val xzFile = File("$outputFilePath.xz")
-
-        TarArchiveOutputStream(XZCompressorOutputStream(FileOutputStream(xzFile))).use { tarOutputStream ->
-            for (filePath in filesToArchive) {
-                val file = File(filePath)
-                if (file.exists()) {
-                    if (file.isDirectory) {
-                        addDirectoryToTar(file, file.name, tarOutputStream)
-                    } else {
-                        addFileToTar(file, "", tarOutputStream)
-                    }
-                }
-            }
-        }
-
-        progressListener(100)
-    }
-    private fun addDirectoryToTar(directory: File, parentPath: String, tarOutputStream: TarArchiveOutputStream) {
-        val files = directory.listFiles()
-
-        for (file in files) {
-            val entryName = if (parentPath.isNotEmpty()) "$parentPath/${file.name}" else file.name
-
-            if (file.isDirectory) {
-                val entry = TarArchiveEntry(file, entryName + File.separator)
-                tarOutputStream.putArchiveEntry(entry)
-                tarOutputStream.closeArchiveEntry()
-                addDirectoryToTar(file, entryName, tarOutputStream)
-            } else {
-                addFileToTar(file, entryName, tarOutputStream)
-            }
-        }
-    }
-    private fun addFileToTar(file: File, entryName: String, tarOutputStream: TarArchiveOutputStream) {
-        val entry = TarArchiveEntry(file, entryName)
-        tarOutputStream.putArchiveEntry(entry)
-
-        FileInputStream(file).use { inputStream ->
-            val buffer = ByteArray(1024)
-            var length: Int
-            while (inputStream.read(buffer).also { length = it } > 0) {
-                tarOutputStream.write(buffer, 0, length)
-            }
-        }
-
-        tarOutputStream.closeArchiveEntry()
-    }
-    private fun compressToGzip(filesToArchive: List<String>, outputFilePath: String) {
-        val outputChannel =
-            FileChannel.open(File(outputFilePath).toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE)
-        val compressionType = CompressorStreamFactory.GZIP
-        val archiveType = ArchiveStreamFactory.ZIP
-        val archiveWriter = outputChannel.newArchiveWriter(archiveType, compressionType)
-
-        for (filePath in filesToArchive) {
-            val file = File(filePath)
-            val entryName = file.name
-            archiveWriter.writeFile(file.toPath(), entryName)
-        }
-
-        archiveWriter.close()
-        outputChannel.close()
-    }
-
-    private fun compressToXz(filesToArchive: List<String>, outputFilePath: String) {
-        val outputChannel =
-            FileChannel.open(File(outputFilePath).toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE)
-        val compressionType = CompressorStreamFactory.XZ
-        val archiveType = ArchiveStreamFactory.TAR
-        val archiveWriter = outputChannel.newArchiveWriter(archiveType, compressionType)
-
-        for (filePath in filesToArchive) {
-            val file = File(filePath)
-            val entryName = file.name
-            archiveWriter.writeFile(file.toPath(), entryName)
-        }
-
-        archiveWriter.close()
-        outputChannel.close()
-    }
-
-    private fun compressToSevenZ(filesToArchive: List<String>, outputFilePath: String) {
-        val outputChannel = File(outputFilePath).outputStream().channel
-        val archiveWriter = outputChannel.newArchiveWriter(ArchiveStreamFactory.SEVEN_Z)
-
-        for (filePath in filesToArchive) {
-            val file = File(filePath)
-            val entryName = file.name
-            archiveWriter.writeFile(file.toPath(), entryName)
-        }
-
-        archiveWriter.close()
-        outputChannel.close()
-    }
-
-    private fun compressToZstandard(filesToArchive: List<String>, outputFilePath: String) {
-        val outputChannel =
-            FileChannel.open(File(outputFilePath).toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE)
-        val compressionType = CompressorStreamFactory.ZSTANDARD
-        val archiveType = ArchiveStreamFactory.TAR
-        val archiveWriter = outputChannel.newArchiveWriter(archiveType, compressionType)
-
-        for (filePath in filesToArchive) {
-            val file = File(filePath)
-            val entryName = file.name
-            archiveWriter.writeFile(file.toPath(), entryName)
-        }
-
-        archiveWriter.close()
-        outputChannel.close()
-    }
 }
 
-
-fun extractArchive(archiveFile: File, outputDir: File) {
-    val archiveInputStream = ArchiveStreamFactory()
-        .createArchiveInputStream(FileInputStream(archiveFile))
-
-    var archiveEntry: ArchiveEntry? = archiveInputStream.nextEntry
-
-    while (archiveEntry != null) {
-        val outputFile = File(outputDir, archiveEntry.name)
-
-        if (archiveEntry.isDirectory) {
-            outputFile.mkdirs()
-        } else {
-            val outputStream = FileOutputStream(outputFile)
-            org.apache.commons.compress.utils.IOUtils.copy(archiveInputStream, outputStream)
-            outputStream.close()
-        }
-
-        archiveEntry = archiveInputStream.nextEntry
-    }
-
-    archiveInputStream.close()
-}
-
-
-private fun extractArchives(archivePaths: List<String>, outputDir: String) {
-    val outputDirectory = File(outputDir)
-
-    if (!outputDirectory.exists()) {
-        outputDirectory.mkdirs()
-    }
-
-    for (archivePath in archivePaths) {
-        val archiveFile = File(archivePath)
-        extractArchive(archiveFile, outputDirectory)
-    }
-}
 
 
 enum class CompressionType {

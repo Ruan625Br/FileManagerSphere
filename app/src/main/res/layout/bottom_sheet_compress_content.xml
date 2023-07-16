@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   android:layout_width="match_parent"
+                                                   xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
                                                    xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
@@ -26,64 +26,24 @@
                     android:id="@+id/eInputEditText"
             />
         </com.google.android.material.textfield.TextInputLayout>
-        <RadioGroup
-                android:id="@+id/typeGroup"
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/menuType"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
+                android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:hint="@string/format_file">
 
-            <RadioButton
-                    android:id="@+id/zipRadio"
-                    android:layout_width="wrap_content"
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/autoCompleteTextView"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/compression_zip"
-            />
-            <RadioButton
-                    android:id="@+id/sevenZRadio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/radio_7z"
-            />
+                    android:inputType="none"
+                    android:labelFor="@+id/menuType"
+                    app:simpleItems="@array/menu_type_items"
+                  />
 
-            <RadioButton
-                    android:id="@+id/tarRadio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/compression_tar"
-
-            />
-            <RadioButton
-                    android:id="@+id/gzipRadio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/compression_gzip"
-            />
-            <RadioButton
-                    android:id="@+id/xzRadio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/compression_xz"
-            />
-            <RadioButton
-                    android:id="@+id/tarXzRadio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/compression_tar_xz"
-            />
-            <RadioButton
-                    android:id="@+id/tarGzRadio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/compression_tar_gz"
-            />
-            <RadioButton
-                    android:id="@+id/zstdRadio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/compression_zstandard"
-            />
-        </RadioGroup>
+        </com.google.android.material.textfield.TextInputLayout>
         <Button
                 android:text="@string/file_list_select_action_archive"
                 android:layout_width="wrap_content"

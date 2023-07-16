@@ -225,5 +225,6 @@
     <string name="compression_tar_xz">.tar.xz</string>
     <string name="compression_tar_gz">.tar.gz</string>
     <string name="compression_zstandard">Zstandard</string>
+    <string name="format_file">Formato do arquivo</string>
 
 </resources>
