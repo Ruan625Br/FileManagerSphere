@@ -39,6 +39,12 @@
                     android:checked="true"
                     android:text="@string/compression_zip"
             />
+            <RadioButton
+                    android:id="@+id/sevenZRadio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/radio_7z"
+            />
 
             <RadioButton
                     android:id="@+id/tarRadio"
@@ -46,12 +52,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/compression_tar"
 
-            />
-            <RadioButton
-                    android:id="@+id/sevenZRadio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/radio_7z"
             />
             <RadioButton
                     android:id="@+id/gzipRadio"
@@ -64,6 +64,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/compression_xz"
+            />
+            <RadioButton
+                    android:id="@+id/tarXzRadio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/compression_tar_xz"
+            />
+            <RadioButton
+                    android:id="@+id/tarGzRadio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/compression_tar_gz"
             />
             <RadioButton
                     android:id="@+id/zstdRadio"

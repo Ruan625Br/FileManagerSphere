@@ -834,11 +834,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     override fun cutFile(file: FileItemSet) {
-        createBottomSheetOperation(file, false, null)
+        createBottomSheetOperation(file, false, null, FileOperation.MOVE)
     }
 
     override fun copyFile(file: FileItemSet) {
-        createBottomSheetOperation(file, true, null)
+        createBottomSheetOperation(file, true, null, FileOperation.MOVE)
     }
 
     override fun confirmDeleteFile(files: FileItemSet?, fileItem: FileModel?) {
@@ -848,12 +848,12 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val textNegativeButton = requireContext().getString(R.string.dialog_cancel)
         val file: FileModel
 
-        if (files == null){
+        if (files == null) {
             paths = listOf(fileItem!!.filePath)
             file = fileItem
-        } else{
+        } else {
             val files = files.toList()
-             paths = files.map { it.filePath }
+            paths = files.map { it.filePath }
             file = files.first()
 
         }
@@ -931,12 +931,17 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 selectFile(file, true)
             }
 
+            CreateFileAction.EXTRACT -> {
+                createBottomSheetOperation(null, true, file, FileOperation.EXTRACT)
+
+            }
+
             CreateFileAction.CUT -> {
-                createBottomSheetOperation(null, false, file)
+                createBottomSheetOperation(null, false, file, FileOperation.MOVE)
             }
 
             CreateFileAction.COPY -> {
-                createBottomSheetOperation(null, true, file)
+                createBottomSheetOperation(null, true, file, FileOperation.COPY)
             }
 
             CreateFileAction.RENAME -> {
@@ -963,23 +968,28 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     }
 
-    private fun compressFiles(files: FileItemSet){
+    private fun compressFiles(files: FileItemSet) {
         val paths = files.map { it.filePath }
         showBottomSheetCompressFiles(paths)
     }
 
-    private fun showBottomSheetCompressFiles(paths: List<String>){
+    private fun showBottomSheetCompressFiles(paths: List<String>) {
 
         val modalBottomSheetCompress = ModalBottomSheetCompress()
         modalBottomSheetCompress.arguments = Bundle().apply {
             putString(ModalBottomSheetCompress.ARG_CURRENT_PATH, viewModel.currentPath.toString())
             putStringArrayList(ModalBottomSheetCompress.ARG_PATHS, ArrayList(paths))
         }
-            modalBottomSheetCompress.show(parentFragmentManager, ModalBottomSheetCompress.TAG)
+        modalBottomSheetCompress.show(parentFragmentManager, ModalBottomSheetCompress.TAG)
     }
 
 
     private fun showBottomSheetMoreActionFile(fileItem: FileModel) {
+
+        val isArchive = MimeTypeUtil().isSpecificFileType(
+            fileUtil.getMimeType(null, fileItem.filePath).toString(), MimeTypeIcon.ARCHIVE
+        )
+
 
         val fileOption = mutableListOf<FileAction>().apply {
             add(
@@ -994,6 +1004,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                     R.drawable.ic_check,
                     requireContext().getString(R.string.action_bottom_select),
                     CreateFileAction.SELECT
+                )
+            )
+            if (isArchive) add(
+                FileAction(
+                    R.drawable.baseline_unarchive_24, getString(R.string.extract), CreateFileAction.EXTRACT
                 )
             )
             add(FileAction(R.drawable.ic_cut_24, requireContext().getString(R.string.cut), CreateFileAction.CUT))
@@ -1042,7 +1057,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     @SuppressLint("SetTextI18n")
-    private fun createBottomSheetOperation(files: FileItemSet?, copy: Boolean, fileItem: FileModel?) {
+    private fun createBottomSheetOperation(
+        files: FileItemSet?, copy: Boolean, fileItem: FileModel?, operation: FileOperation
+    ) {
 
         val ivCloseOp = requireView().findViewById<ImageView>(R.id.iv_close_op)
         val ivStartOp = requireView().findViewById<ImageView>(R.id.iv_start_op)
@@ -1064,29 +1081,45 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             file = files.first()
         }
         val quantity = paths.size
-        val title = if (copy) {
-            requireContext().resources.getQuantityString(
-                R.plurals.operation_copying_files,
-                quantity,
-                quantity,
-                file.fileName
-            )
-        } else {
-            requireContext().resources.getQuantityString(
-                R.plurals.operation_moving_files,
-                quantity,
-                quantity,
-                file.fileName
-            )
+
+        val title = when (operation) {
+            FileOperation.MOVE -> {
+                requireContext().resources.getQuantityString(
+                    R.plurals.operation_moving_files, quantity, quantity, file.fileName
+                )
+            }
+
+            FileOperation.COPY -> {
+                requireContext().resources.getQuantityString(
+                    R.plurals.operation_copying_files, quantity, quantity, file.fileName
+                )
+            }
+
+            FileOperation.EXTRACT -> {
+                requireContext().resources.getQuantityString(
+                    R.plurals.operation_extracting_files, quantity, quantity, file.fileName
+                )
+            }
+
+            else -> {
+                requireContext().resources.getQuantityString(
+                    R.plurals.operation_generic_files, quantity, quantity, file.fileName
+                )
+            }
+
         }
 
         tvTitleOp.text = title
 
 
         ivStartOp.setOnClickListener {
-            val destinationDir = viewModel.currentPath?.toString()
-
-            destinationDir?.let { it1 -> if (copy) copy(paths, it1) else move(paths, it1) }
+            val destinationDir = viewModel.currentPath.toString()
+            when (operation) {
+                FileOperation.COPY -> copy(paths, destinationDir)
+                FileOperation.MOVE -> move(paths, destinationDir)
+                FileOperation.EXTRACT -> extract(paths, destinationDir)
+                else -> {}
+            }
             standardBehaviorOperation.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -1248,6 +1281,15 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         intent.putStringArrayListExtra("sourcePaths", ArrayList<String>(mPaths))
         intent.putStringArrayListExtra("newNames", ArrayList<String>(newNames))
         intent.putExtra("operation", FileOperation.RENAME)
+        ContextCompat.startForegroundService(requireContext(), intent)
+    }
+
+    private fun extract(paths: List<Path>, destinationPath: String) {
+        val mPaths = paths.map { it.toAbsolutePath().toString() }
+        val intent = Intent(requireContext(), FileOperationService::class.java)
+        intent.putStringArrayListExtra("sourcePaths", ArrayList(mPaths))
+        intent.putExtra("destinationPath", destinationPath)
+        intent.putExtra("operation", FileOperation.EXTRACT)
         ContextCompat.startForegroundService(requireContext(), intent)
     }
 

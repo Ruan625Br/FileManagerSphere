@@ -28,6 +28,7 @@
     <string name="delete">Excluir</string>
     <string name="copy">Copiar</string>
     <string name="cut">Recortar</string>
+    <string name="extract">Extrair</string>
     <string name="file_item_action_open_with">Abrir com</string>
     <string name="file_item_action_properties">Propiedades</string>
     <string name="dialog_ok">OK</string>
@@ -150,6 +151,14 @@
         <item quantity="one">Copiando "\"%2$s\""</item>
         <item quantity="other">Copiando %1$d itens</item>
     </plurals>
+    <plurals name="operation_extracting_files">
+        <item quantity="one">Extraindo "\"%2$s\""</item>
+        <item quantity="other">Extraindo %1$d itens</item>
+    </plurals>
+    <plurals name="operation_generic_files">
+        <item quantity="one">Operando "\"%2$s\""</item>
+        <item quantity="other">Operando %1$d itens</item>
+    </plurals>
     <string name="file_list_subtitle_separator">,\u0020</string>
     <plurals name="file_list_subtitle_directory_count_format">
         <item quantity="one">%1$,d pasta</item>
@@ -212,7 +221,9 @@
     <string name="compression_zip">.zip</string>
     <string name="compression_tar">.tar</string>
     <string name="compression_gzip">.gzip</string>
-    <string name="compression_xz">.tar.xz</string>
+    <string name="compression_xz">.xz</string>
+    <string name="compression_tar_xz">.tar.xz</string>
+    <string name="compression_tar_gz">.tar.gz</string>
     <string name="compression_zstandard">Zstandard</string>
 
 </resources>

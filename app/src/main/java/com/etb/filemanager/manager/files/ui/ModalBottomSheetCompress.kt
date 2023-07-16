@@ -74,10 +74,18 @@ class ModalBottomSheetCompress : BottomSheetDialogFragment() {
                         extension = ".xz"
                         compressionType = CompressionType.XZ
                     }
+                    R.id.tarXzRadio -> {
+                        extension = ".tar"
+                        compressionType = CompressionType.TARXZ
+                    }
+                    R.id.tarGzRadio -> {
+                        extension = ".tar"
+                        compressionType = CompressionType.TARGZ
+                    }
 
                     R.id.zstdRadio -> {
                         extension = ".zst"
-                        compressionType = CompressionType.ZSTANDARD
+                        compressionType = CompressionType.ZSTD
                     }
                     else -> throw AssertionError(typeId)
                 }
