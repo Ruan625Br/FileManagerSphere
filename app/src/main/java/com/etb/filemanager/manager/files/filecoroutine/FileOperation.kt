@@ -8,19 +8,16 @@ import com.etb.filemanager.manager.files.filecoroutine.CompressionType.*
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import net.sf.sevenzipjbinding.ArchiveFormat
-import net.sf.sevenzipjbinding.SevenZip
-import newArchiveWriter
 import org.apache.commons.compress.archivers.ArchiveEntry
+import org.apache.commons.compress.archivers.ArchiveInputStream
 import org.apache.commons.compress.archivers.ArchiveStreamFactory
+import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry
+import org.apache.commons.compress.archivers.sevenz.SevenZFile
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
 import org.apache.commons.compress.compressors.CompressorStreamFactory
-import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream
-import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream
+import org.apache.commons.io.FileUtils
 import java.io.*
-import java.lang.reflect.Method
-import java.nio.channels.FileChannel
 import java.nio.file.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
@@ -48,13 +45,12 @@ suspend fun performFileOperation(
                 FileOperation.MOVE -> move(sourcePath!!, destinationPath!!, progressListener)
                 FileOperation.COPY -> copy(sourcePath!!, destinationPath!!, progressListener)
                 FileOperation.COMPRESS -> CompressFiles().compressFiles(
-                    sourcePath!!,
-                    destinationPath!!,
-                    compressionType!!,
-                    progressListener
+                    sourcePath!!, destinationPath!!, compressionType!!, progressListener
                 )
 
-                FileOperation.EXTRACT -> {}
+                FileOperation.EXTRACT -> {
+                    ExtractArchives().extractFiles(sourcePath!!, destinationPath!!)
+                }
             }
             completionListener(true)
         } catch (e: Exception) {
@@ -251,13 +247,10 @@ private fun sendProgress(progressListener: (Int) -> Unit, progress: Int) {
 }
 
 
- class CompressFiles {
+class CompressFiles {
 
     fun compressFiles(
-        paths: List<String>,
-        outputFilePath: String,
-        compressionType: CompressionType,
-        progressListener: (Int) -> Unit
+        paths: List<String>, outputFilePath: String, compressionType: CompressionType, progressListener: (Int) -> Unit
     ) {
         val outputFile = File(outputFilePath)
         val outputStream = FileOutputStream(outputFile)
@@ -281,63 +274,57 @@ private fun sendProgress(progressListener: (Int) -> Unit, progress: Int) {
     private var totalFiles = 0
     private var processedFiles = 0
 
-     private fun compressToZip(filesToArchive: List<String>, outputFilePath: String, progressListener: (Int) -> Unit) {
-         val zipFile = File(outputFilePath)
-         val zipOutputStream = ZipOutputStream(FileOutputStream(zipFile))
+    private fun compressToZip(filesToArchive: List<String>, outputFilePath: String, progressListener: (Int) -> Unit) {
+        val zipFile = File(outputFilePath)
+        val zipOutputStream = ZipOutputStream(FileOutputStream(zipFile))
 
-         for (filePath in filesToArchive) {
-             val file = File(filePath)
-             if (file.exists()) {
-                 if (file.isDirectory) {
-                     addDirectoryToZip(file, "", zipOutputStream, progressListener)
-                 } else {
-                     addFileToZip(file, "", zipOutputStream, progressListener)
-                 }
-             }
-         }
+        for (filePath in filesToArchive) {
+            val file = File(filePath)
+            if (file.exists()) {
+                if (file.isDirectory) {
+                    addDirectoryToZip(file, "", zipOutputStream, progressListener)
+                } else {
+                    addFileToZip(file, "", zipOutputStream, progressListener)
+                }
+            }
+        }
 
-         zipOutputStream.close()
-     }
+        zipOutputStream.close()
+    }
 
-     private fun addDirectoryToZip(
-         directory: File,
-         parentPath: String,
-         zipOutputStream: ZipOutputStream,
-         progressListener: (Int) -> Unit
-     ) {
-         val files = directory.listFiles()
-         val buffer = ByteArray(1024)
+    private fun addDirectoryToZip(
+        directory: File, parentPath: String, zipOutputStream: ZipOutputStream, progressListener: (Int) -> Unit
+    ) {
+        val files = directory.listFiles()
+        val buffer = ByteArray(1024)
 
-         for (file in files!!) {
-             totalFiles++
-             val relativePath = if (parentPath.isNotEmpty()) "$parentPath/${file.name}" else file.name
+        for (file in files!!) {
+            totalFiles++
+            val relativePath = if (parentPath.isNotEmpty()) "$parentPath/${file.name}" else file.name
 
-             if (file.isDirectory) {
-                 addDirectoryToZip(file, relativePath, zipOutputStream, progressListener)
-             } else {
-                 val inputStream = FileInputStream(file)
-                 zipOutputStream.putNextEntry(ZipEntry(relativePath))
+            if (file.isDirectory) {
+                addDirectoryToZip(file, relativePath, zipOutputStream, progressListener)
+            } else {
+                val inputStream = FileInputStream(file)
+                zipOutputStream.putNextEntry(ZipEntry(relativePath))
 
-                 var length: Int
-                 while (inputStream.read(buffer).also { length = it } > 0) {
-                     zipOutputStream.write(buffer, 0, length)
-                 }
+                var length: Int
+                while (inputStream.read(buffer).also { length = it } > 0) {
+                    zipOutputStream.write(buffer, 0, length)
+                }
 
-                 zipOutputStream.closeEntry()
-                 inputStream.close()
-             }
+                zipOutputStream.closeEntry()
+                inputStream.close()
+            }
 
-             processedFiles++
-             val progress = (processedFiles.toDouble() / totalFiles.toDouble()) * 100
-             progressListener(progress.toInt())
-         }
-     }
+            processedFiles++
+            val progress = (processedFiles.toDouble() / totalFiles.toDouble()) * 100
+            progressListener(progress.toInt())
+        }
+    }
 
     private fun addFileToZip(
-        file: File,
-        parentPath: String,
-        zipOutputStream: ZipOutputStream,
-        progressListener: (Int) -> Unit
+        file: File, parentPath: String, zipOutputStream: ZipOutputStream, progressListener: (Int) -> Unit
     ) {
         val buffer = ByteArray(1024)
         val inputStream = FileInputStream(file)
@@ -359,6 +346,83 @@ private fun sendProgress(progressListener: (Int) -> Unit, progress: Int) {
 
 }
 
+class ExtractArchives {
+
+
+    fun extractFiles(paths: List<String>, outputDirectory: String) {
+        val outputDirFile = File(outputDirectory)
+
+        paths.forEach { archivePath ->
+            val archiveFile = File(archivePath)
+
+            if (!archiveFile.exists() || !outputDirFile.isDirectory) {
+                throw IllegalArgumentException("Invalid archive or output directory.")
+            }
+
+            val extension = getExtension(archiveFile.name)
+
+            when (extension.toLowerCase()) {
+                "zip" -> extractZipArchive(archiveFile, outputDirFile)
+                "7z" -> extract7zArchive(archiveFile, outputDirFile)
+                "tar", "gz", "xz" -> {}
+                else -> throw IllegalArgumentException("Unsupported archive format.")
+            }
+        }
+    }
+
+    private fun extractZipArchive(archiveFile: File, outputDirFile: File) {
+        val zipInputStream = ArchiveStreamFactory().createArchiveInputStream("zip", FileInputStream(archiveFile))
+        var entry: ArchiveEntry? = zipInputStream.nextEntry
+
+        while (entry != null) {
+            if (!entry.isDirectory) {
+                val outputFilePath = File(outputDirFile, entry.name)
+                FileUtils.copyInputStreamToFile(zipInputStream, outputFilePath)
+            }
+
+            entry = zipInputStream.nextEntry
+        }
+
+        zipInputStream.close()
+    }
+
+
+    private fun extract7zArchive(archiveFile: File, outputDirFile: File) {
+        try {
+            val sevenZFile = SevenZFile(archiveFile)
+            var entry: SevenZArchiveEntry? = sevenZFile.nextEntry
+            while (entry != null) {
+                if (!entry.isDirectory) {
+                    val outputFilePath = File(outputDirFile, entry.name)
+                    val outputFile = outputFilePath.absoluteFile
+                    if (!outputFile.parentFile!!.exists()) {
+                        outputFile.parentFile?.mkdirs()
+                    }
+                    val outputStream = FileOutputStream(outputFile)
+                    val content = ByteArray(entry.size.toInt())
+                    sevenZFile.read(content, 0, content.size)
+                    outputStream.write(content)
+                    outputStream.close()
+                }
+                entry = sevenZFile.nextEntry
+            }
+            sevenZFile.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+
+    private fun getExtension(filename: String): String {
+        val dotIndex = filename.lastIndexOf(".")
+        return if (dotIndex > 0 && dotIndex < filename.length - 1) {
+            filename.substring(dotIndex + 1)
+        } else {
+            ""
+        }
+    }
+
+}
 
 
 enum class CompressionType {
