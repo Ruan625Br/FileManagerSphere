@@ -21,39 +21,37 @@ class AppearancePreferences : PreferenceFragmentCompat() {
         mCurrentTheme = Preferences.Appearance.appTheme
         val mCurrentTheIndex = themesValues.indexOf(mCurrentTheme)
 
-        var appThemeSummary = themesEntries.get(mCurrentTheIndex)
+        val appThemeSummary = themesEntries.get(mCurrentTheIndex)
 
-
-       //App theme
-        val appTheme = findPreference<Preference>("app_theme")
-            ?: throw IllegalArgumentException("Preference not found: app_theme")
+        //App theme
+        val appTheme =
+            findPreference<Preference>("app_theme") ?: throw IllegalArgumentException("Preference not found: app_theme")
 
         appTheme.summary = appThemeSummary
         appTheme.setOnPreferenceClickListener { preference ->
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(getString(R.string.themes_title))
+            MaterialAlertDialogBuilder(requireContext()).setTitle(getString(R.string.themes_title))
                 .setSingleChoiceItems(themesEntries, mCurrentTheIndex) { dialog, which ->
-                     if (which != mCurrentTheIndex){
-                         val theme = StyleManager.OptionStyle.valueOf(themesValues[which])
-                         Preferences.Appearance.appTheme = theme.name
-                         StyleManager().setTheme(theme, requireContext())
-                          restartActivity()
-                     }
+                    if (which != mCurrentTheIndex) {
+                        val theme = StyleManager.OptionStyle.valueOf(themesValues[which])
+                        Preferences.Appearance.appTheme = theme.name
+                        StyleManager().setTheme(theme, requireContext())
+                        restartActivity()
+                    }
 
                     dialog.cancel()
                 }
 
                 .setNegativeButton(getString(R.string.dialog_cancel)) { dialog, which ->
-                }
-                .show()
-                        true
+                }.show()
+            true
         }
 
 
         //Material you
         val swtMaterialYou = findPreference<SwitchPreferenceCompat>("dynamic_colors")
-        val isEnabledDynamicColors =  Preferences.Appearance.isEnabledDynamicColors
+        val isEnabledDynamicColors = Preferences.Appearance.isEnabledDynamicColors
         swtMaterialYou?.isChecked = isEnabledDynamicColors
+
 
     }
 
@@ -62,7 +60,6 @@ class AppearancePreferences : PreferenceFragmentCompat() {
         requireActivity().finish()
         startActivity(intent)
     }
-
 
 
 }

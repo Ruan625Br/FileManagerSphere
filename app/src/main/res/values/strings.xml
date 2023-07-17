@@ -213,7 +213,7 @@
     <bool name="default_select_file_long_click">true</bool>
     <bool name="default_is_enabled_anim_in_file_list">true</bool>
     <bool name="default_is_enabled_rounded_corners">true</bool>
-    <bool name="default_is_enabled_dynamic_colors">true</bool>
+    <bool name="default_is_enabled_dynamic_colors">false</bool>
 
 
     <string name="radio_zip">.zip</string>

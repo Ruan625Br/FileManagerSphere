@@ -80,12 +80,7 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val styleString = sharedPreferences.getString("themes", StyleManager.OptionStyle.FOLLOW_SYSTEM.name)
         val optionStyle = StyleManager.OptionStyle.valueOf(Preferences.Appearance.appTheme)
-        if (Preferences.Appearance.isEnabledDynamicColors){
-            DynamicColors.applyToActivitiesIfAvailable(application)
-        } else{
-            styleManager.setTheme(optionStyle, this)
-
-        }
+        styleManager.setTheme(optionStyle, this)
 
     }
 

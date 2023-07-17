@@ -11,6 +11,7 @@
         <item>Tema azul modo escuro</item>
         <item>Tema vermelho modo claro</item>
         <item>Tema vermelho modo escuro</item>
+        <item>Cores Dinâmicas</item>
     </string-array>
 
     <string-array name="themes_values">
@@ -24,6 +25,7 @@
         <item>BLUE_THEME_DARK</item>
         <item>RED_THEME_LIGHT</item>
         <item>RED_THEME_DARK</item>
+        <item>DYNAMIC_COLORS</item>
     </string-array>
     <!-- Reply Preference -->
     <string-array name="reply_entries">

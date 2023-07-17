@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat.startActivity
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
+import com.etb.filemanager.settings.preference.Preferences
 import com.google.android.material.color.DynamicColors
 
 class StyleManager {
@@ -23,6 +24,7 @@ class StyleManager {
             OptionStyle.BLUE_THEME_DARK -> setDarkBlueTheme(context)
             OptionStyle.RED_THEME_LIGHT -> setLightRedTheme(context)
             OptionStyle.RED_THEME_DARK -> setDarkRedTheme(context)
+            OptionStyle.DYNAMIC_COLORS -> enableDynamicColors(context)
         }
     }
 
@@ -63,7 +65,11 @@ class StyleManager {
         context.setTheme(R.style.AppThemeRed_light)
     }
     private fun setDarkRedTheme(context: Context) {
-        context.setTheme(R.style.Theme_MaterialYouColors)
+        context.setTheme(R.style.AppThemeRed_Dark)
+    }
+
+    private fun enableDynamicColors(context: Context){
+       context.setTheme(R.style.Theme_MaterialYouColors)
     }
 
     enum class OptionStyle {
@@ -76,6 +82,7 @@ class StyleManager {
         BLUE_THEME_LIGHT,
         BLUE_THEME_DARK,
         RED_THEME_LIGHT,
-        RED_THEME_DARK
+        RED_THEME_DARK,
+        DYNAMIC_COLORS
     }
 }
