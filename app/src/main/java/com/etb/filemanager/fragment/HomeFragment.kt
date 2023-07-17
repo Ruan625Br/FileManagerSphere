@@ -205,7 +205,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         viewModel.currentPathLiveData.observe(viewLifecycleOwner) { onCurrentPathChanged(it) }
         viewModel.selectedFilesLiveData.observe(viewLifecycleOwner) { onSelectedFilesChanged(it) }
         viewModel.fileListLiveData.observe(viewLifecycleOwner) { onFileListChanged(it) }
-        if (fileUri != null){
+        if (fileUri != null) {
             viewModel.resetTo(fileUri!!.fileProviderPath)
 
         } else {
@@ -814,17 +814,20 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val pickOptions = viewModel.pickOptions;
         if (file.isDirectory) {
             navigateTo(file.filePath)
+        } else {
+            openFileWith(file)
         }
     }
 
     override fun openFileWith(file: FileModel) {
         val path = file.filePath
-        if (!file.isDirectory && MimeTypeUtil().isSpecificFileType(
-                fileUtil.getFileMimeType(path).toString(), MimeTypeIcon.CODE
-            )
-        ) {
-            val fileUri = Uri.fromFile(File(path))
+        val mimeType = fileUtil.getMimeType(null, path)
+        val isSpecificFileType = if (mimeType != null) MimeTypeUtil().isSpecificFileType(
+            mimeType, MimeTypeIcon.CODE
+        ) else false
+        if (!file.isDirectory && isSpecificFileType) {
 
+            val fileUri = Uri.fromFile(File(path))
             val options = CodeEditorFragment.Options.Builder().setUri(fileUri)
                 .setTitle(requireContext().getString(R.string.code_editor)).setSubtitle(file.fileName)
                 .setEnableSharing(true).setJavaSmaliToggle(true).setReadOnly(false).build()

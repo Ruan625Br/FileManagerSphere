@@ -540,27 +540,6 @@ public class CodeEditorFragment extends Fragment {
 
             }
         });
-      /*  mViewModel.getJavaFileLiveData().observe(getViewLifecycleOwner(), uri -> {
-            CodeEditorFragment.Options options = new CodeEditorFragment.Options.Builder()
-                    .setUri(uri)
-                    .setTitle(mOptions.title)
-                    .setSubtitle(mOptions.subtitle)
-                    .setEnableSharing(true)
-                    .setJavaSmaliToggle(false)
-                    .setReadOnly(true)
-                    .build();
-            CodeEditorFragment fragment = new CodeEditorFragment();
-            Bundle args = new Bundle();
-            args.putParcelable(CodeEditorFragment.ARG_OPTIONS, options);
-            fragment.setArguments(args);
-            FragmentActivity activity = requireActivity();
-            activity.getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(((ViewGroup) requireView().getParent()).getId(), fragment)
-                    .addToBackStack(null)
-                    .commit();
-        });
-        mViewModel.loadFileContentIfAvailable();*/
     }
 
     @Override
@@ -585,7 +564,6 @@ public class CodeEditorFragment extends Fragment {
         mSaveMenu = menu.findItem(R.id.action_save);
         mUndoMenu = menu.findItem(R.id.action_undo);
         mRedoMenu = menu.findItem(R.id.action_redo);
-        mJavaSmaliToggleMenu = menu.findItem(R.id.action_java_smali_toggle);
         mShareMenu = menu.findItem(R.id.action_share);
         updateStartupMenu();
     }
@@ -625,11 +603,6 @@ public class CodeEditorFragment extends Fragment {
         } else if (id == R.id.action_save_as) {
             launchIntentSaver();
             return true;
-        } else if (id == R.id.action_share) {
-
-            return true;
-        } else if (id == R.id.action_java_smali_toggle) {
-          //  mViewModel.generateJava(mEditor.getText().toString());
         } else if (id == R.id.action_search) {
             if (mSearchWidget != null) {
                 if (mSearchWidget.getVisibility() == View.VISIBLE) {
@@ -685,8 +658,6 @@ public class CodeEditorFragment extends Fragment {
     private void updateStartupMenu() {
         if (mViewModel == null) return;
         if (mJavaSmaliToggleMenu != null) {
-         //   mJavaSmaliToggleMenu.setVisible(mViewModel.canGenerateJava());
-         //   mJavaSmaliToggleMenu.setEnabled(mViewModel.canGenerateJava());
         }
         if (mShareMenu != null) {
             mShareMenu.setEnabled(mViewModel.isBackedByAFile());

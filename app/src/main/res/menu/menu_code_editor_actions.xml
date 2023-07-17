@@ -2,10 +2,6 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-            android:id="@+id/action_java_smali_toggle"
-            android:title="@string/java"
-            app:showAsAction="always" />
 
     <item
             android:id="@+id/action_search"
@@ -42,9 +38,5 @@
             android:title="wrap"
             app:showAsAction="never" />
 
-    <item
-            android:id="@+id/action_share"
-            android:title="@string/share"
-            app:showAsAction="never" />
 
 </menu>
