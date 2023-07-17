@@ -190,9 +190,8 @@ class RecentFragment : Fragment() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 requestPermissionLauncher.launch(Manifest.permission.MANAGE_EXTERNAL_STORAGE)
             } else {
-                val permissions =
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-                requestStoragePermissions.launch(permissions)
+                requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
             }
         }
 
@@ -297,7 +296,8 @@ class RecentFragment : Fragment() {
                         readWritePermission,
                         READ_WRITE_PERMISSION_REQUEST_CODE
                     )
-                    requestStoragePermissions.launch(readWritePermission)
+                    requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+
 
                 }
             }
