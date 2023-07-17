@@ -28,7 +28,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
+import com.etb.filemanager.files.util.fileProviderUri
 import com.etb.filemanager.files.util.getColorByAttr
+import com.etb.filemanager.interfaces.manager.ItemListener
 import com.etb.filemanager.manager.category.adapter.CategoryFileModel
 import com.etb.filemanager.manager.category.adapter.CategoryFileModelAdapter
 import com.etb.filemanager.manager.category.adapter.RecentImagemodelAdapter
@@ -39,6 +41,8 @@ import com.etb.filemanager.settings.preference.Preferences
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.*
+import java.nio.file.Path
+import java.nio.file.Paths
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -50,7 +54,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [RecentFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class RecentFragment : Fragment() {
+class RecentFragment : Fragment(), ItemListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -74,8 +78,7 @@ class RecentFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
 
         return inflater.inflate(R.layout.fragment_recent, container, false)
@@ -121,47 +124,63 @@ class RecentFragment : Fragment() {
     @SuppressLint("SuspiciousIndentation")
     fun initCategoryItem() {
         val recyclerView = requireView().findViewById<RecyclerView>(R.id.recyclerView)
+        val dcimPath =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath
+        val moviesPath =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath
+        val documentsPath =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath
+        val musicPath =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
+        val downloadsPath =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
+       val whatsappPath = getString(R.string.path_whatsapp)
+
+
 
         val categoryFileModels = ArrayList<CategoryFileModel>()
-        categoryFileModels.add(CategoryFileModel(R.drawable.ic_image, "Images", "Sla", R.color.category_icon_blue))
-        categoryFileModels.add(CategoryFileModel(R.drawable.ic_video, "Video", "Sla", R.color.category_icon_orange))
         categoryFileModels.add(
             CategoryFileModel(
-                R.drawable.ic_document,
-                "Document",
-                "Sla",
-                R.color.category_icon_purple
-            )
-        )
-        categoryFileModels.add(CategoryFileModel(R.drawable.ic_music, "Music", "Sla", R.color.category_icon_pink))
-        categoryFileModels.add(
-            CategoryFileModel(
-                R.drawable.ic_archive,
-                "Archive",
-                "Sla",
-                R.color.category_icon_light_green
+                R.drawable.ic_image,
+                "Images",
+                dcimPath,
+                R.color.category_icon_blue
             )
         )
         categoryFileModels.add(
             CategoryFileModel(
-                R.drawable.ic_download,
-                "Download",
-                "Sla",
-                R.color.category_icon_light_red
+                R.drawable.ic_video,
+                "Video",
+                moviesPath,
+                R.color.category_icon_orange
             )
         )
         categoryFileModels.add(
             CategoryFileModel(
-                R.drawable.ic_whatsapp,
-                "Whatsapp",
-                "Sla",
-                R.color.category_icon_green
+                R.drawable.ic_document, "Document", documentsPath, R.color.category_icon_purple
             )
         )
-        categoryFileModels.add(CategoryFileModel(R.drawable.ic_download, "Others", "Sla", R.color.category_icon_red))
+        categoryFileModels.add(
+            CategoryFileModel(
+                R.drawable.ic_music,
+                "Music",
+                musicPath,
+                R.color.category_icon_pink
+            )
+        )
 
+        categoryFileModels.add(
+            CategoryFileModel(
+                R.drawable.ic_download, "Download", downloadsPath, R.color.category_icon_light_red
+            )
+        )
+        categoryFileModels.add(
+            CategoryFileModel(
+                R.drawable.ic_whatsapp, "Whatsapp", whatsappPath, R.color.category_icon_green
+            )
+        )
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 4)
-        val adapter = CategoryFileModelAdapter(categoryFileModels, requireContext())
+        val adapter = CategoryFileModelAdapter(this, categoryFileModels, requireContext())
         recyclerView.adapter = adapter
 
     }
@@ -209,7 +228,8 @@ class RecentFragment : Fragment() {
         if (Preferences.Interface.isEnabledRoundedCorners) {
             if (roundedCornersDrawable == null) {
                 val mCornerRadius =
-                    requireContext().resources.getDimensionPixelSize(R.dimen.corner_radius_base).toFloat()
+                    requireContext().resources.getDimensionPixelSize(R.dimen.corner_radius_base)
+                        .toFloat()
                 val colorPrimary = getColorByAttr(com.google.android.material.R.attr.colorPrimary)
                 roundedCornersDrawable = GradientDrawable().apply {
                     cornerRadius = mCornerRadius
@@ -272,8 +292,7 @@ class RecentFragment : Fragment() {
 
     private fun requestReadWritePermission() {
         val readWritePermission = arrayOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
         val READ_WRITE_PERMISSION_REQUEST_CODE = 1
 
@@ -292,9 +311,7 @@ class RecentFragment : Fragment() {
                 val isConfirmed = dialogResult.confirmed
                 if (isConfirmed) {
                     ActivityCompat.requestPermissions(
-                        requireActivity(),
-                        readWritePermission,
-                        READ_WRITE_PERMISSION_REQUEST_CODE
+                        requireActivity(), readWritePermission, READ_WRITE_PERMISSION_REQUEST_CODE
                     )
                     requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
 
@@ -303,6 +320,7 @@ class RecentFragment : Fragment() {
             }
         }
     }
+
     @RequiresApi(Build.VERSION_CODES.R)
     private fun requestManageExternalPermission() {
         if (Environment.isExternalStorageManager()) {
@@ -329,11 +347,11 @@ class RecentFragment : Fragment() {
 
         }
     }
+
     private fun arePermissionsGranted(permissions: Array<String>): Boolean {
         for (permission in permissions) {
             if (ContextCompat.checkSelfPermission(
-                    requireActivity(),
-                    permission
+                    requireActivity(), permission
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 return false
@@ -350,7 +368,7 @@ class RecentFragment : Fragment() {
             if (isGranted) {
                 openListFiles()
                 setRecentImages()
-            } else{
+            } else {
                 requestStoragePermission()
             }
         }
@@ -367,7 +385,12 @@ class RecentFragment : Fragment() {
         }
     }
 
+    override fun openFileCategory(path: Path) {
+        val uri = path.fileProviderUri
+        val homeFragment = HomeFragment.newInstance(uri)
+        (requireActivity() as MainActivity).startNewFragment(homeFragment)
 
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -379,12 +402,11 @@ class RecentFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            RecentFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        fun newInstance(param1: String, param2: String) = RecentFragment().apply {
+            arguments = Bundle().apply {
+                putString(ARG_PARAM1, param1)
+                putString(ARG_PARAM2, param2)
             }
+        }
     }
 }

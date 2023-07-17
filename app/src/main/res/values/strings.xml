@@ -229,4 +229,6 @@
     <string name="compression_zstandard">Zstandard</string>
     <string name="format_file">Formato do arquivo</string>
 
+    <string name="path_whatsapp">/storage/emulated/0/Android/media/com.whatsapp/WhatsApp</string>
+
 </resources>

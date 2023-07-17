@@ -9,11 +9,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
+import com.etb.filemanager.interfaces.manager.ItemListener
 import com.etb.filemanager.interfaces.settings.PopupSettingsListener
 import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
 import com.etb.filemanager.manager.util.FileUtils
+import java.nio.file.Paths
 
-class CategoryFileModelAdapter(private var categoryFileModel: List<CategoryFileModel>, private val mContext: Context) :
+class CategoryFileModelAdapter(private var listener: ItemListener, private var categoryFileModel: List<CategoryFileModel>, private val mContext: Context) :
     RecyclerView.Adapter<CategoryFileModelAdapter.ViewHolder>() {
 
     private val fileUtils: FileUtils = FileUtils.getInstance()
@@ -28,17 +30,15 @@ class CategoryFileModelAdapter(private var categoryFileModel: List<CategoryFileM
 
     override fun onBindViewHolder(holder: CategoryFileModelAdapter.ViewHolder, position: Int) {
         val categoryViewFileModel = categoryFileModel[position]
+        val path = Paths.get(categoryViewFileModel.path)
+
         selectPreferenceUtils = SelectPreferenceUtils.getInstance()
         holder.itemIcon.setImageResource(categoryViewFileModel.icon)
         holder.itemTitle.text = categoryViewFileModel.title
 
-
-
-
-
-
-
-
+        holder.itemCategory.setOnClickListener{
+            listener.openFileCategory(path)
+        }
     }
 
     override fun getItemCount(): Int {
