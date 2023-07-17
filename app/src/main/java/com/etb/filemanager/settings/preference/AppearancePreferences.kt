@@ -3,6 +3,7 @@ package com.etb.filemanager.settings.preference
 import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
 import com.etb.filemanager.R
 import com.etb.filemanager.util.file.style.StyleManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -49,16 +50,11 @@ class AppearancePreferences : PreferenceFragmentCompat() {
         }
 
 
-        //Animation in file list
-  /*      val switchAnimFileList = findPreference<SwitchPreference>("anim_file_list")
-                 switchAnimFileList!!.isChecked = animFileList
+        //Material you
+        val swtMaterialYou = findPreference<SwitchPreferenceCompat>("dynamic_colors")
+        val isEnabledDynamicColors =  Preferences.Appearance.isEnabledDynamicColors
+        swtMaterialYou?.isChecked = isEnabledDynamicColors
 
-        switchAnimFileList.setOnPreferenceChangeListener { preference, isEnabled ->
-            if (isEnabled as Boolean) {
-                Preferences.Appearance.setAnimFileList(switchAnimFileList.isChecked)
-            }
-            true
-        }*/
     }
 
     private fun restartActivity() {

@@ -17,6 +17,7 @@ import com.etb.filemanager.settings.PreferenceUtils
 import com.etb.filemanager.settings.preference.PopupSettings
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.util.file.style.StyleManager
+import com.google.android.material.color.DynamicColors
 import java.io.File
 
 
@@ -79,7 +80,12 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val styleString = sharedPreferences.getString("themes", StyleManager.OptionStyle.FOLLOW_SYSTEM.name)
         val optionStyle = StyleManager.OptionStyle.valueOf(Preferences.Appearance.appTheme)
-        styleManager.setTheme(optionStyle, this)
+        if (Preferences.Appearance.isEnabledDynamicColors){
+            DynamicColors.applyToActivitiesIfAvailable(application)
+        } else{
+            styleManager.setTheme(optionStyle, this)
+
+        }
 
     }
 

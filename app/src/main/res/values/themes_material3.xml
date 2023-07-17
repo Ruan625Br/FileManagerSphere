@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="AppThemeGreen.Ligth" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/green_md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/green_md_theme_light_onPrimary</item>
@@ -215,6 +215,26 @@
         <item name="switchPreferenceCompatStyle">@style/Preference.M3.SwitchPreferenceCompat</item>
         <item name="preferenceStyle">@style/Preference.M3</item>
     </style>
+        <style name="Theme.MaterialYouColors" parent="Theme.Material3.Dark.NoActionBar">
+
+            <item name="colorAccent">@color/primaryColor</item>
+            <item name="colorPrimaryInverse">@color/primaryColorInverse</item>
+            <item name="colorPrimary">@color/primaryColor</item>
+            <item name="colorPrimaryVariant">@color/primaryVariantColor</item>
+            <item name="colorOnPrimary">@color/secondaryVariantColor</item>
+            <item name="colorPrimaryContainer">@color/colorPrimaryContainer</item>
+            <item name="colorOnPrimaryContainer">@color/colorOnPrimaryContainer</item>
 
 
+            <item name="colorSecondary">@color/secondaryColor</item>
+            <item name="colorSecondaryVariant">@color/secondaryColor</item>
+            <item name="colorOnSecondary">@color/secondaryVariantColor</item>
+
+            <item name="preferenceScreenStyle">@style/Preference.M3.PreferenceScreen</item>
+            <item name="switchPreferenceCompatStyle">@style/Preference.M3.SwitchPreferenceCompat</item>
+            <item name="preferenceStyle">@style/Preference.M3</item>
+            <item name="windowActionModeOverlay">true</item>
+
+
+        </style>
 </resources>

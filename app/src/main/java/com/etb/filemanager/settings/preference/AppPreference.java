@@ -35,6 +35,7 @@ public class AppPreference {
     public enum PreferenceKey {
         //
         PREF_APP_THEME_STR,
+        PREF_DYNAMIC_COLORS_BOOL,
 
 
         //Interface
@@ -292,7 +293,8 @@ public class AppPreference {
                 return mContext.getResources().getBoolean(R.bool.default_is_enabled_anim_in_file_list);
             case PREF_ROUNDED_CORNERS_BOOL:
                 return mContext.getResources().getBoolean(R.bool.default_is_enabled_rounded_corners);
-
+            case PREF_DYNAMIC_COLORS_BOOL:
+                return mContext.getResources().getBoolean(R.bool.default_is_enabled_dynamic_colors);
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

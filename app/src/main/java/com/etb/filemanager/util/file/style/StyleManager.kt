@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat.startActivity
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
+import com.google.android.material.color.DynamicColors
 
 class StyleManager {
 
@@ -62,9 +63,8 @@ class StyleManager {
         context.setTheme(R.style.AppThemeRed_light)
     }
     private fun setDarkRedTheme(context: Context) {
-        context.setTheme(R.style.AppThemeRed_Dark)
+        context.setTheme(R.style.Theme_MaterialYouColors)
     }
-
 
     enum class OptionStyle {
         FOLLOW_SYSTEM,

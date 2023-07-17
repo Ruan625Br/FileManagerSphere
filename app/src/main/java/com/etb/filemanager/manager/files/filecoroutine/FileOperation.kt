@@ -281,55 +281,57 @@ private fun sendProgress(progressListener: (Int) -> Unit, progress: Int) {
     private var totalFiles = 0
     private var processedFiles = 0
 
-    private fun compressToZip(filesToArchive: List<String>, outputFilePath: String, progressListener: (Int) -> Unit) {
-        val zipFile = File(outputFilePath)
-        val zipOutputStream = ZipOutputStream(FileOutputStream(zipFile))
+     private fun compressToZip(filesToArchive: List<String>, outputFilePath: String, progressListener: (Int) -> Unit) {
+         val zipFile = File(outputFilePath)
+         val zipOutputStream = ZipOutputStream(FileOutputStream(zipFile))
 
-        for (filePath in filesToArchive) {
-            val file = File(filePath)
-            if (file.exists()) {
-                if (file.isDirectory) {
-                    addDirectoryToZip(file, file.name, zipOutputStream, progressListener)
-                } else {
-                    addFileToZip(file, "", zipOutputStream, progressListener)
-                }
-            }
-        }
+         for (filePath in filesToArchive) {
+             val file = File(filePath)
+             if (file.exists()) {
+                 if (file.isDirectory) {
+                     addDirectoryToZip(file, "", zipOutputStream, progressListener)
+                 } else {
+                     addFileToZip(file, "", zipOutputStream, progressListener)
+                 }
+             }
+         }
 
-        zipOutputStream.close()
-    }
+         zipOutputStream.close()
+     }
 
-    private fun addDirectoryToZip(
-        directory: File,
-        parentPath: String,
-        zipOutputStream: ZipOutputStream,
-        progressListener: (Int) -> Unit
-    ) {
-        val files = directory.listFiles()
-        val buffer = ByteArray(1024)
+     private fun addDirectoryToZip(
+         directory: File,
+         parentPath: String,
+         zipOutputStream: ZipOutputStream,
+         progressListener: (Int) -> Unit
+     ) {
+         val files = directory.listFiles()
+         val buffer = ByteArray(1024)
 
-        for (file in files!!) {
-            totalFiles++
-            if (file.isDirectory) {
-                addDirectoryToZip(file, "$parentPath/${file.name}", zipOutputStream, progressListener)
-            } else {
-                val inputStream = FileInputStream(file)
-                zipOutputStream.putNextEntry(ZipEntry("$parentPath/${file.name}"))
+         for (file in files!!) {
+             totalFiles++
+             val relativePath = if (parentPath.isNotEmpty()) "$parentPath/${file.name}" else file.name
 
-                var length: Int
-                while (inputStream.read(buffer).also { length = it } > 0) {
-                    zipOutputStream.write(buffer, 0, length)
-                }
+             if (file.isDirectory) {
+                 addDirectoryToZip(file, relativePath, zipOutputStream, progressListener)
+             } else {
+                 val inputStream = FileInputStream(file)
+                 zipOutputStream.putNextEntry(ZipEntry(relativePath))
 
-                zipOutputStream.closeEntry()
-                inputStream.close()
+                 var length: Int
+                 while (inputStream.read(buffer).also { length = it } > 0) {
+                     zipOutputStream.write(buffer, 0, length)
+                 }
 
-                processedFiles++
-                val progress = (processedFiles.toDouble() / totalFiles.toDouble()) * 100
-                progressListener(progress.toInt())
-            }
-        }
-    }
+                 zipOutputStream.closeEntry()
+                 inputStream.close()
+             }
+
+             processedFiles++
+             val progress = (processedFiles.toDouble() / totalFiles.toDouble()) * 100
+             progressListener(progress.toInt())
+         }
+     }
 
     private fun addFileToZip(
         file: File,

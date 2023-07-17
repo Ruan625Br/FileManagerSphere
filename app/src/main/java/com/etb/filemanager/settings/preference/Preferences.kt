@@ -10,6 +10,9 @@ class Preferences {
             set(theme) {
                 AppPreference.set(AppPreference.PreferenceKey.PREF_APP_THEME_STR, theme)
             }
+        var isEnabledDynamicColors: Boolean
+            get() = AppPreference.getBoolean(AppPreference.PreferenceKey.PREF_DYNAMIC_COLORS_BOOL)
+            set(value) { AppPreference.set(AppPreference.PreferenceKey.PREF_DYNAMIC_COLORS_BOOL, value)}
     }
 
     object Interface {
