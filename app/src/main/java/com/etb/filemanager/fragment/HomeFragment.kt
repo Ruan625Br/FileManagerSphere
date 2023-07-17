@@ -205,7 +205,12 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         viewModel.currentPathLiveData.observe(viewLifecycleOwner) { onCurrentPathChanged(it) }
         viewModel.selectedFilesLiveData.observe(viewLifecycleOwner) { onSelectedFilesChanged(it) }
         viewModel.fileListLiveData.observe(viewLifecycleOwner) { onFileListChanged(it) }
-        viewModel.resetTo(Paths.get(Preferences.Behavior.defaultFolder))
+        if (fileUri != null){
+            viewModel.resetTo(fileUri!!.fileProviderPath)
+
+        } else {
+            viewModel.resetTo(Paths.get(Preferences.Behavior.defaultFolder))
+        }
         viewModel.showHiddenFilesLiveData.observe(viewLifecycleOwner) { onShowHiddenFilesChanged() }
         viewModel.sortOptionsLiveData.observe(viewLifecycleOwner) { onSortOptionsChanged() }
         viewModel.toggleGridLiveData.observe(viewLifecycleOwner) { onToggleGridChange(it) }

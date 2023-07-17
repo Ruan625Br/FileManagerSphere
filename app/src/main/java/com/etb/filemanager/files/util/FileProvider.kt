@@ -35,7 +35,7 @@ val Path.fileProviderUri: Uri
             .build()
     }
 
-private val Uri.fileProviderPath: Path
+ val Uri.fileProviderPath: Path
     get() {
         val uriPath = Uri.decode(path).substring(1)
         return Paths.get(URI.create(uriPath))

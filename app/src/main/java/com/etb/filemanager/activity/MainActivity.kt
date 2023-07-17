@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val styleString = sharedPreferences.getString("themes", StyleManager.OptionStyle.FOLLOW_SYSTEM.name)
         val optionStyle = StyleManager.OptionStyle.valueOf(Preferences.Appearance.appTheme)
-        styleManager.setTheme(optionStyle, this)
+            styleManager.setTheme(optionStyle, this)
 
     }
 
