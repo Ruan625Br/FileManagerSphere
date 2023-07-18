@@ -85,4 +85,8 @@ dependencies {
     // https://mvnrepository.com/artifact/net.sf.sevenzipjbinding/sevenzipjbinding
     implementation("net.sf.sevenzipjbinding:sevenzipjbinding:16.02-2.01")
 
+    //Google
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+
 }

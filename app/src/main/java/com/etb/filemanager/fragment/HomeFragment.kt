@@ -993,8 +993,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
 
     private fun showBottomSheetMoreActionFile(fileItem: FileModel) {
-
-        val isArchive = MimeTypeUtil().isSpecificFileType(
+        val mimeType = fileUtil.getMimeType(null, fileItem.filePath)
+        val isArchive = if (mimeType == null) false else MimeTypeUtil().isSpecificFileType(
             fileUtil.getMimeType(null, fileItem.filePath).toString(), MimeTypeIcon.ARCHIVE
         )
 

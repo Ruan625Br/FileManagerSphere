@@ -5,25 +5,33 @@
         android:layout_width="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_height="wrap_content">
-    <LinearLayout
-            android:id="@+id/itemCategory"
+   <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardView"
             android:layout_width="62dp"
             android:layout_height="62dp"
-            android:background="@drawable/rectangle_5"
-            android:orientation="vertical" android:gravity="center_horizontal|center_vertical"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="vertical"
+            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="?attr/colorOnPrimary"
+           app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="16dp"
             app:layout_constraintHorizontal_bias="0.017">
+        <LinearLayout
+                android:id="@+id/itemCategory"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal|center_vertical"
+                >
         <ImageView
                 android:layout_width="29dp"
                 android:layout_height="28dp"
                 app:tint="?attr/colorPrimary"
                 android:id="@+id/imageView" app:srcCompat="@drawable/ic_music"/>
     </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
     <TextView
             android:id="@+id/item_title"
-            android:layout_width="wrap_content"
+            android:layout_width="62dp"
             android:layout_height="wrap_content"
             android:text="Whatsapp"
             android:textSize="12sp"
@@ -31,6 +39,6 @@
             android:gravity="center_horizontal|center_vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemCategory"/>
+            app:layout_constraintTop_toBottomOf="@+id/cardView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

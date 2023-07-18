@@ -214,6 +214,8 @@
     <bool name="default_is_enabled_anim_in_file_list">true</bool>
     <bool name="default_is_enabled_rounded_corners">true</bool>
     <bool name="default_is_enabled_dynamic_colors">false</bool>
+    <string name="default_list_categories_path" />
+    <string name="default_list_categories_name" />
 
 
     <string name="radio_zip">.zip</string>
@@ -230,5 +232,12 @@
     <string name="format_file">Formato do arquivo</string>
 
     <string name="path_whatsapp">/storage/emulated/0/Android/media/com.whatsapp/WhatsApp</string>
+    <string name="category_name">Nome da categoria</string>
+    <string name="category_path">Caminho da categoria</string>
+    <string name="category_add">Adicionar categoria</string>
+
+    <string name="error_empty">Campo vazio</string>
+    <string name="folder_not_exist">Pasta não existe</string>
+    <string name="invalid_path">Caiminho inválido</string>
 
 </resources>

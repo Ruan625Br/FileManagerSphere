@@ -229,20 +229,24 @@
                 android:layout_marginEnd="8dp" android:layout_marginStart="8dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cCategoryItem"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="243dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/tags_rounded_corners"
-            app:layout_constraintTop_toBottomOf="@+id/cInternalStorage" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cInternalStorage"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="16dp" android:layout_marginEnd="16dp" android:layout_marginStart="16dp">
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp">
 
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="0dp"
-                android:layout_height="243dp"
+                android:layout_height="190dp"
                 android:scrollbars="none"
                 tools:listitem="@layout/category_file_item"
                 android:id="@+id/recyclerView"
@@ -253,6 +257,18 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintVertical_bias="0.0"
                 android:contentDescription="@string/app_name" />
+
+        <Button
+                android:text="@string/category_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnAddCategory"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="5dp"
+                android:textColor="?attr/colorOnPrimary"
+                app:layout_constraintHorizontal_bias="0.944" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <TextView

@@ -11,6 +11,8 @@ import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.io.*
 import java.nio.file.Files
 import java.nio.file.Path
@@ -203,8 +205,19 @@ class FileUtil {
         }
     }
 
-
-    enum class TypeFile() {
+     enum class TypeFile() {
         FILE, FOLDER
     }
+}
+
+fun jsonStringToList(jsonString: String?): List<String> {
+    if (jsonString.isNullOrEmpty()) {
+        return emptyList()
+    }
+    return Gson().fromJson(jsonString, object : TypeToken<List<String>>() {}.type)
+}
+
+fun stringListToJsonString(stringList: List<String>): String {
+    val jsonString = Gson().toJson(stringList)
+    return jsonString
 }

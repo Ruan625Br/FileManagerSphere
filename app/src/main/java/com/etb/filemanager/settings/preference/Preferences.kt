@@ -2,6 +2,9 @@ package com.etb.filemanager.settings.preference
 
 import com.etb.filemanager.manager.files.filelist.FileSortOptions
 import com.etb.filemanager.manager.files.filelist.FileSortOptions.SortBy
+import com.etb.filemanager.util.file.jsonStringToList
+import com.etb.filemanager.util.file.stringListToJsonString
+
 
 class Preferences {
     object Appearance {
@@ -12,7 +15,9 @@ class Preferences {
             }
         var isEnabledDynamicColors: Boolean
             get() = AppPreference.getBoolean(AppPreference.PreferenceKey.PREF_DYNAMIC_COLORS_BOOL)
-            set(value) { AppPreference.set(AppPreference.PreferenceKey.PREF_DYNAMIC_COLORS_BOOL, value)}
+            set(value) {
+                AppPreference.set(AppPreference.PreferenceKey.PREF_DYNAMIC_COLORS_BOOL, value)
+            }
     }
 
     object Interface {
@@ -24,20 +29,43 @@ class Preferences {
             }
         var isEnabledRoundedCorners: Boolean
             get() = AppPreference.getBoolean(AppPreference.PreferenceKey.PREF_ROUNDED_CORNERS_BOOL)
-            set(value) { AppPreference.set(AppPreference.PreferenceKey.PREF_ROUNDED_CORNERS_BOOL, value)}
+            set(value) {
+                AppPreference.set(AppPreference.PreferenceKey.PREF_ROUNDED_CORNERS_BOOL, value)
+            }
     }
 
     object Behavior {
         var defaultFolder: String
             get() = AppPreference.getString(AppPreference.PreferenceKey.PREF_DEFAULT_FOLDER_STR)
             set(defaultFolder) {
-                AppPreference.set(AppPreference.PreferenceKey.PREF_DEFAULT_FOLDER_STR, defaultFolder)
+                AppPreference.set(
+                    AppPreference.PreferenceKey.PREF_DEFAULT_FOLDER_STR, defaultFolder
+                )
             }
 
         var selectFileLongClick: Boolean
             get() = AppPreference.getBoolean(AppPreference.PreferenceKey.PREF_SELECT_FILE_LONG_CLICK_BOOL)
             set(value) {
-                AppPreference.set(AppPreference.PreferenceKey.PREF_SELECT_FILE_LONG_CLICK_BOOL, value)
+                AppPreference.set(
+                    AppPreference.PreferenceKey.PREF_SELECT_FILE_LONG_CLICK_BOOL, value
+                )
+            }
+
+        var categoryNameList: List<String>
+            get() = jsonStringToList(AppPreference.getString(AppPreference.PreferenceKey.PREF_LIST_CATEGORIES_NAME_STR))
+            set(value) {
+                AppPreference.set(
+                    AppPreference.PreferenceKey.PREF_LIST_CATEGORIES_NAME_STR,
+                    stringListToJsonString(value)
+                )
+            }
+        var categoryPathList: List<String>
+            get() = jsonStringToList(AppPreference.getString(AppPreference.PreferenceKey.PREF_LIST_CATEGORIES_PATH_STR))
+            set(value) {
+                AppPreference.set(
+                    AppPreference.PreferenceKey.PREF_LIST_CATEGORIES_PATH_STR,
+                    stringListToJsonString(value)
+                )
             }
     }
 
@@ -50,7 +78,9 @@ class Preferences {
         var isDirectoriesFirst: Boolean
             get() = AppPreference.getBoolean(AppPreference.PreferenceKey.PREF_DIRECTORIES_FIRST_BOOL)
             set(directoriesFirst) {
-                AppPreference.set(AppPreference.PreferenceKey.PREF_DIRECTORIES_FIRST_BOOL, directoriesFirst)
+                AppPreference.set(
+                    AppPreference.PreferenceKey.PREF_DIRECTORIES_FIRST_BOOL, directoriesFirst
+                )
             }
 
         var orderFiles: FileSortOptions.Order
@@ -65,6 +95,8 @@ class Preferences {
             }
         var isGridEnabled: Boolean
             get() = AppPreference.getBoolean(AppPreference.PreferenceKey.PREF_GRID_TOGGLE_BOOL)
-            set(value) {AppPreference.set(AppPreference.PreferenceKey.PREF_GRID_TOGGLE_BOOL, value)}
+            set(value) {
+                AppPreference.set(AppPreference.PreferenceKey.PREF_GRID_TOGGLE_BOOL, value)
+            }
     }
 }

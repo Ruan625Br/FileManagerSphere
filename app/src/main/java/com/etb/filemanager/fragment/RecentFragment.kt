@@ -15,6 +15,7 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
@@ -38,11 +39,11 @@ import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.FileUtils.SpaceType
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.Preferences
+import com.etb.filemanager.ui.view.ModalBottomSheetAddCategory
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.*
 import java.nio.file.Path
-import java.nio.file.Paths
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -67,6 +68,8 @@ class RecentFragment : Fragment(), ItemListener {
     private lateinit var cInternalStorage: ConstraintLayout
     private lateinit var cCategoryFileItem: ConstraintLayout
     private lateinit var cBaseItem: ConstraintLayout
+    private lateinit var btnAddCategory: Button
+    private lateinit var adapter: CategoryFileModelAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,6 +104,7 @@ class RecentFragment : Fragment(), ItemListener {
         cInternalStorage = view.findViewById(R.id.cInternalStorage)
         cCategoryFileItem = view.findViewById(R.id.cCategoryItem)
         cRecentImg = view.findViewById(R.id.cRecentImage)
+        btnAddCategory = view.findViewById(R.id.btnAddCategory)
 
         //requestStoragePermission()
         // initStyleView()
@@ -123,6 +127,8 @@ class RecentFragment : Fragment(), ItemListener {
 
     @SuppressLint("SuspiciousIndentation")
     fun initCategoryItem() {
+        val listCategoryName = Preferences.Behavior.categoryNameList
+        val listCategoryPath = Preferences.Behavior.categoryPathList
         val recyclerView = requireView().findViewById<RecyclerView>(R.id.recyclerView)
         val dcimPath =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath
@@ -134,8 +140,7 @@ class RecentFragment : Fragment(), ItemListener {
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
         val downloadsPath =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
-       val whatsappPath = getString(R.string.path_whatsapp)
-
+        val whatsappPath = getString(R.string.path_whatsapp)
 
 
         val categoryFileModels = ArrayList<CategoryFileModel>()
@@ -143,46 +148,57 @@ class RecentFragment : Fragment(), ItemListener {
             CategoryFileModel(
                 R.drawable.ic_image,
                 "Images",
-                dcimPath,
-                R.color.category_icon_blue
+                dcimPath
             )
         )
         categoryFileModels.add(
             CategoryFileModel(
                 R.drawable.ic_video,
                 "Video",
-                moviesPath,
-                R.color.category_icon_orange
+                moviesPath
             )
         )
         categoryFileModels.add(
             CategoryFileModel(
-                R.drawable.ic_document, "Document", documentsPath, R.color.category_icon_purple
+                R.drawable.ic_document, "Document", documentsPath
             )
         )
         categoryFileModels.add(
             CategoryFileModel(
                 R.drawable.ic_music,
                 "Music",
-                musicPath,
-                R.color.category_icon_pink
+                musicPath
             )
         )
 
         categoryFileModels.add(
             CategoryFileModel(
-                R.drawable.ic_download, "Download", downloadsPath, R.color.category_icon_light_red
+                R.drawable.ic_download, "Download", downloadsPath
             )
         )
         categoryFileModels.add(
             CategoryFileModel(
-                R.drawable.ic_whatsapp, "Whatsapp", whatsappPath, R.color.category_icon_green
+                R.drawable.ic_whatsapp, "Whatsapp", whatsappPath
             )
         )
+        if (!listCategoryName.isNullOrEmpty()) {
+            for ((index, name) in listCategoryName.withIndex()) {
+                val mName = name
+                val mPath = listCategoryPath[index]
+                categoryFileModels.add(CategoryFileModel(R.drawable.ic_folder, mName, mPath))
+            }
+        }
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 4)
-        val adapter = CategoryFileModelAdapter(this, categoryFileModels, requireContext())
+         adapter = CategoryFileModelAdapter(this, categoryFileModels, requireContext())
         recyclerView.adapter = adapter
 
+    }
+
+    private fun showBottomSheetAddCategory() {
+        val modalBottomSheetAddCategory = ModalBottomSheetAddCategory()
+
+
+        modalBottomSheetAddCategory.show(parentFragmentManager, ModalBottomSheetAddCategory.TAG)
     }
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -217,6 +233,8 @@ class RecentFragment : Fragment(), ItemListener {
         ivSettings.setOnClickListener {
             (requireActivity() as MainActivity).startNewFragment(settingsFragment)
         }
+        btnAddCategory.setOnClickListener { showBottomSheetAddCategory() }
+
     }
 
     private fun openListFiles() {
@@ -391,6 +409,7 @@ class RecentFragment : Fragment(), ItemListener {
         (requireActivity() as MainActivity).startNewFragment(homeFragment)
 
     }
+
     companion object {
         /**
          * Use this factory method to create a new instance of

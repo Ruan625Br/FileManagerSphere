@@ -44,6 +44,8 @@ public class AppPreference {
         //Behavior
         PREF_DEFAULT_FOLDER_STR,
         PREF_SELECT_FILE_LONG_CLICK_BOOL,
+        PREF_LIST_CATEGORIES_NAME_STR,
+        PREF_LIST_CATEGORIES_PATH_STR,
 
         //Popup
         PREF_SORT_BY_STR,
@@ -295,6 +297,11 @@ public class AppPreference {
                 return mContext.getResources().getBoolean(R.bool.default_is_enabled_rounded_corners);
             case PREF_DYNAMIC_COLORS_BOOL:
                 return mContext.getResources().getBoolean(R.bool.default_is_enabled_dynamic_colors);
+            case PREF_LIST_CATEGORIES_NAME_STR:
+                return mContext.getResources().getString(R.string.default_list_categories_name);
+            case PREF_LIST_CATEGORIES_PATH_STR:
+                return mContext.getResources().getString(R.string.default_list_categories_path);
+
         }
         throw new IllegalArgumentException("Pref key not found.");
     }
