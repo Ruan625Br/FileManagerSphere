@@ -11,6 +11,7 @@ import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import com.etb.filemanager.files.util.ContextUtils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.*
@@ -100,14 +101,43 @@ class FileUtil {
 
     fun shareFile(path: String, context: Context) {
         val file = File(path)
-        val mimeType = getFileMimeType(path)
         val uri = FileProvider.getUriForFile(context, "com.etb.filemanager.fileprovider", file)
+        val mimeType = getMimeType(uri, null)
+
 
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = if (file.isDirectory) "vnd.android.document/directory" else mimeType
         intent.putExtra(Intent.EXTRA_STREAM, uri)
         context.startActivity(intent)
     }
+
+    fun shareFiles(filePaths: List<String>, context: Context) {
+        //val context = ContextUtils.getContext()
+        val files = ArrayList<File>()
+
+        for (filePath in filePaths) {
+            val file = File(filePath)
+            if (file.exists()) {
+                files.add(file)
+            }
+        }
+
+        if (files.isNotEmpty()) {
+            val uris = ArrayList<Uri>()
+            for (file in files) {
+                val uri = FileProvider.getUriForFile(context, "com.etb.filemanager.fileprovider", file)
+                uris.add(uri)
+            }
+
+            val intent = Intent(Intent.ACTION_SEND_MULTIPLE)
+            intent.type = "*/*"
+            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+            context.startActivity(Intent.createChooser(intent, "Compartilhar arquivos tete"))
+        }
+    }
+
 
     @SuppressLint("QueryPermissionsNeeded")
     fun actionOpenWith(path: String, context: Context) {

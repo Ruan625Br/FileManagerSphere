@@ -2,26 +2,15 @@ package com.etb.filemanager.fragment
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Parcelable
-import android.util.Log
 import android.view.View
-import androidx.annotation.NonNull
-import androidx.annotation.Nullable
-import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
 import com.etb.filemanager.R
-import com.etb.filemanager.activity.MainActivity
-import com.etb.filemanager.files.util.BundleParceler
 import com.etb.filemanager.util.file.style.StyleManager
-import com.google.android.material.appbar.MaterialToolbar
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 
-class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsFragment : PreferenceFragmentCompat(),
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val styleManager = StyleManager()
-
-
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -40,16 +29,21 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
 
-       when (key){
-           "themes"-> {
-               val styleString = preferenceManager.sharedPreferences?.getString(key, StyleManager.OptionStyle.FOLLOW_SYSTEM.name)
-               val optionStyle = StyleManager.OptionStyle.valueOf(styleString ?: StyleManager.OptionStyle.FOLLOW_SYSTEM.name)
+        when (key) {
+            "themes" -> {
+                val styleString = preferenceManager.sharedPreferences?.getString(
+                    key,
+                    StyleManager.OptionStyle.FOLLOW_SYSTEM.name
+                )
+                val optionStyle = StyleManager.OptionStyle.valueOf(
+                    styleString ?: StyleManager.OptionStyle.FOLLOW_SYSTEM.name
+                )
 
-               styleManager.setTheme(optionStyle, requireContext())
-               restartActivity()
+                styleManager.setTheme(optionStyle, requireContext())
+                restartActivity()
 
-           }
-       }
+            }
+        }
     }
 
 
