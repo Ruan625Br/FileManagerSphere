@@ -15,7 +15,6 @@
             android:gravity="center_vertical">
         <ImageView
                 android:layout_width="24dp"
-                app:tint="?attr/colorPrimaryInverse"
                 android:layout_height="24dp" app:srcCompat="@drawable/ic_edit_24"
                 android:id="@+id/imageView4"
         />
