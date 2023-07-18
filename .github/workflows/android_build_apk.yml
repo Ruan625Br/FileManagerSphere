@@ -7,7 +7,7 @@ on:
 
 jobs:
   Gradle:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: checkout code
         uses: actions/checkout@v2
@@ -17,9 +17,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Make Gradle executable
-        run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+        run: chmod +x gradlew
       - name: Build Release APK
-        run: .\gradlew assembleRelease
+        run: ./gradlew assembleRelease
       - name: Releasing using Hub
         uses: r0user/release-apk@main
         env:
