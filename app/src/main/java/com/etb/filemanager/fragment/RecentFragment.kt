@@ -38,6 +38,7 @@ import com.etb.filemanager.manager.category.adapter.RecentImagemodelAdapter
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.FileUtils.SpaceType
 import com.etb.filemanager.manager.util.MaterialDialogUtils
+import com.etb.filemanager.settings.preference.AboutFragment
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.ui.view.ModalBottomSheetAddCategory
 import com.google.android.material.progressindicator.CircularProgressIndicator
@@ -97,7 +98,7 @@ class RecentFragment : Fragment(), ItemListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val aboutFragment = AboutFragment()
 
 
         cBaseItem = view.findViewById(R.id.cBaseItems)
@@ -105,6 +106,10 @@ class RecentFragment : Fragment(), ItemListener {
         cCategoryFileItem = view.findViewById(R.id.cCategoryItem)
         cRecentImg = view.findViewById(R.id.cRecentImage)
         btnAddCategory = view.findViewById(R.id.btnAddCategory)
+        val mnAbout = view.findViewById<ImageView>(R.id.mn_about)
+        mnAbout.setOnClickListener {
+            (requireActivity() as MainActivity).startNewFragment(aboutFragment)
+        }
 
         //requestStoragePermission()
         // initStyleView()
@@ -146,16 +151,12 @@ class RecentFragment : Fragment(), ItemListener {
         val categoryFileModels = ArrayList<CategoryFileModel>()
         categoryFileModels.add(
             CategoryFileModel(
-                R.drawable.ic_image,
-                "Images",
-                dcimPath
+                R.drawable.ic_image, "Images", dcimPath
             )
         )
         categoryFileModels.add(
             CategoryFileModel(
-                R.drawable.ic_video,
-                "Video",
-                moviesPath
+                R.drawable.ic_video, "Video", moviesPath
             )
         )
         categoryFileModels.add(
@@ -165,9 +166,7 @@ class RecentFragment : Fragment(), ItemListener {
         )
         categoryFileModels.add(
             CategoryFileModel(
-                R.drawable.ic_music,
-                "Music",
-                musicPath
+                R.drawable.ic_music, "Music", musicPath
             )
         )
 
@@ -189,7 +188,7 @@ class RecentFragment : Fragment(), ItemListener {
             }
         }
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 4)
-         adapter = CategoryFileModelAdapter(this, categoryFileModels, requireContext())
+        adapter = CategoryFileModelAdapter(this, categoryFileModels, requireContext())
         recyclerView.adapter = adapter
 
     }

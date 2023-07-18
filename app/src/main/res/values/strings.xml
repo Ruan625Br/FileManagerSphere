@@ -54,7 +54,8 @@
     <string name="policy_and_terms"><![CDATA[Privacy Policy and Terms & conditions]]></string>
     <string name="ok"></string>
     <string name="allow">Permitir</string>
-    <string name="download">Download</string><string name="permission_required">Permissão Necessária</string>
+    <string name="download">Download</string>
+    <string name="permission_required">Permissão Necessária</string>
     <string name="permission_required_body">Para oferecer uma melhor experiência de uso, precisamos acessar os arquivos armazenados no seu dispositivo. Essa permissão é necessária para que o aplicativo possa carregar e exibir imagens, vídeos, documentos e outros arquivos relevantes. Além disso, ela é essencial para permitir recursos como compartilhamento de arquivos, armazenamento de dados offline e manipulação de documentos. Garantimos que seus dados serão tratados com segurança e privacidade. Para conceder a permissão, clique em "Permitir" abaixo.</string>
 
     <string name="action_bottom_select">Selecionar</string>
@@ -239,5 +240,11 @@
     <string name="error_empty">Campo vazio</string>
     <string name="folder_not_exist">Pasta não existe</string>
     <string name="invalid_path">Caiminho inválido</string>
+    <string name="about">Sobre</string>
+    <string name="info_app_desc">" Gerenciador de arquivos Android intuitivo e eficiente. Simplifique sua organização de arquivos"</string>
+    <string name="mn_version">Versâo</string>
+    <string name="mn_code">Código-fonte</string>
+    <string name="mn_licenses">Licenças</string>
+    <string name="mn_author">Desenvolvido por Juan Nascimento</string>
 
 </resources>

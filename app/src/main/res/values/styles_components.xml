@@ -25,4 +25,21 @@
         <item name="android:layout_marginHorizontal" tools:targetApi="o">@dimen/padding_small</item>
     </style>
 
+    <style name="Widget.Manager.TextView.Base" parent="Widget.AppCompat.TextView">
+        <item name="android:textAlignment">viewStart</item>
+    </style>
+    <style name="Widget.Manager.TextView.Icon" parent="Widget.Manager.TextView.Base">
+        <item name="android:drawablePadding">@dimen/spacing_medium</item>
+        <item name="android:paddingTop">@dimen/spacing_mid_medium</item>
+        <item name="android:paddingStart">@dimen/spacing_medium</item>
+        <item name="android:paddingBottom">@dimen/spacing_mid_medium</item>
+        <item name="android:paddingEnd">@dimen/spacing_medium</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyLarge </item>
+    </style>
+
+    <style name="Widget.Manager.TextView.Icon.Clickable" parent="Widget.Manager.TextView.Icon">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
 </resources>
