@@ -7,21 +7,21 @@ on:
 
 jobs:
   Gradle:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v2
-      - name: setup jdk
+      - name: Setup JDK
         uses: actions/setup-java@v2
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Make Gradle executable
-        run: chmod +x gradlew
       - name: Build Release APK
-        run: ./gradlew assembleRelease
-      - name: Releasing using Hub
-        uses: r0user/release-apk@main
+        run: .\gradlew assembleRelease
+      - name: Publish APK
+        uses: peaceiris/actions-gradle@v2
+        with:
+          tasks: publish
+          args: --info --stacktrace
         env:
           GITHUB_TOKEN: ${{ secrets.FILEMANAGER_TOKEN }}
-          APP_FOLDER: app
