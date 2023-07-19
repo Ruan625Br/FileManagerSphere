@@ -12,7 +12,7 @@ Bem-vindo ao FileManagerSphere - seu gerenciador de arquivos personalizado!
 
 <p><img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/1.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/2.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/3.jpg" width="32%" />
 <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/4.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/5.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/6.jpg" width="32%" />
-<img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/7.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/6.jpg" width="32%" /></p>
+<img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/7.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/8.jpg" width="32%" /></p>
 
 
 ## Visão geral
