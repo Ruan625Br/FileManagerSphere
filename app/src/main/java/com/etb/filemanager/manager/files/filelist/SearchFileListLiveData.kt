@@ -50,6 +50,7 @@ class SearchFileListLiveData(
                 Log.e("WEER", "ERRO: $e")
                 Failure(value, e)
             }
+            Log.i("RESULTS", "Results: $fileList")
         }
     }
 

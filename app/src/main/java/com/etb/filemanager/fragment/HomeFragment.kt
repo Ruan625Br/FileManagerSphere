@@ -536,33 +536,43 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
     private fun setUpSearchView(searchView: SearchView) {
+        // Define ação ao pesquisar
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.search(query ?: "")
+                viewModel.isSearchViewExpanded = false
+                viewModel.stopSearching()
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.searchViewQuery = newText ?: ""
+                debouncedSearchRunnable()
+                return true
+            }
+        })
+
+        // Define ação ao expandir a SearchView
         searchView.setOnSearchClickListener {
             viewModel.isSearchViewExpanded = true
             searchView.setQuery(viewModel.searchViewQuery, false)
             debouncedSearchRunnable()
         }
 
+        // Define ação ao fechar a SearchView
         searchView.setOnCloseListener {
             viewModel.isSearchViewExpanded = false
             viewModel.stopSearching()
             false
         }
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                debouncedSearchRunnable.cancel()
-                viewModel.search(query!!)
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                    viewModel.searchViewQuery = newText!!
-                    debouncedSearchRunnable()
-
-                return true
-            }
-        })
+        // Verifica e expande a SearchView se necessário
+        if (viewModel.isSearchViewExpanded) {
+            searchView.isIconified = false
+            searchView.clearFocus()
+        }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 
@@ -612,7 +622,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_toggle_grid -> {
-                viewModel.setGriToggle()
+               // viewModel.setGriToggle
+                viewModel.isSearchViewExpanded = false
+                viewModel.stopSearching()
+
             }
 
             R.id.action_sort_by_name -> {
