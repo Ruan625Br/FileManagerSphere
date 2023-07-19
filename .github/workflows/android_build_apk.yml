@@ -1,27 +1,31 @@
-name: Build & Publish Release APK
+name: Publish Release APK
 
 on:
   push:
-    tags:
-      - '*'
+    tags: [ "*" ]
 
 jobs:
-  Gradle:
-    runs-on: windows-latest
+  publish:
+
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-      - name: Build Release APK
-        run: .\gradlew assembleRelease
-      - name: Publish APK
-        uses: peaceiris/actions-gradle@v2
-        with:
-          tasks: publish
-          args: --info --stacktrace
-        env:
-          GITHUB_TOKEN: ${{ secrets.FILEMANAGER_TOKEN }}
+    - uses: actions/checkout@v3
+    - name: set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build Release APK
+      run: ./gradlew assembleRelease
+    - name: Publish APK
+      uses: alsrb968/action-release-apk@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.FILEMANAGER_TOKEN }}
+        APP_FOLDER: app
+        
+        name: Build & Publish Release APK
