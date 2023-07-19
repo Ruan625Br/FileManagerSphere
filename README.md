@@ -3,15 +3,16 @@
 
 ![FileManagerSphere Logo](link_para_o_logo)
 
-[![GitHub release](https://img.shields.io/github/v/release/Ruan625Br/FlappyBird)](https://github.com/Ruan625Br/FileManagerSphere/releases)
+[![GitHub release](https://img.shields.io/github/v/release/Ruan625Br/FileManagerSphere)](https://github.com/Ruan625Br/FileManagerSphere/releases)
 [![License](https://img.shields.io/github/license/Ruan625Br/FileManagerSphere?color=blue)](LICENSE)
 
 Bem-vindo ao FileManagerSphere - seu gerenciador de arquivos personalizado!
 
 ## Preview
 
-<p><img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/1.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/2.jpg" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="32%" />
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" width="32%" /></p>
+<p><img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/1.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/2.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/3.jpg" width="32%" />
+<img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/4.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/5.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/6.jpg" width="32%" />
+<img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/7.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/6.jpg" width="32%" /></p>
 
 
 ## Visão geral
@@ -22,10 +23,9 @@ O FileManagerSphere é uma poderosa ferramenta de gerenciamento de arquivos, pro
    
 - **Código aberto:** leve, limpo e seguro.
 - **Design de Materiais:** Segue as diretrizes de Design de Materiais, com atenção aos detalhes.
-- **Breadcrumbs:** Navegue no sistema de arquivos com facilidade.
 - **Suporte a arquivos:** Visualize, extraia e crie arquivos compactados comuns.
 - **Temas:** cores de interface do usuário personalizáveis, além do modo noturno com preto verdadeiro opcional.
-- **Bem implementado:** Construído sobre as coisas certas, incluindo Java NIO2 File API e LiveData.
+- **Bem implementado:** Construído sobre as coisas certas, incluindo Java NIO File API e LiveData.
 
 ## Recursos Principais
 
