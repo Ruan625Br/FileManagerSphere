@@ -12,6 +12,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.provider.DocumentsContract
 import android.provider.Settings
 import android.util.Log
@@ -23,6 +25,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.documentfile.provider.DocumentFile
@@ -134,6 +137,16 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     private var progressDialog: AlertDialog? = null
     private var isProgressDialogShowing = false
+    private val debouncedSearchRunnable = DebouncedRunnable(Handler(Looper.getMainLooper()), 1000) {
+        if (!isResumed || !viewModel.isSearchViewExpanded) {
+            return@DebouncedRunnable
+        }
+        val query = viewModel.searchViewQuery
+        if (query.isEmpty()) {
+            return@DebouncedRunnable
+        }
+        viewModel.search(query)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -409,9 +422,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     private fun onFileListChanged(stateful: Stateful<List<FileModel>>) {
         val files = if (stateful is Failure) null else stateful.value
+        val isSearching = viewModel.searchState.isSearching
         when {
             stateful is Failure -> topAppBar.subtitle = getString(R.string.error)
-            stateful is Loading -> topAppBar.subtitle = getString(R.string.loading)
+            stateful is  Loading && !isSearching -> topAppBar.subtitle = getString(R.string.loading)
             else -> topAppBar.subtitle = getSubtitle(files!!)
         }
         val hasFiles = !files.isNullOrEmpty()
@@ -448,7 +462,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         if (!Preferences.Popup.showHiddenFiles) {
             files = files.filterNot { it.isHidden }
         }
-        adapter.replaceList(files)
+        adapter.replaceList(files, viewModel.searchState.isSearching)
     }
 
     private fun updateActionMode() {
@@ -521,6 +535,34 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     }
 
+    private fun setUpSearchView(searchView: SearchView) {
+        searchView.setOnSearchClickListener {
+            viewModel.isSearchViewExpanded = true
+            searchView.setQuery(viewModel.searchViewQuery, false)
+            debouncedSearchRunnable()
+        }
+
+        searchView.setOnCloseListener {
+            viewModel.isSearchViewExpanded = false
+            viewModel.stopSearching()
+            false
+        }
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                debouncedSearchRunnable.cancel()
+                viewModel.search(query!!)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                    viewModel.searchViewQuery = newText!!
+                    debouncedSearchRunnable()
+
+                return true
+            }
+        })
+    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 
@@ -537,7 +579,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val itemSortDirectoriesFirst = menu.findItem(R.id.action_sort_directories_first)
         val itemShowHiddenFiles = menu.findItem(R.id.action_show_hidden_files)
         val itemToggleGrid = menu.findItem(R.id.action_toggle_grid)
+        val search = menu.findItem(R.id.action_search_view)
+        val searchView = search.actionView as SearchView
 
+        setUpSearchView(searchView)
 
         itemSortOrderAscending.isChecked =
             (Preferences.Popup.orderFiles == FileSortOptions.Order.ASCENDING)
@@ -785,7 +830,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         )
     }
 
-    
 
     fun refresh() {
         viewModel.reload()

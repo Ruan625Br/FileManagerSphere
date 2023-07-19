@@ -92,7 +92,25 @@ class FileListViewModel : ViewModel() {
     val currentPath: Path?
         get() = currentPathLiveData.value
 
-    private val _fileListLiveData = FileListSwitchMapLiveData(currentPathLiveData)
+    private val _searchStateLiveData = MutableLiveData(SearchState(false, ""))
+    val searchStateLive: LiveData<SearchState> = _searchStateLiveData
+    val searchState: SearchState
+        get() = _searchStateLiveData.value!!
+
+    fun search(query: String){
+        val searchState = _searchStateLiveData.value!!
+        if (searchState.isSearching && searchState.query == query) return
+        _searchStateLiveData.value = SearchState(true, query)
+    }
+
+    fun stopSearching(){
+        val searchState = _searchStateLiveData.value!!
+        if (!searchState.isSearching) return
+        _searchStateLiveData.value = SearchState(false, "")
+    }
+
+
+    private val _fileListLiveData = FileListSwitchMapLiveData(currentPathLiveData, _searchStateLiveData)
     val fileListLiveData: LiveData<Stateful<List<FileModel>>>
         get() = _fileListLiveData
     val fileListStateful: Stateful<List<FileModel>>
@@ -103,15 +121,31 @@ class FileListViewModel : ViewModel() {
         _fileListLiveData.reload()
     }
 
+
+    val searchViewExpandedLiveData = MutableLiveData(false)
+    var isSearchViewExpanded: Boolean
+        get() = searchViewExpandedLiveData.value!!
+        set(value) {
+            if (searchViewExpandedLiveData.value == value) return
+            searchViewExpandedLiveData.value = value
+        }
+    private val _searchViewQueryLiveData = MutableLiveData("")
+    var searchViewQuery: String
+        get() = _searchViewQueryLiveData.value!!
+        set(value) {
+            if (_searchViewQueryLiveData.value == value) return
+            _searchViewQueryLiveData.value = value
+        }
+
     private class FileListSwitchMapLiveData(
-        private val pathLiveData: LiveData<Path>
+        private val pathLiveData: LiveData<Path>,
+        private val searchStateLiveData: LiveData<SearchState>
     ) : MediatorLiveData<Stateful<List<FileModel>>>(), Closeable {
         private var liveData: CloseableLiveData<Stateful<List<FileModel>>>? = null
 
         init {
-            addSource(pathLiveData) {
-                updateSource()
-            }
+            addSource(pathLiveData){updateSource()}
+            addSource(searchStateLiveData){updateSource()}
         }
 
         private fun updateSource() {
@@ -120,7 +154,8 @@ class FileListViewModel : ViewModel() {
                 it.close()
             }
             val path = pathLiveData.value
-            val liveData = FileListLiveData(path!!)
+            val searchState = searchStateLiveData.value!!
+            val liveData = if (searchState.isSearching) SearchFileListLiveData(path!!, searchState.query) else FileListLiveData(path!!)
 
 
             this.liveData = liveData
@@ -130,6 +165,7 @@ class FileListViewModel : ViewModel() {
         fun reload() {
             when (val liveData = liveData) {
                 is FileListLiveData -> liveData.loadValue()
+                is SearchFileListLiveData -> liveData.loadValue()
             }
         }
 

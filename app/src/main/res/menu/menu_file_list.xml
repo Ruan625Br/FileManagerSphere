@@ -2,7 +2,7 @@
       xmlns:tools="http://schemas.android.com/tools" tools:ignore="AlwaysShowAction">
 
     <item
-            android:id="@+id/app_bar_search"
+            android:id="@+id/action_search_view"
             android:icon="@drawable/ic_search"
             android:title="Search"
             app:showAsAction="collapseActionView|ifRoom"

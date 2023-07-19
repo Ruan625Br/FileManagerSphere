@@ -66,6 +66,7 @@ class FileModelAdapter(
 
     private val defaultComparator: Comparator<FileModel> = compareBy<FileModel> { it.fileName }.thenBy { it.fileName }
     private lateinit var _comparator: Comparator<FileModel>
+    private var  isSearching = false
     var comparator: Comparator<FileModel>
         get()  {
             if (!::_comparator.isInitialized) {
@@ -75,9 +76,10 @@ class FileModelAdapter(
         }
         set(value) {
             _comparator = value
+            if (!isSearching){
             super.replace(list.sortedWith(value), true)
             rebuildFilePositionMap()
-        }
+        }}
 
     var pickOptions: PickOptions? = null
         set(value) {
@@ -161,8 +163,10 @@ class FileModelAdapter(
     }
 
 
-    fun replaceList(list: List<FileModel>) {
-        super.replace(list.sortedWith(comparator), false)
+    fun replaceList(list: List<FileModel>, isSearching: Boolean) {
+        val clear = this.isSearching != isSearching
+        this.isSearching = isSearching
+        super.replace(if (!isSearching) list.sortedWith(comparator) else list, clear)
         rebuildFilePositionMap()
     }
 
