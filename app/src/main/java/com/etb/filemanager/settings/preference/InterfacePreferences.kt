@@ -1,9 +1,11 @@
 package com.etb.filemanager.settings.preference
 
 import android.os.Bundle
+import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.etb.filemanager.R
+import com.etb.filemanager.files.util.getStringArray
 
 class InterfacePreferences : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -21,5 +23,34 @@ class InterfacePreferences : PreferenceFragmentCompat() {
         val isEnabledRoundedCorner = Preferences.Interface.isEnabledRoundedCorners
         swtRoundedCorners?.isChecked = isEnabledRoundedCorner
 
+        //View File Information
+        val simpleMenuPreference = findPreference<ListPreference>(getString(R.string.pref_key_view_file_information))
+        val fileInformationEntries = requireContext().resources.getStringArray(R.array.view_file_information_entries)
+        val fileInformationValues = requireContext().resources.getStringArray(R.array.view_file_information_values)
+
+        var currentFileInformationOption = Preferences.Interface.viewFileInformationOption
+        var mCurrentTheIndex = fileInformationValues.indexOf(currentFileInformationOption.name)
+        var fileInformationSummary = fileInformationEntries[mCurrentTheIndex]
+
+        simpleMenuPreference?.summary = fileInformationSummary
+
+        simpleMenuPreference?.setOnPreferenceChangeListener { preference, newValue ->
+            val newOptionName = newValue as String
+            val newOption = ViewFileInformationOption.valueOf(newOptionName)
+            currentFileInformationOption = newOption
+
+            mCurrentTheIndex = fileInformationValues.indexOf(currentFileInformationOption.name)
+            fileInformationSummary = fileInformationEntries[mCurrentTheIndex]
+            simpleMenuPreference.summary = fileInformationSummary
+
+            true
+        }    }
+
+    enum class ViewFileInformationOption {
+        DATE_ONLY,
+        SIZE_ONLY,
+        NAME_ONLY,
+        EVERYTHING
     }
 }
+

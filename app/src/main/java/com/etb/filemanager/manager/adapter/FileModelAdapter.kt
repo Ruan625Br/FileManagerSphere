@@ -3,53 +3,36 @@ package com.etb.filemanager.manager.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
 import com.etb.filemanager.R
 import com.etb.filemanager.databinding.FileItemBinding
 import com.etb.filemanager.files.file.common.mime.MidiaType
 import com.etb.filemanager.files.file.common.mime.MimeTypeUtil
 import com.etb.filemanager.files.file.common.mime.getMidiaType
 import com.etb.filemanager.files.util.layoutInflater
-import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.manager.FileListener
-import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
 import com.etb.filemanager.manager.files.filelist.FileItemSet
 import com.etb.filemanager.manager.files.filelist.PickOptions
 import com.etb.filemanager.manager.files.filelist.fileItemSetOf
 import com.etb.filemanager.manager.files.ui.AnimatedListAdapter
 import com.etb.filemanager.manager.files.ui.CheckableItemBackground
-import com.etb.filemanager.manager.files.ui.SelectableMaterialCardView
 import com.etb.filemanager.manager.util.FileUtils
+import com.etb.filemanager.settings.preference.InterfacePreferences
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.util.file.FileUtil
 import com.etb.filemanager.util.file.style.ColorUtil
 import com.etb.filemanager.util.file.style.IconUtil
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import java.lang.UnsupportedOperationException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -57,18 +40,19 @@ import java.util.*
 
 
 class FileModelAdapter(
-   private val mContext: Context, private val listener: FileListener
+    private val mContext: Context, private val listener: FileListener
 ) : AnimatedListAdapter<FileModel, FileModelAdapter.ViewHolder>(CALLBACK) {
 
     private val fileUtils: FileUtils = FileUtils.getInstance()
     private val basePath = "/storage/emulated/0"
     private var currentPath = basePath
 
-    private val defaultComparator: Comparator<FileModel> = compareBy<FileModel> { it.fileName }.thenBy { it.fileName }
+    private val defaultComparator: Comparator<FileModel> =
+        compareBy<FileModel> { it.fileName }.thenBy { it.fileName }
     private lateinit var _comparator: Comparator<FileModel>
-    private var  isSearching = false
+    private var isSearching = false
     var comparator: Comparator<FileModel>
-        get()  {
+        get() {
             if (!::_comparator.isInitialized) {
                 _comparator = defaultComparator
             }
@@ -76,10 +60,11 @@ class FileModelAdapter(
         }
         set(value) {
             _comparator = value
-            if (!isSearching){
-            super.replace(list.sortedWith(value), true)
-            rebuildFilePositionMap()
-        }}
+            if (!isSearching) {
+                super.replace(list.sortedWith(value), true)
+                rebuildFilePositionMap()
+            }
+        }
 
     var pickOptions: PickOptions? = null
         set(value) {
@@ -115,7 +100,7 @@ class FileModelAdapter(
 
     }
 
-   private fun selectFile(file: FileModel) {
+    private fun selectFile(file: FileModel) {
         if (!isFileSelectable(file)) {
             return
         }
@@ -150,7 +135,7 @@ class FileModelAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-     fun clearItemSelection() {
+    fun clearItemSelection() {
         for (index in 0 until itemCount) {
             val file = getItem(index)
 
@@ -170,7 +155,7 @@ class FileModelAdapter(
         rebuildFilePositionMap()
     }
 
-     fun rebuildFilePositionMap() {
+    fun rebuildFilePositionMap() {
         filePositionMap.clear()
         for (index in 0 until itemCount) {
             val file = getItem(index)
@@ -183,25 +168,26 @@ class FileModelAdapter(
         ViewHolder(
             FileItemBinding.inflate(parent.context.layoutInflater, parent, false)
         ).apply {
-           binding.itemFile.background = CheckableItemBackground.create(binding.itemFile.context)
+            binding.itemFile.background = CheckableItemBackground.create(binding.itemFile.context)
 
 
         }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int){
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         throw UnsupportedOperationException()
     }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: List<Any>) {
         bindViewHolderAnimation(holder)
         val file = getItem(position)
         val binding = holder.binding
         val filePath = file.filePath
-        val mimeType = FileUtil().getMimeType(null,filePath)
+        val mimeType = FileUtil().getMimeType(null, filePath)
         val selected = file in selectedFiles
         val isDirectory = file.isDirectory
         currentPath = file.filePath
         binding.itemFile.isChecked = selected
-        if (payloads.isNotEmpty()){
+        if (payloads.isNotEmpty()) {
             return
         }
 
@@ -218,9 +204,9 @@ class FileModelAdapter(
                         loadImage(filePath, binding)
                     }
 
-                 else ->{
-                     loadImage(filePath, binding)
-                 }
+                    else -> {
+                        loadImage(filePath, binding)
+                    }
                 }
             } else {
                 getIconByMimeType(mimeType, binding)
@@ -243,13 +229,13 @@ class FileModelAdapter(
             }
         }
         binding.itemFile.setOnLongClickListener {
-            if (Preferences.Behavior.selectFileLongClick){
+            if (Preferences.Behavior.selectFileLongClick) {
                 if (selectedFiles.isEmpty()) {
                     selectFile(file)
                 } else {
                     listener.openFile(file)
                 }
-            } else{
+            } else {
                 listener.showBottomSheet(file)
             }
 
@@ -276,19 +262,35 @@ class FileModelAdapter(
     private fun setVisibility(isDir: Boolean, mimeType: String?, binding: FileItemBinding) {
         val iconUtil = IconUtil()
         val isMedia = mimeType?.isMimeTypeMedia()
+        val viewFileInformationOption = Preferences.Interface.viewFileInformationOption
+        binding.fileDate.visibility = when (viewFileInformationOption) {
+            InterfacePreferences.ViewFileInformationOption.DATE_ONLY -> if (isDir) View.GONE else View.VISIBLE
+            InterfacePreferences.ViewFileInformationOption.EVERYTHING -> if (isDir) View.GONE else View.VISIBLE
+            else -> {
+                View.GONE
+            }
+        }
+        binding.fileSize.visibility = when (viewFileInformationOption) {
+            InterfacePreferences.ViewFileInformationOption.SIZE_ONLY -> if (isDir) View.GONE else View.VISIBLE
+            InterfacePreferences.ViewFileInformationOption.EVERYTHING -> if (isDir) View.GONE else View.VISIBLE
+            else -> {
+                View.GONE
+            }
+        }
 
-        binding.fileDate.visibility = if (isDir) View.GONE else View.VISIBLE
-        binding.fileSize.visibility = if (isDir) View.GONE else View.VISIBLE
         binding.iconPreview.visibility = if (isMedia == true) View.VISIBLE else View.GONE
-            binding.iconFile.visibility = if (isMedia == true) View.GONE else View.VISIBLE
+        binding.iconFile.visibility = if (isMedia == true) View.GONE else View.VISIBLE
 
 
-        binding.itemBorder.background = if (isMedia == true) iconUtil.getBorderPreview(mContext) else iconUtil.getBorderNormal(mContext)
+        binding.itemBorder.background =
+            if (isMedia == true) iconUtil.getBorderPreview(mContext) else iconUtil.getBorderNormal(
+                mContext
+            )
         if (isDir) binding.iconFile.setImageDrawable(iconUtil.getIconFolder(mContext))
     }
 
 
-    private fun getIconByMimeType(mimeType: String?, binding: FileItemBinding){
+    private fun getIconByMimeType(mimeType: String?, binding: FileItemBinding) {
         val tint = ColorUtil().getColorPrimaryInverse(mContext)
         val icFile = mContext.getDrawable(R.drawable.file_generic_icon)
         icFile?.setTint(tint)
@@ -307,12 +309,13 @@ class FileModelAdapter(
         Glide.with(binding.iconPreview)
             .clear(binding.iconPreview)
         Glide.with(mContext).load(path).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-            .apply(RequestOptions().override(50, 50)).apply(RequestOptions().placeholder(R.drawable.ic_image))
+            .apply(RequestOptions().override(50, 50))
+            .apply(RequestOptions().placeholder(R.drawable.ic_image))
             .into(binding.iconPreview)
 
     }
 
-    private fun setPreview(preview: Drawable, placeholder: Drawable, binding: FileItemBinding){
+    private fun setPreview(preview: Drawable, placeholder: Drawable, binding: FileItemBinding) {
         Glide.with(mContext).load(preview).diskCacheStrategy(DiskCacheStrategy.ALL)
             .apply(RequestOptions().placeholder(placeholder)).into(binding.iconFile)
 
@@ -326,9 +329,7 @@ class FileModelAdapter(
     }
 
 
-    class ViewHolder(val binding: FileItemBinding) : RecyclerView.ViewHolder(binding.root) {
-
-    }
+    class ViewHolder(val binding: FileItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun clear() {
         super.clear()

@@ -66,3 +66,4 @@ class BehaviorPreferences : PreferenceFragmentCompat(){
 
     }
 }
+

@@ -41,6 +41,7 @@ public class AppPreference {
         //Interface
         PREF_ANIM_FILES_LIST_BOOL,
         PREF_ROUNDED_CORNERS_BOOL,
+        PREF_VIEW_FILE_INFORMATION_STR,
         //Behavior
         PREF_DEFAULT_FOLDER_STR,
         PREF_SELECT_FILE_LONG_CLICK_BOOL,
@@ -301,7 +302,8 @@ public class AppPreference {
                 return mContext.getResources().getString(R.string.default_list_categories_name);
             case PREF_LIST_CATEGORIES_PATH_STR:
                 return mContext.getResources().getString(R.string.default_list_categories_path);
-
+            case PREF_VIEW_FILE_INFORMATION_STR:
+                return mContext.getResources().getString(R.string.default_view_file_information);
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

@@ -32,6 +32,18 @@ class Preferences {
             set(value) {
                 AppPreference.set(AppPreference.PreferenceKey.PREF_ROUNDED_CORNERS_BOOL, value)
             }
+        var viewFileInformationOption: InterfacePreferences.ViewFileInformationOption
+            get() = InterfacePreferences.ViewFileInformationOption.valueOf(
+                AppPreference.getString(
+                    AppPreference.PreferenceKey.PREF_VIEW_FILE_INFORMATION_STR
+                )
+            )
+            set(value) {
+                AppPreference.set(
+                    AppPreference.PreferenceKey.PREF_VIEW_FILE_INFORMATION_STR,
+                    value.name
+                )
+            }
     }
 
     object Behavior {

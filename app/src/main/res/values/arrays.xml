@@ -27,17 +27,21 @@
         <item>RED_THEME_DARK</item>
         <item>DYNAMIC_COLORS</item>
     </string-array>
-    <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
-    </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
-    </string-array>
+    <!--Interface-->
 
+    <string-array name="view_file_information_entries">
+        <item>Display date only</item>
+        <item>Display size only</item>
+        <item>Display name only</item>
+        <item>Display everything</item>
+    </string-array>
+    <string-array name="view_file_information_values">
+        <item>DATE_ONLY</item>
+        <item>SIZE_ONLY</item>
+        <item>NAME_ONLY</item>
+        <item>EVERYTHING</item>
+    </string-array>
     <string-array name="menu_type_items">
         <item>.zip</item>
         <item>.7z</item>

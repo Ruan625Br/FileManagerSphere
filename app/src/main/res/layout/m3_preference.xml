@@ -3,6 +3,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         style="@style/Widget.AppTheme.CardView.ListItem"
         android:layout_width="match_parent"
+        android:id="@android:id/empty"
         android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.LinearLayoutCompat
