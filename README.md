@@ -3,6 +3,7 @@
 
 ![FileManagerSphere Logo](link_para_o_logo)
 
+[![Android CI status](https://github.com/Ruan625Br/FileManagerSphere/workflows/Android%20CI/badge.svg)](https://github.com/Ruan625Br/FileManagerSphere/actions)
 [![GitHub release](https://img.shields.io/github/v/release/Ruan625Br/FileManagerSphere)](https://github.com/Ruan625Br/FileManagerSphere/releases)
 [![License](https://img.shields.io/github/license/Ruan625Br/FileManagerSphere?color=blue)](LICENSE)
 
