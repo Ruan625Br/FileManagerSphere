@@ -1,7 +1,7 @@
 <PreferenceScreen
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        app:title="@string/app_name">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
 
     <Preference
             app:key="appearance_prefs"

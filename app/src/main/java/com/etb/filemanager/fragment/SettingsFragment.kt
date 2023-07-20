@@ -1,57 +1,29 @@
 package com.etb.filemanager.fragment
 
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.View
-import androidx.preference.PreferenceFragmentCompat
 import com.etb.filemanager.R
-import com.etb.filemanager.util.file.style.StyleManager
+import com.etb.filemanager.settings.preference.PreferenceFragment
+import com.etb.filemanager.settings.preference.SettingsDataStore
 
-class SettingsFragment : PreferenceFragmentCompat(),
-    SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsFragment : PreferenceFragment() {
+    override fun getTitle(): Int {
+        return R.string.settings
+    }
 
-    private val styleManager = StyleManager()
+    fun getInstance(key: String?): SettingsFragment {
+        val preferences = SettingsFragment()
+        val args = Bundle()
+        args.putString(PREF_KEY, key)
+        preferences.arguments = args
+        return preferences
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        preferenceScreen.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        preferenceScreen.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
-
-    }
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-
-        when (key) {
-            "themes" -> {
-                val styleString = preferenceManager.sharedPreferences?.getString(
-                    key,
-                    StyleManager.OptionStyle.FOLLOW_SYSTEM.name
-                )
-                val optionStyle = StyleManager.OptionStyle.valueOf(
-                    styleString ?: StyleManager.OptionStyle.FOLLOW_SYSTEM.name
-                )
-
-                styleManager.setTheme(optionStyle, requireContext())
-                restartActivity()
-
-            }
-        }
+        preferenceManager.preferenceDataStore = SettingsDataStore()
     }
 
 
-    private fun restartActivity() {
-        val intent = requireActivity().intent
-        requireActivity().finish()
-        startActivity(intent)
-    }
 }
 
 

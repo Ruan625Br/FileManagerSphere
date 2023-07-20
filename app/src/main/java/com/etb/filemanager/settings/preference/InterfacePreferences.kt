@@ -7,7 +7,11 @@ import androidx.preference.SwitchPreferenceCompat
 import com.etb.filemanager.R
 import com.etb.filemanager.files.util.getStringArray
 
-class InterfacePreferences : PreferenceFragmentCompat() {
+class InterfacePreferences : PreferenceFragment() {
+    override fun getTitle(): Int {
+        return R.string.pref_interface_title
+    }
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_interface, rootKey)
         preferenceManager.preferenceDataStore = SettingsDataStore()

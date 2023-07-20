@@ -16,7 +16,11 @@ import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
 
-class BehaviorPreferences : PreferenceFragmentCompat(){
+class BehaviorPreferences : PreferenceFragment(){
+    override fun getTitle(): Int {
+        return R.string.pref_behavior_title
+    }
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_behavior, rootKey)
         preferenceManager.preferenceDataStore = SettingsDataStore()

@@ -2,13 +2,14 @@ package com.etb.filemanager.settings.preference
 
 import android.os.Bundle
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.etb.filemanager.R
 import com.etb.filemanager.util.file.style.StyleManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.transition.MaterialSharedAxis
 
-class AppearancePreferences : PreferenceFragmentCompat() {
+
+class AppearancePreferences : PreferenceFragment() {
 
     private lateinit var mCurrentTheme: String
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -25,7 +26,8 @@ class AppearancePreferences : PreferenceFragmentCompat() {
 
         //App theme
         val appTheme =
-            findPreference<Preference>("app_theme") ?: throw IllegalArgumentException("Preference not found: app_theme")
+            findPreference<Preference>("app_theme")
+                ?: throw IllegalArgumentException("Preference not found: app_theme")
 
         appTheme.summary = appThemeSummary
         appTheme.setOnPreferenceClickListener { preference ->
@@ -61,5 +63,11 @@ class AppearancePreferences : PreferenceFragmentCompat() {
         startActivity(intent)
     }
 
+    override fun getTitle(): Int {
+        return R.string.pref_cat_appearance
+    }
 
 }
+
+
+

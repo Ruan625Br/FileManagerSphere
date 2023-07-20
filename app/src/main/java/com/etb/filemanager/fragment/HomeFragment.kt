@@ -575,8 +575,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-
         inflater.inflate(R.menu.menu_file_list, menu)
+        val search = menu.findItem(R.id.action_search_view)
+        val searchView = search.actionView as SearchView
+
+        setUpSearchView(searchView)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -589,10 +592,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val itemSortDirectoriesFirst = menu.findItem(R.id.action_sort_directories_first)
         val itemShowHiddenFiles = menu.findItem(R.id.action_show_hidden_files)
         val itemToggleGrid = menu.findItem(R.id.action_toggle_grid)
-        val search = menu.findItem(R.id.action_search_view)
-        val searchView = search.actionView as SearchView
 
-        setUpSearchView(searchView)
 
         itemSortOrderAscending.isChecked =
             (Preferences.Popup.orderFiles == FileSortOptions.Order.ASCENDING)

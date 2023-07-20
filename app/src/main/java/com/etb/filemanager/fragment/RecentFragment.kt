@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
+import com.etb.filemanager.activity.SettingsActivity
 import com.etb.filemanager.files.util.fileProviderUri
 import com.etb.filemanager.files.util.getColorByAttr
 import com.etb.filemanager.interfaces.manager.ItemListener
@@ -45,6 +46,7 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.*
 import java.nio.file.Path
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -230,7 +232,9 @@ class RecentFragment : Fragment(), ItemListener {
         }
 
         ivSettings.setOnClickListener {
-            (requireActivity() as MainActivity).startNewFragment(settingsFragment)
+         //   (requireActivity() as MainActivity).startNewFragment(settingsFragment)
+            val settingsIntent: Intent = SettingsActivity().getIntent(requireContext())
+            startActivity(settingsIntent)
         }
         btnAddCategory.setOnClickListener { showBottomSheetAddCategory() }
 
