@@ -1,24 +1,32 @@
-# FileManagerSphere
-## EM CONSTRUÇÂO
+<p align="center"><img src="fastlane/metadata/android/pt-BR/images/icon.png" width="150"></p>
+<h1 align="center"><b>FileManagerSphere</b></h1>
+<h4 align="center">Bem-vindo ao FileManagerSphere - seu gerenciador de arquivos personalizado!</h4>
 
-![FileManagerSphere Logo](link_para_o_logo)
-
-[![Android CI status](https://github.com/Ruan625Br/FileManagerSphere/workflows/Android%20CI/badge.svg)](https://github.com/Ruan625Br/FileManagerSphere/actions)
-[![GitHub release](https://img.shields.io/github/v/release/Ruan625Br/FileManagerSphere)](https://github.com/Ruan625Br/FileManagerSphere/releases)
-[![License](https://img.shields.io/github/license/Ruan625Br/FileManagerSphere?color=blue)](LICENSE)
-
-Bem-vindo ao FileManagerSphere - seu gerenciador de arquivos personalizado!
-
-## Preview
-
-<p><img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/1.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/2.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/3.jpg" width="32%" />
-<img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/4.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/5.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/6.jpg" width="32%" />
-<img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/7.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/8.jpg" width="32%" /></p>
-
+<p  align="center">
+        <a href="https://github.com/Ruan625Br/FileManagerSphere/actions">
+            <img src="https://github.com/Ruan625Br/FileManagerSphere/workflows/Android%20CI/badge.svg" alt="Android CI status">
+        </a>
+        <a href="https://github.com/Ruan625Br/FileManagerSphere/releases">
+            <img src="https://img.shields.io/github/v/release/Ruan625Br/FileManagerSphere" alt="GitHub release">
+        </a>
+        <a href="LICENSE">
+            <img src="https://img.shields.io/github/license/Ruan625Br/FileManagerSphere?color=blue" alt="License">
+        </a>
+    </p>
+</p>
 
 ## Visão geral
 
 O FileManagerSphere é uma poderosa ferramenta de gerenciamento de arquivos, projetada para simplificar e aprimorar sua experiência ao lidar com documentos, mídia e outros tipos de arquivos. Com recursos avançados e uma interface intuitiva, o FileManagerSphere oferece uma solução abrangente para organizar, navegar, buscar e manipular seus arquivos com facilidade.
+    
+## Preview
+
+<img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/1.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/2.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/3.jpg" width="32%" />
+<img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/4.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/5.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/6.jpg" width="32%" />
+<img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/7.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/8.jpg" width="32%" /></p>
+
+
+
 
 ## Características
    
@@ -30,7 +38,7 @@ O FileManagerSphere é uma poderosa ferramenta de gerenciamento de arquivos, pro
 
 ## Recursos Principais
 
-- **Organização Eficiente**: O FileManagerSphere permite que você crie pastas, renomeie e mova arquivos de forma rápida e fácil. Mantenha seus documentos e arquivos multimídia bem organizados para facilitar o acesso e a localização.
+- **Organização Eficiente**: O FileManagerSphere permite que você crie pastas, renomeie múltiplos arquivos, e mova arquivos de forma rápida e fácil. Mantenha seus documentos e arquivos multimídia bem organizados para facilitar o acesso e a localização.
 
 - **Navegação Intuitiva**: Com uma interface amigável e intuitiva, o FileManagerSphere facilita a navegação entre pastas e arquivos. Encontre rapidamente o que você precisa e navegue de forma eficiente por sua estrutura de arquivos.
 
