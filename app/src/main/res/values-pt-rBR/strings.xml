@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">File Manager Sphere</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -12,7 +11,7 @@
     <string name="file_list_action_sort_directories_first">Pastas primeiro</string>
     <string name="file_list_action_sort_path_specific">Somente pata esta pasta</string>
     <plurals name="file_list_action_toggle_grid">
-        <item quantity="one">Alternar visualização de list</item>
+        <item quantity="one" tools:ignore="ImpliedQuantity">Alternar visualização de list</item>
         <item quantity="other">Alternar visualização de grade</item>
     </plurals>
     <string name="refresh">Atualizar</string>
@@ -44,6 +43,7 @@
     <string name="todo">TODO</string>
     <string name="testeeeeeeeee">TESTEEEEEEEEE</string>
     <string name="file_list_select_action_archive">Compactar</string>
+
     <string name="recente">Recentes</string>
     <string name="storage">Storage</string>
     <string name="used_space">Espaço usado</string>
@@ -52,28 +52,39 @@
     <string name="gb_total">128</string>
     <string name="internal_st">Internal storage</string>
     <string name="policy_and_terms"><![CDATA[Privacy Policy and Terms & conditions]]></string>
+    <string name="ok"></string>
     <string name="allow">Permitir</string>
     <string name="download">Download</string>
     <string name="permission_required">Permissão Necessária</string>
     <string name="permission_required_body">Para oferecer uma melhor experiência de uso, precisamos acessar os arquivos armazenados no seu dispositivo. Essa permissão é necessária para que o aplicativo possa carregar e exibir imagens, vídeos, documentos e outros arquivos relevantes. Além disso, ela é essencial para permitir recursos como compartilhamento de arquivos, armazenamento de dados offline e manipulação de documentos. Garantimos que seus dados serão tratados com segurança e privacidade. Para conceder a permissão, clique em "Permitir" abaixo.</string>
+
     <string name="action_bottom_select">Selecionar</string>
+
+
     <string name="action_mode_title">selecionado</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
+
     <!-- Themes Preferences -->
     <string name="signature_title">Your signature</string>
     <string name="themes_title">Tema</string>
+
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
     <string name="settings">Configuração</string>
+
     <string name="category_aparencia">Aparência</string>
+
+
     <string name="restriction_folder">Pasta com restrição</string>
     <string name="e_restriction_folder">Os conteúdos desta pasta não podem ser exibidos devido à restrições do android
     </string>
+
     <plurals name="renamingItems">
         <item quantity="one">Renomeando %d itens</item>
         <item quantity="two">%d items renomeados de</item>
@@ -82,7 +93,9 @@
     <plurals name="movingItems">
         <item quantity="one">Movendo %d itens</item>
         <item quantity="other">Movendo %d itens: Movendo "%s" para "%s"</item>
+
     </plurals>
+
     <string name="exit_confirmation">Confirmação de saída</string>
     <string name="file_modified_are_you_sure">O arquivo foi modificado. Tem certeza?</string>
     <string name="no">Não</string>
@@ -91,37 +104,46 @@
     <string name="search_option_match_case">Ignorar maiúsculas/minúsculas</string>
     <string name="search_option_regex">Expressão regular</string>
     <string name="search_option_whole_word">Palavra inteira</string>
+
+
     <plurals name="search_results">
         <item quantity="one">%d result</item>
         <item quantity="other">%d results</item>
     </plurals>
+
     <string name="search">Pesquisar</string>
     <string name="java">Java</string>
+
     <string name="undo">Desfazer</string>
     <string name="redo">Refazer</string>
     <string name="save">Salvar</string>
     <string name="save_as">Salvar como</string>
     <string name="wrap">Wrap</string>
+
     <string name="replacement_text">Replacement</string>
     <string name="code_editor">Editor de codigos</string>
+
     <string name="save_file_error">Erro ao salvar arquivo</string>
     <plurals name="an_error_message_occurred">
         <item quantity="one">Ocorreu um erro ao salvar o arquivo "%s"</item>
         <item quantity="other">Ocorreram %d erros ao salvar o arquivo "%s"</item>
     </plurals>
     <string name="reply_title">Default reply action</string>
+
     <plurals name="plurals_file_already_exists">
-        <item quantity="one">Substituir arquivo</item>
+        <item quantity="one">O arquivo "\"%s\"" já existe na pasta de destino, deseja substituí-lo?</item>
         <item quantity="other">O arquivo "\"%s\"" já existe na pasta de destino, deseja substituí-lo?</item>
     </plurals>
     <string name="replace">Substitui</string>
     <string name="skip">Pular</string>
+
     <string name="empty">vazio</string>
     <string name="loading">carregando</string>
     <string name="error">erro</string>
     <string name="error_occurred">Erro</string>
     <string name="warning">Aviso</string>
     <string name="error_occurred_during_operation">Ocorreu um erro durante a  operação</string>
+
     <plurals name="operation_moving_files">
         <item quantity="one">Movendo "\"%2$s\""</item>
         <item quantity="other">Movendo %1$d itens</item>
@@ -160,11 +182,16 @@
         <item quantity="other">Renomeando %1$d itens</item>
     </plurals>
     <plurals name="files_files_renaming_msg_count_format">
+        <item quantity="one">Renomeando "\"%2s\"" para "\"%3s\""</item>
         <item quantity="other">Renomeando "\"%2s\"" para "\"%3s\""</item>
     </plurals>
+
+
     <string name="set">Definir</string>
+
     <!--Preferences-->
     <string name="pref_key_view_file_information">view_file_information</string>
+
     <string name="pref_behavior_default_folder_title">Pasta padrão</string>
     <string name="pref_behavior_select_file_long_click">Selecionar arquivo no clique longo</string>
     <string name="pref_anim_in_file_list">Animação na lista de arquivos</string>
@@ -172,15 +199,19 @@
     <string name="pref_dynamic_colors">Material you</string>
     <string name="pref_behavior_set_default_folder_title">Pasta padrão</string>
     <string name="pref_view_file_information_title">View file information</string>
+
     <string name="pref_summary_anim_in_file_list">Adicione animações suaves à lista de arquivos para uma experiência visualmente agradável.</string>
     <string name="pref_summary_rounded_corners">Adicione cantos arredondados aos elementos da interface para um visual mais suave e moderno.</string>
     <string name="pref_summary_dynamic_colors">Aproveite uma experiência mais próxima do seu dispositivo (requer reinicialização).</string>
     <string name="pref_cat_appearance">Aparência</string>
     <string name="pref_interface_title">Interface</string>
     <string name="pref_behavior_title">Comportamento</string>
+
     <string name="pref_appearance_description">Tema, animações, recursos, etc.</string>
+
     <string name="pref_interface_description">Personalize a aparência do aplicativo de acordo com as suas preferências.</string>
     <string name="pref_behavior_description">Pasta padrão, Modo de exibição, etc.</string>
+
     <string name="default_pref_default_folder">/storage/emulated/0</string>
     <bool name="default_is_directories_first">true</bool>
     <bool name="default_show_hidden_file">false</bool>
@@ -189,10 +220,15 @@
     <bool name="default_is_enabled_anim_in_file_list">true</bool>
     <bool name="default_is_enabled_rounded_corners">true</bool>
     <bool name="default_is_enabled_dynamic_colors">false</bool>
+    <string name="default_list_categories_path" />
+    <string name="default_list_categories_name" />
     <string name="default_view_file_information">EVERYTHING</string>
+
+
     <string name="radio_zip">.zip</string>
     <string name="radio_tar_xz">.tar.xz</string>
     <string name="radio_7z">.7z</string>
+
     <string name="compression_zip">.zip</string>
     <string name="compression_tar">.tar</string>
     <string name="compression_gzip">.gzip</string>
@@ -201,10 +237,12 @@
     <string name="compression_tar_gz">.tar.gz</string>
     <string name="compression_zstandard">Zstandard</string>
     <string name="format_file">Formato do arquivo</string>
+
     <string name="path_whatsapp">/storage/emulated/0/Android/media/com.whatsapp/WhatsApp</string>
     <string name="category_name">Nome da categoria</string>
     <string name="category_path">Caminho da categoria</string>
     <string name="category_add">Adicionar categoria</string>
+
     <string name="error_empty">Campo vazio</string>
     <string name="folder_not_exist">Pasta não existe</string>
     <string name="invalid_path">Caiminho inválido</string>
@@ -214,4 +252,5 @@
     <string name="mn_code">Código-fonte</string>
     <string name="mn_licenses">Licenças</string>
     <string name="mn_author">Desenvolvido por Juan Nascimento</string>
+
 </resources>
