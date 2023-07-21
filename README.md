@@ -50,8 +50,18 @@ O FileManagerSphere é uma poderosa ferramenta de gerenciamento de arquivos, pro
 
 Ajude a traduzir [as strings do aplicativo](https://hosted.weblate.org/engage/filemanagersphere/) 
 
+<div align="center">
+    <a href="https://hosted.weblate.org/engage/filemanagersphere/">
+<img src="https://hosted.weblate.org/widgets/filemanagersphere/-/287x66-black.png" alt="Status da tradução" />
+</a>    
+</a>
+<details>
+<summary>Veja o status da tradução para todos os idiomas.</summary>
+
 [![Translation status](https://hosted.weblate.org/widgets/filemanagersphere/-/translations/multi-auto.svg)](https://hosted.weblate.org/engage/filemanagersphere/)
 
+</details>
+</div>
 ## Contribuição
 
 Contribuições são bem-vindas! Se você quiser melhorar o FileManagerSphere, sinta-se à vontade para enviar um pull request. Certifique-se de discutir suas ideias primeiro, abrindo uma issue.
