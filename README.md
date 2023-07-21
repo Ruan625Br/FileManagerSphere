@@ -62,6 +62,7 @@ Ajude a traduzir [as strings do aplicativo](https://hosted.weblate.org/engage/fi
 
 </details>
 </div>
+
 ## Contribuição
 
 Contribuições são bem-vindas! Se você quiser melhorar o FileManagerSphere, sinta-se à vontade para enviar um pull request. Certifique-se de discutir suas ideias primeiro, abrindo uma issue.
