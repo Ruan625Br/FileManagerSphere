@@ -38,6 +38,11 @@ O FileManagerSphere é uma poderosa ferramenta de gerenciamento de arquivos, pro
 
 - **Manipulação de Arquivos**: O FileManagerSphere oferece várias opções para manipular seus arquivos. Copie, mova, renomeie e exclua arquivos com apenas alguns cliques. Você também pode visualizar e editar arquivos diretamente na interface.
 
+## Traduções
+
+Ajude a traduzir [as strings do aplicativo](https://hosted.weblate.org/engage/filemanagersphere/) 
+
+[![Translation status](https://hosted.weblate.org/widgets/filemanagersphere/-/translations/multi-auto.svg)](https://hosted.weblate.org/engage/filemanagersphere/)
 
 ## Contribuição
 
