@@ -11,7 +11,7 @@
     <string name="file_list_action_sort_directories_first">Pastas primeiro</string>
     <string name="file_list_action_sort_path_specific">Somente pata esta pasta</string>
     <plurals name="file_list_action_toggle_grid">
-        <item quantity="one" tools:ignore="ImpliedQuantity">Alternar visualização de list</item>
+        <item quantity="one">Alternar visualização de list</item>
         <item quantity="other">Alternar visualização de grade</item>
     </plurals>
     <string name="refresh">Atualizar</string>
