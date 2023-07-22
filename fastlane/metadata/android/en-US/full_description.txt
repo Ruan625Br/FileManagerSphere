@@ -1,0 +1,10 @@
+The FileManagerSphere is a powerful file management tool designed to simplify and enhance your experience when dealing with documents, media, and other file types. With advanced features and an intuitive interface, FileManagerSphere provides a comprehensive solution for organizing, navigating, searching, and manipulating your files with ease.
+
+<b>Features</b>
+
+- Open source: Lightweight, clean, and secure.
+- Material Design: Follows the Material Design guidelines, with attention to details.
+- File support: View, extract, and create common compressed files.
+- Themes: Customizable user interface colors, plus optional true black night mode.
+- Elegant widgets that automatically adapt to your size
+- Well-implemented: Built upon the right things, including Java NIO File API and LiveData.

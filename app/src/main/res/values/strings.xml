@@ -1,215 +1,186 @@
 <resources>
     <string name="app_name">File Manager Sphere</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="auto" translatable="false">auto</string>
+    <string name="_lang_tag" translatable="false">en</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="sort">Classificar</string>
-    <string name="file_list_action_sort_by_name">Nome</string>
-    <string name="file_list_action_sort_by_type">Tipo</string>
-    <string name="file_list_action_sort_by_size">Tamanho</string>
-    <string name="file_list_action_sort_by_last_modified">Útilma Modificação</string>
-    <string name="file_list_action_sort_order_ascending">Crescente</string>
-    <string name="file_list_action_sort_directories_first">Pastas primeiro</string>
-    <string name="file_list_action_sort_path_specific">Somente pata esta pasta</string>
+    <string name="sort">Sort</string>
+    <string name="file_list_action_sort_by_name">Name</string>
+    <string name="file_list_action_sort_by_type">Type</string>
+    <string name="file_list_action_sort_by_size">Size</string>
+    <string name="file_list_action_sort_by_last_modified">Last Modified</string>
+    <string name="file_list_action_sort_order_ascending">Ascending</string>
+    <string name="file_list_action_sort_directories_first">Directories first</string>
+    <string name="file_list_action_sort_path_specific">This folder only</string>
     <plurals name="file_list_action_toggle_grid">
-        <item quantity="one">Alternar visualização de list</item>
-        <item quantity="other">Alternar visualização de grade</item>
+        <item quantity="one">Toggle list view</item>
+        <item quantity="other">Toggle grid view</item>
     </plurals>
-    <string name="refresh">Atualizar</string>
-    <string name="select_all">Selecionar tudo</string>
-    <string name="file_list_action_navigate_to">Ir para</string>
-    <string name="file_list_action_show_hidden_files">Mostrar arquivos ocultos</string>
-    <string name="share">Compartilhar</string>
-    <string name="file_list_action_copy_path">Copiar caminho</string>
-    <string name="fab_menu_action_create_file">Criar arquivo</string>
-    <string name="fab_menu_action_create_folder">Criar pasta</string>
-    <string name="file_item_action_archive">Compactar</string>
-    <string name="file_item_action_extract">Extrair</string>
-    <string name="rename">Renomear</string>
-    <string name="delete">Excluir</string>
-    <string name="copy">Copiar</string>
-    <string name="cut">Recortar</string>
-    <string name="extract">Extrair</string>
-    <string name="file_item_action_open_with">Abrir com</string>
-    <string name="file_item_action_properties">Propiedades</string>
+    <string name="refresh">Refresh</string>
+    <string name="select_all">Select all</string>
+    <string name="file_list_action_navigate_to">Go to</string>
+    <string name="file_list_action_show_hidden_files">Show hidden files</string>
+    <string name="share">Share</string>
+    <string name="file_list_action_copy_path">Copy path</string>
+    <string name="fab_menu_action_create_file">Create file</string>
+    <string name="fab_menu_action_create_folder">Create folder</string>
+    <string name="file_item_action_archive">Compress</string>
+    <string name="file_item_action_extract">Extract</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="copy">Copy</string>
+    <string name="cut">Cut</string>
+    <string name="extract">Extract</string>
+    <string name="file_item_action_open_with">Open with</string>
+    <string name="file_item_action_properties">Properties</string>
     <string name="dialog_ok">OK</string>
-    <string name="dialog_cancel">Cancelar</string>
-    <string name="dialog_new_folder">Nova pasta</string>
-    <string name="dialog_new_file">Novo arquivo</string>
-    <string name="dialog_name_file">Nome do arquivo</string>
-    <string name="dialog_name_folder">Nome da pasta</string>
-    <string name="dialog_file_exists">Um arquivo com esse nome já existe</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_new_folder">New folder</string>
+    <string name="dialog_new_file">New file</string>
+    <string name="dialog_name_file">File name</string>
+    <string name="dialog_name_folder">Folder name</string>
+    <string name="dialog_file_exists">A file with this name already exists</string>
     <string name="_24_de_mar">24 de mar.</string>
     <string name="_16_kb">16 KB</string>
     <string name="todo">TODO</string>
     <string name="testeeeeeeeee">TESTEEEEEEEEE</string>
-    <string name="file_list_select_action_archive">Compactar</string>
-
-    <string name="recente">Recentes</string>
+    <string name="file_list_select_action_archive">Compress</string>
+    <string name="recente">Recent</string>
     <string name="storage">Storage</string>
-    <string name="used_space">Espaço usado</string>
-    <string name="free_space">Espaço livre</string>
+    <string name="used_space">Used Space</string>
+    <string name="free_space">Free Space</string>
     <string name="gb">GB</string>
     <string name="gb_total">128</string>
     <string name="internal_st">Internal storage</string>
-    <string name="policy_and_terms"><![CDATA[Privacy Policy and Terms & conditions]]></string>
-    <string name="ok"></string>
-    <string name="allow">Permitir</string>
+    <string name="policy_and_terms"><![CDATA[Privacy Policy and Terms & Conditions]]></string>
+    <string name="ok">Ok</string>
+    <string name="allow">Allow</string>
     <string name="download">Download</string>
-    <string name="permission_required">Permissão Necessária</string>
-    <string name="permission_required_body">Para oferecer uma melhor experiência de uso, precisamos acessar os arquivos armazenados no seu dispositivo. Essa permissão é necessária para que o aplicativo possa carregar e exibir imagens, vídeos, documentos e outros arquivos relevantes. Além disso, ela é essencial para permitir recursos como compartilhamento de arquivos, armazenamento de dados offline e manipulação de documentos. Garantimos que seus dados serão tratados com segurança e privacidade. Para conceder a permissão, clique em "Permitir" abaixo.</string>
-
-    <string name="action_bottom_select">Selecionar</string>
-
-
-    <string name="action_mode_title">selecionado</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="permission_required_body">To provide a better user experience, we need to access the files stored on your device. This permission is necessary for the application to load and display images, videos, documents, and other relevant files. Additionally, it is essential to enable features such as file sharing, offline data storage, and document manipulation. We assure you that your data will be handled securely and with privacy in mind. To grant the permission, click "Allow" below.</string>
+    <string name="action_bottom_select">Select</string>
+    <string name="action_mode_title">selected</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
-
     <!-- Themes Preferences -->
     <string name="signature_title">Your signature</string>
-    <string name="themes_title">Tema</string>
-
+    <string name="themes_title">Theme</string>
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-
-    <string name="settings">Configuração</string>
-
-    <string name="category_aparencia">Aparência</string>
-
-
-    <string name="restriction_folder">Pasta com restrição</string>
-    <string name="e_restriction_folder">Os conteúdos desta pasta não podem ser exibidos devido à restrições do android
-    </string>
-
+    <string name="settings">Settings</string>
+    <string name="category_aparencia">Appearance</string>
+    <string name="restriction_folder">Restricted Folder</string>
+    <string name="e_restriction_folder">The contents of this folder cannot be displayed due to Android restrictions.</string>
     <plurals name="renamingItems">
-        <item quantity="one">Renomeando %d itens</item>
-        <item quantity="two">%d items renomeados de</item>
-        <item quantity="other">%d</item>
+        <item quantity="one">Renaming %d item</item>
+        <item quantity="other">Renaming %d items</item>
     </plurals>
     <plurals name="movingItems">
-        <item quantity="one">Movendo %d itens</item>
-        <item quantity="other">Movendo %d itens: Movendo "%s" para "%s"</item>
-
+        <item quantity="one">Moving %d item</item>
+        <item quantity="other">Moving %d items: Moving "%s" to "%s"</item>
     </plurals>
-
-    <string name="exit_confirmation">Confirmação de saída</string>
-    <string name="file_modified_are_you_sure">O arquivo foi modificado. Tem certeza?</string>
-    <string name="no">Não</string>
-    <string name="yes">Sim</string>
-    <string name="save_and_exit">Salvar e sair</string>
-    <string name="search_option_match_case">Ignorar maiúsculas/minúsculas</string>
-    <string name="search_option_regex">Expressão regular</string>
-    <string name="search_option_whole_word">Palavra inteira</string>
-
-
+    <string name="exit_confirmation">Exit Confirmation</string>
+    <string name="file_modified_are_you_sure">The file has been modified. Are you sure?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="save_and_exit">Save and Exit</string>
+    <string name="search_option_match_case">Match case</string>
+    <string name="search_option_regex">Regular expression</string>
+    <string name="search_option_whole_word">Whole word</string>
     <plurals name="search_results">
         <item quantity="one">%d result</item>
         <item quantity="other">%d results</item>
     </plurals>
-
-    <string name="search">Pesquisar</string>
+    <string name="search">Search</string>
     <string name="java">Java</string>
-
-    <string name="undo">Desfazer</string>
-    <string name="redo">Refazer</string>
-    <string name="save">Salvar</string>
-    <string name="save_as">Salvar como</string>
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
+    <string name="save">Save</string>
+    <string name="save_as">Save as</string>
     <string name="wrap">Wrap</string>
-
     <string name="replacement_text">Replacement</string>
-    <string name="code_editor">Editor de codigos</string>
-
-    <string name="save_file_error">Erro ao salvar arquivo</string>
+    <string name="code_editor">Code Editor</string>
+    <string name="save_file_error">Error saving file</string>
     <plurals name="an_error_message_occurred">
-        <item quantity="one">Ocorreu um erro ao salvar o arquivo "%s"</item>
-        <item quantity="other">Ocorreram %d erros ao salvar o arquivo "%s"</item>
+        <item quantity="one">An error occurred while saving the file "%s"</item>
+        <item quantity="other">%d errors occurred while saving the file "%s"</item>
     </plurals>
     <string name="reply_title">Default reply action</string>
-
     <plurals name="plurals_file_already_exists">
-        <item quantity="one">Substituir arquivo</item>
-        <item quantity="other">O arquivo "\"%s\"" já existe na pasta de destino, deseja substituí-lo?</item>
+        <item quantity="one">Replace file</item>
+        <item quantity="other">The file "\"%s\"" already exists in the destination folder. Do you want to replace it?</item>
     </plurals>
-    <string name="replace">Substitui</string>
-    <string name="skip">Pular</string>
-
-    <string name="empty">vazio</string>
-    <string name="loading">carregando</string>
-    <string name="error">erro</string>
-    <string name="error_occurred">Erro</string>
-    <string name="warning">Aviso</string>
-    <string name="error_occurred_during_operation">Ocorreu um erro durante a  operação</string>
-
+    <string name="replace">Replace</string>
+    <string name="skip">Skip</string>
+    <string name="empty">empty</string>
+    <string name="loading">loading</string>
+    <string name="error">error</string>
+    <string name="error_occurred">Error</string>
+    <string name="warning">Warning</string>
+    <string name="error_occurred_during_operation">An error occurred during the operation</string>
     <plurals name="operation_moving_files">
-        <item quantity="one">Movendo "\"%2$s\""</item>
-        <item quantity="other">Movendo %1$d itens</item>
+        <item quantity="one">Moving "\"%2$s\""</item>
+        <item quantity="other">Moving %1$d items</item>
     </plurals>
     <plurals name="operation_copying_files">
-        <item quantity="one">Copiando "\"%2$s\""</item>
-        <item quantity="other">Copiando %1$d itens</item>
+        <item quantity="one">Copying "\"%2$s\""</item>
+        <item quantity="other">Copying %1$d items</item>
     </plurals>
     <plurals name="operation_extracting_files">
-        <item quantity="one">Extraindo "\"%2$s\""</item>
-        <item quantity="other">Extraindo %1$d itens</item>
+        <item quantity="one">Extracting "\"%2$s\""</item>
+        <item quantity="other">Extracting %1$d items</item>
     </plurals>
     <plurals name="operation_generic_files">
-        <item quantity="one">Operando "\"%2$s\""</item>
-        <item quantity="other">Operando %1$d itens</item>
+        <item quantity="one">Operating "\"%2$s\""</item>
+        <item quantity="other">Operating %1$d items</item>
     </plurals>
-    <string name="file_list_subtitle_separator">,\u0020</string>
+    <string name="file_list_subtitle_separator">, </string>
     <plurals name="file_list_subtitle_directory_count_format">
-        <item quantity="one">%1$,d pasta</item>
-        <item quantity="other">%1$,d pastas</item>
+        <item quantity="one">%1$,d folder</item>
+        <item quantity="other">%1$,d folders</item>
     </plurals>
     <plurals name="file_list_subtitle_file_count_format">
-        <item quantity="one">%1$,d arquivo</item>
-        <item quantity="other">%1$,d arquivos</item>
+        <item quantity="one">%1$,d file</item>
+        <item quantity="other">%1$,d files</item>
     </plurals>
     <plurals name="file_list_selected_count_format">
-        <item quantity="one">%1$,d selecionado</item>
-        <item quantity="other">%1$,d selecionados</item>
+        <item quantity="one">%1$,d selected</item>
+        <item quantity="other">%1$,d selected</item>
     </plurals>
     <plurals name="file_list_delete_count_format">
-        <item quantity="one">Excluir "\"%2$s\""?</item>
-        <item quantity="other">Excluir %1$,d itens?</item>
+        <item quantity="one">Delete "\"%2$s\""?</item>
+        <item quantity="other">Delete %1$d items?</item>
     </plurals>
     <plurals name="files_files_renaming_count_format">
-        <item quantity="one">Renomeando "\"%s\""</item>
-        <item quantity="other">Renomeando %1$d itens</item>
+        <item quantity="one">Renaming "\"%s\""</item>
+        <item quantity="other">Renaming %1$d items</item>
     </plurals>
     <plurals name="files_files_renaming_msg_count_format">
-        <item quantity="other">Renomeando "\"%2s\"" para "\"%3s\""</item>
+        <item quantity="other">Renaming "\"%2s\"" to "\"%3s\""</item>
     </plurals>
-
-    <string name="set">Definir</string>
-
+    <string name="set">Set</string>
     <!--Preferences-->
     <string name="pref_key_view_file_information">view_file_information</string>
-
-    <string name="pref_behavior_default_folder_title">Pasta padrão</string>
-    <string name="pref_behavior_select_file_long_click">Selecionar arquivo no clique longo</string>
-    <string name="pref_anim_in_file_list">Animação na lista de arquivos</string>
-    <string name="pref_rounded_corners">Cantos arredondados</string>
+    <string name="pref_behavior_default_folder_title">Default folder</string>
+    <string name="pref_behavior_select_file_long_click">Select file on long click</string>
+    <string name="pref_anim_in_file_list">Animation in file list</string>
+    <string name="pref_rounded_corners">Rounded corners</string>
     <string name="pref_dynamic_colors">Material you</string>
-    <string name="pref_behavior_set_default_folder_title">Pasta padrão</string>
+    <string name="pref_behavior_set_default_folder_title">Default folder</string>
     <string name="pref_view_file_information_title">View file information</string>
-
-    <string name="pref_summary_anim_in_file_list">Adicione animações suaves à lista de arquivos para uma experiência visualmente agradável.</string>
-    <string name="pref_summary_rounded_corners">Adicione cantos arredondados aos elementos da interface para um visual mais suave e moderno.</string>
-    <string name="pref_summary_dynamic_colors">Aproveite uma experiência mais próxima do seu dispositivo (requer reinicialização).</string>
-    <string name="pref_cat_appearance">Aparência</string>
+    <string name="pref_summary_anim_in_file_list">Add smooth animations to the file list for a visually pleasing experience.</string>
+    <string name="pref_summary_rounded_corners">Add rounded corners to interface elements for a smoother and modern look.</string>
+    <string name="pref_summary_dynamic_colors">Enjoy a more personalized experience close to your device (requires a restart).</string>
+    <string name="pref_cat_appearance">Appearance</string>
     <string name="pref_interface_title">Interface</string>
-    <string name="pref_behavior_title">Comportamento</string>
-
-    <string name="pref_appearance_description">Tema, animações, recursos, etc.</string>
-
-    <string name="pref_interface_description">Personalize a aparência do aplicativo de acordo com as suas preferências.</string>
-    <string name="pref_behavior_description">Pasta padrão, Modo de exibição, etc.</string>
-
+    <string name="pref_behavior_title">Behavior</string>
+    <string name="pref_app_language_title">Language</string>
+    <string name="pref_appearance_description">Theme, animations, features, etc.</string>
+    <string name="pref_interface_description">Personalize the appearance of the application according to your preferences.</string>
+    <string name="pref_behavior_description">Default folder, View mode, etc.</string>
     <string name="default_pref_default_folder">/storage/emulated/0</string>
     <bool name="default_is_directories_first">true</bool>
     <bool name="default_show_hidden_file">false</bool>
@@ -221,12 +192,9 @@
     <string name="default_list_categories_path" />
     <string name="default_list_categories_name" />
     <string name="default_view_file_information">EVERYTHING</string>
-
-
     <string name="radio_zip">.zip</string>
     <string name="radio_tar_xz">.tar.xz</string>
     <string name="radio_7z">.7z</string>
-
     <string name="compression_zip">.zip</string>
     <string name="compression_tar">.tar</string>
     <string name="compression_gzip">.gzip</string>
@@ -234,21 +202,18 @@
     <string name="compression_tar_xz">.tar.xz</string>
     <string name="compression_tar_gz">.tar.gz</string>
     <string name="compression_zstandard">Zstandard</string>
-    <string name="format_file">Formato do arquivo</string>
-
+    <string name="format_file">File format</string>
     <string name="path_whatsapp">/storage/emulated/0/Android/media/com.whatsapp/WhatsApp</string>
-    <string name="category_name">Nome da categoria</string>
-    <string name="category_path">Caminho da categoria</string>
-    <string name="category_add">Adicionar categoria</string>
-
-    <string name="error_empty">Campo vazio</string>
-    <string name="folder_not_exist">Pasta não existe</string>
-    <string name="invalid_path">Caiminho inválido</string>
-    <string name="about">Sobre</string>
-    <string name="info_app_desc">" Gerenciador de arquivos Android intuitivo e eficiente. Simplifique sua organização de arquivos"</string>
-    <string name="mn_version">Versâo</string>
-    <string name="mn_code">Código-fonte</string>
-    <string name="mn_licenses">Licenças</string>
-    <string name="mn_author">Desenvolvido por Juan Nascimento</string>
-
+    <string name="category_name">Category name</string>
+    <string name="category_path">Category path</string>
+    <string name="category_add">Add category</string>
+    <string name="error_empty">Field is empty</string>
+    <string name="folder_not_exist">Folder does not exist</string>
+    <string name="invalid_path">Invalid path</string>
+    <string name="about">About</string>
+    <string name="info_app_desc">"Intuitive and efficient Android file manager. Simplify your file organization"</string>
+    <string name="mn_version">Version</string>
+    <string name="mn_code">Source Code</string>
+    <string name="mn_licenses">Licenses</string>
+    <string name="mn_author">Developed by Juan Nascimento</string>
 </resources>
