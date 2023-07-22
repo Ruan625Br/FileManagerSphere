@@ -66,7 +66,6 @@
     <string name="signature_title">Sua assinatura</string>
     <string name="themes_title">Tema</string>
     <!-- Sync Preferences -->
-    <string name="sync_title"></string>
     <string name="attachment_title">Baixar anexos recebidos</string>
     <string name="attachment_summary_on">Baixar anexos automaticamente para e-mails recebidos</string>
     <string name="attachment_summary_off">Baixe anexos apenas quando solicitados manualmente</string>
