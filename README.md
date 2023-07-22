@@ -12,9 +12,18 @@
         <a href="LICENSE">
             <img src="https://img.shields.io/github/license/Ruan625Br/FileManagerSphere?color=blue" alt="License">
         </a>
+          <a href="https://apt.izzysoft.de/fdroid/index/apk/com.etb.filemanager/">
+                <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.etb.filemanager" 
+                     alt="Get it on IzzyOnDroid"
+        </a>
     </p>
 </p>
-
+<p  align="center">
+        <a href="https://apt.izzysoft.de/fdroid/index/apk/com.etb.filemanager/">
+                <img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid"
+                        width="170">
+        </a>     
+  </p>
 ## Visão geral
 
 O FileManagerSphere é uma poderosa ferramenta de gerenciamento de arquivos, projetada para simplificar e aprimorar sua experiência ao lidar com documentos, mídia e outros tipos de arquivos. Com recursos avançados e uma interface intuitiva, o FileManagerSphere oferece uma solução abrangente para organizar, navegar, buscar e manipular seus arquivos com facilidade.
