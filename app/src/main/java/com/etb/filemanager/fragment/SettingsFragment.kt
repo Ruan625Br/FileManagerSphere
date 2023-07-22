@@ -1,17 +1,11 @@
 package com.etb.filemanager.fragment
 
-import android.annotation.TargetApi
-import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
 import android.os.Bundle
-import android.os.LocaleList
-import android.util.ArrayMap
-import androidx.core.content.ContextCompat
+import androidx.collection.ArrayMap;
 import androidx.preference.Preference
 import com.etb.filemanager.R
-import com.etb.filemanager.activity.MainActivity
 import com.etb.filemanager.files.util.LangUtils
+import com.etb.filemanager.files.util.getStringArray
 import com.etb.filemanager.settings.preference.PreferenceFragment
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.settings.preference.SettingsDataStore
@@ -40,7 +34,7 @@ class SettingsFragment : PreferenceFragment() {
         //Language
 
         var mCurrentLang = Preferences.Interface.language
-        val locales: ArrayMap<String, Locale> = LangUtils().getAppLanguages(requireActivity())
+        val locales = LangUtils.getAppLanguages(requireActivity())
         val languageNames = getLanguagesL(locales)
         val languages = arrayOfNulls<String>(languageNames.size)
         for (i in 0 until locales.size) {
@@ -48,7 +42,7 @@ class SettingsFragment : PreferenceFragment() {
         }
         var localeIndex = locales.indexOfKey(mCurrentLang)
         if (localeIndex < 0) {
-            localeIndex = locales.indexOfKey(LangUtils().LANG_AUTO)
+            localeIndex = locales.indexOfKey(LangUtils.LANG_AUTO)
         }
         val locale: Preference = Objects.requireNonNull(findPreference("custom_locale"))
         locale.summary = languageNames[localeIndex]
@@ -58,7 +52,7 @@ class SettingsFragment : PreferenceFragment() {
                     if (which != localeIndex) {
                         mCurrentLang = languages[which]!!
                         Preferences.Interface.language = languages[which]!!
-                        updateAppLanguage(locales[languages[which]]!!)
+                        updateAppLanguage(Locale(languages[which]))
                         restartActivity()
                     }
 
@@ -97,25 +91,42 @@ class SettingsFragment : PreferenceFragment() {
 
 
 
+
+
     private fun getLanguagesL(locales: ArrayMap<String, Locale>): Array<CharSequence?> {
         val localesL = arrayOfNulls<CharSequence>(locales.size)
         var locale: Locale?
         for (i in 0 until locales.size) {
             locale = locales.valueAt(i)
             if (locale != null) {
-                if (LangUtils().LANG_AUTO == locales.keyAt(i)) {
+                if (LangUtils.LANG_AUTO == locales.keyAt(i)) {
                     localesL[i] = requireActivity().getString(R.string.auto)
                 } else {
                     localesL[i] = locale.getDisplayName(locale)
                 }
             } else {
-                // Defina aqui um valor padrão caso a localização seja nula.
-                // Por exemplo, você pode usar "Automático" para a chave LANG_AUTO.
-                localesL[i] = LangUtils().LANG_AUTO
+                localesL[i] = LangUtils.LANG_AUTO
             }
         }
         return localesL
     }
+
+
+
+/*
+    private fun getLanguagesL(locales: ArrayMap<String, Locale>): Array<CharSequence?> {
+        val localesL = arrayOfNulls<CharSequence>(locales.size)
+        var locale: Locale
+        for (i in 0 until locales.size) {
+            locale = locales.valueAt(i)
+            if (LangUtils.LANG_AUTO == locales.keyAt(i)) {
+                localesL[i] = requireActivity().getString(R.string.auto)
+            } else localesL[i] = locale.getDisplayName(locale)
+        }
+        return localesL
+    }
+*/
+
 }
 
 

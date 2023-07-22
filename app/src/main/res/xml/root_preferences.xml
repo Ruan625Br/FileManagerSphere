@@ -27,6 +27,7 @@
     <Preference
             app:key="custom_locale"
             app:icon="@drawable/ic_translate"
+            android:enabled="false"
             app:title="@string/pref_app_language_title"
             tools:summary="Auto" />
 </PreferenceScreen>

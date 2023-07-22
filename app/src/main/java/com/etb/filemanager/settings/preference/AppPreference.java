@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
 
@@ -311,7 +312,5 @@ public class AppPreference {
         }
         throw new IllegalArgumentException("Pref key not found.");
     }
-
-
 
 }
