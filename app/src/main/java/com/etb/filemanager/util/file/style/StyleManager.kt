@@ -72,6 +72,23 @@ class StyleManager {
        context.setTheme(R.style.Theme_MaterialYouColors)
     }
 
+    fun getAppTheme(optionStyle: OptionStyle): Int{
+        return when(optionStyle){
+            OptionStyle.FOLLOW_SYSTEM ->    AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+
+            OptionStyle.LIGHT_THEME -> AppCompatDelegate.MODE_NIGHT_NO
+            OptionStyle.DARK_THEME -> AppCompatDelegate.MODE_NIGHT_YES
+            OptionStyle.PINK_THEME -> R.style.AppThemePink
+            OptionStyle.GREEN_THEME_LIGHT -> R.style.AppThemeGreen_Ligth
+            OptionStyle.GREEN_THEME_DARK -> R.style.AppThemeGreen_Dark
+            OptionStyle.BLUE_THEME_LIGHT -> R.style.AppThemeBlue_light
+            OptionStyle.BLUE_THEME_DARK -> R.style.AppThemeBlue_Dark
+            OptionStyle.RED_THEME_LIGHT -> R.style.AppThemeRed_light
+            OptionStyle.RED_THEME_DARK -> R.style.AppThemeRed_Dark
+            OptionStyle.DYNAMIC_COLORS -> R.style.Theme_MaterialYouColors
+        }
+    }
+
     enum class OptionStyle {
         FOLLOW_SYSTEM,
         LIGHT_THEME,

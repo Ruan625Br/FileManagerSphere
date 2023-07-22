@@ -1,9 +1,11 @@
 package com.etb.filemanager.settings.preference
 
+import android.content.Context
 import com.etb.filemanager.manager.files.filelist.FileSortOptions
 import com.etb.filemanager.manager.files.filelist.FileSortOptions.SortBy
 import com.etb.filemanager.util.file.jsonStringToList
 import com.etb.filemanager.util.file.stringListToJsonString
+import com.etb.filemanager.util.file.style.StyleManager
 
 
 class Preferences {
@@ -18,6 +20,10 @@ class Preferences {
             set(value) {
                 AppPreference.set(AppPreference.PreferenceKey.PREF_DYNAMIC_COLORS_BOOL, value)
             }
+
+        fun getAppTheme(): Int{
+            return StyleManager().getAppTheme(StyleManager.OptionStyle.valueOf(appTheme))
+        }
     }
 
     object Interface {
@@ -44,6 +50,16 @@ class Preferences {
                     value.name
                 )
             }
+        var language: String
+            get() = AppPreference.getString(AppPreference.PreferenceKey.PREF_CUSTOM_LOCALE_STR)
+            set(value) {
+                AppPreference.set(AppPreference.PreferenceKey.PREF_CUSTOM_LOCALE_STR, value)
+            }
+
+        fun getLanguage(context: Context): String{
+            val appPreference = AppPreference.getNewInstace(context)
+            return (appPreference.getValue(AppPreference.PreferenceKey.PREF_CUSTOM_LOCALE_STR) as String)
+        }
     }
 
     object Behavior {

@@ -1,6 +1,6 @@
-<PreferenceScreen
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
 
     <Preference
@@ -24,4 +24,9 @@
             app:summary="@string/pref_behavior_description"
             android:fragment="com.etb.filemanager.settings.preference.BehaviorPreferences"
           />
+    <Preference
+            app:key="custom_locale"
+            app:icon="@drawable/ic_translate"
+            app:title="@string/pref_app_language_title"
+            tools:summary="Auto" />
 </PreferenceScreen>
