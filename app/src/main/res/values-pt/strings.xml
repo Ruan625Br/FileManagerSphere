@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">File Manager Sphere</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">Olá fragmento em branco</string>
     <string name="sort">Classificar</string>
     <string name="file_list_action_sort_by_name">Nome</string>
     <string name="file_list_action_sort_by_type">Tipo</string>
@@ -13,6 +13,7 @@
     <string name="file_list_action_sort_path_specific">Somente pata esta pasta</string>
     <plurals name="file_list_action_toggle_grid">
         <item quantity="one">Alternar visualização de lista</item>
+        <item quantity="many">Alternar visualização de grade</item>
         <item quantity="other">Alternar visualização de grade</item>
     </plurals>
     <string name="refresh">Atualizar</string>
@@ -45,12 +46,12 @@
     <string name="testeeeeeeeee">TESTEEEEEEEEE</string>
     <string name="file_list_select_action_archive">Compactar</string>
     <string name="recente">Recentes</string>
-    <string name="storage">Storage</string>
+    <string name="storage">Armazenamento</string>
     <string name="used_space">Espaço usado</string>
     <string name="free_space">Espaço livre</string>
     <string name="gb">GB</string>
     <string name="gb_total">128</string>
-    <string name="internal_st">Internal storage</string>
+    <string name="internal_st">Armazenamento interno</string>
     <string name="policy_and_terms"><![CDATA[Privacy Policy and Terms & conditions]]></string>
     <string name="allow">Permitir</string>
     <string name="download">Download</string>
@@ -60,15 +61,15 @@
     <string name="action_mode_title">selecionado</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="sync_header">Sincronizar</string>
     <!-- Themes Preferences -->
-    <string name="signature_title">Your signature</string>
+    <string name="signature_title">Sua assinatura</string>
     <string name="themes_title">Tema</string>
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="sync_title"></string>
+    <string name="attachment_title">Baixar anexos recebidos</string>
+    <string name="attachment_summary_on">Baixar anexos automaticamente para e-mails recebidos</string>
+    <string name="attachment_summary_off">Baixe anexos apenas quando solicitados manualmente</string>
     <string name="settings">Configuração</string>
     <string name="category_aparencia">Aparência</string>
     <string name="restriction_folder">Pasta com restrição</string>
@@ -76,7 +77,7 @@
     </string>
     <plurals name="renamingItems">
         <item quantity="one">Renomeando %d itens</item>
-        <item quantity="two">%d items renomeados de</item>
+        <item quantity="many">Renomeando %d itens</item>
         <item quantity="other">%d</item>
     </plurals>
     <plurals name="movingItems">
