@@ -1,4 +1,4 @@
-<p align="center"><img src="fastlane/metadata/android/pt-BR/images/icon.png" width="150"></p>
+<p align="center"><img src="fastlane/metadata/android/en-US/images/icon.png" width="150"></p>
 <h1 align="center"><b>FileManagerSphere</b></h1>
 <h4 align="center">Bem-vindo ao FileManagerSphere - seu gerenciador de arquivos personalizado!</h4>
 
@@ -30,9 +30,9 @@ O FileManagerSphere é uma poderosa ferramenta de gerenciamento de arquivos, pro
     
 ## Preview
 
-<img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/1.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/2.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/3.jpg" width="32%" />
-<img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/4.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/5.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/6.jpg" width="32%" />
-<img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/7.jpg" width="32%" /> <img src="fastlane/metadata/android/pt-BR/images/phoneScreenshots/8.jpg" width="32%" /></p>
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="32%" />
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" width="32%" />
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.jpg" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.jpg" width="32%" /></p>
 
 
 
