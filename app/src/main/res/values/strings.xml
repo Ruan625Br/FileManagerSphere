@@ -216,4 +216,18 @@
     <string name="mn_code">Source Code</string>
     <string name="mn_licenses">Licenses</string>
     <string name="mn_author">Developed by Juan Nascimento</string>
+
+    <string-array name="themes_entries">
+        <item>Follow the system</item>
+        <item>Light theme</item>
+        <item>Dark theme</item>
+        <item>Pink theme</item>
+        <item>Green theme light mode</item>
+        <item>Green theme dark mode</item>
+        <item>Blue theme light mode</item>
+        <item>Blue theme dark mode</item>
+        <item>Red theme light mode</item>
+        <item>Red theme dark mode</item>
+        <item>Dynamic Colors</item>
+    </string-array>
 </resources>
