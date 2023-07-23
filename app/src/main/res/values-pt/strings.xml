@@ -80,7 +80,7 @@
     </plurals>
     <plurals name="movingItems">
         <item quantity="one">Movendo %d itens</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Movendo %d itens: Movendo %s para %s</item>
     </plurals>
     <string name="exit_confirmation">Confirmação de saída</string>
@@ -93,7 +93,7 @@
     <string name="search_option_whole_word">Palavra inteira</string>
     <plurals name="search_results">
         <item quantity="one">%d result</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">%d results</item>
     </plurals>
     <string name="search">Pesquisar</string>
@@ -108,13 +108,13 @@
     <string name="save_file_error">Erro ao salvar arquivo</string>
     <plurals name="an_error_message_occurred">
         <item quantity="one">Ocorreu um erro ao salvar o arquivo %s</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Ocorreram %d erros ao salvar o arquivo %s</item>
     </plurals>
     <string name="reply_title">Default reply action</string>
     <plurals name="plurals_file_already_exists">
         <item quantity="one">O arquivo \"%s\" já existe na pasta de destino, deseja substituí-lo\?</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">O arquivo \"%s\" já existe na pasta de destino, deseja substituí-lo\?</item>
     </plurals>
     <string name="replace">Substitui</string>
@@ -127,53 +127,53 @@
     <string name="error_occurred_during_operation">Ocorreu um erro durante a operação</string>
     <plurals name="operation_moving_files">
         <item quantity="one">Movendo \"%2$s\"</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Movendo %1$d itens</item>
     </plurals>
     <plurals name="operation_copying_files">
         <item quantity="one">Copiando \"%2$s\"</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Copiando %1$d itens</item>
     </plurals>
     <plurals name="operation_extracting_files">
         <item quantity="one">Extraindo \"%2$s\"</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Extraindo %1$d itens</item>
     </plurals>
     <plurals name="operation_generic_files">
         <item quantity="one">Operando \"%2$s\"</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Operando %1$d itens</item>
     </plurals>
     <string name="file_list_subtitle_separator">", "</string>
     <plurals name="file_list_subtitle_directory_count_format">
         <item quantity="one">%1$,d pasta</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">%1$,d pastas</item>
     </plurals>
     <plurals name="file_list_subtitle_file_count_format">
         <item quantity="one">%1$,d arquivo</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">%1$,d arquivos</item>
     </plurals>
     <plurals name="file_list_selected_count_format">
         <item quantity="one">%1$,d selecionado</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">%1$,d selecionados</item>
     </plurals>
     <plurals name="file_list_delete_count_format">
         <item quantity="one">Excluir \"%2$s\"\?</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Excluir %1$,d itens\?</item>
     </plurals>
     <plurals name="files_files_renaming_count_format">
         <item quantity="one">Renomeando \"%s\"</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Renomeando %1$d itens</item>
     </plurals>
     <plurals name="files_files_renaming_msg_count_format">
         <item quantity="one">Renomeando \"%2s\" para \"%3s\"</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Renomeando \"%2s\" para \"%3s\"</item>
     </plurals>
     <string name="set">Definir</string>
@@ -231,8 +231,4 @@
     <string name="ok">Ok</string>
     <string name="sync_title">Sincronizar e-mail periodicamente</string>
     <string name="pref_app_language_title">Linguagem</string>
-    <string name="default_list_categories_path"></string>
-    <string name="default_list_categories_name"></string>
-    <string name="_lang_tag" translatable="false"></string>
-    <string name="auto" translatable="false"></string>
 </resources>
