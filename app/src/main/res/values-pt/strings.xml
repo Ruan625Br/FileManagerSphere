@@ -52,11 +52,11 @@
     <string name="gb">GB</string>
     <string name="gb_total">128</string>
     <string name="internal_st">Armazenamento interno</string>
-    <string name="policy_and_terms"><![CDATA[Privacy Policy and Terms & conditions]]></string>
+    <string name="policy_and_terms">Privacy Policy and Terms &amp; conditions</string>
     <string name="allow">Permitir</string>
     <string name="download">Download</string>
     <string name="permission_required">Permissão Necessária</string>
-    <string name="permission_required_body">Para oferecer uma melhor experiência de uso, precisamos acessar os arquivos armazenados no seu dispositivo. Essa permissão é necessária para que o aplicativo possa carregar e exibir imagens, vídeos, documentos e outros arquivos relevantes. Além disso, ela é essencial para permitir recursos como compartilhamento de arquivos, armazenamento de dados offline e manipulação de documentos. Garantimos que seus dados serão tratados com segurança e privacidade. Para conceder a permissão, clique em "Permitir" abaixo.</string>
+    <string name="permission_required_body">Para oferecer uma melhor experiência de uso, precisamos acessar os arquivos armazenados no seu dispositivo. Essa permissão é necessária para que o aplicativo possa carregar e exibir imagens, vídeos, documentos e outros arquivos relevantes. Além disso, ela é essencial para permitir recursos como compartilhamento de arquivos, armazenamento de dados offline e manipulação de documentos. Garantimos que seus dados serão tratados com segurança e privacidade. Para conceder a permissão, clique em Permitir abaixo.</string>
     <string name="action_bottom_select">Selecionar</string>
     <string name="action_mode_title">selecionado</string>
     <!-- Preference Titles -->
@@ -72,8 +72,7 @@
     <string name="settings">Configuração</string>
     <string name="category_aparencia">Aparência</string>
     <string name="restriction_folder">Pasta com restrição</string>
-    <string name="e_restriction_folder">Os conteúdos desta pasta não podem ser exibidos devido à restrições do android
-    </string>
+    <string name="e_restriction_folder">Os conteúdos desta pasta não podem ser exibidos devido à restrições do android</string>
     <plurals name="renamingItems">
         <item quantity="one">Renomeando %d itens</item>
         <item quantity="many">Renomeando %d itens</item>
@@ -81,10 +80,11 @@
     </plurals>
     <plurals name="movingItems">
         <item quantity="one">Movendo %d itens</item>
-        <item quantity="other">Movendo %d itens: Movendo "%s" para "%s"</item>
+        <item quantity="many"></item>
+        <item quantity="other">Movendo %d itens: Movendo %s para %s</item>
     </plurals>
     <string name="exit_confirmation">Confirmação de saída</string>
-    <string name="file_modified_are_you_sure">O arquivo foi modificado. Tem certeza?</string>
+    <string name="file_modified_are_you_sure">O arquivo foi modificado. Tem certeza\?</string>
     <string name="no">Não</string>
     <string name="yes">Sim</string>
     <string name="save_and_exit">Salvar e sair</string>
@@ -93,6 +93,7 @@
     <string name="search_option_whole_word">Palavra inteira</string>
     <plurals name="search_results">
         <item quantity="one">%d result</item>
+        <item quantity="many"></item>
         <item quantity="other">%d results</item>
     </plurals>
     <string name="search">Pesquisar</string>
@@ -106,13 +107,15 @@
     <string name="code_editor">Editor de codigos</string>
     <string name="save_file_error">Erro ao salvar arquivo</string>
     <plurals name="an_error_message_occurred">
-        <item quantity="one">Ocorreu um erro ao salvar o arquivo "%s"</item>
-        <item quantity="other">Ocorreram %d erros ao salvar o arquivo "%s"</item>
+        <item quantity="one">Ocorreu um erro ao salvar o arquivo %s</item>
+        <item quantity="many"></item>
+        <item quantity="other">Ocorreram %d erros ao salvar o arquivo %s</item>
     </plurals>
     <string name="reply_title">Default reply action</string>
     <plurals name="plurals_file_already_exists">
-        <item quantity="one">O arquivo "\"%s\"" já existe na pasta de destino, deseja substituí-lo?</item>
-        <item quantity="other">O arquivo "\"%s\"" já existe na pasta de destino, deseja substituí-lo?</item>
+        <item quantity="one">O arquivo \"%s\" já existe na pasta de destino, deseja substituí-lo\?</item>
+        <item quantity="many"></item>
+        <item quantity="other">O arquivo \"%s\" já existe na pasta de destino, deseja substituí-lo\?</item>
     </plurals>
     <string name="replace">Substitui</string>
     <string name="skip">Pular</string>
@@ -121,47 +124,57 @@
     <string name="error">erro</string>
     <string name="error_occurred">Erro</string>
     <string name="warning">Aviso</string>
-    <string name="error_occurred_during_operation">Ocorreu um erro durante a  operação</string>
+    <string name="error_occurred_during_operation">Ocorreu um erro durante a operação</string>
     <plurals name="operation_moving_files">
-        <item quantity="one">Movendo "\"%2$s\""</item>
+        <item quantity="one">Movendo \"%2$s\"</item>
+        <item quantity="many"></item>
         <item quantity="other">Movendo %1$d itens</item>
     </plurals>
     <plurals name="operation_copying_files">
-        <item quantity="one">Copiando "\"%2$s\""</item>
+        <item quantity="one">Copiando \"%2$s\"</item>
+        <item quantity="many"></item>
         <item quantity="other">Copiando %1$d itens</item>
     </plurals>
     <plurals name="operation_extracting_files">
-        <item quantity="one">Extraindo "\"%2$s\""</item>
+        <item quantity="one">Extraindo \"%2$s\"</item>
+        <item quantity="many"></item>
         <item quantity="other">Extraindo %1$d itens</item>
     </plurals>
     <plurals name="operation_generic_files">
-        <item quantity="one">Operando "\"%2$s\""</item>
+        <item quantity="one">Operando \"%2$s\"</item>
+        <item quantity="many"></item>
         <item quantity="other">Operando %1$d itens</item>
     </plurals>
-    <string name="file_list_subtitle_separator">,\u0020</string>
+    <string name="file_list_subtitle_separator">", "</string>
     <plurals name="file_list_subtitle_directory_count_format">
         <item quantity="one">%1$,d pasta</item>
+        <item quantity="many"></item>
         <item quantity="other">%1$,d pastas</item>
     </plurals>
     <plurals name="file_list_subtitle_file_count_format">
         <item quantity="one">%1$,d arquivo</item>
+        <item quantity="many"></item>
         <item quantity="other">%1$,d arquivos</item>
     </plurals>
     <plurals name="file_list_selected_count_format">
         <item quantity="one">%1$,d selecionado</item>
+        <item quantity="many"></item>
         <item quantity="other">%1$,d selecionados</item>
     </plurals>
     <plurals name="file_list_delete_count_format">
-        <item quantity="one">Excluir "\"%2$s\""?</item>
-        <item quantity="other">Excluir %1$,d itens?</item>
+        <item quantity="one">Excluir \"%2$s\"\?</item>
+        <item quantity="many"></item>
+        <item quantity="other">Excluir %1$,d itens\?</item>
     </plurals>
     <plurals name="files_files_renaming_count_format">
-        <item quantity="one">Renomeando "\"%s\""</item>
+        <item quantity="one">Renomeando \"%s\"</item>
+        <item quantity="many"></item>
         <item quantity="other">Renomeando %1$d itens</item>
     </plurals>
     <plurals name="files_files_renaming_msg_count_format">
-        <item quantity="one">Renomeando "\"%2s\"" para "\"%3s\""</item>
-        <item quantity="other">Renomeando "\"%2s\"" para "\"%3s\""</item>
+        <item quantity="one">Renomeando \"%2s\" para \"%3s\"</item>
+        <item quantity="many"></item>
+        <item quantity="other">Renomeando \"%2s\" para \"%3s\"</item>
     </plurals>
     <string name="set">Definir</string>
     <!--Preferences-->
@@ -218,4 +231,8 @@
     <string name="ok">Ok</string>
     <string name="sync_title">Sincronizar e-mail periodicamente</string>
     <string name="pref_app_language_title">Linguagem</string>
+    <string name="default_list_categories_path"></string>
+    <string name="default_list_categories_name"></string>
+    <string name="_lang_tag" translatable="false"></string>
+    <string name="auto" translatable="false"></string>
 </resources>
