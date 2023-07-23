@@ -59,6 +59,14 @@
     <string name="permission_required_body">To provide a better user experience, we need to access the files stored on your device. This permission is necessary for the application to load and display images, videos, documents, and other relevant files. Additionally, it is essential to enable features such as file sharing, offline data storage, and document manipulation. We assure you that your data will be handled securely and with privacy in mind. To grant the permission, click "Allow" below.</string>
     <string name="action_bottom_select">Select</string>
     <string name="action_mode_title">selected</string>
+
+    <string name="images">Images</string>
+    <string name="video">Video</string>
+    <string name="document">Document</string>
+    <string name="music">Music</string>
+
+    <string name="whatsapp">WhatsApp</string>
+
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
@@ -162,6 +170,11 @@
         <item quantity="other">Renaming "\"%2s\"" to "\"%3s\""</item>
     </plurals>
     <string name="set">Set</string>
+   <string name="free_space_format">%s GB</string>
+    <string name="total_space_format">%s GB</string>
+    <string name="used_space_format">%s GB</string>
+    <string name="space_of_format">Free space: %1$s GB of %2$s GB</string>
+
     <!--Preferences-->
     <string name="pref_key_view_file_information">view_file_information</string>
     <string name="pref_behavior_default_folder_title">Default folder</string>
@@ -216,18 +229,6 @@
     <string name="mn_code">Source Code</string>
     <string name="mn_licenses">Licenses</string>
     <string name="mn_author">Developed by Juan Nascimento</string>
+    <string name="recent_images">Recent Images</string>
 
-    <string-array name="themes_entries">
-        <item>Follow the system</item>
-        <item>Light theme</item>
-        <item>Dark theme</item>
-        <item>Pink theme</item>
-        <item>Green theme light mode</item>
-        <item>Green theme dark mode</item>
-        <item>Blue theme light mode</item>
-        <item>Blue theme dark mode</item>
-        <item>Red theme light mode</item>
-        <item>Red theme dark mode</item>
-        <item>Dynamic Colors</item>
-    </string-array>
 </resources>

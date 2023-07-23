@@ -78,6 +78,7 @@ import kotlinx.coroutines.*
 import java.io.File
 import java.nio.file.*
 import java.util.*
+import kotlin.io.path.pathString
 
 
 private const val ARG_FILE_URI = "fileUri"
@@ -535,51 +536,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     }
 
-    private fun setUpSearchView(searchView: SearchView) {
-        // Define ação ao pesquisar
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.search(query ?: "")
-                viewModel.isSearchViewExpanded = false
-                viewModel.stopSearching()
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.searchViewQuery = newText ?: ""
-                debouncedSearchRunnable()
-                return true
-            }
-        })
-
-        // Define ação ao expandir a SearchView
-        searchView.setOnSearchClickListener {
-            viewModel.isSearchViewExpanded = true
-            searchView.setQuery(viewModel.searchViewQuery, false)
-            debouncedSearchRunnable()
-        }
-
-        // Define ação ao fechar a SearchView
-        searchView.setOnCloseListener {
-            viewModel.isSearchViewExpanded = false
-            viewModel.stopSearching()
-            false
-        }
-
-        // Verifica e expande a SearchView se necessário
-        if (viewModel.isSearchViewExpanded) {
-            searchView.isIconified = false
-            searchView.clearFocus()
-        }
-    }
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_file_list, menu)
-        val search = menu.findItem(R.id.action_search_view)
-        val searchView = search.actionView as SearchView
 
-        setUpSearchView(searchView)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -622,10 +583,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_toggle_grid -> {
-               // viewModel.setGriToggle
-                viewModel.isSearchViewExpanded = false
-                viewModel.stopSearching()
-
+                viewModel.setGriToggle()
             }
 
             R.id.action_sort_by_name -> {
@@ -652,7 +610,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 viewModel.setDirectoriesFirst()
             }
 
-            R.id.action_sort_path_specific -> {}
             R.id.action_refresh -> {
                 refresh()
             }
@@ -669,7 +626,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 viewModel.setShowHiddenFiles(!Preferences.Popup.showHiddenFiles)
             }
 
-            R.id.action_share -> {}
+            R.id.action_share -> {
+                val mPath = viewModel.currentPath!!.pathString
+                shareFiles(null, listOf(mPath))
+            }
             R.id.action_copy_path -> {
                 fileUtil.copyTextToClipboard(
                     requireContext(), viewModel.currentPathLiveData.value.toString(), true
@@ -808,7 +768,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
             R.id.action_rename -> {
                 val selectedFile = viewModel.selectedFiles.toMutableList()
-                if (viewModel.selectedFiles.size == 1) showRenameFileDialog(selectedFile[0]) else showBottomSheetRenameMultipleFiles(
+                if (viewModel.selectedFiles.size == 1) showRenameFileDialog(selectedFile.first()) else showBottomSheetRenameMultipleFiles(
                     viewModel.selectedFiles
                 )
                 finishActionMode()
@@ -856,8 +816,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
 
     fun createDialogNavigateTo() {
+        val mPath = viewModel.currentPath?.pathString!!
         val title = requireContext().getString(R.string.file_list_action_navigate_to)
-        val text = mCurrentPath
+        val text = mPath
         val textPositiveButton = requireContext().getString(R.string.dialog_ok)
 
         materialDialogUtils.createBasicMaterial(
@@ -865,7 +826,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         ) { dialogResult ->
             val isConfirmed = dialogResult.confirmed
             val enteredText = dialogResult.text
-            if (isConfirmed && enteredText != mCurrentPath) {
+            if (isConfirmed && enteredText != mPath) {
                 navigateTo(enteredText)
             }
         }
@@ -877,15 +838,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         if (::adapter.isInitialized) adapter.replaceSelectedFiles(files)
     }
 
-
-    private fun getFileItemByKey(key: Long): FileModel? {
-        for (item in fileModel) {
-            if (item.id == key) {
-                return item
-            }
-        }
-        return null
-    }
 
 
     override fun clearSelectedFiles() {

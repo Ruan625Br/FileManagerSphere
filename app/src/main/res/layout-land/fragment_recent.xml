@@ -20,6 +20,22 @@
             app:layout_constraintHorizontal_bias="0.031" android:layout_marginStart="24dp">
 
         <ImageView
+                android:src="@drawable/ic_help_24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/mn_about"
+                app:tint="?attr/colorOnPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintVertical_bias="0.896"
+                android:layout_marginBottom="4dp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_space_free"
+                app:layout_constraintEnd_toStartOf="@+id/iv_settings"
+                android:layout_marginEnd="8dp" />
+
+
+        <ImageView
                 android:src="@drawable/baseline_settings_24"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/iv_settings"
@@ -239,15 +255,31 @@
             app:layout_constraintHorizontal_bias="0.863" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="24dp" app:layout_constraintStart_toEndOf="@+id/cBaseItems"
             android:layout_marginEnd="24dp">
+
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="130dp"
                 android:scrollbars="none"
                 tools:listitem="@layout/category_file_item"
-                android:id="@+id/recyclerView" app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintVertical_bias="0.0" android:contentDescription="@string/app_name"/>
+                android:id="@+id/recyclerView"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintVertical_bias="0.0"
+                android:contentDescription="@string/app_name" />
+        <Button
+                android:text="@string/category_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnAddCategory"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="5dp"
+                android:textColor="?attr/colorOnPrimary"
+                app:layout_constraintHorizontal_bias="0.944" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout

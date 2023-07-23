@@ -10,6 +10,8 @@ import com.etb.filemanager.settings.preference.PreferenceFragment
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.settings.preference.SettingsDataStore
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.transition.MaterialFadeThrough
+import com.google.android.material.transition.MaterialSharedAxis
 import java.util.Locale
 import java.util.Objects
 

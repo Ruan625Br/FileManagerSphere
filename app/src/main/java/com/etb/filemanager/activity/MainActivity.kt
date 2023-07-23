@@ -22,13 +22,12 @@ import java.io.File
 import java.util.Locale
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private lateinit var popupSettings: PopupSettings
     private lateinit var preferenceUtils: PreferenceUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startTheme()
         setContentView(R.layout.activity_main)
 
 
@@ -82,7 +81,6 @@ class MainActivity : AppCompatActivity() {
         val styleString = sharedPreferences.getString("themes", StyleManager.OptionStyle.FOLLOW_SYSTEM.name)
         val optionStyle = StyleManager.OptionStyle.valueOf(Preferences.Appearance.appTheme)
         styleManager.setTheme(optionStyle, this)
-
 
     }
 

@@ -48,21 +48,7 @@ import kotlinx.coroutines.*
 import java.nio.file.Path
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [RecentFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class RecentFragment : Fragment(), ItemListener {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
 
     private lateinit var fileUtils: FileUtils
 
@@ -74,14 +60,6 @@ class RecentFragment : Fragment(), ItemListener {
     private lateinit var btnAddCategory: Button
     private lateinit var adapter: CategoryFileModelAdapter
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -113,7 +91,6 @@ class RecentFragment : Fragment(), ItemListener {
             (requireActivity() as MainActivity).startNewFragment(aboutFragment)
         }
 
-        //requestStoragePermission()
         // initStyleView()
 
         fileUtils = FileUtils()
@@ -153,36 +130,36 @@ class RecentFragment : Fragment(), ItemListener {
         val categoryFileModels = ArrayList<CategoryFileModel>()
         categoryFileModels.add(
             CategoryFileModel(
-                R.drawable.ic_image, "Images", dcimPath
+                R.drawable.ic_image, getString(R.string.images), dcimPath
             )
         )
         categoryFileModels.add(
             CategoryFileModel(
-                R.drawable.ic_video, "Video", moviesPath
+                R.drawable.ic_video, getString(R.string.video), moviesPath
             )
         )
         categoryFileModels.add(
             CategoryFileModel(
-                R.drawable.ic_document, "Document", documentsPath
+                R.drawable.ic_document, getString(R.string.document), documentsPath
             )
         )
         categoryFileModels.add(
             CategoryFileModel(
-                R.drawable.ic_music, "Music", musicPath
+                R.drawable.ic_music, getString(R.string.music), musicPath
             )
         )
 
         categoryFileModels.add(
             CategoryFileModel(
-                R.drawable.ic_download, "Download", downloadsPath
+                R.drawable.ic_download, getString(R.string.document), downloadsPath
             )
         )
         categoryFileModels.add(
             CategoryFileModel(
-                R.drawable.ic_whatsapp, "Whatsapp", whatsappPath
+                R.drawable.ic_whatsapp, getString(R.string.whatsapp), whatsappPath
             )
         )
-        if (!listCategoryName.isNullOrEmpty()) {
+        if (listCategoryName.isNotEmpty()) {
             for ((index, name) in listCategoryName.withIndex()) {
                 val mName = name
                 val mPath = listCategoryPath[index]
@@ -197,8 +174,7 @@ class RecentFragment : Fragment(), ItemListener {
 
     private fun showBottomSheetAddCategory() {
         val modalBottomSheetAddCategory = ModalBottomSheetAddCategory()
-
-
+        modalBottomSheetAddCategory.itemListener = this
         modalBottomSheetAddCategory.show(parentFragmentManager, ModalBottomSheetAddCategory.TAG)
     }
 
@@ -232,7 +208,7 @@ class RecentFragment : Fragment(), ItemListener {
         }
 
         ivSettings.setOnClickListener {
-         //   (requireActivity() as MainActivity).startNewFragment(settingsFragment)
+            //   (requireActivity() as MainActivity).startNewFragment(settingsFragment)
             val settingsIntent: Intent = SettingsActivity().getIntent(requireContext())
             startActivity(settingsIntent)
         }
@@ -265,7 +241,7 @@ class RecentFragment : Fragment(), ItemListener {
         }
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "StringFormatMatches")
     fun setStorageSpaceInGB() {
         val tvSpaceUsed = requireView().findViewById<TextView>(R.id.tv_space_used)
         val tvSpaceFree = requireView().findViewById<TextView>(R.id.tv_space_free)
@@ -278,22 +254,19 @@ class RecentFragment : Fragment(), ItemListener {
         val freeSpace = fileUtils.getStorageSpaceInGB(SpaceType.FREE)
         val usedSpace = fileUtils.getStorageSpaceInGB(SpaceType.USED)
 
-        tvSpaceUsed.text = "$usedSpace GB"
-        tvSpaceFree.text = "$freeSpace GB"
-        tvSpaceTotal.text = "$totalSpace GB"
-        tvSpaceOf.text = "$freeSpace GB of $totalSpace GB"
 
-        /* cpSpace.progress = usedSpace
-        pbSpace.progress = usedSpace*/
+        tvSpaceUsed.text = getString(R.string.used_space_format, usedSpace)
+        tvSpaceFree.text = getString(R.string.free_space_format, freeSpace)
+        tvSpaceTotal.text = getString(R.string.total_space_format, totalSpace)
+        tvSpaceOf.text = getString(R.string.space_of_format, freeSpace, totalSpace)
+
         val animation = ObjectAnimator.ofInt(cpSpace, "progress", 0, usedSpace)
         animation.duration = 1000
         animation.start()
 
-        pbSpace.progress = 0 // Define o valor inicial do progresso
-
+        pbSpace.progress = 0
         val animationPb = ValueAnimator.ofInt(0, usedSpace)
-        animation.duration = 1000 // Duração da animação em milissegundos
-
+        animation.duration = 1000
         animation.addUpdateListener { valueAnimator ->
             val progress = valueAnimator.animatedValue as Int
             pbSpace.progress = progress
@@ -413,22 +386,11 @@ class RecentFragment : Fragment(), ItemListener {
 
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RecentFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) = RecentFragment().apply {
-            arguments = Bundle().apply {
-                putString(ARG_PARAM1, param1)
-                putString(ARG_PARAM2, param2)
-            }
-        }
+    override fun refreshItem() {
+
+        /*this is a quick fix i am using to update items after new ones are added,
+         the way to update items will be improved in the future*/
+        initCategoryItem()
     }
+
 }

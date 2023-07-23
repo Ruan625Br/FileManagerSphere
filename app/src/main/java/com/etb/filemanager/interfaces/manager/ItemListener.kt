@@ -4,7 +4,7 @@ import java.nio.file.Path
 
 interface ItemListener {
 
-    fun openFileCategory(path: Path){
+    fun openFileCategory(path: Path)
+    fun refreshItem()
 
-    }
 }

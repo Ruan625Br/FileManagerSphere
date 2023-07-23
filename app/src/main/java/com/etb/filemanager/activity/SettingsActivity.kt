@@ -4,19 +4,23 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import com.etb.filemanager.R
 import com.etb.filemanager.databinding.ActivitySettingsBinding
 import com.etb.filemanager.fragment.SettingsFragment
 import com.etb.filemanager.settings.preference.PreferenceFragment
+import com.etb.filemanager.settings.preference.Preferences
+import com.etb.filemanager.util.file.style.StyleManager
 import java.util.Objects
 
 
-class SettingsActivity : AppCompatActivity(),
+class SettingsActivity : BaseActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     private lateinit var binding: ActivitySettingsBinding
 
@@ -25,14 +29,22 @@ class SettingsActivity : AppCompatActivity(),
 
     private var mLevel = 0
     private var mKeys: List<String> = emptyList()
-
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            backPressed()
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
         setSupportActionBar(binding.mToolbar)
-        binding.mToolbar.setNavigationOnClickListener { onBackPressed() }
+        this.onBackPressedDispatcher.addCallback(this,onBackPressedCallback)
+        binding.mToolbar.setNavigationOnClickListener {
+           onBackPressedCallback.handleOnBackPressed()
+        }
+
 
         val uri = getIntent().data
         if (uri != null && SCHEME.equals(uri.scheme) && HOST.equals(uri.host) && uri.path != null){
@@ -65,6 +77,16 @@ class SettingsActivity : AppCompatActivity(),
         }
     }
 
+    fun backPressed() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.main_layout)
+        if (fragment is SettingsFragment) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        } else{
+            supportFragmentManager.popBackStack()
+        }
+    }
     fun getIntent(context: Context, vararg paths: String?): Intent {
         val intent = Intent(context, SettingsActivity::class.java)
         if (paths != null) {

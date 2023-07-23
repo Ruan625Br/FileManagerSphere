@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.etb.filemanager.R
+import com.etb.filemanager.interfaces.manager.ItemListener
 import com.etb.filemanager.settings.preference.Preferences
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputEditText
@@ -14,6 +15,7 @@ import java.io.File
 
 class ModalBottomSheetAddCategory : BottomSheetDialogFragment() {
 
+     var itemListener: ItemListener? = null
     private lateinit var eCategoryName: TextInputLayout
     private lateinit var eCategoryPath: TextInputLayout
     private lateinit var dCategoryName: TextInputEditText
@@ -80,10 +82,10 @@ class ModalBottomSheetAddCategory : BottomSheetDialogFragment() {
 
         Preferences.Behavior.categoryNameList = listNameCategory.toList()
         Preferences.Behavior.categoryPathList = listPathCategory.toList()
+        itemListener?.refreshItem()
     }
 
     companion object {
         const val TAG = "ModalBottomSheetAddCategory"
-
     }
 }

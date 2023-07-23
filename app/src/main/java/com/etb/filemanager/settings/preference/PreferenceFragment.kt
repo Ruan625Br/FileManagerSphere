@@ -18,6 +18,7 @@ import com.etb.filemanager.files.app.application
 import com.etb.filemanager.files.util.BundleParceler
 import com.etb.filemanager.files.util.ParcelableArgs
 import com.etb.filemanager.util.ui.UiUtils
+import com.google.android.material.transition.MaterialSharedAxis
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.WriteWith
 import kotlin.reflect.KClass
@@ -42,6 +43,7 @@ abstract class PreferenceFragment : PreferenceFragmentCompat() {
         recyclerView.clipToPadding = false
         UiUtils.applyWindowInsetsAsPaddingNoTop(recyclerView)
     }
+
 
     @CallSuper
     override fun onStart() {

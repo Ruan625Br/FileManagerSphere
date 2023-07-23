@@ -39,7 +39,6 @@
                     android:layout_width="56dp"
                     android:gravity="center"
                     android:background="@drawable/background_icon_item"
-
                     android:layout_height="55dp" app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.0"

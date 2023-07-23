@@ -1,20 +1,18 @@
 <resources>
     <!-- Themes Preference -->
-<!--
     <string-array name="themes_entries">
-        <item>Seguir o sistema</item>
-        <item>Tema claro</item>
-        <item>Tema escuro</item>
-        <item>Tema rosa</item>
-        <item>Tema verde modo claro</item>
-        <item>Tema verde modo escuro</item>
-        <item>Tema azul modo claro</item>
-        <item>Tema azul modo escuro</item>
-        <item>Tema vermelho modo claro</item>
-        <item>Tema vermelho modo escuro</item>
-        <item>Cores Dinâmicas</item>
+        <item>Follow the system</item>
+        <item>Light theme</item>
+        <item>Dark theme</item>
+        <item>Pink theme</item>
+        <item>Green theme light mode</item>
+        <item>Green theme dark mode</item>
+        <item>Blue theme light mode</item>
+        <item>Blue theme dark mode</item>
+        <item>Red theme light mode</item>
+        <item>Red theme dark mode</item>
+        <item>Dynamic Colors</item>
     </string-array>
--->
 
     <string-array name="themes_values">
         <item>FOLLOW_SYSTEM</item>
