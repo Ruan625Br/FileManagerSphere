@@ -215,4 +215,7 @@
     <string name="mn_code">Código-fonte</string>
     <string name="mn_licenses">Licenças</string>
     <string name="mn_author">Desenvolvido por Juan Nascimento</string>
+    <string name="ok">Ok</string>
+    <string name="sync_title">Sincronizar e-mail periodicamente</string>
+    <string name="pref_app_language_title">Linguagem</string>
 </resources>
