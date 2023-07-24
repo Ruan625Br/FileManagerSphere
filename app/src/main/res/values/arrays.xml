@@ -1,17 +1,17 @@
 <resources>
     <!-- Themes Preference -->
     <string-array name="themes_entries">
-        <item>Follow the system</item>
-        <item>Light theme</item>
-        <item>Dark theme</item>
-        <item>Pink theme</item>
-        <item>Green theme light mode</item>
-        <item>Green theme dark mode</item>
-        <item>Blue theme light mode</item>
-        <item>Blue theme dark mode</item>
-        <item>Red theme light mode</item>
-        <item>Red theme dark mode</item>
-        <item>Dynamic Colors</item>
+        <item>@string/follow_the_system</item>
+        <item>@string/light_theme</item>
+        <item>@string/dark_theme</item>
+        <item>@string/pink_theme</item>
+        <item>@string/green_theme_light_mode</item>
+        <item>@string/green_theme_dark_mode</item>
+        <item>@string/blue_theme_light_mode</item>
+        <item>@string/blue_theme_dark_mode</item>
+        <item>@string/red_theme_light_mode</item>
+        <item>@string/red_theme_dark_mode</item>
+        <item>@string/dynamic_colors</item>
     </string-array>
 
     <string-array name="themes_values">
@@ -31,10 +31,10 @@
     <!--Interface-->
 
     <string-array name="view_file_information_entries">
-        <item>Display date only</item>
-        <item>Display size only</item>
-        <item>Display name only</item>
-        <item>Display everything</item>
+        <item>@string/display_date_only</item>
+        <item>@string/display_size_only</item>
+        <item>@string/display_name_only</item>
+        <item>@string/display_everything</item>
     </string-array>
     <string-array name="view_file_information_values">
         <item>DATE_ONLY</item>

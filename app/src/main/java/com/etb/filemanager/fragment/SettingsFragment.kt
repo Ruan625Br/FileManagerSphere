@@ -1,17 +1,17 @@
 package com.etb.filemanager.fragment
 
 import android.os.Bundle
-import androidx.collection.ArrayMap;
+import android.util.Log
+import androidx.annotation.NonNull
+import androidx.collection.ArrayMap
 import androidx.preference.Preference
 import com.etb.filemanager.R
+import com.etb.filemanager.activity.BaseActivity
 import com.etb.filemanager.files.util.LangUtils
-import com.etb.filemanager.files.util.getStringArray
 import com.etb.filemanager.settings.preference.PreferenceFragment
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.settings.preference.SettingsDataStore
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.transition.MaterialFadeThrough
-import com.google.android.material.transition.MaterialSharedAxis
 import java.util.Locale
 import java.util.Objects
 
@@ -54,13 +54,11 @@ class SettingsFragment : PreferenceFragment() {
                     if (which != localeIndex) {
                         mCurrentLang = languages[which]!!
                         Preferences.Interface.language = languages[which]!!
-                        updateAppLanguage(Locale(languages[which]))
-                        restartActivity()
-                    }
+                        (activity as BaseActivity).applyConfigurationChangesToActivities()
 
+                    }
                     dialog.dismiss()
                 }
-
                 .setNegativeButton(getString(R.string.dialog_cancel)) { dialog, which ->
                 }.show()
             true
@@ -74,7 +72,7 @@ class SettingsFragment : PreferenceFragment() {
 
     }
 
-     private fun updateAppLanguage(locale: Locale) {
+    private fun updateAppLanguage(locale: Locale) {
         Locale.setDefault(locale)
 
         val resources = resources
@@ -92,42 +90,20 @@ class SettingsFragment : PreferenceFragment() {
     }
 
 
-
-
-
     private fun getLanguagesL(locales: ArrayMap<String, Locale>): Array<CharSequence?> {
         val localesL = arrayOfNulls<CharSequence>(locales.size)
-        var locale: Locale?
+
         for (i in 0 until locales.size) {
-            locale = locales.valueAt(i)
-            if (locale != null) {
-                if (LangUtils.LANG_AUTO == locales.keyAt(i)) {
-                    localesL[i] = requireActivity().getString(R.string.auto)
-                } else {
-                    localesL[i] = locale.getDisplayName(locale)
-                }
+            val locale = locales.valueAt(i)
+            if (LangUtils.LANG_AUTO == locales.keyAt(i)) {
+                localesL[i] = requireContext().getString(R.string.auto)
             } else {
-                localesL[i] = LangUtils.LANG_AUTO
+                localesL[i] = locale?.getDisplayName(locale)
             }
         }
+
         return localesL
     }
-
-
-
-/*
-    private fun getLanguagesL(locales: ArrayMap<String, Locale>): Array<CharSequence?> {
-        val localesL = arrayOfNulls<CharSequence>(locales.size)
-        var locale: Locale
-        for (i in 0 until locales.size) {
-            locale = locales.valueAt(i)
-            if (LangUtils.LANG_AUTO == locales.keyAt(i)) {
-                localesL[i] = requireActivity().getString(R.string.auto)
-            } else localesL[i] = locale.getDisplayName(locale)
-        }
-        return localesL
-    }
-*/
 
 }
 

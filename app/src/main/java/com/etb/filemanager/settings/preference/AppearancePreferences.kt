@@ -7,7 +7,6 @@ import com.etb.filemanager.R
 import com.etb.filemanager.activity.BaseActivity
 import com.etb.filemanager.util.file.style.StyleManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.transition.MaterialSharedAxis
 
 
 class AppearancePreferences : PreferenceFragment() {
@@ -25,7 +24,7 @@ class AppearancePreferences : PreferenceFragment() {
         mCurrentTheme = Preferences.Appearance.appTheme
         val mCurrentTheIndex = themesValues.indexOf(mCurrentTheme)
 
-        val appThemeSummary = themesEntries.get(mCurrentTheIndex)
+        val appThemeSummary = themesEntries[mCurrentTheIndex]
 
         //App theme
         val appTheme =
@@ -39,7 +38,7 @@ class AppearancePreferences : PreferenceFragment() {
                     if (which != mCurrentTheIndex) {
                         val theme = StyleManager.OptionStyle.valueOf(themesValues[which])
                         Preferences.Appearance.appTheme = theme.name
-                        (activity as BaseActivity).updateTheme()
+                        (activity as BaseActivity).applyConfigurationChangesToActivities()
 
                     }
 
@@ -57,12 +56,6 @@ class AppearancePreferences : PreferenceFragment() {
         swtMaterialYou?.isChecked = isEnabledDynamicColors
 
 
-    }
-
-    private fun restartActivity() {
-        val intent = requireActivity().intent
-        requireActivity().finish()
-        startActivity(intent)
     }
 
     override fun getTitle(): Int {
