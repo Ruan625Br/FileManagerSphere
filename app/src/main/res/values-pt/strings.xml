@@ -249,4 +249,19 @@
     <string name="pref_title_transparent_list_background">Plano de fundo dos arquivos na lista transparente</string>
     <string name="pref_title_selected_file_background_opacity">Opacidade da cor de fundo quando o arquivo é selecionado</string>
     <string name="recent_images">Imagens recentes</string>
+    <string name="red_theme_light_mode">Tema vermelho modo claro</string>
+    <string name="red_theme_dark_mode">Tema vermelho modo escuro</string>
+    <string name="dynamic_colors">Cores Dinâmicas</string>
+    <string name="display_date_only">Mostrar somente a data</string>
+    <string name="display_size_only">Mostrar somente o tamanho</string>
+    <string name="follow_the_system">Seguir o sistema</string>
+    <string name="light_theme">Tema claro</string>
+    <string name="dark_theme">Tema escuro</string>
+    <string name="pink_theme">Tema rosa</string>
+    <string name="green_theme_light_mode">Tema verde modo claro</string>
+    <string name="green_theme_dark_mode">Tema verde modo escuro</string>
+    <string name="blue_theme_light_mode">Tema azul modo claro</string>
+    <string name="blue_theme_dark_mode">Tema azul modo escuro</string>
+    <string name="display_name_only">Mostrar somente o nome</string>
+    <string name="display_everything">Mostrar tudo</string>
 </resources>
