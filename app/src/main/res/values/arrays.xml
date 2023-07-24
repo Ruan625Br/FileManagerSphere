@@ -42,6 +42,33 @@
         <item>NAME_ONLY</item>
         <item>EVERYTHING</item>
     </string-array>
+
+    <string-array name="selected_file_background_opacity_entries">
+        <item>@string/opacity_12_percent</item>
+        <item>@string/opacity_24_percent</item>
+        <item>@string/opacity_48_percent</item>
+        <item>@string/opacity_96_percent</item>
+    </string-array>
+    <string-array name="selected_file_background_opacity_values">
+        <item>0.12</item>
+        <item>0.24</item>
+        <item>0.48</item>
+        <item>0.96</item>
+    </string-array>
+
+    <string-array name="file_list_margins_entries">
+        <item>2dp</item>
+        <item>4dp</item>
+        <item>8dp</item>
+        <item>16dp</item>
+    </string-array>
+    <string-array name="file_list_margins_values">
+        <item>2</item>
+        <item>4</item>
+        <item>8</item>
+        <item>16</item>
+    </string-array>
+
     <string-array name="menu_type_items">
         <item>.zip</item>
         <item>.7z</item>

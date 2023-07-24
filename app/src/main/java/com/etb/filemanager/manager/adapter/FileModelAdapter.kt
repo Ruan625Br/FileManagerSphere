@@ -20,6 +20,8 @@ import com.etb.filemanager.databinding.FileItemBinding
 import com.etb.filemanager.files.file.common.mime.MidiaType
 import com.etb.filemanager.files.file.common.mime.MimeTypeUtil
 import com.etb.filemanager.files.file.common.mime.getMidiaType
+import com.etb.filemanager.files.util.getDimension
+import com.etb.filemanager.files.util.getDimensionPixelSize
 import com.etb.filemanager.files.util.layoutInflater
 import com.etb.filemanager.interfaces.manager.FileListener
 import com.etb.filemanager.manager.files.filelist.FileItemSet
@@ -163,15 +165,29 @@ class FileModelAdapter(
         }
     }
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(
-            FileItemBinding.inflate(parent.context.layoutInflater, parent, false)
-        ).apply {
-            binding.itemFile.background = CheckableItemBackground.create(binding.itemFile.context)
-
-
+    private fun applyStyle(binding: FileItemBinding) {
+        if (Preferences.Interface.isEnabledRoundedCorners) {
+            mContext.let { ctx ->
+                binding.itemFile.radius = ctx.getDimension(R.dimen.corner_radius_base)
+                binding.layoutBase.layoutParams = binding.layoutBase.layoutParams.apply {
+                    if (this is ViewGroup.MarginLayoutParams) {
+                        val padding = ctx.getDimensionPixelSize(R.dimen.spacing_tiny)
+                        setMargins(padding, padding, padding, padding)
+                    }
+                }
+            }
         }
+    }
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
+        FileItemBinding.inflate(parent.context.layoutInflater, parent, false)
+    ).apply {
+        applyStyle(binding)
+       binding.itemFile.background = CheckableItemBackground.create(binding.itemFile.context)
+
+
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         throw UnsupportedOperationException()
@@ -306,12 +322,10 @@ class FileModelAdapter(
 
     private fun loadImage(path: String, binding: FileItemBinding) {
 
-        Glide.with(binding.iconPreview)
-            .clear(binding.iconPreview)
+        Glide.with(binding.iconPreview).clear(binding.iconPreview)
         Glide.with(mContext).load(path).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .apply(RequestOptions().override(50, 50))
-            .apply(RequestOptions().placeholder(R.drawable.ic_image))
-            .into(binding.iconPreview)
+            .apply(RequestOptions().placeholder(R.drawable.ic_image)).into(binding.iconPreview)
 
     }
 

@@ -45,6 +45,10 @@ public class AppPreference {
         PREF_ROUNDED_CORNERS_BOOL,
         PREF_VIEW_FILE_INFORMATION_STR,
         PREF_CUSTOM_LOCALE_STR,
+        PREF_TRANSPARENT_LIST_BACKGROUND_BOOL,
+        PREF_SELECTED_FILE_BACKGROUND_OPACITY_STR,
+        PREF_FILE_LIST_MARGINS_STR,
+
         //Behavior
         PREF_DEFAULT_FOLDER_STR,
         PREF_SELECT_FILE_LONG_CLICK_BOOL,
@@ -309,6 +313,13 @@ public class AppPreference {
                 return mContext.getResources().getString(R.string.default_view_file_information);
             case PREF_CUSTOM_LOCALE_STR:
                 return "auto";
+            case PREF_TRANSPARENT_LIST_BACKGROUND_BOOL:
+                return mContext.getResources().getBoolean(R.bool.default_is_enabled_transparent_list_background);
+            case PREF_SELECTED_FILE_BACKGROUND_OPACITY_STR:
+                return mContext.getResources().getString(R.string.default_selected_file_background_opacity);
+            case PREF_FILE_LIST_MARGINS_STR:
+                return mContext.getString(R.string.default_file_list_margins);
+
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

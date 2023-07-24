@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto">
-  <SwitchPreferenceCompat
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <SwitchPreferenceCompat
             app:key="rounded_corners"
             app:iconSpaceReserved="false"
             app:title="@string/pref_rounded_corners"
-            app:summary="@string/pref_summary_rounded_corners"/>
-  <rikka.preference.SimpleMenuPreference
-          android:key="@string/pref_key_view_file_information"
-          android:title="@string/pref_view_file_information_title"
-          app:entryValues="@array/view_file_information_values"
-          app:entries="@array/view_file_information_entries"
-          app:iconSpaceReserved="false"
-          />
-
+            app:summary="@string/pref_summary_rounded_corners" />
+    <rikka.preference.SimpleMenuPreference
+            android:key="@string/pref_key_view_file_information"
+            android:title="@string/pref_view_file_information_title"
+            app:entryValues="@array/view_file_information_values"
+            app:entries="@array/view_file_information_entries"
+            app:iconSpaceReserved="false" />
+    <SwitchPreferenceCompat
+            app:key="@string/pref_key_transparent_list_background"
+            app:iconSpaceReserved="false"
+            app:title="@string/pref_title_transparent_list_background"
+            app:summary="@string/pref_summary_transparent_list_background" />
+    <Preference
+            app:key="@string/pref_key_selected_file_background_opacity"
+            app:title="@string/pref_title_selected_file_background_opacity"
+            app:iconSpaceReserved="false" />
+    <Preference
+            app:key="@string/pref_key_file_list_margins"
+            app:title="@string/pref_title_file_list_margins"
+            app:iconSpaceReserved="false" />
 </PreferenceScreen>

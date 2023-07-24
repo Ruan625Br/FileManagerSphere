@@ -32,9 +32,12 @@ object CheckableItemBackground {
             val shortAnimTime = context.shortAnimTime
             setEnterFadeDuration(shortAnimTime)
             setExitFadeDuration(shortAnimTime)
+            val opacity = Preferences.Interface.selectedFileBackgroundOpacity
+            val transparentColor = ColorDrawable(Color.TRANSPARENT)
             val primaryColor = context.getColorByAttr( com.google.android.material.R.attr.colorPrimaryContainer)
-            val checkedColor = primaryColor.asColor().withModulatedAlpha(0.48f).value
+            val checkedColor = primaryColor.asColor().withModulatedAlpha(opacity).value
             val normalColor = colorOnSecondary
+            val mNormalColor = ColorDrawable(normalColor)
 
             val backgroundSelected = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.background_file_item_selected)!!)
             DrawableCompat.setTint(backgroundSelected, checkedColor)
@@ -43,10 +46,10 @@ object CheckableItemBackground {
             DrawableCompat.setTint(background, normalColor)
             if (Preferences.Interface.isEnabledRoundedCorners) {
                 addState(intArrayOf(android.R.attr.state_checked), backgroundSelected)
-                addState(intArrayOf(), background)
+                addState(intArrayOf(), if (Preferences.Interface.isEnabledTransparentListBackground) transparentColor else background)
             } else{
                 addState(intArrayOf(android.R.attr.state_checked), ColorDrawable(checkedColor))
-                addState(intArrayOf(), ColorDrawable(normalColor))
+                addState(intArrayOf(), if (Preferences.Interface.isEnabledTransparentListBackground) transparentColor else mNormalColor)
             }
         }
 }}

@@ -170,13 +170,18 @@
         <item quantity="other">Renaming "\"%2s\"" to "\"%3s\""</item>
     </plurals>
     <string name="set">Set</string>
-   <string name="free_space_format">%s GB</string>
+    <string name="free_space_format">%s GB</string>
     <string name="total_space_format">%s GB</string>
     <string name="used_space_format">%s GB</string>
     <string name="space_of_format">Free space: %1$s GB of %2$s GB</string>
 
     <!--Preferences-->
     <string name="pref_key_view_file_information">view_file_information</string>
+    <string name="pref_key_file_list_margins">file_list_margins</string>
+    <string name="pref_key_transparent_list_background">transparent_list_background</string>
+    <string name="pref_key_selected_file_background_opacity">selected_file_background_opacity</string>
+
+
     <string name="pref_behavior_default_folder_title">Default folder</string>
     <string name="pref_behavior_select_file_long_click">Select file on long click</string>
     <string name="pref_anim_in_file_list">Animation in file list</string>
@@ -184,13 +189,20 @@
     <string name="pref_dynamic_colors">Material you</string>
     <string name="pref_behavior_set_default_folder_title">Default folder</string>
     <string name="pref_view_file_information_title">View file information</string>
+    <string name="pref_title_file_list_margins">Margins of the files in the list</string>
+    <string name="pref_title_transparent_list_background">Background of files in transparent list</string>
+    <string name="pref_title_selected_file_background_opacity">Background color opacity when file is selected</string>
+
     <string name="pref_summary_anim_in_file_list">Add smooth animations to the file list for a visually pleasing experience.</string>
     <string name="pref_summary_rounded_corners">Add rounded corners to interface elements for a smoother and modern look.</string>
     <string name="pref_summary_dynamic_colors">Enjoy a more personalized experience close to your device (requires a restart).</string>
+    <string name="pref_summary_transparent_list_background">Set the background of files in the list to be transparent.</string>
+
     <string name="pref_cat_appearance">Appearance</string>
     <string name="pref_interface_title">Interface</string>
     <string name="pref_behavior_title">Behavior</string>
     <string name="pref_app_language_title">Language</string>
+
     <string name="pref_appearance_description">Theme, animations, features, etc.</string>
     <string name="pref_interface_description">Personalize the appearance of the application according to your preferences.</string>
     <string name="pref_behavior_description">Default folder, View mode, etc.</string>
@@ -204,6 +216,11 @@
     <bool name="default_is_enabled_dynamic_colors">false</bool>
     <string name="default_list_categories_path" />
     <string name="default_list_categories_name" />
+    <bool name="default_is_enabled_transparent_list_background">false</bool>
+    <string name="default_selected_file_background_opacity">0.48</string>
+    <string name="default_file_list_margins">4</string>
+
+
     <string name="default_view_file_information">EVERYTHING</string>
     <string name="radio_zip">.zip</string>
     <string name="radio_tar_xz">.tar.xz</string>
@@ -230,5 +247,10 @@
     <string name="mn_licenses">Licenses</string>
     <string name="mn_author">Developed by Juan Nascimento</string>
     <string name="recent_images">Recent Images</string>
+
+    <string name="opacity_12_percent">12% opacity</string>
+    <string name="opacity_24_percent">24% opacity</string>
+    <string name="opacity_48_percent">48% opacity</string>
+    <string name="opacity_96_percent">96% opacity</string>
 
 </resources>

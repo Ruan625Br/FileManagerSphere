@@ -21,7 +21,7 @@ class Preferences {
                 AppPreference.set(AppPreference.PreferenceKey.PREF_DYNAMIC_COLORS_BOOL, value)
             }
 
-        fun getAppTheme(): Int{
+        fun getAppTheme(): Int {
             return StyleManager().getAppTheme(StyleManager.OptionStyle.valueOf(appTheme))
         }
     }
@@ -46,8 +46,7 @@ class Preferences {
             )
             set(value) {
                 AppPreference.set(
-                    AppPreference.PreferenceKey.PREF_VIEW_FILE_INFORMATION_STR,
-                    value.name
+                    AppPreference.PreferenceKey.PREF_VIEW_FILE_INFORMATION_STR, value.name
                 )
             }
         var language: String
@@ -56,10 +55,36 @@ class Preferences {
                 AppPreference.set(AppPreference.PreferenceKey.PREF_CUSTOM_LOCALE_STR, value)
             }
 
-        fun getLanguage(context: Context): String{
+        fun getLanguage(context: Context): String {
             val appPreference = AppPreference.getNewInstace(context)
             return (appPreference.getValue(AppPreference.PreferenceKey.PREF_CUSTOM_LOCALE_STR) as String)
         }
+
+        var isEnabledTransparentListBackground: Boolean
+            get() = AppPreference.getBoolean(AppPreference.PreferenceKey.PREF_TRANSPARENT_LIST_BACKGROUND_BOOL)
+            set(value) {
+                AppPreference.set(
+                    AppPreference.PreferenceKey.PREF_TRANSPARENT_LIST_BACKGROUND_BOOL, value
+                )
+            }
+
+        var selectedFileBackgroundOpacity: Float
+            get() = AppPreference.getString(AppPreference.PreferenceKey.PREF_SELECTED_FILE_BACKGROUND_OPACITY_STR)
+                .toFloat()
+            set(value) {
+                AppPreference.set(
+                    AppPreference.PreferenceKey.PREF_SELECTED_FILE_BACKGROUND_OPACITY_STR,
+                    value.toString()
+                )
+            }
+        var fileListMargins: Int
+            get() = AppPreference.getString(AppPreference.PreferenceKey.PREF_FILE_LIST_MARGINS_STR)
+                .toInt()
+            set(value) {
+                AppPreference.set(
+                    AppPreference.PreferenceKey.PREF_FILE_LIST_MARGINS_STR, value.toString()
+                )
+            }
     }
 
     object Behavior {

@@ -2,10 +2,14 @@ package com.etb.filemanager.settings.preference
 
 import android.os.Bundle
 import androidx.preference.ListPreference
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.etb.filemanager.R
+import com.etb.filemanager.activity.BaseActivity
 import com.etb.filemanager.files.util.getStringArray
+import com.etb.filemanager.util.file.style.StyleManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class InterfacePreferences : PreferenceFragment() {
     override fun getTitle(): Int {
@@ -48,7 +52,73 @@ class InterfacePreferences : PreferenceFragment() {
             simpleMenuPreference.summary = fileInformationSummary
 
             true
-        }    }
+        }
+
+        //Transparent list background
+        val sTransparentBackground = findPreference<SwitchPreferenceCompat>(getString(R.string.pref_key_transparent_list_background))
+        val isEnabledTransBackground = Preferences.Interface.isEnabledTransparentListBackground
+        sTransparentBackground?.isChecked = isEnabledTransBackground
+
+        //Background of files in transparent list
+        val opacityEntries = requireContext().resources.getStringArray(R.array.selected_file_background_opacity_entries)
+        val opacityValues = requireContext().resources.getStringArray(R.array.selected_file_background_opacity_values)
+
+        val currentOpacity = Preferences.Interface.selectedFileBackgroundOpacity.toString()
+        var currentOpacityIndex = opacityValues.indexOf(currentOpacity)
+
+        val opacitySummary = opacityEntries[currentOpacityIndex]
+
+        val selectedFileBackgroundOpacity = findPreference<Preference>(getString(R.string.pref_key_selected_file_background_opacity))!!
+
+        selectedFileBackgroundOpacity.summary = opacitySummary
+        selectedFileBackgroundOpacity.setOnPreferenceClickListener { preference ->
+            MaterialAlertDialogBuilder(requireContext()).setTitle(getString(R.string.pref_title_selected_file_background_opacity))
+                .setSingleChoiceItems(opacityEntries, currentOpacityIndex) { dialog, which ->
+                    if (which != currentOpacityIndex) {
+                        currentOpacityIndex = which
+                        val opacity = opacityValues[which]!!
+                        Preferences.Interface.selectedFileBackgroundOpacity = opacity.toFloat()
+                        selectedFileBackgroundOpacity.summary = opacityEntries[currentOpacityIndex]
+                    }
+
+                    dialog.cancel()
+                }
+                .setNegativeButton(getString(R.string.dialog_cancel)) { dialog, which ->
+                }.show()
+            true
+        }
+
+        //File list margins
+        val fileListMarginsEntries = requireContext().resources.getStringArray(R.array.file_list_margins_entries)
+        val fileListMarginsValues = requireContext().resources.getStringArray(R.array.file_list_margins_values)
+
+        val currentMargin = Preferences.Interface.fileListMargins.toString()
+        var currentMarginIndex = fileListMarginsValues.indexOf(currentMargin)
+
+        val fileListMarginsSummary = fileListMarginsEntries[currentMarginIndex]
+
+        val fileListMargins = findPreference<Preference>(getString(R.string.pref_key_file_list_margins))!!
+
+        fileListMargins.summary = fileListMarginsSummary
+        fileListMargins.setOnPreferenceClickListener { preference ->
+            MaterialAlertDialogBuilder(requireContext()).setTitle(getString(R.string.pref_title_file_list_margins))
+                .setSingleChoiceItems(fileListMarginsEntries, currentMarginIndex) { dialog, which ->
+                    if (which != currentMarginIndex) {
+                        currentMarginIndex = which
+                        val margin = fileListMarginsValues[which].toInt()
+                        Preferences.Interface.fileListMargins = margin
+                        fileListMargins.summary = fileListMarginsEntries[currentMarginIndex]
+
+                    }
+
+                    dialog.cancel()
+                }
+                .setNegativeButton(getString(R.string.dialog_cancel)) { dialog, which ->
+                }.show()
+            true
+        }
+
+    }
 
     enum class ViewFileInformationOption {
         DATE_ONLY,

@@ -42,4 +42,19 @@
         <item name="android:focusable">true</item>
         <item name="android:background">?attr/selectableItemBackground</item>
     </style>
+    <style name="Widget.FileManagerSphere.MaterialCardView.Base" parent="Widget.Material3.CardView.Filled">
+<!--
+        <item name="cardBackgroundColor">?attr/colorOnSecondary</item>
+-->
+        <item name="android:clickable">true</item>
+        <item name="android:checkable">true</item>
+    </style>
+    <style name="Widget.FileManagerSphere.MaterialCardView.LargeRound" parent="Widget.FileManagerSphere.MaterialCardView.Base">
+        <item name="cardCornerRadius">@dimen/corner_radius_base</item>
+        <item name="android:layout_margin">@dimen/spacing_tiny</item>
+        <item name="android:layout_height">@dimen/card_normal_height</item>
+    </style>
+    <style name="Widget.FileManagerSphere.MaterialCardView.Large" parent="Widget.FileManagerSphere.MaterialCardView.Base">
+        <item name="android:layout_height">@dimen/card_normal_height</item>
+    </style>
 </resources>
