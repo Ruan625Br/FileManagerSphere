@@ -79,7 +79,7 @@
         <item quantity="other">%d</item>
     </plurals>
     <plurals name="movingItems">
-        <item quantity="one">Movendo %d itens</item>
+        <item quantity="one">Movendo %d item</item>
         <item quantity="many">Movendo %d itens</item>
         <item quantity="other">Movendo %d itens: Movendo %s para %s</item>
     </plurals>
@@ -231,4 +231,22 @@
     <string name="ok">Ok</string>
     <string name="sync_title">Sincronizar e-mail periodicamente</string>
     <string name="pref_app_language_title">Linguagem</string>
+    <string name="images">Imagens</string>
+    <string name="video">Video</string>
+    <string name="document">Documento</string>
+    <string name="music">Musica</string>
+    <string name="whatsapp">WhatsApp</string>
+    <string name="pref_summary_transparent_list_background">Defina o plano de fundo dos arquivos na lista para serem transparentes.</string>
+    <string name="opacity_24_percent">24% de opacidade</string>
+    <string name="opacity_48_percent">48% de opacidade</string>
+    <string name="opacity_96_percent">96% de opacidade</string>
+    <string name="total_space_format">%s GB</string>
+    <string name="used_space_format">%s GB</string>
+    <string name="space_of_format">Espaço livre: %1$s GB de %2$s GB</string>
+    <string name="free_space_format">%s GB</string>
+    <string name="pref_title_file_list_margins">Margens dos arquivos na lista</string>
+    <string name="opacity_12_percent">12% de opacidade</string>
+    <string name="pref_title_transparent_list_background">Plano de fundo dos arquivos na lista transparente</string>
+    <string name="pref_title_selected_file_background_opacity">Opacidade da cor de fundo quando o arquivo é selecionado</string>
+    <string name="recent_images">Imagens recentes</string>
 </resources>
