@@ -6,23 +6,48 @@
              android:id="@+id/item_root"
              tools:context=".fragment.HomeFragment">
 
-
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/file_item"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:layout_marginTop="65dp"
-            android:id="@+id/recyclerView" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintVertical_bias="1.0"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimaryContainer"
+                app:liftOnScroll="true">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:id="@+id/topAppBar"
+                    app:menu="@menu/menu_file_list"
+                    app:subtitle="Folders e files"
+                    app:title="@string/files"
+
+                    />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/file_item"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:id="@+id/recyclerView"
+               />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
 
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="-117dp" app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/relativeLayout">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -65,8 +90,7 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/add_icon_white_24dp"
                 app:tint="?attr/colorOnPrimaryContainer"
-
-                android:background="?attr/colorPrimary"
+               android:background="?attr/colorPrimary"
                 app:pressedTranslationZ="12dp"
                 android:contentDescription="@string/dialog_new_file"
                 android:layout_alignParentBottom="true"
@@ -75,28 +99,7 @@
 
 
     </RelativeLayout>
-    <com.etb.filemanager.ui.widget.AppBarLayout
-            android:id="@+id/appBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:liftOnScroll="true"
-            tools:ignore="MissingConstraints"
-          >
-
-    <com.google.android.material.appbar.MaterialToolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimaryContainer"
-            android:id="@+id/topAppBar"
-            app:menu="@menu/menu_file_list"
-            app:title="@string/files"
-           />
-    </com.etb.filemanager.ui.widget.AppBarLayout>
-    <include layout="@layout/bottom_sheet_content"/>
-    <include layout="@layout/bottom_sheet_operations_content"/>
-    <include layout="@layout/bottom_sheet_properties_content"/>
-    <include layout="@layout/bottom_sheet_dialog_rename"/>
-
+    <include layout="@layout/include_bottom_sheet_content"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

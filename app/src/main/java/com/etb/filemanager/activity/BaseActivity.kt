@@ -3,6 +3,7 @@ package com.etb.filemanager.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.etb.filemanager.files.util.Args
 import com.etb.filemanager.files.util.LocaleContextWrapper
@@ -15,6 +16,7 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         applyTheme()
         super.onCreate(savedInstanceState)
+
     }
 
     private fun applyTheme() {
