@@ -264,4 +264,6 @@
     <string name="blue_theme_dark_mode">Tema azul modo escuro</string>
     <string name="display_name_only">Mostrar somente o nome</string>
     <string name="display_everything">Mostrar tudo</string>
+    <string name="opacity_6_percent">6% de opacidade</string>
+    <string name="files">Arquivos</string>
 </resources>
