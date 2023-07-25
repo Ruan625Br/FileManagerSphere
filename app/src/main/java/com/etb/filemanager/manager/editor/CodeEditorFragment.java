@@ -37,6 +37,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
 
@@ -93,16 +94,19 @@ public class CodeEditorFragment extends Fragment {
         public final boolean readOnly;
         public final boolean javaSmaliToggle;
         public final boolean enableSharing;
+        @Nullable
+        public final  Parcelable lastState;
 
 
         private Options(@Nullable Uri uri, @Nullable String title, @Nullable String subtitle, boolean readOnly,
-                        boolean javaSmaliToggle, boolean enableSharing) {
+                        boolean javaSmaliToggle, boolean enableSharing, @Nullable Parcelable lastState) {
             this.uri = uri;
             this.title = title;
             this.subtitle = subtitle;
             this.readOnly = readOnly;
             this.javaSmaliToggle = javaSmaliToggle;
             this.enableSharing = enableSharing;
+            this.lastState = lastState;
         }
 
         protected Options(@NonNull Parcel in) {
@@ -112,6 +116,7 @@ public class CodeEditorFragment extends Fragment {
             readOnly = in.readByte() != 0;
             javaSmaliToggle = in.readByte() != 0;
             enableSharing = in.readByte() != 0;
+            lastState = in.readParcelable(RecyclerView.LayoutManager.class.getClassLoader());
         }
 
         public static final Creator<Options> CREATOR = new Creator<Options>() {
@@ -139,6 +144,7 @@ public class CodeEditorFragment extends Fragment {
             dest.writeByte((byte) (readOnly ? 1 : 0));
             dest.writeByte((byte) (javaSmaliToggle ? 1 : 0));
             dest.writeByte((byte) (enableSharing ? 1 : 0));
+            dest.writeParcelable(lastState, flags);
         }
 
         public static class Builder {
@@ -151,7 +157,8 @@ public class CodeEditorFragment extends Fragment {
             private boolean readOnly = false;
             private boolean javaSmaliToggle = false;
             private boolean enableSharing = true;
-
+            @Nullable
+            private Parcelable lastState;
             public Builder() {
             }
 
@@ -162,6 +169,7 @@ public class CodeEditorFragment extends Fragment {
                 readOnly = options.readOnly;
                 javaSmaliToggle = options.javaSmaliToggle;
                 enableSharing = options.enableSharing;
+                lastState = options.lastState;
             }
 
             public Builder setUri(@Nullable Uri uri) {
@@ -194,8 +202,13 @@ public class CodeEditorFragment extends Fragment {
                 return this;
             }
 
+            public Builder setLastState(Parcelable lastState){
+                this.lastState = lastState;
+                return this;
+            }
+
             public Options build() {
-                return new Options(uri, title, subtitle, readOnly, javaSmaliToggle, enableSharing);
+                return new Options(uri, title, subtitle, readOnly, javaSmaliToggle, enableSharing, lastState);
             }
         }
     }
@@ -266,13 +279,13 @@ public class CodeEditorFragment extends Fragment {
                         .setNegativeButton(R.string.yes, (dialog, which) -> {
                             setEnabled(false);
                             FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                            boolean fragmentPopped = fragmentManager.popBackStackImmediate();
-                            if (!fragmentPopped) {
-                                RecentFragment recentFragment = new RecentFragment();
-                                MainActivity activity = (MainActivity) requireActivity();
-                                activity.startNewFragment(recentFragment);
+                         //   boolean fragmentPopped = fragmentManager.popBackStackImmediate();
 
-                            }
+                                HomeFragment homeFragment = HomeFragment.newInstance(null, mOptions.lastState);
+                                MainActivity activity = (MainActivity) requireActivity();
+                                activity.startNewFragment(homeFragment);
+
+
                         })
                         .setNeutralButton(R.string.save_and_exit, (dialog, which) -> {
                             saveFile(mEditor.getText().toString());

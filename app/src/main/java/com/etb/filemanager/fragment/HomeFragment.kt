@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.os.Parcelable
 import android.provider.DocumentsContract
 import android.provider.Settings
 import android.util.Log
@@ -82,11 +83,13 @@ import kotlin.io.path.pathString
 
 
 private const val ARG_FILE_URI = "fileUri"
+private const val ARG_LAST_STATE_FILE_LIST = "lastStateFileList"
 
 class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.ActionMode.Callback,
     FileListener {
 
     private var fileUri: Uri? = null
+    private var lastStateFileList: Parcelable? = null
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: FileModelAdapter
@@ -152,6 +155,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         super.onCreate(savedInstanceState)
         arguments?.let {
             fileUri = it.getParcelable(ARG_FILE_URI)
+            lastStateFileList = it.getParcelable(ARG_LAST_STATE_FILE_LIST)
         }
         setHasOptionsMenu(true)
     }
@@ -212,6 +216,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         recyclerView.layoutManager = GridLayoutManager(requireActivity(), spanCount)
         adapter = FileModelAdapter(requireContext(), this)
         recyclerView.adapter = adapter
+        lastStateFileList?.let { recyclerView.layoutManager!!.onRestoreInstanceState(it) }
+
 
 
     }
@@ -652,9 +658,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
          * @return A new instance of fragment HomeFragment.
          */
         @JvmStatic
-        fun newInstance(fileUri: Uri) = HomeFragment().apply {
+        fun newInstance(fileUri: Uri? = null, lastState: Parcelable? = null) = HomeFragment().apply {
             arguments = Bundle().apply {
                 putParcelable(ARG_FILE_URI, fileUri)
+                putParcelable(ARG_LAST_STATE_FILE_LIST, lastState)
             }
         }
 
@@ -868,12 +875,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             mimeType, MimeTypeIcon.CODE
         ) else false
         if (!file.isDirectory && isSpecificFileType) {
-
+            val state = recyclerView.layoutManager!!.onSaveInstanceState()
             val fileUri = Uri.fromFile(File(path))
             val options = CodeEditorFragment.Options.Builder().setUri(fileUri)
                 .setTitle(requireContext().getString(R.string.code_editor))
                 .setSubtitle(file.fileName).setEnableSharing(true).setJavaSmaliToggle(true)
-                .setReadOnly(false).build()
+                .setReadOnly(false)
+                .setLastState(state)
+                .build()
             val fragment = CodeEditorFragment()
             val args = Bundle()
             args.putParcelable(CodeEditorFragment.ARG_OPTIONS, options)

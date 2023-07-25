@@ -185,7 +185,7 @@
     <string name="pref_rounded_corners">Cantos arredondados</string>
     <string name="pref_dynamic_colors">Material você</string>
     <string name="pref_behavior_set_default_folder_title">Pasta padrão</string>
-    <string name="pref_view_file_information_title">View file information</string>
+    <string name="pref_view_file_information_title">Mostrar informações do arquivo</string>
     <string name="pref_summary_anim_in_file_list">Adicione animações suaves à lista de arquivos para uma experiência visualmente agradável.</string>
     <string name="pref_summary_rounded_corners">Adicione cantos arredondados aos elementos da interface para um visual mais suave e moderno.</string>
     <string name="pref_summary_dynamic_colors">Aproveite uma experiência mais próxima do seu dispositivo (requer reinicialização).</string>

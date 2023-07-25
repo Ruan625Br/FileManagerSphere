@@ -5,18 +5,15 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.Nullable
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
 import com.etb.filemanager.R
 import com.etb.filemanager.databinding.ActivitySettingsBinding
+import com.etb.filemanager.files.util.Args
+import com.etb.filemanager.files.util.getArgsOrNull
 import com.etb.filemanager.fragment.SettingsFragment
 import com.etb.filemanager.settings.preference.PreferenceFragment
-import com.etb.filemanager.settings.preference.Preferences
-import com.etb.filemanager.util.file.style.StyleManager
 import java.util.Objects
 
 
@@ -34,20 +31,23 @@ class SettingsActivity : BaseActivity(),
             backPressed()
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        val args = intent.extras?.getArgsOrNull<Args>()
+        val argsSavedInstanceState = savedInstanceState ?: args?.savedInstanceState
+        super.onCreate(argsSavedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
         setSupportActionBar(binding.mToolbar)
-        this.onBackPressedDispatcher.addCallback(this,onBackPressedCallback)
+        this.onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
         binding.mToolbar.setNavigationOnClickListener {
-           onBackPressedCallback.handleOnBackPressed()
+            onBackPressedCallback.handleOnBackPressed()
         }
 
 
         val uri = getIntent().data
-        if (uri != null && SCHEME.equals(uri.scheme) && HOST.equals(uri.host) && uri.path != null){
+        if (uri != null && SCHEME.equals(uri.scheme) && HOST.equals(uri.host) && uri.path != null) {
             mKeys = Objects.requireNonNull(uri.pathSegments)
         }
 
@@ -59,12 +59,14 @@ class SettingsActivity : BaseActivity(),
         supportFragmentManager.addOnBackStackChangedListener {
             mLevel = supportFragmentManager.backStackEntryCount
         }
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.main_layout, SettingsFragment().getInstance(getKey(mLevel)))
-            .commit()
-
+        if (argsSavedInstanceState == null) {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.main_layout, SettingsFragment().getInstance(getKey(mLevel)))
+                .commit()
+        }
     }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         val uri = intent.data
@@ -72,7 +74,9 @@ class SettingsActivity : BaseActivity(),
             mKeys = Objects.requireNonNull(uri.pathSegments)
             val fragment: Fragment? = supportFragmentManager.findFragmentById(R.id.main_layout)
             if (fragment is SettingsFragment) {
-                getKey(0.also { mLevel = it })?.let { (fragment as SettingsFragment?)?.setPrefKey(it) }
+                getKey(0.also {
+                    mLevel = it
+                })?.let { (fragment as SettingsFragment?)?.setPrefKey(it) }
             }
         }
     }
@@ -83,10 +87,11 @@ class SettingsActivity : BaseActivity(),
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
-        } else{
+        } else {
             supportFragmentManager.popBackStack()
         }
     }
+
     fun getIntent(context: Context, vararg paths: String?): Intent {
         val intent = Intent(context, SettingsActivity::class.java)
         if (paths != null) {
@@ -139,4 +144,12 @@ class SettingsActivity : BaseActivity(),
         return false
     }
 
+    fun restart() {
+        val savedInstanceState = Bundle().apply {
+            onSaveInstanceState(this)
+        }
+
+        applyConfigurationChangesToActivities(savedInstanceState)
+
+    }
 }

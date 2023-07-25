@@ -87,9 +87,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimaryContainer"
-            android:theme="?attr/actionBarTheme"
-            android:minHeight="?attr/actionBarSize" android:id="@+id/topAppBar"
-            app:menu="@menu/menu_file_list" app:title="@string/app_name"
+            android:id="@+id/topAppBar"
+            app:menu="@menu/menu_file_list"
+            app:title="@string/files"
            />
     </com.etb.filemanager.ui.widget.AppBarLayout>
     <include layout="@layout/bottom_sheet_content"/>

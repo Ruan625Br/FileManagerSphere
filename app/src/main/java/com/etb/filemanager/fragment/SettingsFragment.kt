@@ -1,12 +1,12 @@
 package com.etb.filemanager.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
-import androidx.annotation.NonNull
 import androidx.collection.ArrayMap
 import androidx.preference.Preference
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.BaseActivity
+import com.etb.filemanager.activity.SettingsActivity
 import com.etb.filemanager.files.util.LangUtils
 import com.etb.filemanager.settings.preference.PreferenceFragment
 import com.etb.filemanager.settings.preference.Preferences
@@ -29,6 +29,7 @@ class SettingsFragment : PreferenceFragment() {
         return preferences
     }
 
+    @SuppressLint("ResourceType")
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
         preferenceManager.preferenceDataStore = SettingsDataStore()
@@ -54,7 +55,7 @@ class SettingsFragment : PreferenceFragment() {
                     if (which != localeIndex) {
                         mCurrentLang = languages[which]!!
                         Preferences.Interface.language = languages[which]!!
-                        (activity as BaseActivity).applyConfigurationChangesToActivities()
+                        (activity as SettingsActivity).restart()
 
                     }
                     dialog.dismiss()
@@ -69,26 +70,7 @@ class SettingsFragment : PreferenceFragment() {
             true
         }
 
-
     }
-
-    private fun updateAppLanguage(locale: Locale) {
-        Locale.setDefault(locale)
-
-        val resources = resources
-        val configuration = resources.configuration
-        configuration.setLocale(locale)
-
-        val dm = resources.displayMetrics
-        resources.updateConfiguration(configuration, dm)
-    }
-
-    private fun restartActivity() {
-        val intent = requireActivity().intent
-        requireActivity().finish()
-        startActivity(intent)
-    }
-
 
     private fun getLanguagesL(locales: ArrayMap<String, Locale>): Array<CharSequence?> {
         val localesL = arrayOfNulls<CharSequence>(locales.size)

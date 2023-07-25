@@ -1,14 +1,8 @@
 package com.etb.filemanager.util.file.style
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat.startActivity
 import com.etb.filemanager.R
-import com.etb.filemanager.activity.MainActivity
-import com.etb.filemanager.settings.preference.Preferences
-import com.google.android.material.color.DynamicColors
 
 class StyleManager {
 
@@ -36,6 +30,11 @@ class StyleManager {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
     }
+    /**
+     * If you are switching from a light theme to a dark theme, it's recommended to call
+     * {@link #setDarkTheme} before applying any other dark theme. This can help avoid
+     * rendering issues on some devices.
+     */
 
     private fun setDarkTheme() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -46,36 +45,42 @@ class StyleManager {
     }
 
     private fun setGreenLightTheme(context: Context) {
-       context.setTheme(R.style.AppThemeGreen_Ligth)
+        context.setTheme(R.style.AppThemeGreen_Ligth)
 
     }
+
     private fun setGreenDarkTheme(context: Context) {
-       context.setTheme(R.style.AppThemeGreen_Dark)
+        setDarkTheme()
+        context.setTheme(R.style.AppThemeGreen_Dark)
 
     }
 
     private fun setLightBlueTheme(context: Context) {
         context.setTheme(R.style.AppThemeBlue_light)
     }
+
     private fun setDarkBlueTheme(context: Context) {
+        setDarkTheme()
         context.setTheme(R.style.AppThemeBlue_Dark)
     }
 
     private fun setLightRedTheme(context: Context) {
         context.setTheme(R.style.AppThemeRed_light)
     }
+
     private fun setDarkRedTheme(context: Context) {
+        setDarkTheme()
         context.setTheme(R.style.AppThemeRed_Dark)
     }
 
-    private fun enableDynamicColors(context: Context){
-       context.setTheme(R.style.Theme_MaterialYouColors)
+    private fun enableDynamicColors(context: Context) {
+        setDarkTheme()
+        context.setTheme(R.style.Theme_MaterialYouColors)
     }
 
-    fun getAppTheme(optionStyle: OptionStyle): Int{
-        return when(optionStyle){
-            OptionStyle.FOLLOW_SYSTEM ->    AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-
+    fun getAppTheme(optionStyle: OptionStyle): Int {
+        return when (optionStyle) {
+            OptionStyle.FOLLOW_SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             OptionStyle.LIGHT_THEME -> AppCompatDelegate.MODE_NIGHT_NO
             OptionStyle.DARK_THEME -> AppCompatDelegate.MODE_NIGHT_YES
             OptionStyle.PINK_THEME -> R.style.AppThemePink

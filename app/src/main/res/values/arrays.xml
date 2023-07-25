@@ -44,12 +44,14 @@
     </string-array>
 
     <string-array name="selected_file_background_opacity_entries">
+        <item>@string/opacity_6_percent</item>
         <item>@string/opacity_12_percent</item>
         <item>@string/opacity_24_percent</item>
         <item>@string/opacity_48_percent</item>
         <item>@string/opacity_96_percent</item>
     </string-array>
     <string-array name="selected_file_background_opacity_values">
+        <item>0.06</item>
         <item>0.12</item>
         <item>0.24</item>
         <item>0.48</item>

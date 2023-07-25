@@ -82,11 +82,12 @@ class RecentFragment : Fragment(), ItemListener {
 
 
         cBaseItem = view.findViewById(R.id.cBaseItems)
-        cInternalStorage = view.findViewById(R.id.cInternalStorage)
         cCategoryFileItem = view.findViewById(R.id.cCategoryItem)
         cRecentImg = view.findViewById(R.id.cRecentImage)
         btnAddCategory = view.findViewById(R.id.btnAddCategory)
         val mnAbout = view.findViewById<ImageView>(R.id.mn_about)
+        cInternalStorage = view.findViewById(R.id.cInternalStorage)
+
         mnAbout.setOnClickListener {
             (requireActivity() as MainActivity).startNewFragment(aboutFragment)
         }

@@ -39,10 +39,10 @@ object CheckableItemBackground {
             val normalColor = colorOnSecondary
             val mNormalColor = ColorDrawable(normalColor)
 
-            val backgroundSelected = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.background_file_item_selected)!!)
+            val backgroundSelected = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.card_radius_normal)!!)
             DrawableCompat.setTint(backgroundSelected, checkedColor)
 
-            val background = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.background_file_item)!!)
+            val background = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.card_radius_normal)!!)
             DrawableCompat.setTint(background, normalColor)
             if (Preferences.Interface.isEnabledRoundedCorners) {
                 addState(intArrayOf(android.R.attr.state_checked), backgroundSelected)

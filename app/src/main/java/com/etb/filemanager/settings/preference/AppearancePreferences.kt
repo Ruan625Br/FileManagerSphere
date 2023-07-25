@@ -5,6 +5,7 @@ import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.BaseActivity
+import com.etb.filemanager.activity.SettingsActivity
 import com.etb.filemanager.util.file.style.StyleManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -38,7 +39,7 @@ class AppearancePreferences : PreferenceFragment() {
                     if (which != mCurrentTheIndex) {
                         val theme = StyleManager.OptionStyle.valueOf(themesValues[which])
                         Preferences.Appearance.appTheme = theme.name
-                        (activity as BaseActivity).applyConfigurationChangesToActivities()
+                        (activity as SettingsActivity).restart()
 
                     }
 

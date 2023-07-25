@@ -4,11 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.ContextThemeWrapper
+import com.etb.filemanager.files.util.Args
 import com.etb.filemanager.files.util.LocaleContextWrapper
+import com.etb.filemanager.files.util.putArgs
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.util.file.style.StyleManager
-import java.util.Locale
 
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -23,10 +23,12 @@ abstract class BaseActivity : AppCompatActivity() {
         styleManager.setTheme(optionStyle, this)
     }
 
-    fun applyConfigurationChangesToActivities() {
+    fun applyConfigurationChangesToActivities(savedInstanceState: Bundle) {
         val intent = Intent(this, SettingsActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.putArgs(Args(savedInstanceState))
         startActivity(intent)
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finishAffinity()
     }
     override fun attachBaseContext(newBase: Context) {
