@@ -121,7 +121,7 @@
     <string name="skip">Pular</string>
     <string name="empty">vazio</string>
     <string name="loading">carregando</string>
-    <string name="error">erro</string>
+    <string name="error">Erro</string>
     <string name="error_occurred">Erro</string>
     <string name="warning">Aviso</string>
     <string name="error_occurred_during_operation">Ocorreu um erro durante a operação</string>

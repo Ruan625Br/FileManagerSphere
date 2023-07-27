@@ -172,11 +172,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            requestStoragePermission()
-        } else {
-            requestFilesPermission()
-        }
         initAllBottomSheet()
 
         mFab = view.findViewById(R.id.mfab)
@@ -292,6 +287,20 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             if (isConfirmed) {
                 //managerUtil.getPreviousPath()
 
+            }
+        }
+    }
+    private fun createDialogE(e: String) {
+        val title = requireContext().getString(R.string.error)
+        val text = e
+        val textPositiveButton = requireContext().getString(R.string.dialog_ok)
+
+        materialDialogUtils.createDialogInfo(
+            title, text, textPositiveButton, "", requireContext(), false
+        ) { dialogResult ->
+            val isConfirmed = dialogResult.confirmed
+            if (isConfirmed) {
+                viewModel.navigateUp()
             }
         }
     }
@@ -440,13 +449,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
         if (throwable != null) {
             val error = throwable.toString()
-            if (hasFiles) {
-                createDialgRestriction()
-
-            } else {
-                createDialgRestriction()
-
-            }
+            createDialogE(error)
         }
         if (files != null) {
             updateAdapterFileList()

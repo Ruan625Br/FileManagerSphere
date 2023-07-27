@@ -125,7 +125,6 @@ class RecentFragment : Fragment(), ItemListener {
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
         val downloadsPath =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
-        val whatsappPath = getString(R.string.path_whatsapp)
 
 
         val categoryFileModels = ArrayList<CategoryFileModel>()
@@ -153,11 +152,6 @@ class RecentFragment : Fragment(), ItemListener {
         categoryFileModels.add(
             CategoryFileModel(
                 R.drawable.ic_download, getString(R.string.document), downloadsPath
-            )
-        )
-        categoryFileModels.add(
-            CategoryFileModel(
-                R.drawable.ic_whatsapp, getString(R.string.whatsapp), whatsappPath
             )
         )
         if (listCategoryName.isNotEmpty()) {
@@ -381,10 +375,27 @@ class RecentFragment : Fragment(), ItemListener {
     }
 
     override fun openFileCategory(path: Path) {
-        val uri = path.fileProviderUri
-        val homeFragment = HomeFragment.newInstance(uri)
-        (requireActivity() as MainActivity).startNewFragment(homeFragment)
+        if (isReadStoragePermissionGranted()) {
+            val uri = path.fileProviderUri
+            val homeFragment = HomeFragment.newInstance(uri)
+            (requireActivity() as MainActivity).startNewFragment(homeFragment)
+        }
+    }
 
+    private fun isReadStoragePermissionGranted(): Boolean {
+        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            // Android 10 (API 29) e abaixo.
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            // Android 11 (API 30) e acima.
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED || Environment.isExternalStorageManager()
+        }
     }
 
     override fun refreshItem() {

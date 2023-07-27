@@ -33,12 +33,12 @@ class MainActivity : BaseActivity() {
 
         popupSettings = PopupSettings(this)
         preferenceUtils = PreferenceUtils(this)
-        if (preferenceUtils.isNewUser()){
+        /*if (preferenceUtils.isNewUser()){
             preferenceUtils.newUser = false
             val startedFragment = StartedFragment()
             startNewFragment(startedFragment)
         }
-
+*/
     }
 
     override fun onNewIntent(intent: Intent) {

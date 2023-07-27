@@ -51,11 +51,6 @@ class AppearancePreferences : PreferenceFragment() {
             true
         }
 
-        //Material you
-        val swtMaterialYou = findPreference<SwitchPreferenceCompat>("dynamic_colors")
-        val isEnabledDynamicColors = Preferences.Appearance.isEnabledDynamicColors
-        swtMaterialYou?.isChecked = isEnabledDynamicColors
-
 
     }
 

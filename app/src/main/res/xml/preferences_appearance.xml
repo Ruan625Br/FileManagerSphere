@@ -5,11 +5,5 @@
             app:key="app_theme"
             app:iconSpaceReserved="false"
             app:title="@string/themes_title"/>
-    <SwitchPreferenceCompat
-            app:key="dynamic_colors"
-            app:iconSpaceReserved="false"
-            app:enabled="false"
-            app:title="@string/pref_dynamic_colors"
-            app:summary="@string/pref_summary_dynamic_colors"/>
 
 </PreferenceScreen>

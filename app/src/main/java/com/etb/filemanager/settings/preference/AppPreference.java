@@ -284,7 +284,7 @@ public class AppPreference {
     public Object getDefaultValue(@NonNull PreferenceKey key){
         switch (key){
             case PREF_APP_THEME_STR:
-                return StyleManager.OptionStyle.FOLLOW_SYSTEM.name();
+                return "FOLLOW_SYSTEM";
               case PREF_DEFAULT_FOLDER_STR:
                 return mContext.getResources().getString(R.string.default_pref_default_folder);
             case PREF_SORT_BY_STR:

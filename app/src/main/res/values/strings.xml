@@ -125,7 +125,7 @@
     <string name="skip">Skip</string>
     <string name="empty">empty</string>
     <string name="loading">loading</string>
-    <string name="error">error</string>
+    <string name="error">Error</string>
     <string name="error_occurred">Error</string>
     <string name="warning">Warning</string>
     <string name="error_occurred_during_operation">An error occurred during the operation</string>
