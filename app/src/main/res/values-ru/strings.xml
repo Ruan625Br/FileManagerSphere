@@ -1,2 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="sort">Сортировка</string>
+    <string name="file_list_action_sort_by_name">Имя</string>
+    <string name="file_list_action_sort_by_type">Тип</string>
+    <string name="file_list_action_sort_by_size">Размер</string>
+    <string name="file_list_action_sort_by_last_modified">Изменено</string>
+    <string name="file_list_action_sort_directories_first">Папки сначала</string>
+    <string name="refresh">Обновить</string>
+    <string name="select_all">Выбрать все</string>
+    <string name="file_list_action_navigate_to">Переместиться в</string>
+    <string name="file_list_action_show_hidden_files">Показать скрытые файлы</string>
+    <string name="share">Поделиться</string>
+    <string name="file_list_action_copy_path">Копировать путь</string>
+    <string name="fab_menu_action_create_file">Создать файл</string>
+    <string name="fab_menu_action_create_folder">Создать папку</string>
+    <string name="file_item_action_archive">Сжать</string>
+    <string name="rename">Переименовать</string>
+    <string name="delete">Удалить</string>
+    <string name="copy">Копировать</string>
+    <string name="cut">Вырезать</string>
+    <string name="extract">Распаковать</string>
+    <string name="file_item_action_open_with">Открыть с помощью</string>
+    <string name="file_item_action_properties">Свойства</string>
+    <string name="dialog_ok">Хорошо</string>
+    <string name="file_item_action_extract">Распаковать</string>
+</resources>
