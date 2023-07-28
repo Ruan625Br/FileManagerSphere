@@ -51,8 +51,10 @@
     </style>
     <style name="Widget.FileManagerSphere.MaterialCardView.LargeRound" parent="Widget.FileManagerSphere.MaterialCardView.Base">
         <item name="cardCornerRadius">@dimen/corner_radius_base</item>
-        <item name="android:layout_margin">@dimen/spacing_tiny</item>
-        <item name="android:layout_height">@dimen/card_normal_height</item>
+        <item name="cardBackgroundColor">?colorPrimary</item>
+        <item name="android:background" />
+        <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
     </style>
     <style name="Widget.FileManagerSphere.MaterialCardView.Large" parent="Widget.FileManagerSphere.MaterialCardView.Base">
         <item name="android:layout_height">@dimen/card_normal_height</item>

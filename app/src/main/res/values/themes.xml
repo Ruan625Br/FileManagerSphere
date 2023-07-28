@@ -37,4 +37,5 @@
         <item name="simpleMenuPreferenceStyle">@style/Preference.FileManagerSphere.Material3.SimpleMenuPreference</item>
 
     </style>
+
 </resources>

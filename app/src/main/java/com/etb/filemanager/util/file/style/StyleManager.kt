@@ -19,6 +19,7 @@ class StyleManager {
             OptionStyle.RED_THEME_LIGHT -> setLightRedTheme(context)
             OptionStyle.RED_THEME_DARK -> setDarkRedTheme(context)
             OptionStyle.DYNAMIC_COLORS -> enableDynamicColors(context)
+            OptionStyle.MATERIAL_DESIGN_TWO -> enableMaterialDesignTwo(context)
         }
     }
 
@@ -77,6 +78,10 @@ class StyleManager {
         setDarkTheme()
         context.setTheme(R.style.Theme_MaterialYouColors)
     }
+    private fun enableMaterialDesignTwo(context: Context) {
+        setDarkTheme()
+        context.setTheme(R.style.AppThemeViolet_Material2_Dark)
+    }
 
     fun getAppTheme(optionStyle: OptionStyle): Int {
         return when (optionStyle) {
@@ -91,7 +96,11 @@ class StyleManager {
             OptionStyle.RED_THEME_LIGHT -> R.style.AppThemeRed_light
             OptionStyle.RED_THEME_DARK -> R.style.AppThemeRed_Dark
             OptionStyle.DYNAMIC_COLORS -> R.style.Theme_MaterialYouColors
+            OptionStyle.MATERIAL_DESIGN_TWO -> R.style.AppThemeViolet_Material2_Dark
         }
+    }
+    fun resetToDefaultTheme(){
+        setFollowSystemTheme()
     }
 
     enum class OptionStyle {
@@ -105,6 +114,7 @@ class StyleManager {
         BLUE_THEME_DARK,
         RED_THEME_LIGHT,
         RED_THEME_DARK,
-        DYNAMIC_COLORS
+        DYNAMIC_COLORS,
+        MATERIAL_DESIGN_TWO
     }
 }

@@ -37,7 +37,7 @@ public class AppPreference {
     public enum PreferenceKey {
         //
         PREF_APP_THEME_STR,
-        PREF_DYNAMIC_COLORS_BOOL,
+        PREF_MATERIAL_DESIGN_3_BOOL,
 
 
         //Interface
@@ -303,8 +303,8 @@ public class AppPreference {
                 return mContext.getResources().getBoolean(R.bool.default_is_enabled_anim_in_file_list);
             case PREF_ROUNDED_CORNERS_BOOL:
                 return mContext.getResources().getBoolean(R.bool.default_is_enabled_rounded_corners);
-            case PREF_DYNAMIC_COLORS_BOOL:
-                return mContext.getResources().getBoolean(R.bool.default_is_enabled_dynamic_colors);
+            case PREF_MATERIAL_DESIGN_3_BOOL:
+                return mContext.getResources().getBoolean(R.bool.default_is_enabled_material_design_3);
             case PREF_LIST_CATEGORIES_NAME_STR:
                 return mContext.getResources().getString(R.string.default_list_categories_name);
             case PREF_LIST_CATEGORIES_PATH_STR:

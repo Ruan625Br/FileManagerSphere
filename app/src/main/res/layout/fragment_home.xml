@@ -90,7 +90,8 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/add_icon_white_24dp"
                 app:tint="?attr/colorOnPrimaryContainer"
-               android:background="?attr/colorPrimary"
+                android:background="?attr/colorPrimary"
+
                 app:pressedTranslationZ="12dp"
                 android:contentDescription="@string/dialog_new_file"
                 android:layout_alignParentBottom="true"

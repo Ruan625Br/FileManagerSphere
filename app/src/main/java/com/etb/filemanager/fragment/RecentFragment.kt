@@ -42,6 +42,7 @@ import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.AboutFragment
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.ui.view.ModalBottomSheetAddCategory
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.*
@@ -53,10 +54,10 @@ class RecentFragment : Fragment(), ItemListener {
     private lateinit var fileUtils: FileUtils
 
     private var roundedCornersDrawable: GradientDrawable? = null
-    private lateinit var cRecentImg: ConstraintLayout
-    private lateinit var cInternalStorage: ConstraintLayout
-    private lateinit var cCategoryFileItem: ConstraintLayout
-    private lateinit var cBaseItem: ConstraintLayout
+    private lateinit var cRecentImg: MaterialCardView
+    private lateinit var cInternalStorage: MaterialCardView
+    private lateinit var cCategoryFileItem: MaterialCardView
+    private lateinit var cBaseItem: MaterialCardView
     private lateinit var btnAddCategory: Button
     private lateinit var adapter: CategoryFileModelAdapter
 
@@ -190,7 +191,7 @@ class RecentFragment : Fragment(), ItemListener {
     }
 
     fun initClick() {
-        val itemStorage = requireView().findViewById<ConstraintLayout>(R.id.cInternalStorage)
+        val itemStorage = requireView().findViewById<MaterialCardView>(R.id.cInternalStorage)
         val ivSettings = requireView().findViewById<ImageView>(R.id.iv_settings)
         val settingsFragment = SettingsFragment()
         itemStorage.setOnClickListener {

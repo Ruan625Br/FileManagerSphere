@@ -179,6 +179,7 @@
     <string name="pref_key_view_file_information">view_file_information</string>
     <string name="pref_key_file_list_margins">file_list_margins</string>
     <string name="pref_key_transparent_list_background">transparent_list_background</string>
+    <string name="pref_key_material_design_3">material_design_3</string>
     <string name="pref_key_selected_file_background_opacity">selected_file_background_opacity</string>
 
 
@@ -192,6 +193,7 @@
     <string name="pref_title_file_list_margins">Margins of the files in the list</string>
     <string name="pref_title_transparent_list_background">Background of files in transparent list</string>
     <string name="pref_title_selected_file_background_opacity">Background color opacity when file is selected</string>
+    <string name="pref_title_material_design_3">Material Design 3</string>
 
     <string name="pref_summary_anim_in_file_list">Add smooth animations to the file list for a visually pleasing experience.</string>
     <string name="pref_summary_rounded_corners">Add rounded corners to interface elements for a smoother and modern look.</string>
@@ -214,11 +216,13 @@
     <bool name="default_is_enabled_anim_in_file_list">true</bool>
     <bool name="default_is_enabled_rounded_corners">true</bool>
     <bool name="default_is_enabled_dynamic_colors">false</bool>
+    <bool name="default_is_enabled_material_design_3">true</bool>
     <string name="default_list_categories_path" />
     <string name="default_list_categories_name" />
     <bool name="default_is_enabled_transparent_list_background">false</bool>
     <string name="default_selected_file_background_opacity">0.48</string>
     <string name="default_file_list_margins">4</string>
+    <string name="material_design_default_theme">Material Design 2 default theme</string>
 
 
     <string name="default_view_file_information">EVERYTHING</string>
