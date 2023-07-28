@@ -1,0 +1,5 @@
+- Added support for new languages, expanding accessibility to more users.
+- Implemented a function to seamlessly switch between Material Design 3 and Material Design 2.
+- Fixed a critical issue related to permission prompts on Android versions below 11.
+- Removed unnecessary permissions, improving user privacy and security.
+- Various bug fixes and performance improvements for a smoother experience.
