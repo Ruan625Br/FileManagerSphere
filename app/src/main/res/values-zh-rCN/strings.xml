@@ -1,2 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <plurals name="file_list_subtitle_directory_count_format">
+        <item quantity="other">%1$,d 个文件夹</item>
+    </plurals>
+    <string name="app_name">FileManagerSphere</string>
+    <string name="hello_blank_fragment">你好，空白片段</string>
+    <string name="sort">排序</string>
+    <string name="file_list_action_sort_by_name">名称</string>
+    <string name="file_list_action_sort_by_type">类型</string>
+    <string name="file_list_action_sort_by_size">大小</string>
+    <string name="file_list_action_sort_by_last_modified">最后修改</string>
+    <string name="file_list_action_sort_order_ascending">升</string>
+    <string name="file_list_action_sort_directories_first">目录首先</string>
+    <string name="file_list_action_sort_path_specific">仅此文件夹</string>
+    <plurals name="file_list_action_toggle_grid">
+        <item quantity="other">切换网格视图</item>
+    </plurals>
+    <string name="refresh">刷新</string>
+    <string name="select_all">全选</string>
+    <string name="file_list_action_navigate_to">转到</string>
+    <string name="share">分享</string>
+    <string name="file_list_action_copy_path">复制路径</string>
+    <string name="fab_menu_action_create_file">创建文件</string>
+    <string name="fab_menu_action_create_folder">创建文件夹</string>
+    <string name="file_item_action_archive">压缩</string>
+    <string name="file_item_action_extract">提取</string>
+    <string name="rename">重命名</string>
+    <string name="delete">删除</string>
+    <string name="copy">复制</string>
+    <string name="cut">剪切</string>
+    <string name="extract">提取</string>
+    <string name="file_item_action_open_with">打开方式</string>
+    <string name="file_item_action_properties">属性</string>
+    <string name="dialog_ok">好的</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_new_file">新建文件</string>
+    <string name="dialog_name_file">文件名</string>
+    <string name="dialog_name_folder">文件夹名称</string>
+    <string name="dialog_file_exists">已存在同名文件</string>
+    <string name="_24_de_mar">3月24日。</string>
+    <string name="_16_kb">16 KB</string>
+    <string name="todo">待办事项</string>
+    <string name="testeeeeeeeee">TESTEEEEEEEEE</string>
+    <string name="recente">最近</string>
+    <string name="storage">存储</string>
+    <string name="used_space">已用空间</string>
+    <string name="free_space">可用空间</string>
+    <string name="internal_st">内部存储器</string>
+    <string name="policy_and_terms">隐私政策以及条款和条件</string>
+    <string name="ok">完成</string>
+    <string name="allow">允许</string>
+    <string name="permission_required">需要权限</string>
+    <string name="action_bottom_select">选择</string>
+    <string name="action_mode_title">已选中</string>
+    <string name="images">图片</string>
+    <string name="video">视频</string>
+    <string name="music">音乐</string>
+    <string name="document">文件</string>
+    <string name="messages_header">信息</string>
+    <string name="sync_header">同步</string>
+    <string name="signature_title">你的签名</string>
+    <string name="themes_title">主题</string>
+    <string name="attachment_summary_on">自动下载收到电子邮件的附件</string>
+    <string name="attachment_title">下载收到的附件</string>
+    <string name="attachment_summary_off">仅在手动请求时下载附件</string>
+    <string name="settings">设置</string>
+    <string name="category_aparencia">外观</string>
+    <string name="restriction_folder">受限文件夹</string>
+    <string name="e_restriction_folder">由于 Android 限制，无法显示此文件夹的内容。</string>
+    <plurals name="renamingItems">
+        <item quantity="other">重命名 %d 个项目</item>
+    </plurals>
+    <plurals name="movingItems">
+        <item quantity="other">移动 %d 个项目：将 %s 移动到 %s</item>
+    </plurals>
+    <string name="exit_confirmation">退出确认</string>
+    <string name="no">否</string>
+    <string name="yes">是</string>
+    <string name="save_and_exit">保存并退出</string>
+    <string name="search_option_match_case">相符</string>
+    <string name="search_option_regex">正则表达式</string>
+    <string name="search_option_whole_word">整个词</string>
+    <plurals name="search_results">
+        <item quantity="other">%d 个结果</item>
+    </plurals>
+    <string name="redo">重做</string>
+    <string name="save">保存</string>
+    <string name="reply_title">默认回复操作</string>
+    <plurals name="plurals_file_already_exists">
+        <item quantity="other">目标文件夹中已存在文件“%s”。是否要替换？</item>
+    </plurals>
+    <string name="replace">替换</string>
+    <string name="skip">跳过</string>
+    <string name="empty">空</string>
+    <string name="error">错误</string>
+    <string name="error_occurred">错误</string>
+    <plurals name="operation_moving_files">
+        <item quantity="other">移动 %1$d 个项目</item>
+    </plurals>
+    <plurals name="operation_copying_files">
+        <item quantity="other">复制 %1$d 个项目</item>
+    </plurals>
+    <plurals name="operation_extracting_files">
+        <item quantity="other">提取 %1$d 个项目</item>
+    </plurals>
+    <string name="file_list_subtitle_separator">，</string>
+    <plurals name="file_list_subtitle_file_count_format">
+        <item quantity="other">%1$,d 个文件</item>
+    </plurals>
+    <plurals name="file_list_selected_count_format">
+        <item quantity="other">%1$,d 个选中</item>
+    </plurals>
+    <plurals name="file_list_delete_count_format">
+        <item quantity="other">删除 %1$d 个项目？</item>
+    </plurals>
+    <plurals name="files_files_renaming_count_format">
+        <item quantity="other">重命名 %1$d 个项目</item>
+    </plurals>
+    <string name="space_of_format">可用空间：%1$s GB / %2$s GB</string>
+    <string name="file_list_action_show_hidden_files">显示隐藏文件</string>
+    <string name="code_editor">代码编辑器</string>
+    <string name="dialog_new_folder">新建文件夹</string>
+    <string name="file_list_select_action_archive">压缩</string>
+    <string name="download">下载</string>
+    <string name="permission_required_body">为了提供更好的用户体验，我们需要访问您设备上存储的文件。该权限对于应用程序加载和显示图像、视频、文档和其他相关文件是必需的。此外，对启用文件共享、离线数据存储和文档操作等功能也很重要。我们向您保证，您的数据将得到安全处理并考虑到隐私。要授予权限，请单击下面的允许。</string>
+    <string name="search">搜索</string>
+    <string name="undo">撤消</string>
+    <string name="save_as">另存为</string>
+    <string name="replacement_text">替换</string>
+    <string name="save_file_error">保存文件时出错</string>
+    <plurals name="an_error_message_occurred">
+        <item quantity="other">保存文件「%s」时发生 %d 个错误</item>
+    </plurals>
+    <string name="loading">加载中</string>
+    <string name="warning">警告</string>
+    <string name="error_occurred_during_operation">操作过程中发生错误</string>
+    <plurals name="operation_generic_files">
+        <item quantity="other">操作 %1$d 个项目</item>
+    </plurals>
+</resources>
