@@ -138,4 +138,6 @@
     <plurals name="operation_generic_files">
         <item quantity="other">操作 %1$d 个项目</item>
     </plurals>
+    <string name="gb">GB</string>
+    <string name="gb_total">128</string>
 </resources>
