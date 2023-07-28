@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">FileManagerSphere</string>
-    <string name="auto" translatable="false">auto</string>
-    <string name="_lang_tag" translatable="false">en</string>
+    <string name="auto">auto</string>
+    <string name="_lang_tag">en</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sort">Sort</string>
     <string name="file_list_action_sort_by_name">Name</string>

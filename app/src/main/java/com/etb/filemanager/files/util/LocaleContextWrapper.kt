@@ -15,6 +15,7 @@ class LocaleContextWrapper(base: Context) : ContextWrapper(base) {
         fun wrap(context: Context): ContextWrapper {
             val language = Preferences.Interface.language
             val systemLocale = Locale(getSystemLanguage())
+            Log.i("TAGGG", "TAG: $language")
             val mLocale = if (language == LangUtils.LANG_AUTO) systemLocale else Locale(language)
             val config = context.resources.configuration
             val localeList = LocaleList(mLocale)

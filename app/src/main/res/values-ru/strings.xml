@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sort">Сортировка</string>
+    <string name="_lang_tag">ru</string>
+
     <string name="file_list_action_sort_by_name">Имя</string>
     <string name="file_list_action_sort_by_type">Тип</string>
     <string name="file_list_action_sort_by_size">Размер</string>

@@ -18,11 +18,14 @@
         <item>pt</item>
         <item>pt-BR</item>
         <item>ro</item>
+        <item>ru</item>
         <item>ru-RU</item>
+        <item>tr</item>
         <item>tr-TR</item>
         <item>uk-UA</item>
         <item>vi</item>
         <item>zh-CN</item>
+        <item>zh-rCN</item>
         <item>zh-TW</item>
     </string-array>
 </resources>

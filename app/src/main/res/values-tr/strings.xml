@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">FileManagerSphere</string>
     <string name="sort">Sırala</string>
+    <string name="_lang_tag">tr</string>
     <string name="file_list_action_sort_by_name">Ad</string>
     <string name="file_list_action_sort_by_size">Boyut</string>
     <string name="file_list_action_sort_by_last_modified">Son Değişiklik</string>
