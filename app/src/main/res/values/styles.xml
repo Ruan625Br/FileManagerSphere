@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 
@@ -29,19 +28,27 @@
         <item name="android:layout">@layout/m3_preference_widget_material_switch</item>
     </style>
 
-    <style name="Preference.M3.SwitchPreferenceCompat" parent="@style/Preference.SwitchPreferenceCompat.Material"
-           tools:ignore="ResourceCycle">
+    <style name="Preference.M3.SwitchPreferenceCompat" parent="@style/Preference.SwitchPreferenceCompat.Material" tools:ignore="ResourceCycle">
         <item name="widgetLayout">@layout/m3_preference_widget_material_switch</item>
         <item name="android:layout">@layout/m3_preference</item>
 
     </style>
 
     <style name="Preference.FileManagerSphere.Material3.SimpleMenuPreference" parent="Preference.SimpleMenuPreference">
-        <item name="android:popupMenuStyle">@style/Widget.FileManagerSphere.Material3.Preference.SimpleMenuPreference.PopupMenu</item>
+        <item name="android:popupMenuStyle">
+            @style/Widget.FileManagerSphere.Material3.Preference.SimpleMenuPreference.PopupMenu
+        </item>
 
     </style>
+
     <style name="Widget.FileManagerSphere.Material3.Preference.SimpleMenuPreference.PopupMenu" parent="Widget.Preference.SimpleMenuPreference.PopupMenu">
         <item name="android:popupBackground">@drawable/m3_popupmenu_background_overlay</item>
+    </style>
+
+    <!--Preferences M2-->
+    <style name="Preference.M2.SwitchPreferenceCompat" parent="@style/Preference.SwitchPreferenceCompat.Material" tools:ignore="ResourceCycle">
+        <item name="widgetLayout">@layout/m2_preference_widget_material_switch</item>
+
     </style>
 
 </resources>

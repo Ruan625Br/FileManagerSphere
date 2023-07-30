@@ -244,6 +244,15 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <!-- Preferences -->
+
+        <item name="preferenceScreenStyle" />
+        <item name="switchPreferenceCompatStyle">@style/Preference.M2.SwitchPreferenceCompat</item>
+        <item name="preferenceStyle" />
+
+        <item name="simpleMenuPreferenceStyle"/>
+
+
     </style>
 
     <style name="AppThemeViolet.Material2.Dark" parent="AppTheme.Material2.Base">
