@@ -53,6 +53,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/eInputLayoutPath"
-            android:layout_marginTop="72dp" />
+            android:layout_marginTop="40dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

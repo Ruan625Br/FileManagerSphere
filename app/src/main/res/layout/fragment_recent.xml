@@ -5,203 +5,215 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".fragment.RecentFragment">
-
-
-    <com.google.android.material.card.MaterialCardView
+    <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="188dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:id="@+id/cBaseItems"
-            style="@style/Widget.FileManagerSphere.MaterialCardView.LargeRound"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="80dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintHorizontal_bias="0.0">
+            android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="188dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <ImageView
-                    android:src="@drawable/baseline_settings_24"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_settings"
-                    app:tint="?attr/colorOnPrimary"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.971"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintVertical_bias="0.902"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginBottom="4dp"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_space_free" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-            <ImageView
-                    android:src="@drawable/ic_help_24"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/mn_about"
-                    app:tint="?attr/colorOnPrimary"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintVertical_bias="0.896"
-                    android:layout_marginBottom="4dp"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_space_free"
-                    app:layout_constraintEnd_toStartOf="@+id/iv_settings"
-                    android:layout_marginEnd="8dp" />
 
-            <TextView
-                    android:id="@+id/tv_space_free"
-                    android:layout_width="77dp"
-                    android:layout_height="26dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:text="@string/gb"
-                    android:textSize="22sp"
-                    android:textColor="?attr/colorOnSurfaceInverse"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/cp_space"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintVertical_bias="0.0"
-                    android:gravity="center"
-                    android:layout_marginStart="32dp"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
-            <LinearLayout
-                    android:layout_width="77dp"
-                    android:layout_height="21dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:orientation="vertical"
-                    android:background="@drawable/rectangle_2"
-                    tools:ignore="MissingConstraints"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:id="@+id/linearLayout"
-                    app:layout_constraintStart_toEndOf="@+id/cp_space"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintVertical_bias="0.502"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginStart="32dp">
-
-                <TextView
-                        android:id="@+id/free_space"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
+                <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="188dp"
+                        android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
-                        android:textSize="10sp"
-                        android:textColor="?attr/colorSurfaceInverse"
-                        android:text="@string/free_space"
-                        android:gravity="top" />
-            </LinearLayout>
+                        android:id="@+id/cBaseItems"
+                        style="@style/Widget.FileManagerSphere.MaterialCardView.LargeRound"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginTop="80dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        app:layout_constraintHorizontal_bias="0.0">
 
-            <LinearLayout
-                    android:layout_width="77dp"
-                    android:layout_height="21dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:orientation="vertical"
-                    android:background="@drawable/rectangle_2"
-                    tools:ignore="MissingConstraints"
-                    android:gravity="center_horizontal|center_vertical"
-                    app:layout_constraintEnd_toStartOf="@+id/cp_space"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    android:id="@+id/linearLayout5"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginEnd="32dp"
-                    app:layout_constraintVertical_bias="0.502">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="188dp">
 
-                <TextView
-                        android:id="@+id/used_space"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:textSize="10sp"
-                        android:textColor="?attr/colorSurfaceInverse"
-                        android:text="@string/used_space"
-                        android:gravity="top" />
-            </LinearLayout>
+                        <ImageView
+                                android:src="@drawable/baseline_settings_24"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/iv_settings"
+                                app:tint="?attr/colorOnPrimary"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.971"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintVertical_bias="0.902"
+                                android:layout_marginEnd="4dp"
+                                android:layout_marginBottom="4dp"
+                                app:layout_constraintTop_toBottomOf="@+id/tv_space_free" />
 
-            <TextView
-                    android:id="@+id/tv_space_used"
-                    android:layout_width="77dp"
-                    android:layout_height="26dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:text="@string/gb"
-                    android:textSize="22sp"
-                    android:textColor="?attr/colorOnSurfaceInverse"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
-                    android:gravity="center"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
-                    app:layout_constraintEnd_toStartOf="@+id/cp_space"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    android:layout_marginEnd="32dp" />
+                        <ImageView
+                                android:src="@drawable/ic_help_24"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/mn_about"
+                                app:tint="?attr/colorOnPrimary"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintHorizontal_bias="1.0"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintVertical_bias="0.896"
+                                android:layout_marginBottom="4dp"
+                                app:layout_constraintTop_toBottomOf="@+id/tv_space_free"
+                                app:layout_constraintEnd_toStartOf="@+id/iv_settings"
+                                android:layout_marginEnd="8dp" />
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:progress="75"
-                    app:trackCornerRadius="10dp"
-                    app:trackColor="?attr/colorPrimaryInverse"
-                    app:indicatorColor="?attr/colorOnPrimary"
-                    app:indicatorSize="100dp"
-                    app:trackThickness="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:id="@+id/cp_space"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginBottom="32dp" />
+                        <TextView
+                                android:id="@+id/tv_space_free"
+                                android:layout_width="77dp"
+                                android:layout_height="26dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:text="@string/gb"
+                                android:textSize="22sp"
+                                android:textColor="?attr/colorOnSurfaceInverse"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/cp_space"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintVertical_bias="0.0"
+                                android:gravity="center"
+                                android:layout_marginStart="32dp"
+                                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-            <TextView
-                    android:id="@+id/tv_space_total"
-                    android:layout_width="70dp"
-                    android:layout_height="48dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:text="@string/gb_total"
-                    android:textSize="32sp"
-                    android:textColor="?attr/colorOnSurfaceInverse"
-                    android:gravity="center_horizontal|center_vertical"
-                    app:layout_constraintEnd_toEndOf="@+id/cp_space"
-                    app:layout_constraintStart_toStartOf="@+id/cp_space"
-                    app:layout_constraintBottom_toBottomOf="@+id/cp_space"
-                    app:layout_constraintTop_toTopOf="@+id/cp_space" />
+                        <LinearLayout
+                                android:layout_width="77dp"
+                                android:layout_height="21dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:orientation="vertical"
+                                android:background="@drawable/rectangle_2"
+                                tools:ignore="MissingConstraints"
+                                android:gravity="center_horizontal|center_vertical"
+                                android:id="@+id/linearLayout"
+                                app:layout_constraintStart_toEndOf="@+id/cp_space"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintVertical_bias="0.502"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                android:layout_marginStart="32dp">
 
-            <TextView
-                    android:text="GB"
-                    android:layout_width="67dp"
-                    android:layout_height="28dp"
-                    android:id="@+id/textView2"
-                    app:layout_constraintEnd_toEndOf="@+id/cp_space"
-                    app:layout_constraintStart_toStartOf="@+id/cp_space"
-                    android:textColor="?attr/colorOnSurfaceInverse"
-                    app:layout_constraintHorizontal_bias="0.523"
-                    android:textSize="16sp"
-                    android:gravity="center_horizontal"
-                    app:layout_constraintTop_toTopOf="@+id/cp_space"
-                    app:layout_constraintBottom_toBottomOf="@+id/cp_space"
-                    app:layout_constraintVertical_bias="0.814" />
+                            <TextView
+                                    android:id="@+id/free_space"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_alignParentTop="true"
+                                    android:textSize="10sp"
+                                    android:textColor="?attr/colorSurfaceInverse"
+                                    android:text="@string/free_space"
+                                    android:gravity="top" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:layout_width="77dp"
+                                android:layout_height="21dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:orientation="vertical"
+                                android:background="@drawable/rectangle_2"
+                                tools:ignore="MissingConstraints"
+                                android:gravity="center_horizontal|center_vertical"
+                                app:layout_constraintEnd_toStartOf="@+id/cp_space"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintHorizontal_bias="1.0"
+                                android:id="@+id/linearLayout5"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                android:layout_marginEnd="32dp"
+                                app:layout_constraintVertical_bias="0.502">
+
+                            <TextView
+                                    android:id="@+id/used_space"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_alignParentTop="true"
+                                    android:textSize="10sp"
+                                    android:textColor="?attr/colorSurfaceInverse"
+                                    android:text="@string/used_space"
+                                    android:gravity="top" />
+                        </LinearLayout>
+
+                        <TextView
+                                android:id="@+id/tv_space_used"
+                                android:layout_width="77dp"
+                                android:layout_height="26dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:text="@string/gb"
+                                android:textSize="22sp"
+                                android:textColor="?attr/colorOnSurfaceInverse"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintVertical_bias="0.0"
+                                android:gravity="center"
+                                app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
+                                app:layout_constraintEnd_toStartOf="@+id/cp_space"
+                                app:layout_constraintHorizontal_bias="1.0"
+                                android:layout_marginEnd="32dp" />
+
+                        <com.google.android.material.progressindicator.CircularProgressIndicator
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:progress="75"
+                                app:trackCornerRadius="10dp"
+                                app:trackColor="?attr/colorPrimaryInverse"
+                                app:indicatorColor="?attr/colorOnPrimary"
+                                app:indicatorSize="100dp"
+                                app:trackThickness="10dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                android:id="@+id/cp_space"
+                                android:layout_marginTop="32dp"
+                                android:layout_marginBottom="32dp" />
+
+                        <TextView
+                                android:id="@+id/tv_space_total"
+                                android:layout_width="70dp"
+                                android:layout_height="48dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:text="@string/gb_total"
+                                android:textSize="32sp"
+                                android:textColor="?attr/colorOnSurfaceInverse"
+                                android:gravity="center_horizontal|center_vertical"
+                                app:layout_constraintEnd_toEndOf="@+id/cp_space"
+                                app:layout_constraintStart_toStartOf="@+id/cp_space"
+                                app:layout_constraintBottom_toBottomOf="@+id/cp_space"
+                                app:layout_constraintTop_toTopOf="@+id/cp_space" />
+
+                        <TextView
+                                android:text="GB"
+                                android:layout_width="67dp"
+                                android:layout_height="28dp"
+                                android:id="@+id/textView2"
+                                app:layout_constraintEnd_toEndOf="@+id/cp_space"
+                                app:layout_constraintStart_toStartOf="@+id/cp_space"
+                                android:textColor="?attr/colorOnSurfaceInverse"
+                                app:layout_constraintHorizontal_bias="0.523"
+                                android:textSize="16sp"
+                                android:gravity="center_horizontal"
+                                app:layout_constraintTop_toTopOf="@+id/cp_space"
+                                app:layout_constraintBottom_toBottomOf="@+id/cp_space"
+                                app:layout_constraintVertical_bias="0.814" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -406,5 +418,7 @@
                     app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
