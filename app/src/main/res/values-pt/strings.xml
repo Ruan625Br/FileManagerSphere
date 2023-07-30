@@ -227,6 +227,7 @@
     <string name="mn_version">Versâo</string>
     <string name="mn_code">Código-fonte</string>
     <string name="mn_licenses">Licenças</string>
+    <string name="mn_donate">Doar</string>
     <string name="mn_author">Desenvolvido por Juan Nascimento</string>
     <string name="ok">Ok</string>
     <string name="sync_title">Sincronizar e-mail periodicamente</string>

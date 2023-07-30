@@ -37,9 +37,10 @@ class AboutFragment : Fragment() {
 
         binding.aboutToolbar.setNavigationOnClickListener { requireActivity().supportFragmentManager.popBackStack() }
         binding.aboutVersion.text = BuildConfig.VERSION_NAME
-        binding.aboutCode.setOnClickListener {openLinkInBrowser(LINK_SOURCE) }
-        binding.aboutLicenses.setOnClickListener {openLinkInBrowser(LINK_LICENSES) }
-        binding.aboutAuthor.setOnClickListener {openLinkInBrowser(LINK_AUTHOR) }
+        binding.aboutCode.setOnClickListener { openLinkInBrowser(LINK_SOURCE) }
+        binding.aboutLicenses.setOnClickListener { openLinkInBrowser(LINK_LICENSES) }
+        binding.aboutDonate.setOnClickListener { openLinkInBrowser(LINK_DONATE) }
+        binding.aboutAuthor.setOnClickListener { openLinkInBrowser(LINK_AUTHOR) }
     }
 
     private fun openLinkInBrowser(uri: String) {
@@ -55,9 +56,8 @@ class AboutFragment : Fragment() {
             }
         } else {
             val packageName = context.packageManager.resolveActivity(
-                    browserIntent,
-                    PackageManager.MATCH_DEFAULT_ONLY
-                )?.run { activityInfo.packageName }
+                browserIntent, PackageManager.MATCH_DEFAULT_ONLY
+            )?.run { activityInfo.packageName }
             if (packageName != null) {
                 if (packageName == "android") {
                     openAppChooser(browserIntent)
@@ -78,6 +78,7 @@ class AboutFragment : Fragment() {
         const val LINK_SOURCE = "https://github.com/Ruan625Br/FileManagerSphere"
         const val LINK_LICENSES = "https://github.com/Ruan625Br/FileManagerSphere/wiki/Licences"
         const val LINK_AUTHOR = "https://github.com/Ruan625Br"
+        const val LINK_DONATE = "https://github.com/sponsors/Ruan625Br"
     }
 
     private fun openAppChooser(intent: Intent) {

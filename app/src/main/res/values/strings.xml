@@ -249,6 +249,7 @@
     <string name="mn_version">Version</string>
     <string name="mn_code">Source Code</string>
     <string name="mn_licenses">Licenses</string>
+    <string name="mn_donate">Donate</string>
     <string name="mn_author">Developed by Juan Nascimento</string>
     <string name="recent_images">Recent Images</string>
 
