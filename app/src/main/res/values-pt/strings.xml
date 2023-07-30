@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">FileManagerSphere</string>
-    <string name="_lang_tag" >pt</string>
+    <string name="_lang_tag">pt</string>
     <string name="hello_blank_fragment">Olá fragmento em branco</string>
     <string name="sort">Classificar</string>
     <string name="file_list_action_sort_by_name">Nome</string>
@@ -266,4 +266,7 @@
     <string name="display_everything">Mostrar tudo</string>
     <string name="opacity_6_percent">6% de opacidade</string>
     <string name="files">Arquivos</string>
+    <string name="auto">automático</string>
+    <string name="pref_title_material_design_3">Design de materiais 3</string>
+    <string name="material_design_default_theme">Tema padrão do Material Design 2</string>
 </resources>

@@ -84,7 +84,7 @@
     <string name="pref_behavior_default_folder_title">المجلد الإفتراضى</string>
     <string name="pref_anim_in_file_list">الرسوم المتحركة في قائمة الملفات</string>
     <string name="app_name">FileManagerSphere</string>
-    <string name="_lang_tag">ضع علامة اللغة الحالية ، مثال العربية \"ar\" ، الإنجليزية \"en\"</string>
+    <string name="_lang_tag">ar</string>
     <string name="file_list_action_sort_by_size">حجم</string>
     <string name="file_list_action_sort_directories_first">الدلائل أولا</string>
     <string name="share">مشاركة</string>
