@@ -32,8 +32,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:id="@+id/cBaseItems"
                         android:layout_marginTop="24dp"
-                        app:layout_constraintHorizontal_bias="0.031"
-                        android:layout_marginStart="24dp">
+                        app:layout_constraintHorizontal_bias="0.031">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="379dp"
@@ -228,9 +227,7 @@
                         android:id="@+id/cInternalStorage"
                         app:cardCornerRadius="@dimen/rounded_corner_medium"
                         android:layout_marginTop="12dp"
-                        app:layout_constraintHorizontal_bias="0.031"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginStart="24dp">
+                        app:layout_constraintHorizontal_bias="0.031">
 
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -339,9 +336,9 @@
                         android:layout_alignParentTop="true"
                         style="@style/Widget.FileManagerSphere.MaterialCardView.LargeRound"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="28dp"
                         app:layout_constraintStart_toEndOf="@+id/cBaseItems"
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="24dp">
@@ -390,7 +387,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/cCategoryItem"
                         android:layout_marginTop="12dp"
                         android:layout_marginEnd="24dp"
-                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toEndOf="@+id/cInternalStorage"
                         android:layout_marginStart="20dp">
 
@@ -399,7 +396,7 @@
                             android:layout_height="wrap_content">
 
                         <androidx.recyclerview.widget.RecyclerView
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="188dp"
                                 tools:listitem="@layout/recent_image_item"
                                 android:contentDescription="@string/_24_de_mar"
@@ -407,7 +404,9 @@
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent" />
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintVertical_bias="0.0" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
