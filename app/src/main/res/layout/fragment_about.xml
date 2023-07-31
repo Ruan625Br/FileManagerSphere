@@ -146,7 +146,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/mn_donate"
-                            app:drawableStartCompat="@drawable/ic_heart_24"
+                            app:drawableStartCompat="@drawable/ic_heart_20"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/about_licenses" />
