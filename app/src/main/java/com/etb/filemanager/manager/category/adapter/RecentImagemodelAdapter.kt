@@ -11,9 +11,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
+import com.etb.filemanager.interfaces.manager.ItemListener
 import com.etb.filemanager.manager.util.FileUtils
+import java.nio.file.Paths
 
-class RecentImagemodelAdapter(private var recentImageModel: List<RecentImageModel>, private val mContext: Context) :
+class RecentImagemodelAdapter(private var itemListener: ItemListener, private var recentImageModel: List<RecentImageModel>, private val mContext: Context) :
     RecyclerView.Adapter<RecentImagemodelAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentImagemodelAdapter.ViewHolder {
@@ -26,6 +28,7 @@ class RecentImagemodelAdapter(private var recentImageModel: List<RecentImageMode
     override fun onBindViewHolder(holder: RecentImagemodelAdapter.ViewHolder, position: Int) {
         val recentImageViewModel = recentImageModel[position]
         val imagePath = recentImageViewModel.imagePath
+        val mPath = Paths.get(imagePath)
 
         Glide.with(mContext)
             .load(imagePath)
@@ -33,7 +36,7 @@ class RecentImagemodelAdapter(private var recentImageModel: List<RecentImageMode
             .apply(RequestOptions().placeholder(R.drawable.ic_image))
             .into(holder.itemImage)
 
-
+        holder.itemImage.setOnClickListener { itemListener.openItemWith(mPath) }
 
     }
 

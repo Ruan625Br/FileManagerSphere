@@ -6,5 +6,6 @@ interface ItemListener {
 
     fun openFileCategory(path: Path)
     fun refreshItem()
+    fun openItemWith(path: Path)
 
 }

@@ -42,11 +42,13 @@ import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.AboutFragment
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.ui.view.ModalBottomSheetAddCategory
+import com.etb.filemanager.util.file.FileUtil
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.*
 import java.nio.file.Path
+import kotlin.io.path.pathString
 
 
 class RecentFragment : Fragment(), ItemListener {
@@ -177,7 +179,7 @@ class RecentFragment : Fragment(), ItemListener {
     @OptIn(DelicateCoroutinesApi::class)
     fun setRecentImages() {
         val recyclerView = requireView().findViewById<RecyclerView>(R.id.recy_recents_images)
-
+        val listener = this
         val mainScope = CoroutineScope(Dispatchers.Main)
         mainScope.launch {
             val recentImage = withContext(Dispatchers.IO) {
@@ -185,7 +187,7 @@ class RecentFragment : Fragment(), ItemListener {
             }
 
             recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
-            val adapter = RecentImagemodelAdapter(recentImage, requireContext())
+            val adapter = RecentImagemodelAdapter(listener, recentImage, requireContext())
             recyclerView.adapter = adapter
         }
     }
@@ -381,6 +383,10 @@ class RecentFragment : Fragment(), ItemListener {
             val homeFragment = HomeFragment.newInstance(uri)
             (requireActivity() as MainActivity).startNewFragment(homeFragment)
         }
+    }
+
+    override fun openItemWith(path: Path) {
+        FileUtil().actionOpenWith(path.pathString, requireContext())
     }
 
     private fun isReadStoragePermissionGranted(): Boolean {
