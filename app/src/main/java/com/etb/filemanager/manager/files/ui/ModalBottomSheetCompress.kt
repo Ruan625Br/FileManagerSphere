@@ -62,13 +62,9 @@ class ModalBottomSheetCompress : BottomSheetDialogFragment() {
                 0 -> CompressionType.ZIP
                 1 -> CompressionType.SEVENZ
                 2 -> CompressionType.TAR
-                3 -> CompressionType.GZIP
-                4 -> CompressionType.XZ
-                5 -> CompressionType.GZ
-                6 -> CompressionType.ZSTD
-                7 -> CompressionType.TARXZ
-                8 -> CompressionType.TARGZ
-                9 -> CompressionType.TARZSTD
+                3 -> CompressionType.TARXZ
+                4 -> CompressionType.TARGZ
+                5 -> CompressionType.TARZSTD
                 else -> throw IllegalArgumentException("Invalid position: $position")
             }
         }

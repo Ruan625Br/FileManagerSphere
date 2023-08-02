@@ -84,6 +84,9 @@ dependencies {
     implementation 'dev.rikka.shizuku:api:12.2.0'
     runtimeOnly("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation 'androidx.preference:preference-ktx:1.2.0'
+    //https://github.com/Glavo/kala-compress
+    implementation("org.glavo.kala:kala-compress:1.21.0.1-beta3")
+
 
     // Apache Commons IO
     implementation 'commons-io:commons-io:2.11.0'

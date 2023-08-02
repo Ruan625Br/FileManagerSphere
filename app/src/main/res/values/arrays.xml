@@ -75,13 +75,9 @@
         <item>.zip</item>
         <item>.7z</item>
         <item>.tar</item>
-        <item>.gzip</item>
-        <item>.xz</item>
-        <item>.gz</item>
-        <item>.zstd</item>
         <item>.tar.xz</item>
         <item>.tar.gz</item>
-        <item>.tar.zstd</item>
+        <item>.tar.zst</item>
     </string-array>
 
 </resources>
