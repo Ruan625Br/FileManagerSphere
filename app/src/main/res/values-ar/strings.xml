@@ -2,6 +2,7 @@
 <resources>
     <string name="auto">تلقائي</string>
     <string name="sort">فرز</string>
+    <string name="_lang_tag">ar</string>
     <string name="file_list_action_sort_by_name">أسم</string>
     <string name="file_list_action_sort_by_type">‍نوع</string>
     <string name="file_list_action_sort_by_last_modified">آخر تعديل</string>
@@ -84,7 +85,6 @@
     <string name="pref_behavior_default_folder_title">المجلد الإفتراضى</string>
     <string name="pref_anim_in_file_list">الرسوم المتحركة في قائمة الملفات</string>
     <string name="app_name">FileManagerSphere</string>
-    <string name="_lang_tag">ar</string>
     <string name="file_list_action_sort_by_size">حجم</string>
     <string name="file_list_action_sort_directories_first">الدلائل أولا</string>
     <string name="share">مشاركة</string>
