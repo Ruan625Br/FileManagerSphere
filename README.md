@@ -26,9 +26,9 @@
         </a>
   </p>
                   
-## Visão geral
+## Overview
 
-O FileManagerSphere é uma poderosa ferramenta de gerenciamento de arquivos, projetada para simplificar e aprimorar sua experiência ao lidar com documentos, mídia e outros tipos de arquivos. Com recursos avançados e uma interface intuitiva, o FileManagerSphere oferece uma solução abrangente para organizar, navegar, buscar e manipular seus arquivos com facilidade.
+FileManagerSphere is a powerful file management tool, designed to simplify and enhance your experience when dealing with documents, media, and other file types. With advanced features and an intuitive interface, FileManagerSphere provides a comprehensive solution for organizing, browsing, searching, and manipulating your files with ease.
     
 ## Preview
 
@@ -40,27 +40,27 @@ O FileManagerSphere é uma poderosa ferramenta de gerenciamento de arquivos, pro
 
 
 
-## Características
-   
-- **Código aberto:** leve, limpo e seguro.
-- **Design de Materiais:** Segue as diretrizes de Design de Materiais, com atenção aos detalhes.
-- **Suporte a arquivos:** Visualize, extraia e crie arquivos compactados comuns.
-- **Temas:** cores de interface do usuário personalizáveis, além do modo noturno com preto verdadeiro opcional.
-- **Bem implementado:** Construído sobre as coisas certas, incluindo Java NIO File API e LiveData.
+## Features
 
-## Recursos Principais
+- **Open-source:** Lightweight, clean, and secure.
+- **Material Design:** Follows Material Design guidelines, with attention to detail.
+- **File Support:** View, extract, and create common compressed files.
+- **Themes:** Customizable user interface colors, along with optional true black dark mode.
+- **Well-implemented:** Built on the right foundations, including Java NIO File API and LiveData.
+- 
+## Key Features
 
-- **Organização Eficiente**: O FileManagerSphere permite que você crie pastas, renomeie múltiplos arquivos, e mova arquivos de forma rápida e fácil. Mantenha seus documentos e arquivos multimídia bem organizados para facilitar o acesso e a localização.
+- **Efficient Organization:** FileManagerSphere allows you to create folders, rename multiple files, and move files quickly and easily. Keep your documents and multimedia files well-organized for easy access and retrieval.
 
-- **Navegação Intuitiva**: Com uma interface amigável e intuitiva, o FileManagerSphere facilita a navegação entre pastas e arquivos. Encontre rapidamente o que você precisa e navegue de forma eficiente por sua estrutura de arquivos.
+- **Intuitive Navigation:** With a user-friendly and intuitive interface, FileManagerSphere makes navigating between folders and files a breeze. Quickly find what you need and efficiently browse through your file structure.
 
-- **Busca Avançada**: Localize arquivos com facilidade usando recursos de busca avançados. Pesquise por nome, extensão ou palavras-chave específicas para encontrar rapidamente o arquivo que você está procurando.
+- **Advanced Search:** Easily locate files using advanced search features. Search by name, extension, or specific keywords to quickly find the file you're looking for.
 
-- **Manipulação de Arquivos**: O FileManagerSphere oferece várias opções para manipular seus arquivos. Copie, mova, renomeie e exclua arquivos com apenas alguns cliques. Você também pode visualizar e editar arquivos diretamente na interface.
+- **File Manipulation:** FileManagerSphere offers various options for file manipulation. Copy, move, rename, and delete files with just a few clicks. You can also preview and edit files directly within the interface.
 
-## Traduções
+## Translations
 
-Ajude a traduzir [as strings do aplicativo](https://hosted.weblate.org/engage/filemanagersphere/) 
+Help translate [the app strings](https://hosted.weblate.org/engage/filemanagersphere/) to other languages.
 
 <div align="center">
     <a href="https://hosted.weblate.org/engage/filemanagersphere/">
@@ -68,21 +68,20 @@ Ajude a traduzir [as strings do aplicativo](https://hosted.weblate.org/engage/fi
 </a>    
 </a>
 <details>
-<summary>Veja o status da tradução para todos os idiomas.</summary>
-
+<summary>See the translation status for all languages.</summary>
+        
 [![Translation status](https://hosted.weblate.org/widgets/filemanagersphere/-/translations/multi-auto.svg)](https://hosted.weblate.org/engage/filemanagersphere/)
 
 </details>
 </div>
 
-## Contribuição
+## Contribution
 
-Contribuições são bem-vindas! Se você quiser melhorar o FileManagerSphere, sinta-se à vontade para enviar um pull request. Certifique-se de discutir suas ideias primeiro, abrindo uma issue.
+Contributions are welcome! If you would like to improve FileManagerSphere, feel free to submit a pull request. Make sure to discuss your ideas first by opening an issue.
 
-## Autores
+## Authors
 
 - [@Ruan625Br](https://www.github.com/Ruan625Br)
-
 
 
 
