@@ -2,21 +2,24 @@
 <h1 align="center"><b>FileManagerSphere</b></h1>
 <h4 align="center">Bem-vindo ao FileManagerSphere - seu gerenciador de arquivos personalizado!</h4>
 
-<p  align="center">
-        <a href="https://github.com/Ruan625Br/FileManagerSphere/actions">
-            <img src="https://github.com/Ruan625Br/FileManagerSphere/workflows/Android%20CI/badge.svg" alt="Android CI status">
-        </a>
-        <a href="https://github.com/Ruan625Br/FileManagerSphere/releases">
-            <img src="https://img.shields.io/github/v/release/Ruan625Br/FileManagerSphere" alt="GitHub release">
-        </a>
-        <a href="LICENSE">
-            <img src="https://img.shields.io/github/license/Ruan625Br/FileManagerSphere?color=blue" alt="License">
-        </a>
-          <a href="https://apt.izzysoft.de/fdroid/index/apk/com.etb.filemanager/">
-                <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.etb.filemanager" 
-                     alt="Get it on IzzyOnDroid"</a>
-    </p>
-</p>
+<div align="center">
+    <a href="LICENSE">
+        <img src="https://img.shields.io/github/license/ruan625br/filemanagersphere.svg?style=for-the-badge" alt="License">
+    </a>
+    <a href="https://github.com/Ruan625Br/FileManagerSphere/releases">
+        <img src="https://img.shields.io/github/downloads/Ruan625Br/FileManagerSphere/total.svg?style=for-the-badge" alt="Download Counts">
+    </a> 
+     <a href="https://github.com/Ruan625Br/FileManagerSphere/stargazers">
+          <img src="https://img.shields.io/github/stars/Ruan625Br/FileManagerSphere.svg?style=for-the-badge" alt="Stars Count">
+     </a>
+    <a href="https://github.com/Ruan625Br/FileManagerSphere/releases">
+        <img src="https://img.shields.io/github/v/release/Ruan625Br/FileManagerSphere?style=for-the-badge" alt="GitHub release">
+    </a>
+    <a href="https://apt.izzysoft.de/fdroid/index/apk/com.etb.filemanager/">
+        <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.etb.filemanager&style=for-the-badge" alt="Get it on IzzyOnDroid">
+    </a>
+</div>
+
 <p  align="center">
           <a href="https://f-droid.org/app/com.etb.filemanager">
                   <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="170"></a>
@@ -25,20 +28,37 @@
                         width="170">
         </a>
   </p>
-                  
-## Overview
+  
+---                 
 
-FileManagerSphere is a powerful file management tool, designed to simplify and enhance your experience when dealing with documents, media, and other file types. With advanced features and an intuitive interface, FileManagerSphere provides a comprehensive solution for organizing, browsing, searching, and manipulating your files with ease.
-    
-## Preview
+## What is FileMangerSphere?
+ 
+<div align="center">
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="32%" alt="Screenshot 1" />
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="32%" alt="Screenshot 2" />
+    <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="32%" alt="Screenshot 3" />
+</div>
 
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="32%" />
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" width="32%" />
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.jpg" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.jpg" width="32%" /> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/9.jpg" width="32%" /> 
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.jpg" width="32%" /></p>
+<details>
+    <summary>View More Screenshots</summary>
+    <div align="center">
+        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="32%" alt="Screenshot 4" />
+        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="32%" alt="Screenshot 5" />
+        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" width="32%" alt="Screenshot 6" />
+    </div>
+    <div align="center">
+        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.jpg" width="32%" alt="Screenshot 7" />
+        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.jpg" width="32%" alt="Screenshot 8" />
+        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/9.jpg" width="32%" alt="Screenshot 9" />
+    </div>
+    <div align="center">
+        <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.jpg" width="32%" alt="Screenshot 10" />
+    </div>
+</details>
 
+FileManagerSphere is a powerful file management tool, designed to simplify and enhance your experience when dealing with documents, media, and other file types. With advanced features and an intuitive interface, FileManagerSphere provides a comprehensive solution for organizing, browsing, searching, and manipulating your files with ease.   
 
-
+---
 
 ## Features
 
