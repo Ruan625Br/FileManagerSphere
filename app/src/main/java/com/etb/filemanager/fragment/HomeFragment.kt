@@ -26,7 +26,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.documentfile.provider.DocumentFile
@@ -34,7 +33,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -86,8 +84,7 @@ import kotlin.io.path.pathString
 private const val ARG_FILE_URI = "fileUri"
 private const val ARG_LAST_STATE_FILE_LIST = "lastStateFileList"
 
-class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.ActionMode.Callback,
-    FileListener {
+class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
     private var fileUri: Uri? = null
     private var lastStateFileList: Parcelable? = null
@@ -152,6 +149,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         }
         viewModel.search(query)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -213,7 +211,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         adapter = FileModelAdapter(requireContext(), this)
         recyclerView.adapter = adapter
         lastStateFileList?.let { recyclerView.layoutManager!!.onRestoreInstanceState(it) }
-
 
 
     }
@@ -291,6 +288,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
             }
         }
     }
+
     private fun createDialogE(e: String) {
         val title = requireContext().getString(R.string.error)
         val text = e
@@ -442,7 +440,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         val isSearching = viewModel.searchState.isSearching
         when {
             stateful is Failure -> topAppBar.subtitle = getString(R.string.error)
-            stateful is  Loading && !isSearching -> topAppBar.subtitle = getString(R.string.loading)
+            stateful is Loading && !isSearching -> topAppBar.subtitle = getString(R.string.loading)
             else -> topAppBar.subtitle = getSubtitle(files!!)
         }
         val hasFiles = !files.isNullOrEmpty()
@@ -521,9 +519,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         if (isActionMode || !::adapter.isInitialized) {
             return
         }
-
         isActionMode = true
-        actionMode = (activity as AppCompatActivity?)!!.startSupportActionMode(this)
+        setUpActionMode()
     }
 
     fun onSortOptionsChanged() {
@@ -537,15 +534,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
 
     @SuppressLint("NotifyDataSetChanged")
     private fun finishActionMode() {
-
         clearSelectedFiles()
         if (::adapter.isInitialized) adapter.clearItemSelection()
-        actionMode?.finish()
         isActionMode = false
-
-
+        actionMode?.finish()
     }
-
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -640,6 +633,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
                 val mPath = viewModel.currentPath!!.pathString
                 shareFiles(null, listOf(mPath))
             }
+
             R.id.action_copy_path -> {
                 fileUtil.copyTextToClipboard(
                     requireContext(), viewModel.currentPathLiveData.value.toString(), true
@@ -662,12 +656,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
          * @return A new instance of fragment HomeFragment.
          */
         @JvmStatic
-        fun newInstance(fileUri: Uri? = null, lastState: Parcelable? = null) = HomeFragment().apply {
-            arguments = Bundle().apply {
-                putParcelable(ARG_FILE_URI, fileUri)
-                putParcelable(ARG_LAST_STATE_FILE_LIST, lastState)
+        fun newInstance(fileUri: Uri? = null, lastState: Parcelable? = null) =
+            HomeFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(ARG_FILE_URI, fileUri)
+                    putParcelable(ARG_LAST_STATE_FILE_LIST, lastState)
+                }
             }
-        }
 
 
     }
@@ -732,70 +727,80 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
         }
     }
 
+    private fun setUpActionMode() {
 
-    override fun onCreateActionMode(
-        mode: androidx.appcompat.view.ActionMode?, menu: Menu?
-    ): Boolean {
-
-        val inflater = mode?.menuInflater
-        inflater?.inflate(R.menu.menu_file_lis_select, menu)
-        return true
-    }
-
-    override fun onPrepareActionMode(
-        mode: androidx.appcompat.view.ActionMode?, menu: Menu?
-    ): Boolean {
-        return false
-    }
-
-    override fun onActionItemClicked(
-        mode: androidx.appcompat.view.ActionMode?, item: MenuItem?
-    ): Boolean {
-        when (item?.itemId) {
-            R.id.action_cut -> {
-                cutFile(viewModel.selectedFiles)
-                finishActionMode()
+        val actionModeCallback = object : androidx.appcompat.view.ActionMode.Callback {
+            override fun onCreateActionMode(mode: androidx.appcompat.view.ActionMode?, menu: Menu?): Boolean {
+                mode?.menuInflater?.inflate(R.menu.menu_file_lis_select, menu)
+                return true
             }
 
-            R.id.action_copy -> {
-                copyFile(viewModel.selectedFiles)
-                finishActionMode()
+            override fun onPrepareActionMode(mode: androidx.appcompat.view.ActionMode?, menu: Menu?): Boolean {
+                return false
             }
 
-            R.id.action_delete -> {
-                confirmDeleteFile(viewModel.selectedFiles, null)
-                finishActionMode()
+            override fun onActionItemClicked(mode: androidx.appcompat.view.ActionMode?, item: MenuItem?): Boolean {
+                return when (item?.itemId) {
+                    R.id.action_cut -> {
+                        cutFile(viewModel.selectedFiles)
+                        finishActionMode()
+                        true
+                    }
+
+                    R.id.action_copy -> {
+                        copyFile(viewModel.selectedFiles)
+                        finishActionMode()
+                        true
+                    }
+
+                    R.id.action_delete -> {
+                        confirmDeleteFile(viewModel.selectedFiles, null)
+                        finishActionMode()
+
+                        true
+                    }
+
+                    R.id.action_archive -> {
+                        compressFiles(viewModel.selectedFiles)
+                        finishActionMode()
+
+                        true
+                    }
+
+                    R.id.action_share -> {
+                        shareFiles(viewModel.selectedFiles, null)
+                        finishActionMode()
+
+                        true
+                    }
+
+                    R.id.action_rename -> {
+                        val selectedFile = viewModel.selectedFiles.toMutableList()
+                        if (viewModel.selectedFiles.size == 1) showRenameFileDialog(selectedFile.first()) else showBottomSheetRenameMultipleFiles(
+                            viewModel.selectedFiles
+                        )
+                        finishActionMode()
+                        true
+                    }
+
+                    R.id.action_select_all -> {
+                        adapter.selectAllFiles()
+                        true
+                    }
+
+                    else -> false
+                }
             }
 
-            R.id.action_archive -> {
-                compressFiles(viewModel.selectedFiles)
-                finishActionMode()
+            override fun onDestroyActionMode(mode: androidx.appcompat.view.ActionMode?) {
+                actionMode = null
+                clearSelectedFiles()
             }
-
-            R.id.action_share -> {
-                shareFiles(viewModel.selectedFiles, null)
-                finishActionMode()
-            }
-
-            R.id.action_rename -> {
-                val selectedFile = viewModel.selectedFiles.toMutableList()
-                if (viewModel.selectedFiles.size == 1) showRenameFileDialog(selectedFile.first()) else showBottomSheetRenameMultipleFiles(
-                    viewModel.selectedFiles
-                )
-                finishActionMode()
-            }
-
-            R.id.action_select_all -> {
-                adapter.selectAllFiles()
-            }
-
-            else -> return super.onOptionsItemSelected(item!!)
         }
-        return true
-    }
 
-    override fun onDestroyActionMode(mode: androidx.appcompat.view.ActionMode?) {
-        finishActionMode()
+        actionMode = (activity as AppCompatActivity?)!!.startSupportActionMode(actionModeCallback)
+
+
     }
 
     override fun onAttach(context: Context) {
@@ -850,9 +855,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, androidx.appcompat.view.
     }
 
 
-
     override fun clearSelectedFiles() {
         viewModel.clearSelectedFiles()
+
     }
 
     override fun selectFile(file: FileModel, selected: Boolean) {
