@@ -20,15 +20,7 @@
     </a>
 </div>
 
-<p  align="center">
-          <a href="https://f-droid.org/app/com.etb.filemanager">
-                  <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="170"></a>
-             <a href="https://apt.izzysoft.de/fdroid/index/apk/com.etb.filemanager/">
-                <img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid"
-                        width="170">
-        </a>
-  </p>
-  
+
 ---                 
 
 ## What is FileMangerSphere?
@@ -67,7 +59,9 @@ FileManagerSphere is a powerful file management tool, designed to simplify and e
 - **File Support:** View, extract, and create common compressed files.
 - **Themes:** Customizable user interface colors, along with optional true black dark mode.
 - **Well-implemented:** Built on the right foundations, including Java NIO File API and LiveData.
-- 
+
+---
+  
 ## Key Features
 
 - **Efficient Organization:** FileManagerSphere allows you to create folders, rename multiple files, and move files quickly and easily. Keep your documents and multimedia files well-organized for easy access and retrieval.
@@ -78,6 +72,26 @@ FileManagerSphere is a powerful file management tool, designed to simplify and e
 
 - **File Manipulation:** FileManagerSphere offers various options for file manipulation. Copy, move, rename, and delete files with just a few clicks. You can also preview and edit files directly within the interface.
 
+---
+
+## Installation
+
+> _Currently you can download FileManagerSphere in the following ways
+._
+> - [_GitHub Releases_](https://github.com/Ruan625Br/FileMangerSphere/releases)
+> - [_GitHub Actions_](https://github.com/Ruan625Br/FileMangerSphere/actions)
+
+
+<p  align="parent">
+          <a href="https://f-droid.org/app/com.etb.filemanager">
+                  <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="170"></a>
+             <a href="https://apt.izzysoft.de/fdroid/index/apk/com.etb.filemanager/">
+                <img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid"
+                        width="170">
+        </a>
+  </p>
+
+---
 ## Translations
 
 Help translate [the app strings](https://hosted.weblate.org/engage/filemanagersphere/) to other languages.
@@ -95,16 +109,19 @@ Help translate [the app strings](https://hosted.weblate.org/engage/filemanagersp
 </details>
 </div>
 
+---
+
 ## Contribution
 
 Contributions are welcome! If you would like to improve FileManagerSphere, feel free to submit a pull request. Make sure to discuss your ideas first by opening an issue.
+
+---
 
 ## Authors
 
 - [@Ruan625Br](https://www.github.com/Ruan625Br)
 
-
-
+---
 
 ## License
 
