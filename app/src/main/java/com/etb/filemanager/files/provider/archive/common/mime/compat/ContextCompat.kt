@@ -1,4 +1,4 @@
-package com.etb.filemanager.files.file.common.mime.compat
+package com.etb.filemanager.files.provider.archive.common.mime.compat
 
 import android.annotation.SuppressLint
 import android.content.Context

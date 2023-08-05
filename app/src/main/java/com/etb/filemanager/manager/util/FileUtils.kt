@@ -10,8 +10,8 @@ import android.webkit.MimeTypeMap
 import com.etb.filemanager.R
 import com.etb.filemanager.manager.category.adapter.RecentImageModel
 import com.etb.filemanager.settings.preference.PopupSettings
-import com.etb.filemanager.util.file.style.ColorUtil
-import com.etb.filemanager.util.file.style.IconUtil
+import com.etb.filemanager.ui.style.ColorUtil
+import com.etb.filemanager.ui.style.IconUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File

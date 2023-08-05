@@ -17,9 +17,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
 import com.etb.filemanager.databinding.FileItemBinding
-import com.etb.filemanager.files.file.common.mime.MidiaType
-import com.etb.filemanager.files.file.common.mime.MimeTypeUtil
-import com.etb.filemanager.files.file.common.mime.getMidiaType
+import com.etb.filemanager.files.provider.archive.common.mime.MidiaType
+import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeUtil
+import com.etb.filemanager.files.provider.archive.common.mime.getMidiaType
 import com.etb.filemanager.files.util.getDimension
 import com.etb.filemanager.files.util.getDimensionPixelSize
 import com.etb.filemanager.files.util.layoutInflater
@@ -32,9 +32,9 @@ import com.etb.filemanager.manager.files.ui.CheckableItemBackground
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.settings.preference.InterfacePreferences
 import com.etb.filemanager.settings.preference.Preferences
-import com.etb.filemanager.util.file.FileUtil
-import com.etb.filemanager.util.file.style.ColorUtil
-import com.etb.filemanager.util.file.style.IconUtil
+import com.etb.filemanager.files.util.FileUtil
+import com.etb.filemanager.ui.style.ColorUtil
+import com.etb.filemanager.ui.style.IconUtil
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths

@@ -4,14 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
 import com.etb.filemanager.interfaces.settings.PopupSettingsListener
 import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
-import com.etb.filemanager.util.file.FileUtil
+import com.etb.filemanager.files.util.FileUtil
 
 
 class FolderBarModelAdapter(private var folderBarModel: List<FolderBarModel>, private val mContext: Context) :

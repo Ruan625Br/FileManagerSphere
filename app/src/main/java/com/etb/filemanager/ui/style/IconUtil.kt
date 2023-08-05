@@ -1,4 +1,4 @@
-package com.etb.filemanager.util.file.style
+package com.etb.filemanager.ui.style
 
 import android.annotation.SuppressLint
 import android.content.Context

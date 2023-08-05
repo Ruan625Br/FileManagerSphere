@@ -1,4 +1,4 @@
-package com.etb.filemanager.files.file.properties;
+package com.etb.filemanager.files.provider.archive.common.properties;
 
 import android.content.Context;
 

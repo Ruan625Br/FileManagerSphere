@@ -1,4 +1,4 @@
-package com.etb.filemanager.files.file.properties
+package com.etb.filemanager.files.provider.archive.common.properties
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -6,8 +6,8 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.util.Log
 import androidx.fragment.app.Fragment
-import com.etb.filemanager.files.file.common.mime.MidiaType
-import com.etb.filemanager.files.file.common.mime.getMidiaType
+import com.etb.filemanager.files.provider.archive.common.mime.MidiaType
+import com.etb.filemanager.files.provider.archive.common.mime.getMidiaType
 import com.etb.filemanager.fragment.HomeFragment
 import com.etb.filemanager.manager.adapter.FileModel
 import com.etb.filemanager.manager.util.FileUtils

@@ -1,4 +1,4 @@
-package com.etb.filemanager.files.file.common.mime
+package com.etb.filemanager.files.provider.archive.common.mime
 
 enum class MidiaType(val displayName: String) {
     IMAGE("Imagem"),

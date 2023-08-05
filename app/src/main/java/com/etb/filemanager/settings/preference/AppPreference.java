@@ -21,7 +21,7 @@ import com.etb.filemanager.files.util.ArrayUtils;
 import com.etb.filemanager.files.util.ContextUtils;
 import com.etb.filemanager.files.util.LangUtils;
 import com.etb.filemanager.manager.files.filelist.FileSortOptions;
-import com.etb.filemanager.util.file.style.StyleManager;
+import com.etb.filemanager.ui.style.StyleManager;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

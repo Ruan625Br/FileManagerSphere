@@ -1,27 +1,22 @@
 package com.etb.filemanager.files.util
 
-import com.etb.filemanager.files.file.common.mime.compat.checkSelfPermissionCompat
+import com.etb.filemanager.files.provider.archive.common.mime.compat.checkSelfPermissionCompat
 
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.annotation.AnimRes
-import androidx.annotation.AnyRes
 import androidx.annotation.ArrayRes
 import androidx.annotation.AttrRes
 import androidx.annotation.BoolRes
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.Dimension
-import androidx.annotation.DrawableRes
 import androidx.annotation.IntegerRes
 import androidx.annotation.InterpolatorRes
 import androidx.annotation.PluralsRes
 import androidx.fragment.app.Fragment
-import com.etb.filemanager.R
 
 
 fun Fragment.checkSelfPermission(permission: String) =

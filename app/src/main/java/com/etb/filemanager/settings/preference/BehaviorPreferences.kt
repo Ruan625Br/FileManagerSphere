@@ -8,7 +8,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.etb.filemanager.R
 import com.etb.filemanager.manager.util.MaterialDialogUtils
-import com.etb.filemanager.util.file.style.StyleManager
+import com.etb.filemanager.ui.style.StyleManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout

@@ -21,7 +21,6 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -42,7 +41,7 @@ import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.AboutFragment
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.ui.view.ModalBottomSheetAddCategory
-import com.etb.filemanager.util.file.FileUtil
+import com.etb.filemanager.files.util.FileUtil
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator

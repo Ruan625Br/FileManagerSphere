@@ -3,9 +3,9 @@ package com.etb.filemanager.settings.preference
 import android.content.Context
 import com.etb.filemanager.manager.files.filelist.FileSortOptions
 import com.etb.filemanager.manager.files.filelist.FileSortOptions.SortBy
-import com.etb.filemanager.util.file.jsonStringToList
-import com.etb.filemanager.util.file.stringListToJsonString
-import com.etb.filemanager.util.file.style.StyleManager
+import com.etb.filemanager.files.util.jsonStringToList
+import com.etb.filemanager.files.util.stringListToJsonString
+import com.etb.filemanager.ui.style.StyleManager
 
 
 class Preferences {

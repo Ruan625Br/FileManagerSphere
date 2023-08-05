@@ -40,9 +40,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
-import com.etb.filemanager.files.file.common.mime.MimeTypeIcon
-import com.etb.filemanager.files.file.common.mime.MimeTypeUtil
-import com.etb.filemanager.files.file.properties.*
+import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeIcon
+import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeUtil
+import com.etb.filemanager.files.provider.archive.common.properties.*
+import com.etb.filemanager.files.provider.archive.common.properties.PropertiesViewModel
+import com.etb.filemanager.files.provider.archive.common.properties.ViewStateAdapter
 import com.etb.filemanager.files.util.*
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.manager.FileListener
@@ -65,7 +67,7 @@ import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.PopupSettings
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.ui.view.FabMenu
-import com.etb.filemanager.util.file.FileUtil
+import com.etb.filemanager.files.util.FileUtil
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

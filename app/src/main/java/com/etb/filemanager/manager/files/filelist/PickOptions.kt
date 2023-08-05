@@ -1,6 +1,6 @@
 package com.etb.filemanager.manager.files.filelist
 
-import com.etb.filemanager.files.file.common.mime.MimeType
+import com.etb.filemanager.files.provider.archive.common.mime.MimeType
 
 class PickOptions(
     val readOnly: Boolean,

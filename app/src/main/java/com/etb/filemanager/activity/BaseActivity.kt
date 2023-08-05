@@ -9,7 +9,7 @@ import com.etb.filemanager.files.util.Args
 import com.etb.filemanager.files.util.LocaleContextWrapper
 import com.etb.filemanager.files.util.putArgs
 import com.etb.filemanager.settings.preference.Preferences
-import com.etb.filemanager.util.file.style.StyleManager
+import com.etb.filemanager.ui.style.StyleManager
 
 abstract class BaseActivity : AppCompatActivity() {
 

@@ -8,7 +8,7 @@ import androidx.preference.SwitchPreferenceCompat
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.BaseActivity
 import com.etb.filemanager.files.util.getStringArray
-import com.etb.filemanager.util.file.style.StyleManager
+import com.etb.filemanager.ui.style.StyleManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class InterfacePreferences : PreferenceFragment() {
