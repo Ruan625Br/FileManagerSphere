@@ -4,19 +4,19 @@
 
 <div align="center">
     <a href="LICENSE">
-        <img src="https://img.shields.io/github/license/ruan625br/filemanagersphere.svg?style=for-the-badge" alt="License">
+        <img src="https://img.shields.io/github/license/ruan625br/filemanagersphere.svg?color=371E73&style=for-the-badge" alt="License">
     </a>
     <a href="https://github.com/Ruan625Br/FileManagerSphere/releases">
-        <img src="https://img.shields.io/github/downloads/Ruan625Br/FileManagerSphere/total.svg?style=for-the-badge" alt="Download Counts">
+        <img src="https://img.shields.io/github/downloads/Ruan625Br/FileManagerSphere/total.svg?color=cfbdff&style=for-the-badge" alt="Download Counts">
     </a> 
      <a href="https://github.com/Ruan625Br/FileManagerSphere/stargazers">
-          <img src="https://img.shields.io/github/stars/Ruan625Br/FileManagerSphere.svg?style=for-the-badge" alt="Stars Count">
+          <img src="https://img.shields.io/github/stars/Ruan625Br/FileManagerSphere.svg?color=cfbdff&style=for-the-badge" alt="Stars Count">
      </a>
     <a href="https://github.com/Ruan625Br/FileManagerSphere/releases">
-        <img src="https://img.shields.io/github/v/release/Ruan625Br/FileManagerSphere?style=for-the-badge" alt="GitHub release">
+        <img src="https://img.shields.io/github/v/release/Ruan625Br/FileManagerSphere?color=cfbdff&style=for-the-badge" alt="GitHub release">
     </a>
     <a href="https://apt.izzysoft.de/fdroid/index/apk/com.etb.filemanager/">
-        <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.etb.filemanager&style=for-the-badge" alt="Get it on IzzyOnDroid">
+        <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.etb.filemanager&color=cfbdff&style=for-the-badge" alt="Get it on IzzyOnDroid">
     </a>
 </div>
 
