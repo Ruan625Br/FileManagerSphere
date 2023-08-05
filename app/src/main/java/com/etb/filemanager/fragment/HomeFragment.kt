@@ -86,71 +86,64 @@ import kotlin.io.path.pathString
 private const val ARG_FILE_URI = "fileUri"
 private const val ARG_LAST_STATE_FILE_LIST = "lastStateFileList"
 
-class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
+class HomeFragment : Fragment(), FileListener {
 
     private var fileUri: Uri? = null
     private var lastStateFileList: Parcelable? = null
 
+    // RecyclerView and Adapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: FileModelAdapter
-    private var itemSelectedSort: Int = 0
+
+    // Utils and Helpers
     private lateinit var popupSettings: PopupSettings
     private lateinit var fileUtils: FileUtils
-    private val fileUtil = FileUtil()
-
-    private lateinit var mFab: FloatingActionButton
-
-
-    private var mCurrentPath = "/storage/emulated/0"
-    private val BASE_PATH = "/storage/emulated/0"
     private lateinit var materialDialogUtils: MaterialDialogUtils
-    private var fileModel = mutableListOf<FileModel>()
-
-    private val coroutineScope = lifecycleScope
-
     private lateinit var managerUtil: ManagerUtil
-
-
-    private var actionMode: androidx.appcompat.view.ActionMode? = null
-    private var isActionMode = false
-    private lateinit var topAppBar: MaterialToolbar
-
     private lateinit var selectPreferenceUtils: SelectPreferenceUtils
     private lateinit var fileAdapterListenerUtil: FileAdapterListenerUtil
 
-    lateinit var selectionTracker: SelectionTracker<Long>
+    // FAB (Floating Action Button)
+    private lateinit var mFab: FloatingActionButton
 
+    // FileModel data
+    private var fileModel = mutableListOf<FileModel>()
+
+    // Action Mode (for contextual action bar)
+    private var actionMode: androidx.appcompat.view.ActionMode? = null
+    private var isActionMode = false
+
+    // Top App Bar
+    private lateinit var topAppBar: MaterialToolbar
+
+    // Bottom Sheet (Standard)
     private lateinit var standardBottomSheet: FrameLayout
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
+
+    // Bottom Sheet (Operation)
     private lateinit var standardBottomSheetOp: FrameLayout
     private lateinit var standardBehaviorOperation: BottomSheetBehavior<FrameLayout>
+
+    // Bottom Sheet (Properties)
     private lateinit var bottomSheetProperties: FrameLayout
     private lateinit var bottomSheetBehaviorProperties: BottomSheetBehavior<FrameLayout>
+
+    // Bottom Sheet (Rename)
     private lateinit var bottomSheetRename: FrameLayout
     private lateinit var bottomSheetBehaviorRename: BottomSheetBehavior<FrameLayout>
 
+    // View Models
     private lateinit var settingsViewModel: SettingsViewModel
-    private var showHiddenFiles = false
-
     private lateinit var viewModel: FileListViewModel
     private lateinit var coroutineViewModel: FileCoroutineViewModel
 
-    val propertiesViewModel = PropertiesViewModel()
-
+    // Miscellaneous
+    private val fileUtil = FileUtil()
+    private var showHiddenFiles = false
     private val REQUEST_CODE = 6
 
     private var progressDialog: AlertDialog? = null
     private var isProgressDialogShowing = false
-    private val debouncedSearchRunnable = DebouncedRunnable(Handler(Looper.getMainLooper()), 1000) {
-        if (!isResumed || !viewModel.isSearchViewExpanded) {
-            return@DebouncedRunnable
-        }
-        val query = viewModel.searchViewQuery
-        if (query.isEmpty()) {
-            return@DebouncedRunnable
-        }
-        viewModel.search(query)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -195,8 +188,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
         observeSettings()
         observeViewModel()
-        observeOperationViewModel()
-
         initFabClick()
 
 
@@ -204,7 +195,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
         selectPreferenceUtils = SelectPreferenceUtils.getInstance()
         fileAdapterListenerUtil = FileAdapterListenerUtil.getInstance()
-        selectPreferenceUtils.setListener(this, requireContext())
 
         val mFile = fileUri?.path?.let { File(it) }
         val path = fileUri?.let { fileUtil.getFilePathFromUri(requireContext(), it) }
@@ -235,37 +225,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     }
 
 
-    private fun observeOperationViewModel() {
-
-        coroutineViewModel.operationInfo.observe(viewLifecycleOwner) { info ->
-            if (info.progress != null) {
-                updateProgress(info.title, info.message, info.message.toInt())
-            } else {
-                progressDialog?.cancel()
-            }
-        }
-
-    }
-
     fun onNewIntent(uri: Uri) {
         navigateTo(fileUtil.getFilePathFromUri(requireContext(), uri).toString())
-
-    }
-
-
-    @SuppressLint("NotifyDataSetChanged")
-    override fun onItemSelectedActionSort(itemSelected: Int, itemSelectedFolderFirst: Boolean) {
-        itemSelectedSort = itemSelected
-        if (::adapter.isInitialized) {
-            selectPreferenceUtils.sortFilesAuto(fileModel, requireContext())
-            refreshAdapter()
-        }
-    }
-
-
-    override fun onFileInfoReceived(currentPath: String) {
-        // mCurrentPath = currentPath
-        Log.e("HOMEE CURRENTPATH", "PATH $currentPath")
 
     }
 
@@ -365,34 +326,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         }
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.R)
-    private fun requestStoragePermission() {
-        val permission = Manifest.permission.MANAGE_EXTERNAL_STORAGE
-        val requestCode = 1
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (Environment.isExternalStorageManager()) {
-                //TODO()
-            } else {
-                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
-                val uri = Uri.fromParts("package", requireContext().packageName, null)
-                intent.data = uri
-                startActivity(intent)
-            }
-            ActivityCompat.requestPermissions(
-                requireActivity(), arrayOf<String>(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.MANAGE_EXTERNAL_STORAGE
-                ), 1
-            )
-        } else {
-            requestFilesPermission()
-        }
-
-
-    }
-
     private fun requestFilesPermission() {
         val READ_WRITE_PERMISSION_REQUEST_CODE = 1
 
@@ -413,24 +346,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
     }
 
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun refreshAdapter() {
-        val controller =
-            AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_file_fade_in_anim)
-        //    recyclerView.layoutAnimation = controller
-        adapter.notifyDataSetChanged()
-        // recyclerView.scheduleLayoutAnimation()
-
-    }
-
-    private fun setRecyclerViewAnimation() {
-
-        val controller =
-            AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_file_fade_in_anim)
-        recyclerView.layoutAnimation = controller
-        recyclerView.scheduleLayoutAnimation()
-    }
 
     private fun onToggleGridChange(isGridEnabled: Boolean) {
         val spanCount = if (isGridEnabled) 2 else 1
@@ -962,33 +877,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         }
     }
 
-    override fun extractFile(file: FileModel) {
-        TODO("Not yet implemented")
-    }
-
-    override fun showCreateArchiveDialog(file: FileModel) {
-        TODO("Not yet implemented")
-    }
-
-    override fun shareFile(file: FileModel) {
-        TODO("Not yet implemented")
-    }
-
-    override fun copyPath(file: FileModel) {
-        TODO("Not yet implemented")
-    }
-
-    override fun addBookmark(file: FileModel) {
-        TODO("Not yet implemented")
-    }
-
-    override fun createShortcut(file: FileModel) {
-        TODO("Not yet implemented")
-    }
-
-    override fun showPropertiesDialog(file: FileModel) {
-        TODO("Not yet implemented")
-    }
 
     override fun showBottomSheet(file: FileModel) {
         showBottomSheetMoreActionFile(file)
@@ -1362,7 +1250,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     private fun delete(paths: List<String>) {
         askPermission()
         val intent = Intent(requireContext(), FileOperationService::class.java)
-        intent.putStringArrayListExtra("sourcePaths", ArrayList<String>(paths))
+        intent.putStringArrayListExtra("sourcePaths", ArrayList(paths))
         intent.putExtra("destinationPath", "null")
         intent.putExtra("operation", FileOperation.DELETE)
         ContextCompat.startForegroundService(requireContext(), intent)
@@ -1371,8 +1259,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     private fun rename(paths: List<Path>, newNames: List<String>) {
         val mPaths = paths.map { it.toAbsolutePath().toString() }
         val intent = Intent(requireContext(), FileOperationService::class.java)
-        intent.putStringArrayListExtra("sourcePaths", ArrayList<String>(mPaths))
-        intent.putStringArrayListExtra("newNames", ArrayList<String>(newNames))
+        intent.putStringArrayListExtra("sourcePaths", ArrayList(mPaths))
+        intent.putStringArrayListExtra("newNames", ArrayList(newNames))
         intent.putExtra("operation", FileOperation.RENAME)
         ContextCompat.startForegroundService(requireContext(), intent)
     }
@@ -1447,34 +1335,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         } else {
         }
     }
-
-    fun Fragment.getParentActivity(): AppCompatActivity? {
-        return activity as? AppCompatActivity
-    }
-
-    fun updateProgress(title: String, msg: String, progress: Int) {
-        if (!isProgressDialogShowing) {
-            val inflater = LayoutInflater.from(context)
-            val dialogView = inflater.inflate(R.layout.basic_dialog_progress, null)
-            val lProgress = dialogView.findViewById<LinearProgressIndicator>(R.id.progressindicator)
-
-            lProgress.progress = progress
-
-            val builder =
-                MaterialAlertDialogBuilder(requireContext()).setView(dialogView).setTitle(title)
-                    .setMessage(msg).setCancelable(false)
-
-            progressDialog = builder.create()
-            progressDialog?.show()
-            isProgressDialogShowing = true
-        } else {
-            progressDialog?.setMessage(msg)
-            val lProgress =
-                progressDialog?.findViewById<LinearProgressIndicator>(R.id.progressindicator)
-            lProgress?.progress = progress
-        }
-    }
-
     private fun shareFiles(fileItemSet: FileItemSet?, paths: List<String>?) {
         val mPaths = if (fileItemSet.isNullOrEmpty()) paths!! else fileItemSet.map { it.filePath }
         if (mPaths.size == 1) fileUtil.shareFile(
