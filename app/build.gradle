@@ -59,7 +59,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
     implementation 'me.zhanghai.android.fastscroll:library:1.2.0'
@@ -77,13 +77,11 @@ dependencies {
     implementation("io.github.Rosemoe.sora-editor:editor")
     implementation("io.github.Rosemoe.sora-editor:language-textmate")
     implementation 'commons-net:commons-net:3.9.0'
-    implementation 'org.apache.commons:commons-compress:1.20'
     implementation 'org.tukaani:xz:1.9'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.6'
     implementation 'dev.rikka.rikkax.preference:simplemenu-preference:1.0.3'
     implementation 'dev.rikka.shizuku:api:12.2.0'
     runtimeOnly("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
-    implementation 'androidx.preference:preference-ktx:1.2.0'
     //https://github.com/Glavo/kala-compress
     implementation("org.glavo.kala:kala-compress:1.21.0.1-beta3")
 

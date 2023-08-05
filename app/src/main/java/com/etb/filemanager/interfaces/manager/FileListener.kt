@@ -15,6 +15,13 @@ interface FileListener {
     fun copyFile(file: FileItemSet)
     fun confirmDeleteFile(files: FileItemSet?, fileItem: FileModel?)
     fun showRenameFileDialog(file: FileModel)
+    fun extractFile(file: FileModel)
+    fun showCreateArchiveDialog(file: FileModel)
+    fun shareFile(file: FileModel)
+    fun copyPath(file: FileModel)
+    fun addBookmark(file: FileModel)
+    fun createShortcut(file: FileModel)
+    fun showPropertiesDialog(file: FileModel)
     fun showBottomSheet(file: FileModel)
     fun onClickFileAction(file: FileModel, action: CreateFileAction)
 
