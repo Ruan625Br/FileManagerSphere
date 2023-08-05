@@ -1,7 +1,6 @@
 package com.etb.filemanager.manager.editor;
 
 import android.app.Application;
-import android.net.Uri;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -10,11 +9,10 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.etb.filemanager.util.file.FileUtil;
+import com.etb.filemanager.files.util.FileUtil;
 import org.jetbrains.annotations.Contract;
 
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 

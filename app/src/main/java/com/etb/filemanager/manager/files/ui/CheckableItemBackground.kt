@@ -16,7 +16,7 @@ import com.etb.filemanager.files.util.getColorByAttr
 import com.etb.filemanager.files.util.shortAnimTime
 import com.etb.filemanager.files.util.withModulatedAlpha
 import com.etb.filemanager.settings.preference.Preferences
-import com.etb.filemanager.util.file.style.IconUtil
+import com.etb.filemanager.ui.style.IconUtil
 
 
 object CheckableItemBackground {

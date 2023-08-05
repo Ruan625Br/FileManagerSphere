@@ -1,6 +1,4 @@
-package com.etb.filemanager.files.file.common.mime
-
-import java.nio.file.Path
+package com.etb.filemanager.files.provider.archive.common.mime
 
 
 class MimeTypeUtil {

@@ -16,7 +16,7 @@ import com.etb.filemanager.fragment.StartedFragment
 import com.etb.filemanager.settings.PreferenceUtils
 import com.etb.filemanager.settings.preference.PopupSettings
 import com.etb.filemanager.settings.preference.Preferences
-import com.etb.filemanager.util.file.style.StyleManager
+import com.etb.filemanager.ui.style.StyleManager
 import com.google.android.material.color.DynamicColors
 import java.io.File
 import java.util.Locale

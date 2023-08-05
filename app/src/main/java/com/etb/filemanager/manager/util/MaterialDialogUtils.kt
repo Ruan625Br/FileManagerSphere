@@ -6,9 +6,8 @@ import android.view.LayoutInflater
 import android.widget.RadioGroup
 import com.etb.filemanager.R
 import com.etb.filemanager.files.util.ContextUtils
-import com.etb.filemanager.util.file.FileUtil
+import com.etb.filemanager.files.util.FileUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 

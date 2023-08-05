@@ -3,26 +3,19 @@ package com.etb.filemanager.files.util
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
-import android.graphics.drawable.Drawable
-import android.os.Bundle
-import android.os.Looper
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
-import android.widget.Toast
 import androidx.annotation.*
 import androidx.appcompat.view.ContextThemeWrapper
-import com.etb.filemanager.files.file.common.mime.compat.obtainStyledAttributesCompat
-import com.etb.filemanager.files.file.common.mime.compat.use
-import com.google.android.material.R
+import com.etb.filemanager.files.provider.archive.common.mime.compat.obtainStyledAttributesCompat
+import com.etb.filemanager.files.provider.archive.common.mime.compat.use
 
 val Context.activity: Activity?
     get() {

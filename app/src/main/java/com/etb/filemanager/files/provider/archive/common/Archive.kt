@@ -1,4 +1,4 @@
-package com.etb.filemanager.files.provider.archive.commo
+package com.etb.filemanager.files.provider.archive.common
 
 import android.util.Log
 import java.io.*

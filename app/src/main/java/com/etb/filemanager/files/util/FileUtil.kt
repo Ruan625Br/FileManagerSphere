@@ -1,4 +1,4 @@
-package com.etb.filemanager.util.file
+package com.etb.filemanager.files.util
 
 import android.annotation.SuppressLint
 import android.content.ClipData
@@ -11,7 +11,6 @@ import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.content.FileProvider
-import com.etb.filemanager.files.util.ContextUtils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.*

@@ -1,4 +1,4 @@
-package com.etb.filemanager.files.file.properties
+package com.etb.filemanager.files.provider.archive.common.properties
 
 
 import android.annotation.SuppressLint
@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
-import com.etb.filemanager.files.file.common.mime.MidiaType
+import com.etb.filemanager.files.provider.archive.common.mime.MidiaType
 
 
 private const val ARG_PARAM1 = "param1"

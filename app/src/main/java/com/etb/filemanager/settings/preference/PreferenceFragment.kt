@@ -4,8 +4,6 @@ package com.etb.filemanager.settings.preference
 
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
@@ -13,15 +11,7 @@ import androidx.annotation.StringRes
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.etb.filemanager.activity.SettingsActivity
-import com.etb.filemanager.files.app.application
-import com.etb.filemanager.files.util.BundleParceler
-import com.etb.filemanager.files.util.ParcelableArgs
-import com.etb.filemanager.util.ui.UiUtils
-import com.google.android.material.transition.MaterialSharedAxis
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
-import kotlin.reflect.KClass
+import com.etb.filemanager.ui.view.UiUtils
 
 abstract class PreferenceFragment : PreferenceFragmentCompat() {
     companion object {
