@@ -1,6 +1,6 @@
 <p align="center"><img src="fastlane/metadata/android/en-US/images/icon.png" width="150"></p>
 <h1 align="center"><b>FileManagerSphere</b></h1>
-<h4 align="center">Bem-vindo ao FileManagerSphere - seu gerenciador de arquivos personalizado!</h4>
+<p align="center"><span><b>FileManagerSphere</b>, a customizable and modern File Manager and</span></p>
 
 <div align="center">
     <a href="LICENSE">
