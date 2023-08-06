@@ -18,6 +18,7 @@
     <a href="https://apt.izzysoft.de/fdroid/index/apk/com.etb.filemanager/">
         <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.etb.filemanager&color=cfbdff&style=for-the-badge" alt="Get it on IzzyOnDroid">
     </a>
+      <img alt="material" src="https://custom-icon-badges.demolab.com/badge/material%20you-lightblue?color=cfbdff&style=for-the-badge&logoColor=333&logo=material-you"/>
      <a href="https://ko-fi.com/juannascimento/">
     <img src="https://img.shields.io/badge/Ko--fi-F16061?color=cfbdff&style=for-the-badge&logo=ko-fi&logoColor=black"
      alt="Ko-Fi">
