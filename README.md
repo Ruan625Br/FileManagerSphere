@@ -1,6 +1,5 @@
 <p align="center"><img src="fastlane/metadata/android/en-US/images/icon.png" width="150"></p>
-<h1 align="center"><b>FileManagerSphere</b></h1>
-<p align="center"><span><b>FileManagerSphere</b>, a customizable and modern File Manager and</span></p>
+<h1 align="center"><b>FileManagerSphere</b></h1><p align="center"><span><b>FileManagerSphere</b>, a customizable and modern file manager</span></p>
 
 <div align="center">
     <a href="LICENSE">
