@@ -10,7 +10,7 @@
     <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/is_shapeableImageView"
             android:src="@drawable/ic_cj"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/roundedImageView"

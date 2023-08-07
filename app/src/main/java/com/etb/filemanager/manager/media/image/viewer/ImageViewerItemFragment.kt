@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -15,6 +17,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
 import com.etb.filemanager.databinding.FragmentImageViewerItemBinding
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.ShapeAppearanceModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,8 +42,7 @@ class ImageViewerItemFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentImageViewerItemBinding.inflate(inflater, container, false)
         return binding.root
@@ -58,23 +61,40 @@ class ImageViewerItemFragment : Fragment() {
         val inflater = LayoutInflater.from(requireContext())
         val imageViewerItem = inflater.inflate(R.layout.layout_image_viewer_item, null)
 
-        val ivImageViewer =
+        val shapeableImageView =
             imageViewerItem.findViewById<ShapeableImageView>(R.id.is_shapeableImageView)
 
         lifecycleScope.launch {
             try {
                 val bitmap = loadResizedImageAsync(path)
-                val imageWidth = bitmap.width
-                val imageHeight = bitmap.height
 
-                Glide.with(requireContext())
-                    .load(path)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                val imageMaxWidth = 1920
+                val imageMaxHeight = 1080
+                var imageWidth = bitmap.width
+                var imageHeight = bitmap.height
+
+/*
+                if (imageHeight > imageMaxHeight) {
+                    imageWidth = imageMaxWidth
+                    imageHeight = imageMaxHeight
+
+                    val shapeAppearanceModel = ShapeAppearanceModel.builder().setAllCorners(
+                            CornerFamily.ROUNDED,
+                            resources.getDimensionPixelSize(R.dimen.corner_radius_base).toFloat()
+                        ).build()
+                    shapeableImageView.shapeAppearanceModel = shapeAppearanceModel
+                    shapeableImageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                    shapeableImageView.layoutParams.apply {
+                        width = imageMaxWidth
+                        height = imageHeight
+                    }
+                }
+*/
+                Glide.with(requireContext()).load(path).diskCacheStrategy(DiskCacheStrategy.ALL)
                     .apply(
                         RequestOptions().override(imageWidth, imageHeight)
                             .placeholder(R.drawable.ic_image)
-                    )
-                    .into(ivImageViewer)
+                    ).into(shapeableImageView)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -98,9 +118,7 @@ class ImageViewerItemFragment : Fragment() {
         }
 
     private fun calculateInSampleSize(
-        options: BitmapFactory.Options,
-        maxWidth: Int,
-        maxHeight: Int
+        options: BitmapFactory.Options, maxWidth: Int, maxHeight: Int
     ): Int {
         val imageHeight = options.outHeight
         val imageWidth = options.outWidth
@@ -120,12 +138,11 @@ class ImageViewerItemFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(path: Path) =
-            ImageViewerItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_IMAGE_PATH, path.pathString)
+        fun newInstance(path: Path) = ImageViewerItemFragment().apply {
+            arguments = Bundle().apply {
+                putString(ARG_IMAGE_PATH, path.pathString)
 
-                }
             }
+        }
     }
 }
