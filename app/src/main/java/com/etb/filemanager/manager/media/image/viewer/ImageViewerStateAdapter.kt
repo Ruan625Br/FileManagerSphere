@@ -1,4 +1,4 @@
-package com.etb.filemanager.manager.image.viewer
+package com.etb.filemanager.manager.media.image.viewer
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

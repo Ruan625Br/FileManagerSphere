@@ -1,4 +1,4 @@
-package com.etb.filemanager.manager.image.viewer
+package com.etb.filemanager.manager.media.image.viewer
 
 import android.os.Bundle
 import android.view.LayoutInflater

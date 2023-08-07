@@ -68,7 +68,7 @@ import com.etb.filemanager.settings.preference.PopupSettings
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.ui.view.FabMenu
 import com.etb.filemanager.files.util.FileUtil
-import com.etb.filemanager.manager.image.viewer.ImageViewerDialogFragment
+import com.etb.filemanager.manager.media.image.viewer.ImageViewerDialogFragment
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

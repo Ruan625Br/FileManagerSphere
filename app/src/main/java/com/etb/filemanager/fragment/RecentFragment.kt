@@ -42,7 +42,7 @@ import com.etb.filemanager.settings.preference.AboutFragment
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.ui.view.ModalBottomSheetAddCategory
 import com.etb.filemanager.files.util.FileUtil
-import com.etb.filemanager.manager.image.viewer.ImageViewerDialogFragment
+import com.etb.filemanager.manager.media.image.viewer.ImageViewerDialogFragment
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
