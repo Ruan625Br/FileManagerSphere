@@ -68,6 +68,7 @@ import com.etb.filemanager.settings.preference.PopupSettings
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.ui.view.FabMenu
 import com.etb.filemanager.files.util.FileUtil
+import com.etb.filemanager.manager.image.viewer.ImageViewerDialogFragment
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -885,6 +886,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         val isSpecificFileType = if (mimeType != null) MimeTypeUtil().isSpecificFileType(
             mimeType, MimeTypeIcon.CODE
         ) else false
+        val isImage = if (mimeType != null) MimeTypeUtil().isSpecificFileType(
+            mimeType, MimeTypeIcon.IMAGE
+        ) else false
         if (!file.isDirectory && isSpecificFileType) {
             val state = recyclerView.layoutManager!!.onSaveInstanceState()
             val fileUri = Uri.fromFile(File(path))
@@ -901,6 +905,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
             (requireActivity() as MainActivity).startNewFragment(fragment)
 
 
+        }
+
+        if (isImage){
+            showImageViewerDialog(listOf(Paths.get(file.filePath)))
         }
     }
 
@@ -1482,6 +1490,18 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
             requireContext()
         ) else fileUtil.shareFiles(mPaths, requireContext())
 
+    }
+
+    private fun showImageViewerDialog(imagePathList: List<Path>){
+        val imageViewerDialogFragment = ImageViewerDialogFragment()
+        val fm = requireActivity().supportFragmentManager
+        imageViewerDialogFragment.arguments = Bundle().apply {
+            putStringArrayList(
+                ImageViewerDialogFragment.ARG_IMAGE_PATH_LIST,
+                ArrayList(imagePathList.map { it.pathString })
+            )
+        }
+         imageViewerDialogFragment.show(parentFragmentManager, ImageViewerDialogFragment.TAG)
     }
 }
 

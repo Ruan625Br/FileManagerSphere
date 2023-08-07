@@ -42,6 +42,7 @@ import com.etb.filemanager.settings.preference.AboutFragment
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.ui.view.ModalBottomSheetAddCategory
 import com.etb.filemanager.files.util.FileUtil
+import com.etb.filemanager.manager.image.viewer.ImageViewerDialogFragment
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -385,9 +386,22 @@ class RecentFragment : Fragment(), ItemListener {
     }
 
     override fun openItemWith(path: Path) {
-        FileUtil().actionOpenWith(path.pathString, requireContext())
-    }
+       // FileUtil().actionOpenWith(path.pathString, requireContext())
+       showImageViewerDialog(listOf(path))
 
+    }
+    private fun showImageViewerDialog(imagePathList: List<Path>){
+        val s = ImageViewerDialogFragment.newInstance(imagePathList)
+
+        val imageViewerDialogFragment = ImageViewerDialogFragment()
+        imageViewerDialogFragment.arguments = Bundle().apply {
+            putStringArrayList(
+                ImageViewerDialogFragment.ARG_IMAGE_PATH_LIST,
+                java.util.ArrayList(imagePathList.map { it.pathString })
+            )
+        }
+        imageViewerDialogFragment.show(requireActivity().supportFragmentManager, ImageViewerDialogFragment.TAG)
+    }
     private fun isReadStoragePermissionGranted(): Boolean {
         return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             // Android 10 (API 29) e abaixo.
