@@ -3,8 +3,14 @@
 <p align="center"><span><b>FileManagerSphere</b>, a customizable and modern File Manager and</span></p>
 
 <div align="center">
+
+ <img alt="API" src="https://img.shields.io/badge/Api%2026+-50f270?logo=android&logoColor=black&style=for-the-badge"/></a>
+  <img alt="Kotlin" src="https://img.shields.io/badge/Kotlin-a503fc?logo=kotlin&logoColor=white&style=for-the-badge"/></a>
+  <img alt="material" src="https://custom-icon-badges.demolab.com/badge/material%20you-lightblue?style=for-the-badge&logoColor=333&logo=material-you"/></a>
+  </br>
+  </br>
     <a href="LICENSE">
-        <img src="https://img.shields.io/github/license/ruan625br/filemanagersphere.svg?color=371E73&style=for-the-badge&logo=gitbook&logoColor=ebebf0&labelColor=23232F" alt="License">
+        <img src="https://img.shields.io/github/license/ruan625br/filemanagersphere.svg?color=CFBDFF&style=for-the-badge&logo=gitbook&logoColor=ebebf0&labelColor=23232F" alt="License">
     </a>
     <a href="https://github.com/Ruan625Br/FileManagerSphere/releases">
         <img src="https://img.shields.io/github/v/release/Ruan625Br/FileManagerSphere?color=cfbdff&style=for-the-badge&logo=pkgsrc&logoColor=ebebf0&labelColor=23232F" alt="GitHub release">
@@ -16,12 +22,11 @@
         <img src="https://img.shields.io/github/downloads/Ruan625Br/FileManagerSphere/total.svg?color=cfbdff&style=for-the-badge&labelColor=23232F" alt="Download Counts">
     </a> 
     <a href="https://github.com/Ruan625Br/FileManagerSphere/actions/workflows/android.yml">
-        <img alt="Workflow status" src="https://img.shields.io/github/actions/workflow/status/Ruan625Br/FileManagerSphere/android.yml?style=for-the-badge&logo=githubactions&logoColor=ebebf0&labelColor=23232F&label=CI">
+        <img alt="Workflow status" src="https://img.shields.io/github/actions/workflow/status/Ruan625Br/FileManagerSphere/android.yml?color=6650A4&style=for-the-badge&logo=githubactions&logoColor=ebebf0&labelColor=23232F&label=CI">
     </a>
     <a href="https://ko-fi.com/juannascimento/">
         <img src="https://img.shields.io/badge/Ko--fi-F16061?color=cfbdff&style=for-the-badge&logo=ko-fi&logoColor=black" alt="Ko-Fi">
     </a>   
-    <img alt="material" src="https://custom-icon-badges.demolab.com/badge/material%20you-lightblue?color=cfbdff&style=for-the-badge&logoColor=333&logo=material-you"/>
 </div>
 
 
