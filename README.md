@@ -4,26 +4,26 @@
 
 <div align="center">
     <a href="LICENSE">
-        <img src="https://img.shields.io/github/license/ruan625br/filemanagersphere.svg?color=371E73&style=for-the-badge" alt="License">
+        <img src="https://img.shields.io/github/license/ruan625br/filemanagersphere.svg?color=371E73&style=for-the-badge&logo=gitbook&logoColor=ebebf0&labelColor=23232F" alt="License">
     </a>
     <a href="https://github.com/Ruan625Br/FileManagerSphere/releases">
-        <img src="https://img.shields.io/github/downloads/Ruan625Br/FileManagerSphere/total.svg?color=cfbdff&style=for-the-badge" alt="Download Counts">
+        <img src="https://img.shields.io/github/v/release/Ruan625Br/FileManagerSphere?color=cfbdff&style=for-the-badge&logo=pkgsrc&logoColor=ebebf0&labelColor=23232F" alt="GitHub release">
+    </a>
+    <a href="https://github.com/Ruan625Br/FileManagerSphere/stargazers">
+        <img src="https://img.shields.io/github/stars/Ruan625Br/FileManagerSphere.svg?color=cfbdff&style=for-the-badge&logo=apachespark&logoColor=ebebf0&labelColor=23232F" alt="Stars Count">
+    </a>
+    <a href="https://github.com/Ruan625Br/FileManagerSphere/releases">
+        <img src="https://img.shields.io/github/downloads/Ruan625Br/FileManagerSphere/total.svg?color=cfbdff&style=for-the-badge&labelColor=23232F" alt="Download Counts">
     </a> 
-     <a href="https://github.com/Ruan625Br/FileManagerSphere/stargazers">
-          <img src="https://img.shields.io/github/stars/Ruan625Br/FileManagerSphere.svg?color=cfbdff&style=for-the-badge" alt="Stars Count">
-     </a>
-    <a href="https://github.com/Ruan625Br/FileManagerSphere/releases">
-        <img src="https://img.shields.io/github/v/release/Ruan625Br/FileManagerSphere?color=cfbdff&style=for-the-badge" alt="GitHub release">
+    <a href="https://github.com/Ruan625Br/FileManagerSphere/actions/workflows/android.yml">
+        <img alt="Workflow status" src="https://img.shields.io/github/actions/workflow/status/Ruan625Br/FileManagerSphere/android.yml?style=for-the-badge&logo=githubactions&logoColor=ebebf0&labelColor=23232F&label=CI">
     </a>
-    <a href="https://apt.izzysoft.de/fdroid/index/apk/com.etb.filemanager/">
-        <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.etb.filemanager&color=cfbdff&style=for-the-badge" alt="Get it on IzzyOnDroid">
-    </a>
-      <img alt="material" src="https://custom-icon-badges.demolab.com/badge/material%20you-lightblue?color=cfbdff&style=for-the-badge&logoColor=333&logo=material-you"/>
-     <a href="https://ko-fi.com/juannascimento/">
-    <img src="https://img.shields.io/badge/Ko--fi-F16061?color=cfbdff&style=for-the-badge&logo=ko-fi&logoColor=black"
-     alt="Ko-Fi">
+    <a href="https://ko-fi.com/juannascimento/">
+        <img src="https://img.shields.io/badge/Ko--fi-F16061?color=cfbdff&style=for-the-badge&logo=ko-fi&logoColor=black" alt="Ko-Fi">
     </a>   
+    <img alt="material" src="https://custom-icon-badges.demolab.com/badge/material%20you-lightblue?color=cfbdff&style=for-the-badge&logoColor=333&logo=material-you"/>
 </div>
+
 
 
 ---                 
