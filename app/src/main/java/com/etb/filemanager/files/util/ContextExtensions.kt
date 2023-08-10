@@ -5,6 +5,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.util.TypedValue
@@ -14,8 +16,15 @@ import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
 import androidx.annotation.*
 import androidx.appcompat.view.ContextThemeWrapper
+import com.etb.filemanager.R
 import com.etb.filemanager.files.provider.archive.common.mime.compat.obtainStyledAttributesCompat
 import com.etb.filemanager.files.provider.archive.common.mime.compat.use
+import com.etb.filemanager.manager.media.model.Media
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.nio.file.Path
+import java.nio.file.Paths
 
 val Context.activity: Activity?
     get() {
@@ -56,7 +65,6 @@ fun Context.getQuantityText(@PluralsRes id: Int, quantity: Int): CharSequence =
 fun Context.getStringArray(@ArrayRes id: Int): Array<String> = resources.getStringArray(id)
 
 fun Context.getTextArray(@ArrayRes id: Int): Array<CharSequence> = resources.getTextArray(id)
-
 
 
 val Context.displayWidth: Int
@@ -112,7 +120,6 @@ val Context.hasW960Dp: Boolean
     get() = hasWDp(960)
 
 
-
 val Context.isOrientationLandscape: Boolean
     get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
@@ -133,6 +140,7 @@ val Context.longAnimTime: Int
 
 fun Context.withheme(@StyleRes themeRes: Int): Context =
     if (themeRes != 0) ContextThemeWrapper(this, themeRes) else this
+
 @ColorInt
 fun Context.getColorByAttr(@AttrRes attr: Int): Int =
     getColorStateListByAttr(attr).defaultColor
@@ -141,10 +149,40 @@ fun Context.getColorByAttr(@AttrRes attr: Int): Int =
 fun Context.getColorStateListByAttr(@AttrRes attr: Int): ColorStateList =
     obtainStyledAttributesCompat(attrs = intArrayOf(attr)).use { it.getColorStateList(0) }
 
-fun Context.getColorFromRes(atrr: Int): Int{
+fun Context.getColorFromRes(atrr: Int): Int {
     val attrs = intArrayOf(atrr)
     val typedArray = this.obtainStyledAttributes(attrs)
     val tint = typedArray.getColor(0, 0)
     typedArray.recycle()
     return tint
 }
+
+fun Activity.toggleOrientation() {
+    requestedOrientation =
+        if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED ||
+            requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        ) {
+            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        } else ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+}
+
+fun Context.shareMedia(media: Media) {
+    val uri = media.uri
+    val filePath = uri.path
+
+    FileUtil().shareFile(filePath!!, this)
+}
+
+
+
+suspend fun Context.launchEditIntent(media: Media) =
+    withContext(Dispatchers.Default) {
+        val mimeType = FileUtil().getMimeType(null, media.uri.path)
+        val intent = Intent(Intent.ACTION_EDIT).apply {
+            addCategory(Intent.CATEGORY_DEFAULT)
+            setDataAndType(media.uri, mimeType)
+            putExtra("mimeType", mimeType)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        startActivity(Intent.createChooser(intent, getString(R.string.edit)))
+    }

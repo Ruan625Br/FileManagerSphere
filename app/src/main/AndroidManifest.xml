@@ -57,6 +57,7 @@
                 <data android:mimeType="vnd.android.document/directory" />
             </intent-filter>
         </activity>
+        <activity android:name=".manager.media.MediaViewActivity"/>
 
         <service
                 android:name=".manager.files.services.FileOperationService"

@@ -26,6 +26,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.MutableState
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.documentfile.provider.DocumentFile
@@ -33,6 +34,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,11 +42,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
+import com.etb.filemanager.files.provider.archive.common.mime.MimeType
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeIcon
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeUtil
 import com.etb.filemanager.files.provider.archive.common.properties.*
-import com.etb.filemanager.files.provider.archive.common.properties.PropertiesViewModel
-import com.etb.filemanager.files.provider.archive.common.properties.ViewStateAdapter
 import com.etb.filemanager.files.util.*
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.manager.FileListener
@@ -62,13 +63,15 @@ import com.etb.filemanager.manager.files.filecoroutine.FileOperation
 import com.etb.filemanager.manager.files.filelist.*
 import com.etb.filemanager.manager.files.services.FileOperationService
 import com.etb.filemanager.manager.files.ui.ModalBottomSheetCompress
+import com.etb.filemanager.manager.media.MediaPreviewComponent
+import com.etb.filemanager.manager.media.MediaViewActivity
+import com.etb.filemanager.manager.media.image.viewer.ImageViewerDialogFragment
+import com.etb.filemanager.manager.media.model.Media
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.PopupSettings
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.ui.view.FabMenu
-import com.etb.filemanager.files.util.FileUtil
-import com.etb.filemanager.manager.media.image.viewer.ImageViewerDialogFragment
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -733,16 +736,25 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     private fun setUpActionMode() {
 
         val actionModeCallback = object : androidx.appcompat.view.ActionMode.Callback {
-            override fun onCreateActionMode(mode: androidx.appcompat.view.ActionMode?, menu: Menu?): Boolean {
+            override fun onCreateActionMode(
+                mode: androidx.appcompat.view.ActionMode?,
+                menu: Menu?
+            ): Boolean {
                 mode?.menuInflater?.inflate(R.menu.menu_file_lis_select, menu)
                 return true
             }
 
-            override fun onPrepareActionMode(mode: androidx.appcompat.view.ActionMode?, menu: Menu?): Boolean {
+            override fun onPrepareActionMode(
+                mode: androidx.appcompat.view.ActionMode?,
+                menu: Menu?
+            ): Boolean {
                 return false
             }
 
-            override fun onActionItemClicked(mode: androidx.appcompat.view.ActionMode?, item: MenuItem?): Boolean {
+            override fun onActionItemClicked(
+                mode: androidx.appcompat.view.ActionMode?,
+                item: MenuItem?
+            ): Boolean {
                 return when (item?.itemId) {
                     R.id.action_cut -> {
                         cutFile(viewModel.selectedFiles)
@@ -883,6 +895,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     override fun openFileWith(file: FileModel) {
         val path = file.filePath
         val mimeType = fileUtil.getMimeType(null, path)
+        val media = Media(Paths.get(path).fileProviderUri)
         val isSpecificFileType = if (mimeType != null) MimeTypeUtil().isSpecificFileType(
             mimeType, MimeTypeIcon.CODE
         ) else false
@@ -907,9 +920,19 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
         }
 
-        if (isImage){
+        if (isImage) {
             showImageViewerDialog(listOf(Paths.get(file.filePath)))
         }
+/*
+        val isVideo = if (mimeType != null) MimeTypeUtil().isSpecificFileType(
+            mimeType, MimeTypeIcon.VIDEO
+        ) else false
+*/
+
+            val intent = Intent(requireActivity(), MediaViewActivity::class.java)
+            intent.putExtra("media", media)
+            requireActivity().startActivity(intent)
+
     }
 
     override fun cutFile(file: FileItemSet) {
@@ -1492,7 +1515,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
     }
 
-    private fun showImageViewerDialog(imagePathList: List<Path>){
+    private fun showImageViewerDialog(imagePathList: List<Path>) {
         val imageViewerDialogFragment = ImageViewerDialogFragment()
         val fm = requireActivity().supportFragmentManager
         imageViewerDialogFragment.arguments = Bundle().apply {
@@ -1501,7 +1524,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
                 ArrayList(imagePathList.map { it.pathString })
             )
         }
-         imageViewerDialogFragment.show(parentFragmentManager, ImageViewerDialogFragment.TAG)
+        imageViewerDialogFragment.show(parentFragmentManager, ImageViewerDialogFragment.TAG)
     }
 }
 

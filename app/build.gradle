@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace 'com.etb.filemanager'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.etb.filemanager"
         minSdk 26
-        targetSdk 33
+        targetSdk 34
         versionCode 3
         versionName "1.1.1"
 
@@ -20,12 +20,20 @@ android {
         resValue 'string', 'app_provider_authority', applicationId + '.app_provider'
         resValue 'string', 'file_provider_authority', applicationId + '.file_provider'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
     }
 
     buildFeatures{
         aidl true
         buildConfig true
         viewBinding true
+        compose true
+
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.8"
     }
 
 
@@ -45,12 +53,27 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
+    packaging {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
 }
 
 dependencies {
 
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+    implementation 'androidx.activity:activity-compose:1.7.2'
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
     ext {
         navigation_version = "2.6.0"
+         material3 = "1.2.0-alpha05"
+
     }
 
 
@@ -99,7 +122,26 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
 
+    //Compose
+    def composeBom = platform('androidx.compose:compose-bom:2023.08.00')
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
 
+    implementation "androidx.compose.runtime:runtime"
+    implementation "androidx.compose.ui:ui"
+    implementation "androidx.compose.foundation:foundation"
+    implementation "androidx.compose.foundation:foundation-layout"
+    implementation "androidx.compose.material3:material3:$material3"
+    implementation "androidx.compose.material3:material3-window-size-class:$material3"
+    implementation "androidx.compose.runtime:runtime-livedata"
+    implementation "androidx.compose.ui:ui-tooling"
+    implementation "com.google.accompanist:accompanist-themeadapter-material:0.28.0"
+    implementation "androidx.compose.material:material-icons-extended"
+
+    //ExoPlayer
+
+    implementation "androidx.media3:media3-exoplayer:1.1.0"
+    implementation "androidx.media3:media3-ui:1.1.0"
 }
 
 // NB: Android Studio can't find the imports; this does not affect the
