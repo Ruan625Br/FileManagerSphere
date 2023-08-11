@@ -17,7 +17,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
 import com.etb.filemanager.databinding.FileItemBinding
-import com.etb.filemanager.files.provider.archive.common.mime.MidiaType
+import com.etb.filemanager.files.provider.archive.common.mime.MediaType
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeUtil
 import com.etb.filemanager.files.provider.archive.common.mime.getMidiaType
 import com.etb.filemanager.files.util.getDimension
@@ -212,11 +212,11 @@ class FileModelAdapter(
             if (mimeType != null && mimeType.isMimeTypeMedia()) {
                 val mediaType = getMidiaType(mimeType)
                 when (mediaType) {
-                    MidiaType.IMAGE -> {
+                    MediaType.IMAGE -> {
                         loadImage(filePath, binding)
                     }
 
-                    MidiaType.VIDEO -> {
+                    MediaType.VIDEO -> {
                         loadImage(filePath, binding)
                     }
 

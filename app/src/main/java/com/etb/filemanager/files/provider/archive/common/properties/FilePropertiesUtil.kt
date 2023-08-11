@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.util.Log
 import androidx.fragment.app.Fragment
-import com.etb.filemanager.files.provider.archive.common.mime.MidiaType
+import com.etb.filemanager.files.provider.archive.common.mime.MediaType
 import com.etb.filemanager.files.provider.archive.common.mime.getMidiaType
 import com.etb.filemanager.fragment.HomeFragment
 import com.etb.filemanager.manager.adapter.FileModel
@@ -37,8 +37,8 @@ class FilePropertiesUtil {
 
         val mediaType = getMidiaType(mimeType)
         return when (mediaType) {
-            MidiaType.IMAGE -> getImageProperties(fileItem, mediaType)
-            MidiaType.VIDEO -> getVideoProperties(fileItem, mediaType)
+            MediaType.IMAGE -> getImageProperties(fileItem, mediaType)
+            MediaType.VIDEO -> getVideoProperties(fileItem, mediaType)
             else -> mediaType?.let { getImageProperties(fileItem, it) }!!
         }
     }
@@ -72,7 +72,7 @@ class FilePropertiesUtil {
     }
 
     @SuppressLint("SuspiciousIndentation")
-    fun getImageProperties(fileItem: FileModel, mediaType: MidiaType): Fragment{
+    fun getImageProperties(fileItem: FileModel, mediaType: MediaType): Fragment{
         val bitmap: Bitmap = BitmapFactory.decodeFile(fileItem.filePath)
         val width = bitmap.width
         val height = bitmap.height
@@ -88,7 +88,7 @@ class FilePropertiesUtil {
         addTabTitle("Imagem")
         return BasicPropertiesFragment.newInstance("null", "null", imageProperties)
     }
-    fun getVideoProperties(fileItem: FileModel, mediaType: MidiaType): Fragment{
+    fun getVideoProperties(fileItem: FileModel, mediaType: MediaType): Fragment{
         val bitmap: Bitmap = BitmapFactory.decodeFile(fileItem.filePath)
         val width = bitmap.width
         val height = bitmap.height

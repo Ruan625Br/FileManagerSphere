@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
-import com.etb.filemanager.files.provider.archive.common.mime.MidiaType
+import com.etb.filemanager.files.provider.archive.common.mime.MediaType
 
 
 private const val ARG_PARAM1 = "param1"
@@ -88,7 +88,7 @@ class BasicPropertiesFragment() : Fragment() {
     @SuppressLint("InflateParams")
     private fun addProperties(
         title: String, text: String, isMedia: Boolean,
-        mediaType: MidiaType = MidiaType.VIDEO,
+        mediaType: MediaType = MediaType.VIDEO,
         mediaPath: String = ""
     ) {
         val inflater = LayoutInflater.from(requireContext())
@@ -104,8 +104,8 @@ class BasicPropertiesFragment() : Fragment() {
 
         if (isMedia) {
             when (mediaType) {
-                MidiaType.IMAGE -> loadImage(mediaPath, ivMedia)
-                MidiaType.VIDEO -> loadImage(mediaPath, ivMedia)
+                MediaType.IMAGE -> loadImage(mediaPath, ivMedia)
+                MediaType.VIDEO -> loadImage(mediaPath, ivMedia)
                 else -> {}
             }
             linearLayout.addView(filePropertiesItemMedia)

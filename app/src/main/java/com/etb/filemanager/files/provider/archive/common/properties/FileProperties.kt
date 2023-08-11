@@ -4,20 +4,20 @@ import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.annotation.RequiresApi
-import com.etb.filemanager.files.provider.archive.common.mime.MidiaType
+import com.etb.filemanager.files.provider.archive.common.mime.MediaType
 
 
 data class FileProperties(var title: String,
                           var property: String,
                           var isMedia: Boolean = false,
-                          var mediaType: MidiaType = MidiaType.VIDEO,
+                          var mediaType: MediaType = MediaType.VIDEO,
                           var mediaPath: String = "") : Parcelable {
     @RequiresApi(Build.VERSION_CODES.Q)
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readBoolean(),
-        parcel.readSerializable() as MidiaType,
+        parcel.readSerializable() as MediaType,
         parcel.readString() ?: "",
     )
 
