@@ -67,6 +67,7 @@ import androidx.compose.ui.unit.dp
 import androidx.exifinterface.media.ExifInterface
 import com.etb.filemanager.R
 import com.etb.filemanager.files.util.FileUtil
+import com.etb.filemanager.files.util.actionEdit
 import com.etb.filemanager.files.util.launchEditIntent
 import com.etb.filemanager.files.util.shareMedia
 import com.etb.filemanager.manager.media.model.Media
@@ -243,7 +244,7 @@ private fun MediaViewActions(
         imageVector = Icons.Outlined.Edit,
         title = stringResource(id = R.string.edit)
     ) {
-        scope.launch { context.launchEditIntent(it) }
+        scope.launch { it.uri.path?.let { it1 -> context.actionEdit(it1) } }
     }
     // Open With
 

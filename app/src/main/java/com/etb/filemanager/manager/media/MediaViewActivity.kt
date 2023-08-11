@@ -67,7 +67,8 @@ class MediaViewActivity : ComponentActivity() {
                             MediaViewScreen(
                                 media = media!!,
                                 paddingValues = paddingValues,
-                                toggleRotate = ::toggleOrientation
+                                toggleRotate = ::toggleOrientation,
+                                onGoBack = { onBackPressedDispatcher.onBackPressed() }
                             )
                         }
                     }
@@ -78,32 +79,21 @@ class MediaViewActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!", modifier = modifier
-    )
-}
-
-@Preview(showBackground = true, device = "id:pixel_7_pro")
-@Composable
-fun GreetingPreview() {
-    FileManagerTheme {
-        Greeting("Android")
-    }
-}
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun MediaViewScreen(
         media: Media,
         paddingValues: PaddingValues,
-        toggleRotate: () -> Unit) {
+        toggleRotate: () -> Unit,
+        onGoBack: () -> Unit) {
 
         val scrollEnabled = rememberSaveable { mutableStateOf(true) }
         val bottomSheetState = rememberAppBottomSheetState()
 
 
         val showUI = rememberSaveable { mutableStateOf(true) }
+        val maxImageSize  = 4096
+
         val windowInsetsController = rememberWindowInsetsController()
         val currentDate = rememberSaveable { mutableStateOf("") }
 
@@ -115,6 +105,8 @@ fun GreetingPreview() {
 
             MediaPreviewComponent(
                 media = media,
+                scrollEnabled = scrollEnabled,
+                maxImageSize = maxImageSize,
                 playWhenReady = true,
                 onItemClick = {
                     showUI.value = !showUI.value
@@ -147,7 +139,7 @@ fun GreetingPreview() {
                 currentDate = currentDate.value,
                 paddingValues = paddingValues,
                 bottomSheetState = bottomSheetState,
-                onGoBack = {}
+                onGoBack = onGoBack
             )
             MediaViewBottomBar(
                 bottomSheetState = bottomSheetState,

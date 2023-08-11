@@ -14,8 +14,10 @@ import android.view.LayoutInflater
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
+import android.widget.Toast
 import androidx.annotation.*
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.core.content.FileProvider
 import com.etb.filemanager.R
 import com.etb.filemanager.files.provider.archive.common.mime.compat.obtainStyledAttributesCompat
 import com.etb.filemanager.files.provider.archive.common.mime.compat.use
@@ -186,3 +188,17 @@ suspend fun Context.launchEditIntent(media: Media) =
         }
         startActivity(Intent.createChooser(intent, getString(R.string.edit)))
     }
+
+@SuppressLint("QueryPermissionsNeeded")
+fun Context.actionEdit(path: String) {
+    val file = File(path)
+    val uri = FileProvider.getUriForFile(this, this.packageName + ".fileprovider", file)
+    val mimeType = FileUtil().getMimeType(uri, null)
+
+    val intent = Intent(Intent.ACTION_EDIT).apply {
+        setDataAndType(uri, mimeType)
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    this.startActivity(intent)
+
+}

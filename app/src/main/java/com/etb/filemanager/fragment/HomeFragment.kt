@@ -26,7 +26,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.MutableState
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.documentfile.provider.DocumentFile
@@ -34,7 +33,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,7 +40,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
-import com.etb.filemanager.files.provider.archive.common.mime.MimeType
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeIcon
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeUtil
 import com.etb.filemanager.files.provider.archive.common.properties.*
@@ -63,7 +60,6 @@ import com.etb.filemanager.manager.files.filecoroutine.FileOperation
 import com.etb.filemanager.manager.files.filelist.*
 import com.etb.filemanager.manager.files.services.FileOperationService
 import com.etb.filemanager.manager.files.ui.ModalBottomSheetCompress
-import com.etb.filemanager.manager.media.MediaPreviewComponent
 import com.etb.filemanager.manager.media.MediaViewActivity
 import com.etb.filemanager.manager.media.image.viewer.ImageViewerDialogFragment
 import com.etb.filemanager.manager.media.model.Media
@@ -895,7 +891,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     override fun openFileWith(file: FileModel) {
         val path = file.filePath
         val mimeType = fileUtil.getMimeType(null, path)
-        val media = Media(Paths.get(path).fileProviderUri)
+        val uri = Paths.get(path).fileProviderUri
+
+
         val isSpecificFileType = if (mimeType != null) MimeTypeUtil().isSpecificFileType(
             mimeType, MimeTypeIcon.CODE
         ) else false
@@ -920,18 +918,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
         }
 
-        if (isImage) {
-            showImageViewerDialog(listOf(Paths.get(file.filePath)))
-        }
-/*
-        val isVideo = if (mimeType != null) MimeTypeUtil().isSpecificFileType(
-            mimeType, MimeTypeIcon.VIDEO
-        ) else false
-*/
-
-            val intent = Intent(requireActivity(), MediaViewActivity::class.java)
-            intent.putExtra("media", media)
-            requireActivity().startActivity(intent)
+        /*  if (isImage) {
+              showImageViewerDialog(listOf(Paths.get(file.filePath)))
+          }*/
+        mimeType?.let { Log.i("MIMETYPE", it) }
+        val media = Media.createFromUri(uri)
+        val intent = Intent(requireActivity(), MediaViewActivity::class.java)
+        intent.putExtra("media", media)
+        requireActivity().startActivity(intent)
 
     }
 

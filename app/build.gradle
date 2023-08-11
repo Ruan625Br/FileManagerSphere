@@ -72,7 +72,9 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
     ext {
         navigation_version = "2.6.0"
-         material3 = "1.2.0-alpha05"
+        material3 = "1.2.0-alpha05"
+        coil_version = "2.4.0"
+
 
     }
 
@@ -142,6 +144,20 @@ dependencies {
 
     implementation "androidx.media3:media3-exoplayer:1.1.0"
     implementation "androidx.media3:media3-ui:1.1.0"
+
+    //zoomable
+
+    implementation("net.engawapg.lib:zoomable:1.5.0-beta1")
+
+    //Coil
+    implementation("io.coil-kt:coil-bom")
+    def coilBom = platform('io.coil-kt:coil-bom:2.4.0')
+    implementation(coilBom)
+    implementation "io.coil-kt:coil-video"
+    implementation "io.coil-kt:coil-gif"
+    implementation "io.coil-kt:coil-svg"
+    implementation "io.coil-kt:coil-compose"
+
 }
 
 // NB: Android Studio can't find the imports; this does not affect the

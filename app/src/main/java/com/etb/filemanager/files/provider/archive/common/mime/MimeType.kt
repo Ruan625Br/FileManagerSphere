@@ -2,6 +2,7 @@ package com.etb.filemanager.files.provider.archive.common.mime
 
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import android.provider.DocumentsContract
@@ -54,20 +55,32 @@ value class MimeType(val value: String) : Parcelable {
         val IMAGE_ANY = "image/*".asMimeType()
         val IMAGE_GIF = "image/gif".asMimeType()
         val IMAGE_SVG_XML = "image/svg+xml".asMimeType()
+        val VIDEO_MP4 = "video/mp4".asMimeType()
         val PDF = "application/pdf".asMimeType()
         val TEXT_PLAIN = "text/plain".asMimeType()
         val GENERIC = "application/octet-stream".asMimeType()
 
         fun of(type: String, subtype: String, parameters: String?): MimeType =
             "$type/$subtype${if (parameters != null) ";$parameters" else ""}".asMimeType()
+
+        @JvmField
+        val CREATOR: Parcelable.Creator<MimeType> = object : Parcelable.Creator<MimeType> {
+            override fun createFromParcel(source: Parcel): MimeType {
+                return MimeType(source.readString() ?: throw IllegalArgumentException("Invalid MimeType value"))
+            }
+
+            override fun newArray(size: Int): Array<MimeType?> {
+                return arrayOfNulls(size)
+            }
+        }
     }
 
     override fun describeContents(): Int {
-        TODO("Not yet implemented")
+    return 0
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        TODO("Not yet implemented")
+        dest.writeString(value)
     }
 }
 
@@ -99,3 +112,5 @@ private val String.isValidMimeType: Boolean
         }
         return true
     }
+fun MimeType.isASpecificTypeOfMime(mimeType: MimeType): Boolean = this.value == mimeType.value
+
