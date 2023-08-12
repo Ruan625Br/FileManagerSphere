@@ -53,6 +53,9 @@ value class MimeType(val value: String) : Parcelable {
         val APK = "application/vnd.android.package-archive".asMimeType()
         val DIRECTORY = DocumentsContract.Document.MIME_TYPE_DIR.asMimeType()
         val IMAGE_ANY = "image/*".asMimeType()
+        val IMAGE_JPEG = "image/jpeg".asMimeType()
+        val IMAGE_PNG = "image/png".asMimeType()
+        val IMAGE_WEBP = "image/webp".asMimeType()
         val IMAGE_GIF = "image/gif".asMimeType()
         val IMAGE_SVG_XML = "image/svg+xml".asMimeType()
         val VIDEO_MP4 = "video/mp4".asMimeType()
@@ -113,4 +116,16 @@ private val String.isValidMimeType: Boolean
         return true
     }
 fun MimeType.isASpecificTypeOfMime(mimeType: MimeType): Boolean = this.value == mimeType.value
+
+fun MimeType.isMedia(): Boolean {
+    val mediaMimeTypes = setOf(
+        MimeType.IMAGE_ANY,
+        MimeType.IMAGE_JPEG,
+        MimeType.IMAGE_PNG,
+        MimeType.IMAGE_WEBP,
+        MimeType.IMAGE_GIF,
+        MimeType.VIDEO_MP4
+    )
+    return this in mediaMimeTypes
+}
 

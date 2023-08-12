@@ -40,8 +40,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
+import com.etb.filemanager.files.extensions.sortFileModel
+import com.etb.filemanager.files.provider.archive.common.mime.MimeType
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeIcon
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeUtil
+import com.etb.filemanager.files.provider.archive.common.mime.isMedia
 import com.etb.filemanager.files.provider.archive.common.properties.*
 import com.etb.filemanager.files.util.*
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
@@ -63,6 +66,7 @@ import com.etb.filemanager.manager.files.ui.ModalBottomSheetCompress
 import com.etb.filemanager.manager.media.MediaViewActivity
 import com.etb.filemanager.manager.media.image.viewer.ImageViewerDialogFragment
 import com.etb.filemanager.manager.media.model.Media
+import com.etb.filemanager.manager.media.model.MediaListInfo
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.PopupSettings
@@ -373,7 +377,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (Environment.isExternalStorageManager()) {
-                //TODO()
+                //
+                // TODO()
             } else {
                 val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
                 val uri = Uri.fromParts("package", requireContext().packageName, null)
@@ -918,14 +923,39 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
         }
 
-        /*  if (isImage) {
-              showImageViewerDialog(listOf(Paths.get(file.filePath)))
-          }*/
-        mimeType?.let { Log.i("MIMETYPE", it) }
-        val media = Media.createFromUri(uri)
-        val intent = Intent(requireActivity(), MediaViewActivity::class.java)
-        intent.putExtra("media", media)
-        requireActivity().startActivity(intent)
+
+        mimeType?.let {
+            if (MimeType(mimeType).isMedia()) {
+                val mainScope = CoroutineScope(Dispatchers.Main)
+                mainScope.launch {
+                    val startTime = System.nanoTime()
+
+                    val currentMedia = Media.createFromUri(uri, requireContext())
+                    val files = viewModel.fileListStateful.value?.sortFileModel()?.reversed()
+                    val filteredFiles = files?.filter { file ->
+                        val mime = FileUtil().getMimeType(null, file.filePath)
+                        mime != null && MimeType(mime).isMedia()
+                    }
+
+                    if (filteredFiles != null && filteredFiles.isNotEmpty()) {
+                        val mediasList = filteredFiles.mapNotNull { file ->
+                            val uri = Paths.get(file.filePath).fileProviderUri
+                            val media = withContext(Dispatchers.IO) {
+                                Media.createFromUri(uri, requireContext())
+                            }
+                            return@mapNotNull media
+                        }
+
+                        val mediaListInfo = MediaListInfo(mediasList.toList(), currentMedia)
+                        val intent = Intent(requireActivity(), MediaViewActivity::class.java)
+                        intent.putExtra("mediaListInfo", mediaListInfo)
+                        requireActivity().startActivity(intent)
+
+
+                    }
+                }
+            }
+        }
 
     }
 
@@ -1503,8 +1533,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     private fun shareFiles(fileItemSet: FileItemSet?, paths: List<String>?) {
         val mPaths = if (fileItemSet.isNullOrEmpty()) paths!! else fileItemSet.map { it.filePath }
         if (mPaths.size == 1) fileUtil.shareFile(
-            mPaths.first(),
-            requireContext()
+            mPaths.first(), requireContext()
         ) else fileUtil.shareFiles(mPaths, requireContext())
 
     }
