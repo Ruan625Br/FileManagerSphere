@@ -1,4 +1,4 @@
-package com.etb.filemanager.manager.media.ui.theme
+package com.etb.filemanager.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -16,14 +16,14 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
+    primary = md_theme_light_primary,
+    secondary = md_theme_light_onPrimary,
     tertiary = Pink80
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
+    primary = md_theme_light_primary,
+    secondary = md_theme_light_onPrimary,
     tertiary = Pink40
 
     /* Other default colors to override
@@ -41,7 +41,7 @@ private val LightColorScheme = lightColorScheme(
 fun FileManagerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

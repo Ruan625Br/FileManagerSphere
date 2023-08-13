@@ -928,9 +928,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
             if (MimeType(mimeType).isMedia()) {
                 val mainScope = CoroutineScope(Dispatchers.Main)
                 mainScope.launch {
-                    val startTime = System.nanoTime()
 
-                    val currentMedia = Media.createFromUri(uri, requireContext())
+                    val currentMedia = Media.createFromFileModel(file)
                     val files = viewModel.fileListStateful.value?.sortFileModel()?.reversed()
                     val filteredFiles = files?.filter { file ->
                         val mime = FileUtil().getMimeType(null, file.filePath)
@@ -938,12 +937,21 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
                     }
 
                     if (filteredFiles != null && filteredFiles.isNotEmpty()) {
+/*
                         val mediasList = filteredFiles.mapNotNull { file ->
                             val uri = Paths.get(file.filePath).fileProviderUri
                             val media = withContext(Dispatchers.IO) {
                                 Media.createFromUri(uri, requireContext())
                             }
                             return@mapNotNull media
+                        }
+*/
+
+                        val mediasList = filteredFiles.map { file ->
+                            val media = withContext(Dispatchers.IO) {
+                                Media.createFromFileModel(file)
+                            }
+                            return@map media
                         }
 
                         val mediaListInfo = MediaListInfo(mediasList.toList(), currentMedia)

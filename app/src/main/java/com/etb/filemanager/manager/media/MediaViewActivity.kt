@@ -1,6 +1,7 @@
 package com.etb.filemanager.manager.media
 
 import android.app.Activity
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -39,10 +40,11 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.media3.exoplayer.ExoPlayer
+import com.etb.filemanager.files.util.LocaleContextWrapper
 import com.etb.filemanager.files.util.toggleOrientation
 import com.etb.filemanager.manager.media.model.Media
 import com.etb.filemanager.manager.media.model.MediaListInfo
-import com.etb.filemanager.manager.media.ui.theme.FileManagerTheme
+import com.etb.filemanager.ui.theme.FileManagerTheme
 import com.etb.filemanager.manager.media.video.VideoPlayerController
 import com.etb.filemanager.ui.util.Constants
 import com.etb.filemanager.ui.util.Constants.Animation.enterAnimation
@@ -72,12 +74,18 @@ class MediaViewActivity : ComponentActivity() {
                         MediaViewScreen(mediaListInfo = mediaListInfo!!,
                             paddingValues = paddingValues,
                             toggleRotate = ::toggleOrientation,
-                            onGoBack = { onBackPressedDispatcher.onBackPressed() })
+                            onGoBack = { onBackPressedDispatcher.onBackPressed() },
+                            navigateUp = { finish() },)
                     }
                 })
 
             }
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        val context = LocaleContextWrapper.wrap(newBase)
+        super.attachBaseContext(context)
     }
 }
 
@@ -87,7 +95,8 @@ fun MediaViewScreen(
     mediaListInfo: MediaListInfo,
     paddingValues: PaddingValues,
     toggleRotate: () -> Unit,
-    onGoBack: () -> Unit
+    onGoBack: () -> Unit,
+    navigateUp: () -> Unit,
 ) {
 
     val scrollEnabled = rememberSaveable { mutableStateOf(true) }
@@ -103,6 +112,8 @@ fun MediaViewScreen(
         mediaListInfo.mediaList.indexOfFirst { it.id == runtimeMediaId.coerceAtLeast(0) }
     }
 
+    Log.i("MediaView", "runtimeMediaId: $runtimeMediaId")
+    Log.i("MediaView", "currentMediaId: $currentMediaId")
 
     val pagerState = rememberPagerState(
         initialPage = initialPage,
@@ -140,13 +151,15 @@ fun MediaViewScreen(
                     easing = LinearEasing, durationMillis = DEFAULT_LOW_VELOCITY_SWIPE_DURATION
                 )
             ),
+            key = { index -> mediaListInfo.mediaList[index.coerceAtMost(mediaListInfo.mediaList.size - 1)].toString() },
             pageSpacing = 16.dp
         ) { index ->
 
-            MediaPreviewComponent(media = mediaListInfo.mediaList[index],
+            MediaPreviewComponent(
+                media = mediaListInfo.mediaList[index],
                 scrollEnabled = scrollEnabled,
                 maxImageSize = maxImageSize,
-                playWhenReady = true,
+                playWhenReady = index == pagerState.currentPage,
                 onItemClick = {
                     showUI.value = !showUI.value
                     windowInsetsController.toggleSystemBars(showUI.value)
@@ -192,18 +205,15 @@ fun MediaViewScreen(
     }
     BackHandler(!showUI.value) {
         windowInsetsController.toggleSystemBars(show = true)
+        navigateUp()
 
     }
-    LaunchedEffect(mediaListInfo.mediaList, pagerState) {
-        if (pagerState.currentPage in mediaListInfo.mediaList.indices) {
+    LaunchedEffect(mediaListInfo.mediaList) {
             updateContent(pagerState.currentPage)
-        }
     }
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            if (page in mediaListInfo.mediaList.indices) {
                 updateContent(page)
-            }
         }
     }
 
