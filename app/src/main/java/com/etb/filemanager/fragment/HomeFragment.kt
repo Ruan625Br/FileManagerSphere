@@ -71,9 +71,7 @@ import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.PopupSettings
 import com.etb.filemanager.settings.preference.Preferences
-import com.etb.filemanager.ui.util.ThemedFastScroller
 import com.etb.filemanager.ui.view.FabMenu
-import com.etb.filemanager.ui.view.ScrollingViewOnApplyWindowInsetsListener
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -218,12 +216,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         recyclerView.layoutManager = GridLayoutManager(requireActivity(), spanCount)
         adapter = FileModelAdapter(requireContext(), this)
         recyclerView.adapter = adapter
-        if (Preferences.Behavior.isFastScrollEnabled) {
-            val fastScroller = ThemedFastScroller.create(recyclerView)
-            recyclerView.setOnApplyWindowInsetsListener(
-                ScrollingViewOnApplyWindowInsetsListener(recyclerView, fastScroller)
-            )
-        }
         lastStateFileList?.let { recyclerView.layoutManager!!.onRestoreInstanceState(it) }
 
 
@@ -746,20 +738,23 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
         val actionModeCallback = object : androidx.appcompat.view.ActionMode.Callback {
             override fun onCreateActionMode(
-                mode: androidx.appcompat.view.ActionMode?, menu: Menu?
+                mode: androidx.appcompat.view.ActionMode?,
+                menu: Menu?
             ): Boolean {
                 mode?.menuInflater?.inflate(R.menu.menu_file_lis_select, menu)
                 return true
             }
 
             override fun onPrepareActionMode(
-                mode: androidx.appcompat.view.ActionMode?, menu: Menu?
+                mode: androidx.appcompat.view.ActionMode?,
+                menu: Menu?
             ): Boolean {
                 return false
             }
 
             override fun onActionItemClicked(
-                mode: androidx.appcompat.view.ActionMode?, item: MenuItem?
+                mode: androidx.appcompat.view.ActionMode?,
+                item: MenuItem?
             ): Boolean {
                 return when (item?.itemId) {
                     R.id.action_cut -> {
@@ -916,7 +911,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
             val options = CodeEditorFragment.Options.Builder().setUri(fileUri)
                 .setTitle(requireContext().getString(R.string.code_editor))
                 .setSubtitle(file.fileName).setEnableSharing(true).setJavaSmaliToggle(true)
-                .setReadOnly(false).setLastState(state).build()
+                .setReadOnly(false)
+                .setLastState(state)
+                .build()
             val fragment = CodeEditorFragment()
             val args = Bundle()
             args.putParcelable(CodeEditorFragment.ARG_OPTIONS, options)
@@ -931,29 +928,22 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
             if (MimeType(mimeType).isMedia()) {
                 val mainScope = CoroutineScope(Dispatchers.Main)
                 mainScope.launch {
+                    val startTime = System.nanoTime()
 
-                    val currentMedia = Media.createFromFileModel(file)
+                    val currentMedia = Media.createFromUri(uri, requireContext())
                     val files = viewModel.fileListStateful.value?.sortFileModel()?.reversed()
                     val filteredFiles = files?.filter { file ->
                         val mime = FileUtil().getMimeType(null, file.filePath)
                         mime != null && MimeType(mime).isMedia()
                     }
 
-                    if (filteredFiles != null && filteredFiles.isNotEmpty()) {/*
+                    if (filteredFiles != null && filteredFiles.isNotEmpty()) {
                         val mediasList = filteredFiles.mapNotNull { file ->
                             val uri = Paths.get(file.filePath).fileProviderUri
                             val media = withContext(Dispatchers.IO) {
                                 Media.createFromUri(uri, requireContext())
                             }
                             return@mapNotNull media
-                        }
-*/
-
-                        val mediasList = filteredFiles.map { file ->
-                            val media = withContext(Dispatchers.IO) {
-                                Media.createFromFileModel(file)
-                            }
-                            return@map media
                         }
 
                         val mediaListInfo = MediaListInfo(mediasList.toList(), currentMedia)
