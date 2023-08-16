@@ -94,10 +94,7 @@ FileManagerSphere is a powerful file management tool, designed to simplify and e
 <p  align="parent">
           <a href="https://f-droid.org/app/com.etb.filemanager">
                   <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="170"></a>
-             <a href="https://apt.izzysoft.de/fdroid/index/apk/com.etb.filemanager/">
-                <img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid"
-                        width="170">
-        </a>
+
   </p>
 
 ---
