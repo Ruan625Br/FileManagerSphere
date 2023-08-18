@@ -35,6 +35,7 @@ import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.files.util.FileUtil
 import com.etb.filemanager.ui.style.ColorUtil
 import com.etb.filemanager.ui.style.IconUtil
+import me.zhanghai.android.fastscroll.PopupTextProvider
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -43,7 +44,7 @@ import java.util.*
 
 class FileModelAdapter(
     private val mContext: Context, private val listener: FileListener
-) : AnimatedListAdapter<FileModel, FileModelAdapter.ViewHolder>(CALLBACK) {
+) : AnimatedListAdapter<FileModel, FileModelAdapter.ViewHolder>(CALLBACK), PopupTextProvider {
 
     private val fileUtils: FileUtils = FileUtils.getInstance()
     private val basePath = "/storage/emulated/0"
@@ -367,6 +368,12 @@ class FileModelAdapter(
 
         }
 
+    }
+
+    override fun getPopupText(position: Int): CharSequence {
+        val file = getItem(position)
+        val locale = Locale(Preferences.Interface.language)
+        return file.fileName.take(1).uppercase(locale)
     }
 
 }

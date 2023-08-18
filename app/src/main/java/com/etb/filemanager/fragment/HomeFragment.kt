@@ -40,11 +40,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
+import com.etb.filemanager.files.extensions.sortFileModel
+import com.etb.filemanager.files.provider.archive.common.mime.MimeType
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeIcon
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeUtil
+import com.etb.filemanager.files.provider.archive.common.mime.isMedia
 import com.etb.filemanager.files.provider.archive.common.properties.*
-import com.etb.filemanager.files.provider.archive.common.properties.PropertiesViewModel
-import com.etb.filemanager.files.provider.archive.common.properties.ViewStateAdapter
 import com.etb.filemanager.files.util.*
 import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.manager.FileListener
@@ -62,12 +63,17 @@ import com.etb.filemanager.manager.files.filecoroutine.FileOperation
 import com.etb.filemanager.manager.files.filelist.*
 import com.etb.filemanager.manager.files.services.FileOperationService
 import com.etb.filemanager.manager.files.ui.ModalBottomSheetCompress
+import com.etb.filemanager.manager.media.MediaViewActivity
+import com.etb.filemanager.manager.media.image.viewer.ImageViewerDialogFragment
+import com.etb.filemanager.manager.media.model.Media
+import com.etb.filemanager.manager.media.model.MediaListInfo
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.PopupSettings
 import com.etb.filemanager.settings.preference.Preferences
+import com.etb.filemanager.ui.util.ThemedFastScroller
 import com.etb.filemanager.ui.view.FabMenu
-import com.etb.filemanager.files.util.FileUtil
+import com.etb.filemanager.ui.view.ScrollingViewOnApplyWindowInsetsListener
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -212,6 +218,12 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         recyclerView.layoutManager = GridLayoutManager(requireActivity(), spanCount)
         adapter = FileModelAdapter(requireContext(), this)
         recyclerView.adapter = adapter
+        if (Preferences.Behavior.isFastScrollEnabled) {
+            val fastScroller = ThemedFastScroller.create(recyclerView)
+            recyclerView.setOnApplyWindowInsetsListener(
+                ScrollingViewOnApplyWindowInsetsListener(recyclerView, fastScroller)
+            )
+        }
         lastStateFileList?.let { recyclerView.layoutManager!!.onRestoreInstanceState(it) }
 
 
@@ -373,7 +385,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (Environment.isExternalStorageManager()) {
-                //TODO()
+                //
+                // TODO()
             } else {
                 val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
                 val uri = Uri.fromParts("package", requireContext().packageName, null)
@@ -732,16 +745,22 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     private fun setUpActionMode() {
 
         val actionModeCallback = object : androidx.appcompat.view.ActionMode.Callback {
-            override fun onCreateActionMode(mode: androidx.appcompat.view.ActionMode?, menu: Menu?): Boolean {
+            override fun onCreateActionMode(
+                mode: androidx.appcompat.view.ActionMode?, menu: Menu?
+            ): Boolean {
                 mode?.menuInflater?.inflate(R.menu.menu_file_lis_select, menu)
                 return true
             }
 
-            override fun onPrepareActionMode(mode: androidx.appcompat.view.ActionMode?, menu: Menu?): Boolean {
+            override fun onPrepareActionMode(
+                mode: androidx.appcompat.view.ActionMode?, menu: Menu?
+            ): Boolean {
                 return false
             }
 
-            override fun onActionItemClicked(mode: androidx.appcompat.view.ActionMode?, item: MenuItem?): Boolean {
+            override fun onActionItemClicked(
+                mode: androidx.appcompat.view.ActionMode?, item: MenuItem?
+            ): Boolean {
                 return when (item?.itemId) {
                     R.id.action_cut -> {
                         cutFile(viewModel.selectedFiles)
@@ -882,8 +901,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     override fun openFileWith(file: FileModel) {
         val path = file.filePath
         val mimeType = fileUtil.getMimeType(null, path)
+        val uri = Paths.get(path).fileProviderUri
+
+
         val isSpecificFileType = if (mimeType != null) MimeTypeUtil().isSpecificFileType(
             mimeType, MimeTypeIcon.CODE
+        ) else false
+        val isImage = if (mimeType != null) MimeTypeUtil().isSpecificFileType(
+            mimeType, MimeTypeIcon.IMAGE
         ) else false
         if (!file.isDirectory && isSpecificFileType) {
             val state = recyclerView.layoutManager!!.onSaveInstanceState()
@@ -891,9 +916,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
             val options = CodeEditorFragment.Options.Builder().setUri(fileUri)
                 .setTitle(requireContext().getString(R.string.code_editor))
                 .setSubtitle(file.fileName).setEnableSharing(true).setJavaSmaliToggle(true)
-                .setReadOnly(false)
-                .setLastState(state)
-                .build()
+                .setReadOnly(false).setLastState(state).build()
             val fragment = CodeEditorFragment()
             val args = Bundle()
             args.putParcelable(CodeEditorFragment.ARG_OPTIONS, options)
@@ -902,6 +925,48 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
 
         }
+
+
+        mimeType?.let {
+            if (MimeType(mimeType).isMedia()) {
+                val mainScope = CoroutineScope(Dispatchers.Main)
+                mainScope.launch {
+
+                    val currentMedia = Media.createFromFileModel(file)
+                    val files = viewModel.fileListStateful.value?.sortFileModel()?.reversed()
+                    val filteredFiles = files?.filter { file ->
+                        val mime = FileUtil().getMimeType(null, file.filePath)
+                        mime != null && MimeType(mime).isMedia()
+                    }
+
+                    if (filteredFiles != null && filteredFiles.isNotEmpty()) {/*
+                        val mediasList = filteredFiles.mapNotNull { file ->
+                            val uri = Paths.get(file.filePath).fileProviderUri
+                            val media = withContext(Dispatchers.IO) {
+                                Media.createFromUri(uri, requireContext())
+                            }
+                            return@mapNotNull media
+                        }
+*/
+
+                        val mediasList = filteredFiles.map { file ->
+                            val media = withContext(Dispatchers.IO) {
+                                Media.createFromFileModel(file)
+                            }
+                            return@map media
+                        }
+
+                        val mediaListInfo = MediaListInfo(mediasList.toList(), currentMedia)
+                        val intent = Intent(requireActivity(), MediaViewActivity::class.java)
+                        intent.putExtra("mediaListInfo", mediaListInfo)
+                        requireActivity().startActivity(intent)
+
+
+                    }
+                }
+            }
+        }
+
     }
 
     override fun cutFile(file: FileItemSet) {
@@ -1478,10 +1543,21 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     private fun shareFiles(fileItemSet: FileItemSet?, paths: List<String>?) {
         val mPaths = if (fileItemSet.isNullOrEmpty()) paths!! else fileItemSet.map { it.filePath }
         if (mPaths.size == 1) fileUtil.shareFile(
-            mPaths.first(),
-            requireContext()
+            mPaths.first(), requireContext()
         ) else fileUtil.shareFiles(mPaths, requireContext())
 
+    }
+
+    private fun showImageViewerDialog(imagePathList: List<Path>) {
+        val imageViewerDialogFragment = ImageViewerDialogFragment()
+        val fm = requireActivity().supportFragmentManager
+        imageViewerDialogFragment.arguments = Bundle().apply {
+            putStringArrayList(
+                ImageViewerDialogFragment.ARG_IMAGE_PATH_LIST,
+                ArrayList(imagePathList.map { it.pathString })
+            )
+        }
+        imageViewerDialogFragment.show(parentFragmentManager, ImageViewerDialogFragment.TAG)
     }
 }
 

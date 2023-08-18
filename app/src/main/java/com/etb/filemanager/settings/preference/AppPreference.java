@@ -54,6 +54,7 @@ public class AppPreference {
         PREF_SELECT_FILE_LONG_CLICK_BOOL,
         PREF_LIST_CATEGORIES_NAME_STR,
         PREF_LIST_CATEGORIES_PATH_STR,
+        PREF_SHOW_FAST_SCROLL_BOOL,
 
         //Popup
         PREF_SORT_BY_STR,
@@ -319,7 +320,8 @@ public class AppPreference {
                 return mContext.getResources().getString(R.string.default_selected_file_background_opacity);
             case PREF_FILE_LIST_MARGINS_STR:
                 return mContext.getString(R.string.default_file_list_margins);
-
+            case PREF_SHOW_FAST_SCROLL_BOOL:
+                return false;
         }
         throw new IllegalArgumentException("Pref key not found.");
     }
