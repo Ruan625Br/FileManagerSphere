@@ -1,10 +1,10 @@
 package com.etb.filemanager.settings.preference
 
 import android.content.Context
-import com.etb.filemanager.manager.files.filelist.FileSortOptions
-import com.etb.filemanager.manager.files.filelist.FileSortOptions.SortBy
 import com.etb.filemanager.files.util.jsonStringToList
 import com.etb.filemanager.files.util.stringListToJsonString
+import com.etb.filemanager.manager.files.filelist.FileSortOptions
+import com.etb.filemanager.manager.files.filelist.FileSortOptions.SortBy
 import com.etb.filemanager.ui.style.StyleManager
 
 
@@ -119,6 +119,12 @@ class Preferences {
                     AppPreference.PreferenceKey.PREF_LIST_CATEGORIES_PATH_STR,
                     stringListToJsonString(value)
                 )
+            }
+
+        var isFastScrollEnabled: Boolean
+            get() = AppPreference.getBoolean(AppPreference.PreferenceKey.PREF_SHOW_FAST_SCROLL_BOOL)
+            set(value) {
+                AppPreference.set(AppPreference.PreferenceKey.PREF_SHOW_FAST_SCROLL_BOOL, value)
             }
     }
 

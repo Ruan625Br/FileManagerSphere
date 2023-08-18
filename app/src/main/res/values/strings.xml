@@ -181,6 +181,7 @@
     <string name="pref_key_transparent_list_background">transparent_list_background</string>
     <string name="pref_key_material_design_3">material_design_3</string>
     <string name="pref_key_selected_file_background_opacity">selected_file_background_opacity</string>
+    <string name="pref_key_show_fast_scroll">show_fast_scroll</string>
 
 
     <string name="pref_behavior_default_folder_title">Default folder</string>
@@ -194,11 +195,15 @@
     <string name="pref_title_transparent_list_background">Background of files in transparent list</string>
     <string name="pref_title_selected_file_background_opacity">Background color opacity when file is selected</string>
     <string name="pref_title_material_design_3">Material Design 3</string>
+    <string name="pref_title_show_fast_scroll">Show fast scrolling in file list</string>
+
 
     <string name="pref_summary_anim_in_file_list">Add smooth animations to the file list for a visually pleasing experience.</string>
     <string name="pref_summary_rounded_corners">Add rounded corners to interface elements for a smoother and modern look.</string>
     <string name="pref_summary_dynamic_colors">Enjoy a more personalized experience close to your device (requires a restart).</string>
     <string name="pref_summary_transparent_list_background">Set the background of files in the list to be transparent.</string>
+    <string name="pref_summary_show_fast_scroll">Enable or disable fast scrolling in the file list.</string>
+
 
     <string name="pref_cat_appearance">Appearance</string>
     <string name="pref_interface_title">Interface</string>

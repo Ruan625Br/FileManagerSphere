@@ -9,5 +9,10 @@
         app:key="select_file_long_click"
         app:iconSpaceReserved="false"
         app:title="@string/pref_behavior_select_file_long_click"/>
+    <SwitchPreferenceCompat
+            app:key="@string/pref_key_show_fast_scroll"
+            app:iconSpaceReserved="false"
+            app:title="@string/pref_title_show_fast_scroll"
+            app:summary="@string/pref_summary_show_fast_scroll" />
 
 </PreferenceScreen>
