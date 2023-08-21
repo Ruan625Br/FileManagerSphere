@@ -93,27 +93,15 @@ FileManagerSphere is a powerful file management tool, designed to simplify and e
 
 <p  align="parent">
           <a href="https://f-droid.org/app/com.etb.filemanager">
-                  <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="170"></a>
-
-  </p>
+                  <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="170" ></a>
+           <a href="https://www.amazon.com/gp/mas/dl/android?p=com.etb.filemanager">
+                  <img src="https://images-na.ssl-images-amazon.com/images/G/01/mobile-apps/devportal2/res/images/amazon-appstore-badge-english-black.png" width="170" ></a>
+ </p>
 
 ---
 ## Translations
 
-Help translate [the app strings](https://hosted.weblate.org/engage/filemanagersphere/) to other languages.
-
-<div align="center">
-    <a href="https://hosted.weblate.org/engage/filemanagersphere/">
-<img src="https://hosted.weblate.org/widgets/filemanagersphere/-/287x66-black.png" alt="Status da tradução" />
-</a>    
-</a>
-<details>
-<summary>See the translation status for all languages.</summary>
-        
-[![Translation status](https://hosted.weblate.org/widgets/filemanagersphere/-/translations/multi-auto.svg)](https://hosted.weblate.org/engage/filemanagersphere/)
-
-</details>
-</div>
+currently unavailable
 
 ---
 
