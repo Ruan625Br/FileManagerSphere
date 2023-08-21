@@ -191,12 +191,12 @@
     <string name="pref_title_transparent_list_background">Plano de fundo dos arquivos na lista transparente</string>
     <string name="pref_title_selected_file_background_opacity">Opacidade da cor de fundo quando o arquivo é selecionado</string>
     <string name="pref_title_material_design_3">Design de materiais 3</string>
-    <string name="pref_title_show_fast_scroll">Show fast scrolling in file list</string>
+    <string name="pref_title_show_fast_scroll">Mostrar rolagem rápida na lista de arquivos</string>
     <string name="pref_summary_anim_in_file_list">Adicione animações suaves à lista de arquivos para uma experiência visualmente agradável.</string>
     <string name="pref_summary_rounded_corners">Adicione cantos arredondados aos elementos da interface para um visual mais suave e moderno.</string>
     <string name="pref_summary_dynamic_colors">Aproveite uma experiência mais próxima do seu dispositivo (requer reinicialização).</string>
     <string name="pref_summary_transparent_list_background">Defina o plano de fundo dos arquivos na lista para serem transparentes.</string>
-    <string name="pref_summary_show_fast_scroll">Enable or disable fast scrolling in the file list.</string>
+    <string name="pref_summary_show_fast_scroll">Ativar ou desativar a rolagem rápida na lista de arquivos.</string>
     <string name="pref_cat_appearance">Aparência</string>
     <string name="pref_interface_title">Interface</string>
     <string name="pref_behavior_title">Comportamento</string>
