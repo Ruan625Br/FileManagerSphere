@@ -101,7 +101,21 @@ FileManagerSphere is a powerful file management tool, designed to simplify and e
 ---
 ## Translations
 
-currently unavailable
+Help translate [the app strings](https://hosted.weblate.org/engage/filemanagersphere/) to other languages.
+
+<div align="center">
+    <a href="https://hosted.weblate.org/engage/filemanagersphere/">
+<img src="https://hosted.weblate.org/widgets/filemanagersphere/-/287x66-black.png" alt="Status da tradução" />
+</a>    
+</a>
+ 
+<details>
+<summary>See the translation status for all languages.</summary>
+        
+[![Translation status](https://hosted.weblate.org/widgets/filemanagersphere/-/translations/multi-auto.svg)](https://hosted.weblate.org/engage/filemanagersphere/)
+
+</details>
+</div>
 
 ---
 
