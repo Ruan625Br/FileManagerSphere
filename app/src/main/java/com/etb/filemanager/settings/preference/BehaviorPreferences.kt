@@ -68,6 +68,12 @@ class BehaviorPreferences : PreferenceFragment(){
 
         switchSelectFileLongClick?.isChecked = selectFileLongClick
 
+        //Show fast scroll
+        val swShowFastScroll = findPreference<SwitchPreferenceCompat>(getString(R.string.pref_key_show_fast_scroll))
+        val isFastScrollEnabled = Preferences.Behavior.isFastScrollEnabled
+        swShowFastScroll?.isChecked = isFastScrollEnabled
+
+
     }
 }
 

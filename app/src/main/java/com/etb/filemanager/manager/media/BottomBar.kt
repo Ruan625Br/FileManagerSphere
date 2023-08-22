@@ -71,7 +71,7 @@ import com.etb.filemanager.files.util.actionEdit
 import com.etb.filemanager.files.util.launchEditIntent
 import com.etb.filemanager.files.util.shareMedia
 import com.etb.filemanager.manager.media.model.Media
-import com.etb.filemanager.manager.media.ui.theme.Black40P
+import com.etb.filemanager.ui.theme.Black40P
 import com.etb.filemanager.ui.util.Constants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

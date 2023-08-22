@@ -6,12 +6,11 @@ import android.os.Parcelable
 import android.util.Log
 import com.etb.filemanager.files.provider.archive.common.mime.MimeType
 import com.etb.filemanager.files.util.FileUtil
+import com.etb.filemanager.files.util.fileProviderUri
 import com.etb.filemanager.files.util.getMediaIdFromPath
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.etb.filemanager.manager.adapter.FileModel
 import kotlinx.parcelize.Parcelize
+import java.nio.file.Paths
 import java.util.Locale
 
 @Parcelize
@@ -21,15 +20,35 @@ data class Media(
     val mimeType: MimeType
 ) : Parcelable {
     override fun toString(): String {
-        return "$uri"
+        return "id=$id, uri=$uri, mimeType=$mimeType"
     }
 
     companion object {
-       suspend fun createFromUri(uri: Uri, context: Context): Media {
+        suspend fun createFromUri(uri: Uri, context: Context): Media {
             val mime = FileUtil().getMimeType(uri, null)!!
             val mimeType = MimeType(mime)
             val mId = getMediaIdFromPath(uri.path!!, context)
             val id = mId ?: 0
+
+            return Media(
+                uri = uri,
+                id = id,
+                mimeType = mimeType
+            )
+        }
+
+         fun createFromFileModel(file: FileModel): Media {
+            val uri = Paths.get(file.filePath).fileProviderUri
+            val mime = FileUtil().getMimeType(uri, null)!!
+            val mimeType = MimeType(mime)
+             val id = if (file.id.toString().startsWith("-")) {
+                 file.id.toString().removePrefix("-").toLong()
+             } else {
+                 file.id
+             }
+
+
+             Log.i("Media", "Id: $id")
 
             return Media(
                 uri = uri,
