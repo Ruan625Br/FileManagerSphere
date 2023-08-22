@@ -8,7 +8,6 @@ import java.nio.file.Path
 data class FileItemEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val path: Path,
     val fileData: ByteArray
 ) {
     override fun equals(other: Any?): Boolean {
@@ -18,7 +17,6 @@ data class FileItemEntity(
         other as FileItemEntity
 
         if (id != other.id) return false
-        if (path != other.path) return false
         if (!fileData.contentEquals(other.fileData)) return false
 
         return true
@@ -26,7 +24,6 @@ data class FileItemEntity(
 
     override fun hashCode(): Int {
         var result = id
-        result = 31 * result + path.hashCode()
         result = 31 * result + fileData.contentHashCode()
         return result
     }
