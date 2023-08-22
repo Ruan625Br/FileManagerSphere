@@ -290,5 +290,6 @@
     <string name="play_video">Play video</string>
     <string name="edit">Edit</string>
     <string name="open_with">Open With</string>
-
+    <string name="header_today">Today</string>
+    <string name="header_yesterday">Yesterday</string>
 </resources>
