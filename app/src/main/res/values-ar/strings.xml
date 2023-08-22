@@ -322,4 +322,13 @@
     <string name="display_name_only">Display name only</string>
     <string name="display_everything">Display everything</string>
     <string name="files">Files</string>
+    <string name="dialog_image_viewer">Image viewer</string>
+    <string name="title_activity_media_view">MediaViewActivity</string>
+    <string name="rotate_screen_cd">Rotate Screen</string>
+    <string name="pause_video">Pause video</string>
+    <string name="play_video">Play video</string>
+    <string name="edit">Edit</string>
+    <string name="open_with">Open With</string>
+    <string name="header_today">Today</string>
+    <string name="header_yesterday">Yesterday</string>
 </resources>
