@@ -292,4 +292,8 @@
     <string name="open_with">Open With</string>
     <string name="header_today">Today</string>
     <string name="header_yesterday">Yesterday</string>
+    <string name="install">Install</string>
+    <string name="view">View</string>
+    <string name="unable_to_get_apk_package">Unable to get apk package</string>
+
 </resources>

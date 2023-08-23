@@ -17,9 +17,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
 import com.etb.filemanager.databinding.FileItemBinding
-import com.etb.filemanager.files.provider.archive.common.mime.MediaType
+import com.etb.filemanager.files.provider.archive.common.mime.MimeType
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeUtil
+import com.etb.filemanager.files.provider.archive.common.mime.asMimeType
 import com.etb.filemanager.files.provider.archive.common.mime.getMidiaType
+import com.etb.filemanager.files.provider.archive.common.mime.isASpecificTypeOfMime
+import com.etb.filemanager.files.util.FileUtil
 import com.etb.filemanager.files.util.getDimension
 import com.etb.filemanager.files.util.getDimensionPixelSize
 import com.etb.filemanager.files.util.layoutInflater
@@ -32,7 +35,6 @@ import com.etb.filemanager.manager.files.ui.CheckableItemBackground
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.settings.preference.InterfacePreferences
 import com.etb.filemanager.settings.preference.Preferences
-import com.etb.filemanager.files.util.FileUtil
 import com.etb.filemanager.ui.style.ColorUtil
 import com.etb.filemanager.ui.style.IconUtil
 import me.zhanghai.android.fastscroll.PopupTextProvider
@@ -185,7 +187,7 @@ class FileModelAdapter(
         FileItemBinding.inflate(parent.context.layoutInflater, parent, false)
     ).apply {
         applyStyle(binding)
-       binding.itemFile.background = CheckableItemBackground.create(binding.itemFile.context)
+        binding.itemFile.background = CheckableItemBackground.create(binding.itemFile.context)
 
 
     }
@@ -211,20 +213,8 @@ class FileModelAdapter(
         setVisibility(isDirectory, mimeType, binding)
         if (!isDirectory) {
             if (mimeType != null && mimeType.isMimeTypeMedia()) {
-                val mediaType = getMidiaType(mimeType)
-                when (mediaType) {
-                    MediaType.IMAGE -> {
-                        loadImage(filePath, binding)
-                    }
+                loadImage(filePath, binding, mimeType)
 
-                    MediaType.VIDEO -> {
-                        loadImage(filePath, binding)
-                    }
-
-                    else -> {
-                        loadImage(filePath, binding)
-                    }
-                }
             } else {
                 getIconByMimeType(mimeType, binding)
 
@@ -321,13 +311,17 @@ class FileModelAdapter(
 
     }
 
-    private fun loadImage(path: String, binding: FileItemBinding) {
+    private fun loadImage(path: String, binding: FileItemBinding, mimeType: String) {
+        val mimeTypeObject = MimeType(mimeType)
+        val isApk = mimeTypeObject.isASpecificTypeOfMime(MimeType.APK)
+        val imageView = binding.iconPreview
 
-        Glide.with(binding.iconPreview).clear(binding.iconPreview)
-        Glide.with(mContext).load(path).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-            .apply(RequestOptions().override(50, 50))
-            .apply(RequestOptions().placeholder(R.drawable.ic_image)).into(binding.iconPreview)
-
+        Glide.with(mContext)
+            .load(path)
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .override(50, 50)
+            .placeholder(R.drawable.ic_image)
+            .into(imageView)
     }
 
     private fun setPreview(preview: Drawable, placeholder: Drawable, binding: FileItemBinding) {

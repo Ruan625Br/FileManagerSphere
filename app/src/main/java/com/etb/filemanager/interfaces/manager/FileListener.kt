@@ -23,6 +23,7 @@ interface FileListener {
     fun createShortcut(file: FileModel)
     fun showPropertiesDialog(file: FileModel)
     fun showBottomSheet(file: FileModel)
+    fun showBottomSheetInstallAPK(file: FileModel)
     fun onClickFileAction(file: FileModel, action: CreateFileAction)
 
 

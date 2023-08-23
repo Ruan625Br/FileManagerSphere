@@ -25,4 +25,6 @@
     <dimen name="spacing_large">24dp</dimen>
     <dimen name="spacing_huge">32dp</dimen>
     <dimen name="card_normal_height">75dp</dimen>
+    <dimen name="list_item_spacing">16dp</dimen>
+    <dimen name="list_item_spacing_half">8dp</dimen>
 </resources>

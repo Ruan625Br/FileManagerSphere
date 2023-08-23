@@ -55,6 +55,7 @@ class FileUtils {
         return deleted
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     fun getIconApk(context: Context, apkFilePath: String?): Drawable? {
         try {
             val pm = context.packageManager
@@ -64,8 +65,10 @@ class FileUtils {
             appInfo.publicSourceDir = apkFilePath
             return appInfo.loadIcon(pm)
         } catch (e: Exception){
-
-            return iconUtil.getIconFolder(context)
+            val colorPrimaryInverse = colorUtil.getColorPrimaryInverse(context)
+            val iconApk = context.getDrawable(R.drawable.file_apk_icon)!!
+            colorUtil.setTintDrawable(colorPrimaryInverse, iconApk)
+            return iconApk
         }
     }
 

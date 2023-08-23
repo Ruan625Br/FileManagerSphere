@@ -44,6 +44,7 @@ import com.etb.filemanager.files.extensions.sortFileModel
 import com.etb.filemanager.files.provider.archive.common.mime.MimeType
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeIcon
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeUtil
+import com.etb.filemanager.files.provider.archive.common.mime.isASpecificTypeOfMime
 import com.etb.filemanager.files.provider.archive.common.mime.isMedia
 import com.etb.filemanager.files.provider.archive.common.properties.*
 import com.etb.filemanager.files.util.*
@@ -63,6 +64,8 @@ import com.etb.filemanager.manager.files.filecoroutine.FileOperation
 import com.etb.filemanager.manager.files.filelist.*
 import com.etb.filemanager.manager.files.services.FileOperationService
 import com.etb.filemanager.manager.files.ui.ModalBottomSheetCompress
+import com.etb.filemanager.manager.files.ui.components.showInstallAPKBottomSheet
+import com.etb.filemanager.manager.files.ui.dialogs.BottomSheetInstallAPK
 import com.etb.filemanager.manager.media.MediaViewActivity
 import com.etb.filemanager.manager.media.image.viewer.ImageViewerDialogFragment
 import com.etb.filemanager.manager.media.model.Media
@@ -926,14 +929,15 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
         }
 
-
         mimeType?.let {
-            if (MimeType(mimeType).isMedia()) {
+            val mimeTypeObj = MimeType(mimeType)
+
+            if (mimeTypeObj.isMedia()) {
                 val mainScope = CoroutineScope(Dispatchers.Main)
                 mainScope.launch {
 
                     val currentMedia = Media.createFromFileModel(file)
-                    val files = viewModel.fileListStateful.value?.sortFileModel()?.reversed()
+                    val files = viewModel.fileListStateful.value?.sortFileModel()
                     val filteredFiles = files?.filter { file ->
                         val mime = FileUtil().getMimeType(null, file.filePath)
                         mime != null && MimeType(mime).isMedia()
@@ -957,6 +961,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
                     }
                 }
             }
+
+            if (mimeTypeObj.isASpecificTypeOfMime(MimeType.APK))
+               showBottomSheetInstallAPK(file)
         }
 
     }
@@ -1049,6 +1056,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
     override fun showBottomSheet(file: FileModel) {
         showBottomSheetMoreActionFile(file)
+    }
+    override fun showBottomSheetInstallAPK(file: FileModel){
+        BottomSheetInstallAPK.newInstance(file).show(parentFragmentManager, BottomSheetInstallAPK.TAG)
     }
 
     override fun onClickFileAction(file: FileModel, action: CreateFileAction) {
