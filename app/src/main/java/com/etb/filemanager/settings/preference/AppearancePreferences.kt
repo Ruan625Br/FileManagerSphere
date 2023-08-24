@@ -75,11 +75,6 @@ class AppearancePreferences : PreferenceFragment() {
         return R.string.pref_cat_appearance
     }
 
-    private fun restart() {
-        (activity as SettingsActivity).restart()
-
-    }
-
 }
 
 

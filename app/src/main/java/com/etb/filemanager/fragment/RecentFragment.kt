@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
 import com.etb.filemanager.activity.SettingsActivity
+import com.etb.filemanager.files.extensions.applyBackgroundFromPreferences
 import com.etb.filemanager.files.util.fileProviderUri
 import com.etb.filemanager.files.util.getColorByAttr
 import com.etb.filemanager.interfaces.manager.ItemListener
@@ -46,6 +47,7 @@ import com.etb.filemanager.manager.media.image.viewer.ImageViewerDialogFragment
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.android.material.shape.CornerFamily
 import kotlinx.coroutines.*
 import java.nio.file.Path
 import kotlin.io.path.pathString
@@ -95,7 +97,7 @@ class RecentFragment : Fragment(), ItemListener {
             (requireActivity() as MainActivity).startNewFragment(aboutFragment)
         }
 
-        // initStyleView()
+         initStyleView()
 
         fileUtils = FileUtils()
         setStorageSpaceInGB()
@@ -220,23 +222,10 @@ class RecentFragment : Fragment(), ItemListener {
     }
 
     private fun initStyleView() {
-        if (Preferences.Interface.isEnabledRoundedCorners) {
-            if (roundedCornersDrawable == null) {
-                val mCornerRadius =
-                    requireContext().resources.getDimensionPixelSize(R.dimen.corner_radius_base)
-                        .toFloat()
-                val colorPrimary = getColorByAttr(com.google.android.material.R.attr.colorPrimary)
-                roundedCornersDrawable = GradientDrawable().apply {
-                    cornerRadius = mCornerRadius
-                    setColor(colorPrimary)
-                }
-            }
-
-            cBaseItem.background = roundedCornersDrawable
-            cInternalStorage.background = roundedCornersDrawable
-            cCategoryFileItem.background = roundedCornersDrawable
-            cRecentImg.background = roundedCornersDrawable
-        }
+        cBaseItem.applyBackgroundFromPreferences()
+        cRecentImg.applyBackgroundFromPreferences()
+        cInternalStorage.applyBackgroundFromPreferences()
+        cCategoryFileItem.applyBackgroundFromPreferences()
     }
 
     @SuppressLint("SetTextI18n", "StringFormatMatches")

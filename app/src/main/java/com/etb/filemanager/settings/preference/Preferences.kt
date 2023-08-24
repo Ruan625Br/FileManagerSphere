@@ -85,6 +85,12 @@ class Preferences {
                     AppPreference.PreferenceKey.PREF_FILE_LIST_MARGINS_STR, value.toString()
                 )
             }
+        var cornerFamily: Int
+            get() = AppPreference.getInt(AppPreference.PreferenceKey.PREF_CORNER_FAMILY_INT)
+            set(value) {
+                AppPreference.set(
+                    AppPreference.PreferenceKey.PREF_CORNER_FAMILY_INT, value)
+            }
     }
 
     object Behavior {

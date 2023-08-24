@@ -11,6 +11,7 @@ import androidx.annotation.StringRes
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.etb.filemanager.activity.SettingsActivity
 import com.etb.filemanager.ui.view.UiUtils
 
 abstract class PreferenceFragment : PreferenceFragmentCompat() {
@@ -34,6 +35,10 @@ abstract class PreferenceFragment : PreferenceFragmentCompat() {
         UiUtils.applyWindowInsetsAsPaddingNoTop(recyclerView)
     }
 
+    fun restart(){
+        (activity as SettingsActivity).restart()
+
+    }
 
     @CallSuper
     override fun onStart() {
