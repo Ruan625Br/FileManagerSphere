@@ -1,0 +1,10 @@
+<component name="CopyrightManager">
+  <settings default="Juan Nascimento">
+    <module2copyright>
+      <element module="All" copyright="Juan Nascimento" />
+    </module2copyright>
+    <LanguageOptions name="JAVA">
+      <option name="fileTypeOverride" value="3" />
+    </LanguageOptions>
+  </settings>
+</component>

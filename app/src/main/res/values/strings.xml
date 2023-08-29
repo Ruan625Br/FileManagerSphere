@@ -309,5 +309,8 @@
     <string name="install">Install</string>
     <string name="view">View</string>
     <string name="unable_to_get_apk_package">Unable to get apk package</string>
+    <string name="experimental_trash_can">Experimental Trash Can</string>
+    <string name="restore">Restore</string>
+    <string name="trash_is_empty">Trash is empty</string>
 
 </resources>

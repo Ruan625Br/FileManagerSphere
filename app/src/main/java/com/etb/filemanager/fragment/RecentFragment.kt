@@ -29,9 +29,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
 import com.etb.filemanager.activity.SettingsActivity
+import com.etb.filemanager.compose.feature.presentation.fileslist.DeletedFileListScreen
 import com.etb.filemanager.files.extensions.applyBackgroundFromPreferences
 import com.etb.filemanager.files.util.fileProviderUri
-import com.etb.filemanager.files.util.getColorByAttr
 import com.etb.filemanager.interfaces.manager.ItemListener
 import com.etb.filemanager.manager.category.adapter.CategoryFileModel
 import com.etb.filemanager.manager.category.adapter.CategoryFileModelAdapter
@@ -42,12 +42,10 @@ import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.AboutFragment
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.ui.view.ModalBottomSheetAddCategory
-import com.etb.filemanager.files.util.FileUtil
 import com.etb.filemanager.manager.media.image.viewer.ImageViewerDialogFragment
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
-import com.google.android.material.shape.CornerFamily
 import kotlinx.coroutines.*
 import java.nio.file.Path
 import kotlin.io.path.pathString
@@ -196,6 +194,7 @@ class RecentFragment : Fragment(), ItemListener {
 
     fun initClick() {
         val itemStorage = requireView().findViewById<MaterialCardView>(R.id.cInternalStorage)
+        val ivTrash = requireView().findViewById<ImageView>(R.id.mn_trash)
         val ivSettings = requireView().findViewById<ImageView>(R.id.iv_settings)
         val settingsFragment = SettingsFragment()
         itemStorage.setOnClickListener {
@@ -213,6 +212,10 @@ class RecentFragment : Fragment(), ItemListener {
             startActivity(settingsIntent)
         }
         btnAddCategory.setOnClickListener { showBottomSheetAddCategory() }
+        ivTrash.setOnClickListener {
+            val intent = Intent(requireContext(), DeletedFileListScreen::class.java)
+            startActivity(intent)
+        }
 
     }
 

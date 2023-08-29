@@ -40,6 +40,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
+import com.etb.filemanager.compose.feature.presentation.fileslist.DeletedFileListScreen
 import com.etb.filemanager.files.extensions.sortFileModel
 import com.etb.filemanager.files.provider.archive.common.mime.MimeType
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeIcon
@@ -89,6 +90,7 @@ import kotlinx.coroutines.*
 import java.io.File
 import java.nio.file.*
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.io.path.pathString
 
 
@@ -1427,12 +1429,18 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     }
 
     private fun delete(paths: List<String>) {
-        askPermission()
+
+        val it = Intent(requireContext(), DeletedFileListScreen::class.java)
+        it.putStringArrayListExtra("pathList", ArrayList(paths))
+        startActivity(it)
+
+       /* askPermission()
         val intent = Intent(requireContext(), FileOperationService::class.java)
         intent.putStringArrayListExtra("sourcePaths", ArrayList<String>(paths))
         intent.putExtra("destinationPath", "null")
         intent.putExtra("operation", FileOperation.DELETE)
-        ContextCompat.startForegroundService(requireContext(), intent)
+        ContextCompat.startForegroundService(requireContext(), intent)*/
+
     }
 
     private fun rename(paths: List<Path>, newNames: List<String>) {
