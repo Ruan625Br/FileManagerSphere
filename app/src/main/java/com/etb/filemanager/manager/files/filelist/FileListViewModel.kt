@@ -1,7 +1,11 @@
 package com.etb.filemanager.manager.files.filelist
 
 import android.os.Parcelable
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import com.etb.filemanager.files.util.CloseableLiveData
 import com.etb.filemanager.files.util.Stateful
 import com.etb.filemanager.manager.adapter.FileModel
@@ -97,20 +101,21 @@ class FileListViewModel : ViewModel() {
     val searchState: SearchState
         get() = _searchStateLiveData.value!!
 
-    fun search(query: String){
+    fun search(query: String) {
         val searchState = _searchStateLiveData.value!!
         if (searchState.isSearching && searchState.query == query) return
         _searchStateLiveData.value = SearchState(true, query)
     }
 
-    fun stopSearching(){
+    fun stopSearching() {
         val searchState = _searchStateLiveData.value!!
         if (!searchState.isSearching) return
         _searchStateLiveData.value = SearchState(false, "")
     }
 
 
-    private val _fileListLiveData = FileListSwitchMapLiveData(currentPathLiveData, _searchStateLiveData)
+    private val _fileListLiveData =
+        FileListSwitchMapLiveData(currentPathLiveData, _searchStateLiveData)
     val fileListLiveData: LiveData<Stateful<List<FileModel>>>
         get() = _fileListLiveData
     val fileListStateful: Stateful<List<FileModel>>
@@ -144,8 +149,8 @@ class FileListViewModel : ViewModel() {
         private var liveData: CloseableLiveData<Stateful<List<FileModel>>>? = null
 
         init {
-            addSource(pathLiveData){updateSource()}
-            addSource(searchStateLiveData){updateSource()}
+            addSource(pathLiveData) { updateSource() }
+            addSource(searchStateLiveData) { updateSource() }
         }
 
         private fun updateSource() {
@@ -155,7 +160,10 @@ class FileListViewModel : ViewModel() {
             }
             val path = pathLiveData.value
             val searchState = searchStateLiveData.value!!
-            val liveData = if (searchState.isSearching) SearchFileListLiveData(path!!, searchState.query) else FileListLiveData(path!!)
+            val liveData = if (searchState.isSearching) SearchFileListLiveData(
+                path!!,
+                searchState.query
+            ) else FileListLiveData(path!!)
 
 
             this.liveData = liveData
@@ -193,22 +201,24 @@ class FileListViewModel : ViewModel() {
 
     fun setOrderFiles() {
         val currentOrder = Preferences.Popup.orderFiles
-        val newOrder = if (currentOrder == FileSortOptions.Order.ASCENDING) FileSortOptions.Order.DESCENDING else FileSortOptions.Order.ASCENDING
+        val newOrder =
+            if (currentOrder == FileSortOptions.Order.ASCENDING) FileSortOptions.Order.DESCENDING else FileSortOptions.Order.ASCENDING
         Preferences.Popup.orderFiles = newOrder
         _sortOptionsLiveData.value = Unit
     }
+
     fun setDirectoriesFirst() {
         Preferences.Popup.isDirectoriesFirst = !Preferences.Popup.isDirectoriesFirst
         _sortOptionsLiveData.value = Unit
     }
 
-    fun setShowHiddenFiles(value: Boolean){
+    fun setShowHiddenFiles(value: Boolean) {
         Preferences.Popup.showHiddenFiles = value
         _showHiddenFilesLiveData.value = Unit
 
     }
 
-    fun setGriToggle(){
+    fun setGriToggle() {
         val isGridEnabled = !Preferences.Popup.isGridEnabled
         Preferences.Popup.isGridEnabled = isGridEnabled
         _toggleGridLiveData.value = isGridEnabled
@@ -216,7 +226,7 @@ class FileListViewModel : ViewModel() {
 
 }
 
-enum class TypeOperation() {
+enum class TypeOperation {
     CUT,
     // COPY,
 }

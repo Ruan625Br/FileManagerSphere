@@ -60,6 +60,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -68,7 +69,6 @@ import androidx.exifinterface.media.ExifInterface
 import com.etb.filemanager.R
 import com.etb.filemanager.files.util.FileUtil
 import com.etb.filemanager.files.util.actionEdit
-import com.etb.filemanager.files.util.launchEditIntent
 import com.etb.filemanager.files.util.shareMedia
 import com.etb.filemanager.manager.media.model.Media
 import com.etb.filemanager.ui.theme.Black40P

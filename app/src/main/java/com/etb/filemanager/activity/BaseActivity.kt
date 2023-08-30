@@ -3,7 +3,6 @@ package com.etb.filemanager.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.etb.filemanager.files.util.Args
 import com.etb.filemanager.files.util.LocaleContextWrapper
@@ -33,6 +32,7 @@ abstract class BaseActivity : AppCompatActivity() {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finishAffinity()
     }
+
     override fun attachBaseContext(newBase: Context) {
         val context = LocaleContextWrapper.wrap(newBase)
         super.attachBaseContext(context)

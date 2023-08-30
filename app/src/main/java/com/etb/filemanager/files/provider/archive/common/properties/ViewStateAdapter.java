@@ -1,7 +1,5 @@
 package com.etb.filemanager.files.provider.archive.common.properties;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -31,8 +29,6 @@ public class ViewStateAdapter extends FragmentStateAdapter {
         return Objects.requireNonNull(new PropertiesFragment().getFragmentPropriedades(position, fileItem));
 
     }
-
-
 
 
     @Override

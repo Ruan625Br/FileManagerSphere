@@ -5,7 +5,6 @@ import android.util.Log
 import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
-import kotlin.io.path.Path
 
 class TrailData private constructor(
     val trail: List<Path>, private val states: MutableList<Parcelable?>, val currentIndex: Int
@@ -19,19 +18,19 @@ class TrailData private constructor(
 
         for (index in newTrail.indices) {
             if (isPrefix && index < trail.size) {
-                if (newTrail[index] == trail[index]){
+                if (newTrail[index] == trail[index]) {
                     newStates.add(if (index != currentIndex) states[index] else lastState)
 
-                } else{
+                } else {
                     isPrefix = false
                     newStates.add(null)
                 }
-            } else{
+            } else {
                 newStates.add(null)
             }
         }
-        if (isPrefix){
-            for (index in newTrail.size until trail.size){
+        if (isPrefix) {
+            for (index in newTrail.size until trail.size) {
                 newTrail.add(trail[index])
                 newStates.add(if (index != currentIndex) states[index] else lastState)
             }
@@ -74,7 +73,8 @@ class TrailData private constructor(
                 val archiveFileParent = archiveFile.parent
                 if (archiveFileParent != null) {
                     trail.addAll(
-                        0, createTrail(Paths.get(archiveFile.path)))
+                        0, createTrail(Paths.get(archiveFile.path))
+                    )
 
                 }
                 Log.i("TRAIL", "PARENTE:: $archiveFileParent")

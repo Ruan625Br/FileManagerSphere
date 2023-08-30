@@ -4,12 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import com.etb.filemanager.interfaces.settings.PopupSettingsListener
 import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
-import com.etb.filemanager.manager.files.filelist.Settings
 
 
-class PopupSettings(private var context: Context){
+class PopupSettings(private var context: Context) {
 
     private val itemSortByName = 0
     private val itemSortByType = 0
@@ -21,11 +19,13 @@ class PopupSettings(private var context: Context){
         context.getSharedPreferences("sharedPopupSettingsActionSort", Context.MODE_PRIVATE)
     private var settingsModified: Boolean
         get() = sharedPopupSettingsActionSort.getBoolean("settings_action_sort_modified", false)
-        set(value) = sharedPopupSettingsActionSort.edit().putBoolean("settings_action_sort_modified", value).apply()
+        set(value) = sharedPopupSettingsActionSort.edit()
+            .putBoolean("settings_action_sort_modified", value).apply()
 
 
     fun itemIsSelectedActionSort(position: Int): Boolean {
-        val itemSelectedActionSort = sharedPopupSettingsActionSort.getInt("settings_action_sort_item_selected", 0)
+        val itemSelectedActionSort =
+            sharedPopupSettingsActionSort.getInt("settings_action_sort_item_selected", 0)
         return if (settingsModified) {
             position == itemSelectedActionSort
 
@@ -44,9 +44,11 @@ class PopupSettings(private var context: Context){
 
 
     fun setItemSelectedActionSort(position: Int) {
-        val itemSelectedActionSort = sharedPopupSettingsActionSort.getInt("settings_action_sort_item_selected", 0)
+        val itemSelectedActionSort =
+            sharedPopupSettingsActionSort.getInt("settings_action_sort_item_selected", 0)
         if (position != itemSelectedActionSort) {
-            sharedPopupSettingsActionSort.edit().putInt("settings_action_sort_item_selected", position).apply()
+            sharedPopupSettingsActionSort.edit()
+                .putInt("settings_action_sort_item_selected", position).apply()
             updateItemSelectedActionSortListener(position)
             Log.i("SETTINGS", "ITEM $itemSelectedActionSort")
         }
@@ -59,11 +61,13 @@ class PopupSettings(private var context: Context){
 
     fun setSelectedActionSortFolderFirst() {
         if (getActionSortFolderFirst()) {
-            sharedPopupSettingsActionSort.edit().putBoolean("settings_action_sort_directories_first", false).apply()
+            sharedPopupSettingsActionSort.edit()
+                .putBoolean("settings_action_sort_directories_first", false).apply()
 
 
         } else {
-            sharedPopupSettingsActionSort.edit().putBoolean("settings_action_sort_directories_first", true).apply()
+            sharedPopupSettingsActionSort.edit()
+                .putBoolean("settings_action_sort_directories_first", true).apply()
 
         }
 
@@ -74,11 +78,13 @@ class PopupSettings(private var context: Context){
 
 
         if (getActionShowHiddenFiles()) {
-            sharedPopupSettingsActionSort.edit().putBoolean("settings_action_show_hidden_files", false).apply()
+            sharedPopupSettingsActionSort.edit()
+                .putBoolean("settings_action_show_hidden_files", false).apply()
 
 
         } else {
-            sharedPopupSettingsActionSort.edit().putBoolean("settings_action_show_hidden_files", true).apply()
+            sharedPopupSettingsActionSort.edit()
+                .putBoolean("settings_action_show_hidden_files", true).apply()
 
         }
 
@@ -91,7 +97,10 @@ class PopupSettings(private var context: Context){
     }
 
     fun getActionSortFolderFirst(): Boolean {
-        return sharedPopupSettingsActionSort.getBoolean("settings_action_sort_directories_first", false)
+        return sharedPopupSettingsActionSort.getBoolean(
+            "settings_action_sort_directories_first",
+            false
+        )
     }
 
 
@@ -99,7 +108,8 @@ class PopupSettings(private var context: Context){
         val sharedPopupSettingsActionSort: SharedPreferences =
             context.getSharedPreferences("sharedPopupSettingsActionSort", Context.MODE_PRIVATE)
 
-        val itemSelectedActionSort = sharedPopupSettingsActionSort.getInt("settings_action_sort_item_selected", 0)
+        val itemSelectedActionSort =
+            sharedPopupSettingsActionSort.getInt("settings_action_sort_item_selected", 0)
         return itemSelectedActionSort
     }
 
@@ -107,7 +117,6 @@ class PopupSettings(private var context: Context){
         selectPreferenceUtils.addItemSelectedOnListener(position, getActionSortFolderFirst())
 
     }
-
 
 
     companion object {

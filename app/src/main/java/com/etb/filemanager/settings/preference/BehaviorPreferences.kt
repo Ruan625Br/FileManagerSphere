@@ -4,19 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.etb.filemanager.R
-import com.etb.filemanager.manager.util.MaterialDialogUtils
-import com.etb.filemanager.ui.style.StyleManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.io.File
-import java.nio.file.Path
-import java.nio.file.Paths
 
-class BehaviorPreferences : PreferenceFragment(){
+class BehaviorPreferences : PreferenceFragment() {
     override fun getTitle(): Int {
         return R.string.pref_behavior_title
     }
@@ -47,29 +42,31 @@ class BehaviorPreferences : PreferenceFragment(){
                 .setTitle(title)
                 .setView(dialogView)
                 .setCancelable(false)
-            .setPositiveButton(getString(R.string.set)) { dialog, which ->
-                val enteredText = eInputEditText.text.toString()
-                val path = File(enteredText)
-                if (enteredText != currentDefaultFolder && path.exists()){
-                    preference.summary = enteredText
-                    Preferences.Behavior.defaultFolder = enteredText
-                }
+                .setPositiveButton(getString(R.string.set)) { dialog, which ->
+                    val enteredText = eInputEditText.text.toString()
+                    val path = File(enteredText)
+                    if (enteredText != currentDefaultFolder && path.exists()) {
+                        preference.summary = enteredText
+                        Preferences.Behavior.defaultFolder = enteredText
+                    }
 
-            }.setNegativeButton(R.string.dialog_cancel) { _, _ ->
-            }.show()
+                }.setNegativeButton(R.string.dialog_cancel) { _, _ ->
+                }.show()
             true
 
         }
 
         //Select file long click
 
-        val switchSelectFileLongClick = findPreference<SwitchPreferenceCompat>("select_file_long_click")
+        val switchSelectFileLongClick =
+            findPreference<SwitchPreferenceCompat>("select_file_long_click")
         val selectFileLongClick = Preferences.Behavior.selectFileLongClick
 
         switchSelectFileLongClick?.isChecked = selectFileLongClick
 
         //Show fast scroll
-        val swShowFastScroll = findPreference<SwitchPreferenceCompat>(getString(R.string.pref_key_show_fast_scroll))
+        val swShowFastScroll =
+            findPreference<SwitchPreferenceCompat>(getString(R.string.pref_key_show_fast_scroll))
         val isFastScrollEnabled = Preferences.Behavior.isFastScrollEnabled
         swShowFastScroll?.isChecked = isFastScrollEnabled
 

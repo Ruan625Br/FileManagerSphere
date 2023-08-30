@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class OperationCommand {
     static public boolean deleteDir(File file) throws IOException, InterruptedException {
-        if (file.exists()){
+        if (file.exists()) {
             String deleteCommand = "rm -rf " + file.getAbsolutePath();
             Runtime runtime = Runtime.getRuntime();
 

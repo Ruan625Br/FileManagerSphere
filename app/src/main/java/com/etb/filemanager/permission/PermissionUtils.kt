@@ -1,4 +1,3 @@
 package com.etb.filemanager.permission
 
-class PermissionUtils {
-}
+class PermissionUtils

@@ -1,13 +1,11 @@
 package com.etb.filemanager.manager.files.filelist
 
-import java.nio.file.Path
 import android.os.Parcel
 import android.os.Parcelable
-
-import com.etb.filemanager.manager.adapter.FileModel
 import com.etb.filemanager.files.compat.writeParcelableListCompat
 import com.etb.filemanager.files.util.LinkedMapSet
 import com.etb.filemanager.files.util.readParcelableListCompat
+import com.etb.filemanager.manager.adapter.FileModel
 
 class FileItemSet() : LinkedMapSet<String, FileModel>(FileModel::filePath), Parcelable {
     constructor(parcel: Parcel) : this() {

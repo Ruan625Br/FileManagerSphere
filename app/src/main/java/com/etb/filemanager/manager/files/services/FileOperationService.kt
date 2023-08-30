@@ -3,7 +3,6 @@ package com.etb.filemanager.manager.files.services
 
 import android.annotation.SuppressLint
 import android.app.*
-import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
@@ -85,19 +84,20 @@ class FileOperationService : Service() {
     @SuppressLint("ObsoleteSdkInt")
     private fun createNotificationBuilder(): NotificationCompat.Builder {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_HIGH
             val chanel = NotificationChannel(CHANEL_ID, CHANEL_NAME, importance)
             notificationManager.createNotificationChannel(chanel)
         }
         val notificationIntent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE)
+        val pendingIntent =
+            PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE)
         notificationIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
         val title = "File Operation"
         val mesage = "Operação em andamento..."
 
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationCompat.Builder(this, CHANEL_ID)
                 .setContentTitle(title)
                 .setContentText(mesage)
@@ -109,10 +109,10 @@ class FileOperationService : Service() {
                     )
                 )
                 .setContentIntent(pendingIntent)
-               .setProgress(100, 0, false)
+                .setProgress(100, 0, false)
                 .setOngoing(true)
 
-        } else{
+        } else {
             NotificationCompat.Builder(this)
                 .setContentTitle(title)
                 .setContentText(mesage)

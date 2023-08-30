@@ -62,4 +62,5 @@ class SearchFileListLiveData(
         private const val INTERVAL_MILLIS = 500L
     }
 }
+
 class SearchState(val isSearching: Boolean, val query: String)

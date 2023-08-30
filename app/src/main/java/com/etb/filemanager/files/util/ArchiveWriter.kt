@@ -6,19 +6,19 @@ import org.apache.commons.compress.archivers.ArchiveOutputStream
 import org.apache.commons.compress.archivers.ArchiveStreamFactory
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry
-import org.apache.commons.compress.archivers.tar.TarConstants
 import org.apache.commons.compress.archivers.zip.UnixStat
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
-import org.apache.commons.compress.compressors.CompressorException
 import org.apache.commons.compress.compressors.CompressorStreamFactory
 import java.io.*
 import java.nio.channels.Channels
 import java.nio.channels.SeekableByteChannel
-import java.nio.channels.WritableByteChannel
-import java.nio.file.LinkOption
 import java.nio.file.Path
 
-class ArchiveWriter(private val archiveType: String, private val compressorType: String?, private val channel: SeekableByteChannel) : Closeable {
+class ArchiveWriter(
+    private val archiveType: String,
+    private val compressorType: String?,
+    private val channel: SeekableByteChannel
+) : Closeable {
     private val archiveOutputStream: ArchiveOutputStream
 
     init {
@@ -35,12 +35,16 @@ class ArchiveWriter(private val archiveType: String, private val compressorType:
                 val sevenZOutputFile = SevenZOutputFile(channel)
                 SevenZArchiveOutputStream(sevenZOutputFile)
             }
+
             else -> {
                 val outputStream = Channels.newOutputStream(channel).buffered()
                 val compressorOutputStream = compressorType?.let {
                     CompressorStreamFactory().createCompressorOutputStream(it, outputStream)
                 } ?: outputStream
-                ArchiveStreamFactory().createArchiveOutputStream(archiveType, compressorOutputStream)
+                ArchiveStreamFactory().createArchiveOutputStream(
+                    archiveType,
+                    compressorOutputStream
+                )
             }
         }
     }
@@ -68,16 +72,19 @@ class ArchiveWriter(private val archiveType: String, private val compressorType:
                 entry.unixMode = UnixStat.DEFAULT_FILE_PERM
                 entry
             }
+
             ArchiveStreamFactory.TAR -> {
                 val entry = TarArchiveEntry(file.toFile(), entryName)
                 entry.mode = UnixStat.DEFAULT_FILE_PERM
                 entry
             }
+
             else -> throw ArchiveException("Unsupported archive type: $archiveType")
         }
     }
 
-    private inner class SevenZArchiveOutputStream(private val file: SevenZOutputFile) : ArchiveOutputStream() {
+    private inner class SevenZArchiveOutputStream(private val file: SevenZOutputFile) :
+        ArchiveOutputStream() {
         override fun createArchiveEntry(file: File, entryName: String): ArchiveEntry {
             return file.let { this.file.createArchiveEntry(it, entryName) }
         }
@@ -112,7 +119,10 @@ class ArchiveWriter(private val archiveType: String, private val compressorType:
     }
 }
 
-fun SeekableByteChannel.newArchiveWriter(archiveType: String, compressorType: String? = null): ArchiveWriter {
+fun SeekableByteChannel.newArchiveWriter(
+    archiveType: String,
+    compressorType: String? = null
+): ArchiveWriter {
     return ArchiveWriter(archiveType, compressorType, this)
 }
 

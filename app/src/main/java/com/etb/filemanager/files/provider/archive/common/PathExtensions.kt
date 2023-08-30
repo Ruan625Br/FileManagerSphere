@@ -27,14 +27,14 @@ fun AutoCloseable.closeSafe() {
 @Throws(IOException::class)
 fun Path.search(query: String, intervalMillis: Long, listener: (List<Path>) -> Unit) {
     val searchResults = mutableListOf<Path>()
-    if (isDirectory()){
+    if (isDirectory()) {
         val files = toFile().listFiles()
-        if (files != null){
-            for (file in files){
-                if (isDirectory()){
+        if (files != null) {
+            for (file in files) {
+                if (isDirectory()) {
                     searchResults.addAll(searchDirectory(this, query))
-                } else{
-                    if (file.name.contains(query, ignoreCase = true)){
+                } else {
+                    if (file.name.contains(query, ignoreCase = true)) {
                         searchResults.add(file.toPath())
                     }
                 }

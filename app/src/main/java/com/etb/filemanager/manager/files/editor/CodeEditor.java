@@ -7,6 +7,7 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.Log;
+
 import androidx.appcompat.widget.AppCompatEditText;
 
 import java.io.BufferedReader;
@@ -17,44 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CodeEditor extends AppCompatEditText {
-    private Context mContext;
+    private final Context mContext;
 
-    public CodeEditor(Context context, AttributeSet attrs){
+    public CodeEditor(Context context, AttributeSet attrs) {
         super(context);
         mContext = context;
 
-    }
-
-    public void setFileType(FileType fileType){
-            if (fileType == FileType.JAVA){
-                applyJavaSyntax(this);
-            }
-    }
-
-    public void setCodebyStorage(String path){
-        setText(readFileAsString(mContext, path));
-        //applyJavaSyntax(this);
-    }
-
-
-    private void applyJavaSyntax(CodeEditor editor){
-        SpannableString spannableString = new SpannableString(editor.getText());
-
-        for (String keyword : editor.getJavaKeywords()){
-            int startIndex = 0;
-            while (startIndex != -1){
-                startIndex = editor.getText().toString().indexOf(keyword, startIndex);
-                if (startIndex != -1){
-                    int endindex = startIndex + keyword.length();
-                    spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), startIndex, endindex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    startIndex = endindex;
-                }
-            }
-        }
-
-
-
-        editor.setText(spannableString);
     }
 
     public static String readFileAsString(Context context, String fileName) {
@@ -81,8 +50,37 @@ public class CodeEditor extends AppCompatEditText {
         return stringBuilder.toString();
     }
 
+    public void setFileType(FileType fileType) {
+        if (fileType == FileType.JAVA) {
+            applyJavaSyntax(this);
+        }
+    }
 
-    private  List<String> getJavaKeywords() {
+    public void setCodebyStorage(String path) {
+        setText(readFileAsString(mContext, path));
+        //applyJavaSyntax(this);
+    }
+
+    private void applyJavaSyntax(CodeEditor editor) {
+        SpannableString spannableString = new SpannableString(editor.getText());
+
+        for (String keyword : editor.getJavaKeywords()) {
+            int startIndex = 0;
+            while (startIndex != -1) {
+                startIndex = editor.getText().toString().indexOf(keyword, startIndex);
+                if (startIndex != -1) {
+                    int endindex = startIndex + keyword.length();
+                    spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), startIndex, endindex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    startIndex = endindex;
+                }
+            }
+        }
+
+
+        editor.setText(spannableString);
+    }
+
+    private List<String> getJavaKeywords() {
         List<String> keywords = new ArrayList<>();
         keywords.add("abstract");
         keywords.add("assert");
@@ -137,8 +135,6 @@ public class CodeEditor extends AppCompatEditText {
 
         return keywords;
     }
-
-
 
 
 }

@@ -1,7 +1,6 @@
 package com.etb.filemanager.ui.theme
 
 import androidx.compose.ui.graphics.Color
-import com.etb.filemanager.R
 
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
@@ -14,15 +13,20 @@ val Black40P = Color(0xA6000000)
 
 val md_theme_light_primary = Color(com.google.android.material.R.attr.colorPrimary)
 val md_theme_light_onPrimary = Color(com.google.android.material.R.attr.colorOnPrimary)
-val md_theme_light_primaryContainer = Color(com.google.android.material.R.attr.colorPrimaryContainer)
-val md_theme_light_onPrimaryContainer = Color(com.google.android.material.R.attr.colorOnPrimaryContainer)
+val md_theme_light_primaryContainer =
+    Color(com.google.android.material.R.attr.colorPrimaryContainer)
+val md_theme_light_onPrimaryContainer =
+    Color(com.google.android.material.R.attr.colorOnPrimaryContainer)
 val md_theme_light_secondary = Color(com.google.android.material.R.attr.colorSecondary)
 val md_theme_light_onSecondary = Color(com.google.android.material.R.attr.colorOnPrimary)
-val md_theme_light_secondaryContainer = Color(com.google.android.material.R.attr.colorSecondaryContainer)
-val md_theme_light_onSecondaryContainer = Color(com.google.android.material.R.attr.colorOnSecondaryContainer)
+val md_theme_light_secondaryContainer =
+    Color(com.google.android.material.R.attr.colorSecondaryContainer)
+val md_theme_light_onSecondaryContainer =
+    Color(com.google.android.material.R.attr.colorOnSecondaryContainer)
 val md_theme_light_tertiary = Color(com.google.android.material.R.attr.colorTertiary)
 val md_theme_light_onTertiary = Color(com.google.android.material.R.attr.colorOnTertiary)
-val md_theme_light_tertiaryContainer = Color(com.google.android.material.R.attr.colorTertiaryContainer)
+val md_theme_light_tertiaryContainer =
+    Color(com.google.android.material.R.attr.colorTertiaryContainer)
 val md_theme_light_onTertiaryContainer = Color(0xFF31111D)
 val md_theme_light_error = Color(0xFFB3261E)
 val md_theme_light_onError = Color(0xFFFFFFFF)

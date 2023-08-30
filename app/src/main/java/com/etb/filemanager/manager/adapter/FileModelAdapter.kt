@@ -20,6 +20,7 @@ import com.etb.filemanager.databinding.FileItemBinding
 import com.etb.filemanager.files.provider.archive.common.mime.MediaType
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeUtil
 import com.etb.filemanager.files.provider.archive.common.mime.getMidiaType
+import com.etb.filemanager.files.util.FileUtil
 import com.etb.filemanager.files.util.getDimension
 import com.etb.filemanager.files.util.getDimensionPixelSize
 import com.etb.filemanager.files.util.layoutInflater
@@ -32,7 +33,6 @@ import com.etb.filemanager.manager.files.ui.CheckableItemBackground
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.settings.preference.InterfacePreferences
 import com.etb.filemanager.settings.preference.Preferences
-import com.etb.filemanager.files.util.FileUtil
 import com.etb.filemanager.ui.style.ColorUtil
 import com.etb.filemanager.ui.style.IconUtil
 import me.zhanghai.android.fastscroll.PopupTextProvider
@@ -185,7 +185,7 @@ class FileModelAdapter(
         FileItemBinding.inflate(parent.context.layoutInflater, parent, false)
     ).apply {
         applyStyle(binding)
-       binding.itemFile.background = CheckableItemBackground.create(binding.itemFile.context)
+        binding.itemFile.background = CheckableItemBackground.create(binding.itemFile.context)
 
 
     }

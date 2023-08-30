@@ -1,7 +1,6 @@
 package com.etb.filemanager.files.util
 
 
-
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable

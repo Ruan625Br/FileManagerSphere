@@ -21,7 +21,8 @@ class MimeTypeUtil {
         return iconMimeType == type.resourceId
     }
 }
-  fun MimeType.isSpecificMimeType(type: MimeTypeIcon): Boolean{
-      val iconMimeType = MimeTypeUtil().getIconByMimeType(subtype)
-      return iconMimeType == type.resourceId
-  }
+
+fun MimeType.isSpecificMimeType(type: MimeTypeIcon): Boolean {
+    val iconMimeType = MimeTypeUtil().getIconByMimeType(subtype)
+    return iconMimeType == type.resourceId
+}

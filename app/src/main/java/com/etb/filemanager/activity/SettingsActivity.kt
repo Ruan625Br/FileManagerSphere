@@ -46,7 +46,7 @@ class SettingsActivity : BaseActivity(),
         }
 
 
-        val uri = getIntent().data
+        val uri = intent.data
         if (uri != null && SCHEME.equals(uri.scheme) && HOST.equals(uri.host) && uri.path != null) {
             mKeys = Objects.requireNonNull(uri.pathSegments)
         }

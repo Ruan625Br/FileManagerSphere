@@ -16,7 +16,8 @@ class FileRepository(private val deletedFileDao: DeletedFileDao) {
         if (file.exists()) {
             // Store the deleted file in the database
             val fileData = file.readBytes()
-            val deleteTimestamp = System.currentTimeMillis() + TimeUnit.DAYS.toMillis(expirationDays.toLong())
+            val deleteTimestamp =
+                System.currentTimeMillis() + TimeUnit.DAYS.toMillis(expirationDays.toLong())
             val deletedFile = DeletedFileEntity(
                 fileData = fileData,
                 filePath = path,

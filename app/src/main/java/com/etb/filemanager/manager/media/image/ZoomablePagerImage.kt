@@ -49,7 +49,7 @@ fun ZoomablePagerImage(
         }
     )
 
-    LaunchedEffect(zoomState.scale){
+    LaunchedEffect(zoomState.scale) {
         scrollEnabled.value = zoomState.scale == 1f
     }
 

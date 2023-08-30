@@ -8,10 +8,10 @@ package com.etb.filemanager.files.util
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.etb.filemanager.files.compat.readParcelableListCompat
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
-import com.etb.filemanager.files.compat.readParcelableListCompat
 
 inline fun <reified T : Parcelable> Parcel.readParcelable(): T? =
     readParcelable(T::class.java.classLoader)

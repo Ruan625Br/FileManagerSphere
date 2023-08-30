@@ -10,25 +10,36 @@ import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
 import com.etb.filemanager.interfaces.manager.FileListener
 import com.etb.filemanager.manager.adapter.FileModel
-import com.etb.filemanager.manager.file.FileAction
 
 
-class FileOptionAdapter(var listener: FileListener, var fileItem: FileModel, var fileAction: MutableList<FileAction>) :
-RecyclerView.Adapter<FileOptionAdapter.ViewHolder>() {
+class FileOptionAdapter(
+    var listener: FileListener,
+    var fileItem: FileModel,
+    var fileAction: MutableList<FileAction>
+) :
+    RecyclerView.Adapter<FileOptionAdapter.ViewHolder>() {
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileOptionAdapter.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.file_action, parent, false)
 
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: FileOptionAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val actionItem = fileAction[position]
 
         holder.actionTitle.text = actionItem.title
         holder.actionIcon.setImageResource(actionItem.icon)
-        holder.actionBase.setOnClickListener { listener.onClickFileAction(fileItem, actionItem.action) }
+        holder.actionBase.setOnClickListener {
+            listener.onClickFileAction(
+                fileItem,
+                actionItem.action
+            )
+        }
 
     }
 

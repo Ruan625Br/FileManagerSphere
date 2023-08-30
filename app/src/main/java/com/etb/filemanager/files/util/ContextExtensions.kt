@@ -14,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
-import android.widget.Toast
 import androidx.annotation.*
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.FileProvider
@@ -25,8 +24,6 @@ import com.etb.filemanager.manager.media.model.Media
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.nio.file.Path
-import java.nio.file.Paths
 
 val Context.activity: Activity?
     get() {
@@ -174,7 +171,6 @@ fun Context.shareMedia(media: Media) {
 
     FileUtil().shareFile(filePath!!, this)
 }
-
 
 
 suspend fun Context.launchEditIntent(media: Media) =

@@ -51,10 +51,13 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.SurfaceColors;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.transition.MaterialSharedAxis;
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.regex.PatternSyntaxException;
 
 import io.github.rosemoe.sora.event.ContentChangeEvent;
 import io.github.rosemoe.sora.event.PublishSearchResultEvent;
@@ -66,153 +69,15 @@ import io.github.rosemoe.sora.text.Cursor;
 import io.github.rosemoe.sora.text.LineSeparator;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.DirectAccessProps;
+import io.github.rosemoe.sora.widget.EditorSearcher.SearchOptions;
 import io.github.rosemoe.sora.widget.SymbolInputView;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
-import io.github.rosemoe.sora.widget.EditorSearcher.SearchOptions;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
-
-import java.nio.file.Paths;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.regex.PatternSyntaxException;
-
 
 
 public class CodeEditorFragment extends Fragment {
     public static final String ARG_OPTIONS = "options";
-
-
-
-    public static class Options implements Parcelable {
-        @Nullable
-        public final Uri uri;
-        @Nullable
-        public final String title;
-        @Nullable
-        public final String subtitle;
-        public final boolean readOnly;
-        public final boolean javaSmaliToggle;
-        public final boolean enableSharing;
-        @Nullable
-        public final  Parcelable lastState;
-
-
-        private Options(@Nullable Uri uri, @Nullable String title, @Nullable String subtitle, boolean readOnly,
-                        boolean javaSmaliToggle, boolean enableSharing, @Nullable Parcelable lastState) {
-            this.uri = uri;
-            this.title = title;
-            this.subtitle = subtitle;
-            this.readOnly = readOnly;
-            this.javaSmaliToggle = javaSmaliToggle;
-            this.enableSharing = enableSharing;
-            this.lastState = lastState;
-        }
-
-        protected Options(@NonNull Parcel in) {
-            uri = ParcelCompat.readParcelable(in, Uri.class.getClassLoader(), Uri.class);
-            title = in.readString();
-            subtitle = in.readString();
-            readOnly = in.readByte() != 0;
-            javaSmaliToggle = in.readByte() != 0;
-            enableSharing = in.readByte() != 0;
-            lastState = in.readParcelable(RecyclerView.LayoutManager.class.getClassLoader());
-        }
-
-        public static final Creator<Options> CREATOR = new Creator<Options>() {
-            @Override
-            public Options createFromParcel(Parcel in) {
-                return new Options(in);
-            }
-
-            @Override
-            public Options[] newArray(int size) {
-                return new Options[size];
-            }
-        };
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(@NonNull Parcel dest, int flags) {
-            dest.writeParcelable(uri, flags);
-            dest.writeString(title);
-            dest.writeString(subtitle);
-            dest.writeByte((byte) (readOnly ? 1 : 0));
-            dest.writeByte((byte) (javaSmaliToggle ? 1 : 0));
-            dest.writeByte((byte) (enableSharing ? 1 : 0));
-            dest.writeParcelable(lastState, flags);
-        }
-
-        public static class Builder {
-            @Nullable
-            private Uri uri;
-            @Nullable
-            private String title;
-            @Nullable
-            private String subtitle;
-            private boolean readOnly = false;
-            private boolean javaSmaliToggle = false;
-            private boolean enableSharing = true;
-            @Nullable
-            private Parcelable lastState;
-            public Builder() {
-            }
-
-            public Builder(@NonNull Options options) {
-                uri = options.uri;
-                title = options.title;
-                subtitle = options.subtitle;
-                readOnly = options.readOnly;
-                javaSmaliToggle = options.javaSmaliToggle;
-                enableSharing = options.enableSharing;
-                lastState = options.lastState;
-            }
-
-            public Builder setUri(@Nullable Uri uri) {
-                this.uri = uri;
-                return this;
-            }
-
-            public Builder setTitle(@Nullable String title) {
-                this.title = title;
-                return this;
-            }
-
-            public Builder setSubtitle(@Nullable String subtitle) {
-                this.subtitle = subtitle;
-                return this;
-            }
-
-            public Builder setReadOnly(boolean readOnly) {
-                this.readOnly = readOnly;
-                return this;
-            }
-
-            public Builder setJavaSmaliToggle(boolean javaSmaliToggle) {
-                this.javaSmaliToggle = javaSmaliToggle;
-                return this;
-            }
-
-            public Builder setEnableSharing(boolean enableSharing) {
-                this.enableSharing = enableSharing;
-                return this;
-            }
-
-            public Builder setLastState(Parcelable lastState){
-                this.lastState = lastState;
-                return this;
-            }
-
-            public Options build() {
-                return new Options(uri, title, subtitle, readOnly, javaSmaliToggle, enableSharing, lastState);
-            }
-        }
-    }
-
     private EditorColorScheme mColorScheme;
     private CodeEditor mEditor;
     private SymbolInputView mSymbolInputView;
@@ -233,10 +98,6 @@ public class CodeEditorFragment extends Fragment {
     private MenuItem mJavaSmaliToggleMenu;
     private MenuItem mShareMenu;
     private CodeEditorViewModel mViewModel;
-    private boolean mTextModified = false;
-
-    private MaterialToolbar topAppBar;
-
     private final ActivityResultLauncher<Intent> mSaveOpenedFile = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -264,6 +125,7 @@ public class CodeEditorFragment extends Fragment {
                     unlockEditor();
                 }
             });
+    private boolean mTextModified = false;
     private final OnBackPressedCallback mBackPressedCallback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
@@ -279,11 +141,11 @@ public class CodeEditorFragment extends Fragment {
                         .setNegativeButton(R.string.yes, (dialog, which) -> {
                             setEnabled(false);
                             FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                         //   boolean fragmentPopped = fragmentManager.popBackStackImmediate();
+                            //   boolean fragmentPopped = fragmentManager.popBackStackImmediate();
 
-                                HomeFragment homeFragment = HomeFragment.newInstance(null, mOptions.lastState);
-                                MainActivity activity = (MainActivity) requireActivity();
-                                activity.startNewFragment(homeFragment);
+                            HomeFragment homeFragment = HomeFragment.newInstance(null, mOptions.lastState);
+                            MainActivity activity = (MainActivity) requireActivity();
+                            activity.startNewFragment(homeFragment);
 
 
                         })
@@ -315,6 +177,7 @@ public class CodeEditorFragment extends Fragment {
             }
         }
     };
+    private MaterialToolbar topAppBar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -518,12 +381,12 @@ public class CodeEditorFragment extends Fragment {
         // Update live buttons at the start
         updateLiveButtons();
         updateStartupMenu();
-      //  UiUtils.applyWindowInsetsAsPaddingNoTop(view.findViewById(R.id.editor_container));
+        //  UiUtils.applyWindowInsetsAsPaddingNoTop(view.findViewById(R.id.editor_container));
 
         mViewModel.getContentLiveData().observe(getViewLifecycleOwner(), content -> {
             showProgressIndicator(false);
             if (content == null) {
-              //  UIUtils.displayLongToast(R.string.failed);
+                //  UIUtils.displayLongToast(R.string.failed);
                 return;
             }
             mEditor.setEditorLanguage(getLanguage(mViewModel.getLanguage()));
@@ -696,8 +559,6 @@ public class CodeEditorFragment extends Fragment {
         mSearchResultCount.setText(getResources().getQuantityString(R.plurals.search_results, count, count));
     }
 
-
-
     private void saveFile(String content) {
         if (mViewModel == null) return;
         if (!mViewModel.saveFile(content)) {
@@ -729,7 +590,6 @@ public class CodeEditorFragment extends Fragment {
 
         }
     }
-
 
     @NonNull
     public Language getLanguage(@Nullable String language) {
@@ -805,6 +665,134 @@ public class CodeEditorFragment extends Fragment {
     private void initToolbar() {
         AppCompatActivity activity = (AppCompatActivity) requireActivity();
         activity.setSupportActionBar(topAppBar);
+    }
+
+    public static class Options implements Parcelable {
+        public static final Creator<Options> CREATOR = new Creator<Options>() {
+            @Override
+            public Options createFromParcel(Parcel in) {
+                return new Options(in);
+            }
+
+            @Override
+            public Options[] newArray(int size) {
+                return new Options[size];
+            }
+        };
+        @Nullable
+        public final Uri uri;
+        @Nullable
+        public final String title;
+        @Nullable
+        public final String subtitle;
+        public final boolean readOnly;
+        public final boolean javaSmaliToggle;
+        public final boolean enableSharing;
+        @Nullable
+        public final Parcelable lastState;
+
+        private Options(@Nullable Uri uri, @Nullable String title, @Nullable String subtitle, boolean readOnly,
+                        boolean javaSmaliToggle, boolean enableSharing, @Nullable Parcelable lastState) {
+            this.uri = uri;
+            this.title = title;
+            this.subtitle = subtitle;
+            this.readOnly = readOnly;
+            this.javaSmaliToggle = javaSmaliToggle;
+            this.enableSharing = enableSharing;
+            this.lastState = lastState;
+        }
+
+        protected Options(@NonNull Parcel in) {
+            uri = ParcelCompat.readParcelable(in, Uri.class.getClassLoader(), Uri.class);
+            title = in.readString();
+            subtitle = in.readString();
+            readOnly = in.readByte() != 0;
+            javaSmaliToggle = in.readByte() != 0;
+            enableSharing = in.readByte() != 0;
+            lastState = in.readParcelable(RecyclerView.LayoutManager.class.getClassLoader());
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
+            dest.writeParcelable(uri, flags);
+            dest.writeString(title);
+            dest.writeString(subtitle);
+            dest.writeByte((byte) (readOnly ? 1 : 0));
+            dest.writeByte((byte) (javaSmaliToggle ? 1 : 0));
+            dest.writeByte((byte) (enableSharing ? 1 : 0));
+            dest.writeParcelable(lastState, flags);
+        }
+
+        public static class Builder {
+            @Nullable
+            private Uri uri;
+            @Nullable
+            private String title;
+            @Nullable
+            private String subtitle;
+            private boolean readOnly = false;
+            private boolean javaSmaliToggle = false;
+            private boolean enableSharing = true;
+            @Nullable
+            private Parcelable lastState;
+
+            public Builder() {
+            }
+
+            public Builder(@NonNull Options options) {
+                uri = options.uri;
+                title = options.title;
+                subtitle = options.subtitle;
+                readOnly = options.readOnly;
+                javaSmaliToggle = options.javaSmaliToggle;
+                enableSharing = options.enableSharing;
+                lastState = options.lastState;
+            }
+
+            public Builder setUri(@Nullable Uri uri) {
+                this.uri = uri;
+                return this;
+            }
+
+            public Builder setTitle(@Nullable String title) {
+                this.title = title;
+                return this;
+            }
+
+            public Builder setSubtitle(@Nullable String subtitle) {
+                this.subtitle = subtitle;
+                return this;
+            }
+
+            public Builder setReadOnly(boolean readOnly) {
+                this.readOnly = readOnly;
+                return this;
+            }
+
+            public Builder setJavaSmaliToggle(boolean javaSmaliToggle) {
+                this.javaSmaliToggle = javaSmaliToggle;
+                return this;
+            }
+
+            public Builder setEnableSharing(boolean enableSharing) {
+                this.enableSharing = enableSharing;
+                return this;
+            }
+
+            public Builder setLastState(Parcelable lastState) {
+                this.lastState = lastState;
+                return this;
+            }
+
+            public Options build() {
+                return new Options(uri, title, subtitle, readOnly, javaSmaliToggle, enableSharing, lastState);
+            }
+        }
     }
 
 

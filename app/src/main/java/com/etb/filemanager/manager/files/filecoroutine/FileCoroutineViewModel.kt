@@ -78,7 +78,10 @@ class FileCoroutineViewModel : ViewModel() {
                     val newPath = path.resolveSibling(newName)
                     moveAtomically(path, newPath)
                     val msg = context.resources.getQuantityString(
-                        R.plurals.files_files_renaming_msg_count_format, paths.size, path.fileName, newPath
+                        R.plurals.files_files_renaming_msg_count_format,
+                        paths.size,
+                        path.fileName,
+                        newPath
                     )
 
                     completedFiles++

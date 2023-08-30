@@ -1,13 +1,11 @@
 package com.etb.filemanager.manager.media.image.viewer
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
-import com.etb.filemanager.R
 import com.etb.filemanager.databinding.FragmentImageViewerDialogBinding
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -35,12 +33,14 @@ class ImageViewerDialogFragment : DialogFragment() {
         _binding = FragmentImageViewerDialogBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onStart() {
         super.onStart()
         val width = (resources.displayMetrics.widthPixels * 0.9).toInt()
         dialog?.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
-        
+
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

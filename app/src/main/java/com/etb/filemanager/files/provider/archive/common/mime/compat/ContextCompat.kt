@@ -2,17 +2,17 @@ package com.etb.filemanager.files.provider.archive.common.mime.compat
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.AttributeSet
-import androidx.annotation.AttrRes
-import androidx.annotation.StyleRes
-import androidx.annotation.StyleableRes
-import androidx.appcompat.widget.TintTypedArray
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
+import android.util.AttributeSet
+import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.StyleRes
+import androidx.annotation.StyleableRes
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.TintTypedArray
 import androidx.core.content.ContextCompat
 import java.util.concurrent.Executor
 import kotlin.contracts.ExperimentalContracts

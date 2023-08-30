@@ -7,9 +7,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.media3.exoplayer.ExoPlayer
 import com.etb.filemanager.files.provider.archive.common.mime.MimeType
-import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeIcon
 import com.etb.filemanager.files.provider.archive.common.mime.isASpecificTypeOfMime
-import com.etb.filemanager.files.provider.archive.common.mime.isSpecificMimeType
 import com.etb.filemanager.manager.media.image.ZoomablePagerImage
 import com.etb.filemanager.manager.media.model.Media
 import com.etb.filemanager.manager.media.video.VideoPlayer

@@ -2,7 +2,6 @@ package com.etb.filemanager.files.provider.archive.common.mime
 
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import android.provider.DocumentsContract
@@ -69,7 +68,9 @@ value class MimeType(val value: String) : Parcelable {
         @JvmField
         val CREATOR: Parcelable.Creator<MimeType> = object : Parcelable.Creator<MimeType> {
             override fun createFromParcel(source: Parcel): MimeType {
-                return MimeType(source.readString() ?: throw IllegalArgumentException("Invalid MimeType value"))
+                return MimeType(
+                    source.readString() ?: throw IllegalArgumentException("Invalid MimeType value")
+                )
             }
 
             override fun newArray(size: Int): Array<MimeType?> {
@@ -79,7 +80,7 @@ value class MimeType(val value: String) : Parcelable {
     }
 
     override fun describeContents(): Int {
-    return 0
+        return 0
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -109,12 +110,14 @@ private val String.isValidMimeType: Boolean
         val indexOfPlus = indexOf('+')
         if (indexOfPlus != -1 && !(indexOfSemicolon != -1 && indexOfPlus > indexOfSemicolon)) {
             if (indexOfPlus !in indexOfSlash + 2
-                until if (indexOfSemicolon != -1) indexOfSemicolon - 1 else length) {
+                until if (indexOfSemicolon != -1) indexOfSemicolon - 1 else length
+            ) {
                 return false
             }
         }
         return true
     }
+
 fun MimeType.isASpecificTypeOfMime(mimeType: MimeType): Boolean = this.value == mimeType.value
 
 fun MimeType.isMedia(): Boolean {

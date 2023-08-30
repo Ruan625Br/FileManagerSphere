@@ -5,23 +5,22 @@ import android.util.Log
 import com.etb.filemanager.manager.files.root.OperationCommand
 import java.io.File
 import java.io.IOException
-import java.nio.file.Files
 
 object DeleteOperation {
 
 
-     fun deleteFilesOrDir(path: String){
+    fun deleteFilesOrDir(path: String) {
         val file = File(path)
-         if (file.exists()){
-             deleteDir(file)
-         }
+        if (file.exists()) {
+            deleteDir(file)
+        }
 
     }
 
-    private fun deleteDir(file: File): Boolean{
+    private fun deleteDir(file: File): Boolean {
         val files = file.listFiles()
-        if (files != null){
-            for (child in files){
+        if (files != null) {
+            for (child in files) {
                 deleteDir(child)
             }
         }
@@ -30,12 +29,12 @@ object DeleteOperation {
 
         try {
             return file.delete()
-        }catch (e: IOException){
+        } catch (e: IOException) {
             Log.e("Operation delete", "Errro: $e")
         }
         try {
             return file.deleteRecursively()
-        }catch (e: IOException){
+        } catch (e: IOException) {
             Log.e("Operation delete", "Errro: $e")
         }
 

@@ -15,7 +15,7 @@ import java.io.File
 
 class ModalBottomSheetAddCategory : BottomSheetDialogFragment() {
 
-     var itemListener: ItemListener? = null
+    var itemListener: ItemListener? = null
     private lateinit var eCategoryName: TextInputLayout
     private lateinit var eCategoryPath: TextInputLayout
     private lateinit var dCategoryName: TextInputEditText

@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.collection.ArrayMap
 import androidx.preference.Preference
 import com.etb.filemanager.R
-import com.etb.filemanager.activity.BaseActivity
 import com.etb.filemanager.activity.SettingsActivity
 import com.etb.filemanager.files.util.LangUtils
 import com.etb.filemanager.settings.preference.PreferenceFragment

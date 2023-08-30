@@ -7,4 +7,4 @@ import kotlinx.parcelize.Parcelize
 data class MediaListInfo(
     val mediaList: List<Media>,
     val currentMedia: Media
-): Parcelable
+) : Parcelable

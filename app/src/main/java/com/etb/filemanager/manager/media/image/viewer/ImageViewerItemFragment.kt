@@ -4,11 +4,9 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -17,8 +15,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
 import com.etb.filemanager.databinding.FragmentImageViewerItemBinding
 import com.google.android.material.imageview.ShapeableImageView
-import com.google.android.material.shape.CornerFamily
-import com.google.android.material.shape.ShapeAppearanceModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -73,23 +69,23 @@ class ImageViewerItemFragment : Fragment() {
                 var imageWidth = bitmap.width
                 var imageHeight = bitmap.height
 
-/*
-                if (imageHeight > imageMaxHeight) {
-                    imageWidth = imageMaxWidth
-                    imageHeight = imageMaxHeight
+                /*
+                                if (imageHeight > imageMaxHeight) {
+                                    imageWidth = imageMaxWidth
+                                    imageHeight = imageMaxHeight
 
-                    val shapeAppearanceModel = ShapeAppearanceModel.builder().setAllCorners(
-                            CornerFamily.ROUNDED,
-                            resources.getDimensionPixelSize(R.dimen.corner_radius_base).toFloat()
-                        ).build()
-                    shapeableImageView.shapeAppearanceModel = shapeAppearanceModel
-                    shapeableImageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                    shapeableImageView.layoutParams.apply {
-                        width = imageMaxWidth
-                        height = imageHeight
-                    }
-                }
-*/
+                                    val shapeAppearanceModel = ShapeAppearanceModel.builder().setAllCorners(
+                                            CornerFamily.ROUNDED,
+                                            resources.getDimensionPixelSize(R.dimen.corner_radius_base).toFloat()
+                                        ).build()
+                                    shapeableImageView.shapeAppearanceModel = shapeAppearanceModel
+                                    shapeableImageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                                    shapeableImageView.layoutParams.apply {
+                                        width = imageMaxWidth
+                                        height = imageHeight
+                                    }
+                                }
+                */
                 Glide.with(requireContext()).load(path).diskCacheStrategy(DiskCacheStrategy.ALL)
                     .apply(
                         RequestOptions().override(imageWidth, imageHeight)

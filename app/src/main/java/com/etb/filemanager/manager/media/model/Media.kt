@@ -37,18 +37,18 @@ data class Media(
             )
         }
 
-         fun createFromFileModel(file: FileModel): Media {
+        fun createFromFileModel(file: FileModel): Media {
             val uri = Paths.get(file.filePath).fileProviderUri
             val mime = FileUtil().getMimeType(uri, null)!!
             val mimeType = MimeType(mime)
-             val id = if (file.id.toString().startsWith("-")) {
-                 file.id.toString().removePrefix("-").toLong()
-             } else {
-                 file.id
-             }
+            val id = if (file.id.toString().startsWith("-")) {
+                file.id.toString().removePrefix("-").toLong()
+            } else {
+                file.id
+            }
 
 
-             Log.i("Media", "Id: $id")
+            Log.i("Media", "Id: $id")
 
             return Media(
                 uri = uri,

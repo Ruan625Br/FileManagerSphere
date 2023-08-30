@@ -24,9 +24,10 @@ class AppearancePreferences : PreferenceFragment() {
 
         val isEnabledDMaterialDesign3 = Preferences.Appearance.isEnabledDMaterialDesign3
         mCurrentTheme = Preferences.Appearance.appTheme
-        val mCurrentTheIndex = if (isEnabledDMaterialDesign3)themesValues.indexOf(mCurrentTheme) else 0
+        val mCurrentTheIndex =
+            if (isEnabledDMaterialDesign3) themesValues.indexOf(mCurrentTheme) else 0
 
-        val appThemeSummary = if (isEnabledDMaterialDesign3)themesEntries[mCurrentTheIndex] else
+        val appThemeSummary = if (isEnabledDMaterialDesign3) themesEntries[mCurrentTheIndex] else
             getString(R.string.material_design_default_theme)
 
 

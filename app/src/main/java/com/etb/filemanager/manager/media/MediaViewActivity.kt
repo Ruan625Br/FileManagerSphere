@@ -44,8 +44,8 @@ import com.etb.filemanager.files.util.LocaleContextWrapper
 import com.etb.filemanager.files.util.toggleOrientation
 import com.etb.filemanager.manager.media.model.Media
 import com.etb.filemanager.manager.media.model.MediaListInfo
-import com.etb.filemanager.ui.theme.FileManagerTheme
 import com.etb.filemanager.manager.media.video.VideoPlayerController
+import com.etb.filemanager.ui.theme.FileManagerTheme
 import com.etb.filemanager.ui.util.Constants
 import com.etb.filemanager.ui.util.Constants.Animation.enterAnimation
 import com.etb.filemanager.ui.util.Constants.Animation.exitAnimation
@@ -71,11 +71,13 @@ class MediaViewActivity : ComponentActivity() {
 
                 Scaffold(modifier = Modifier.fillMaxSize(), content = { paddingValues ->
                     if (mediaListInfo != null) {
-                        MediaViewScreen(mediaListInfo = mediaListInfo!!,
+                        MediaViewScreen(
+                            mediaListInfo = mediaListInfo!!,
                             paddingValues = paddingValues,
                             toggleRotate = ::toggleOrientation,
                             onGoBack = { onBackPressedDispatcher.onBackPressed() },
-                            navigateUp = { finish() },)
+                            navigateUp = { finish() },
+                        )
                     }
                 })
 
@@ -209,11 +211,11 @@ fun MediaViewScreen(
 
     }
     LaunchedEffect(mediaListInfo.mediaList) {
-            updateContent(pagerState.currentPage)
+        updateContent(pagerState.currentPage)
     }
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
-                updateContent(page)
+            updateContent(page)
         }
     }
 

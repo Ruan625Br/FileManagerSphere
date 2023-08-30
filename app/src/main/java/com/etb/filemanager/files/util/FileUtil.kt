@@ -18,6 +18,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
+import java.util.Locale
 
 
 class FileUtil {
@@ -41,7 +42,7 @@ class FileUtil {
         val fileName = path.fileName.toString()
         val dotIndex = fileName.lastIndexOf(".")
         return if (dotIndex > 0 && dotIndex < fileName.length - 1) {
-            fileName.substring(dotIndex + 1).toLowerCase()
+            fileName.substring(dotIndex + 1).lowercase(Locale.getDefault())
         } else {
             ""
         }
@@ -84,12 +85,16 @@ class FileUtil {
             Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING)
         } catch (e: Exception) {
             Log.e("Erro ao renomear", "Erro: ${e.message}")
-            Log.e("File", "sourcePath: $sourcePath\ntargetPath: $targetPath\nnewFileName: $newFileName")
+            Log.e(
+                "File",
+                "sourcePath: $sourcePath\ntargetPath: $targetPath\nnewFileName: $newFileName"
+            )
         }
     }
 
     fun copyTextToClipboard(context: Context, text: String, toast: Boolean) {
-        val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipboardManager =
+            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = ClipData.newPlainText("label", text)
         clipboardManager.setPrimaryClip(clipData)
 
@@ -124,7 +129,8 @@ class FileUtil {
         if (files.isNotEmpty()) {
             val uris = ArrayList<Uri>()
             for (file in files) {
-                val uri = FileProvider.getUriForFile(context, "com.etb.filemanager.fileprovider", file)
+                val uri =
+                    FileProvider.getUriForFile(context, "com.etb.filemanager.fileprovider", file)
                 uris.add(uri)
             }
 
@@ -152,7 +158,11 @@ class FileUtil {
         if (intent.resolveActivity(context.packageManager) != null) {
             context.startActivity(intent)
         } else {
-            Toast.makeText(context, "Nenhum aplicativo encontrado para abrir o arquivo", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                "Nenhum aplicativo encontrado para abrir o arquivo",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -234,7 +244,7 @@ class FileUtil {
         }
     }
 
-     enum class TypeFile() {
+    enum class TypeFile {
         FILE, FOLDER
     }
 }

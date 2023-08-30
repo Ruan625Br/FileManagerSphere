@@ -11,10 +11,8 @@ import com.etb.filemanager.files.provider.archive.common.mime.isMedia
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.nio.file.attribute.BasicFileAttributes
 
 fun getImagesInDirectory(directoryPath: String): List<String> {
     val images = mutableListOf<String>()

@@ -16,15 +16,18 @@ import com.etb.filemanager.files.util.getColorByAttr
 import com.etb.filemanager.files.util.shortAnimTime
 import com.etb.filemanager.files.util.withModulatedAlpha
 import com.etb.filemanager.settings.preference.Preferences
-import com.etb.filemanager.ui.style.IconUtil
 
 
 object CheckableItemBackground {
 
     @SuppressLint("RestrictedApi")
-    fun create(context: Context): Drawable{
+    fun create(context: Context): Drawable {
         val typedValue = TypedValue()
-        val resolved = context.theme.resolveAttribute(com.google.android.material.R.attr.colorOnSecondary, typedValue, true)
+        val resolved = context.theme.resolveAttribute(
+            com.google.android.material.R.attr.colorOnSecondary,
+            typedValue,
+            true
+        )
         val colorOnSecondary = if (resolved) typedValue.data else 0
 
 
@@ -34,22 +37,40 @@ object CheckableItemBackground {
             setExitFadeDuration(shortAnimTime)
             val opacity = Preferences.Interface.selectedFileBackgroundOpacity
             val transparentColor = ColorDrawable(Color.TRANSPARENT)
-            val primaryColor = context.getColorByAttr( com.google.android.material.R.attr.colorPrimaryContainer)
+            val primaryColor =
+                context.getColorByAttr(com.google.android.material.R.attr.colorPrimaryContainer)
             val checkedColor = primaryColor.asColor().withModulatedAlpha(opacity).value
             val normalColor = colorOnSecondary
             val mNormalColor = ColorDrawable(normalColor)
 
-            val backgroundSelected = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.card_radius_normal)!!)
+            val backgroundSelected = DrawableCompat.wrap(
+                ContextCompat.getDrawable(
+                    context,
+                    R.drawable.card_radius_normal
+                )!!
+            )
             DrawableCompat.setTint(backgroundSelected, checkedColor)
 
-            val background = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.card_radius_normal)!!)
+            val background = DrawableCompat.wrap(
+                ContextCompat.getDrawable(
+                    context,
+                    R.drawable.card_radius_normal
+                )!!
+            )
             DrawableCompat.setTint(background, normalColor)
             if (Preferences.Interface.isEnabledRoundedCorners) {
                 addState(intArrayOf(android.R.attr.state_checked), backgroundSelected)
-                addState(intArrayOf(), if (Preferences.Interface.isEnabledTransparentListBackground) transparentColor else background)
-            } else{
+                addState(
+                    intArrayOf(),
+                    if (Preferences.Interface.isEnabledTransparentListBackground) transparentColor else background
+                )
+            } else {
                 addState(intArrayOf(android.R.attr.state_checked), ColorDrawable(checkedColor))
-                addState(intArrayOf(), if (Preferences.Interface.isEnabledTransparentListBackground) transparentColor else mNormalColor)
+                addState(
+                    intArrayOf(),
+                    if (Preferences.Interface.isEnabledTransparentListBackground) transparentColor else mNormalColor
+                )
             }
         }
-}}
+    }
+}

@@ -26,17 +26,15 @@ import java.util.function.IntFunction;
 import java.util.function.Predicate;
 
 
-
 /**
  * ArrayUtils contains some methods that you can call to find out
  * the most efficient increments by which to grow arrays.
  */
 @SuppressWarnings("unused")
 public class ArrayUtils {
+    public static final File[] EMPTY_FILE = new File[0];
     private static final int CACHE_SIZE = 73;
     private static final Object[] sCache = new Object[CACHE_SIZE];
-
-    public static final File[] EMPTY_FILE = new File[0];
 
     private ArrayUtils() { /* cannot be instantiated */ }
 

@@ -9,11 +9,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.LeadingMarginSpan;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +29,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.internal.ViewUtils;
-
-import java.util.Locale;
 
 public final class UiUtils {
     private UiUtils() {
@@ -90,25 +83,6 @@ public final class UiUtils {
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
-
-    /**
-     * Wrapper around {@link androidx.core.view.OnApplyWindowInsetsListener} which also passes the
-     * initial padding/margin set on the view. Used with {@link #doOnApplyWindowInsets(View,
-     * OnApplyWindowInsetsListener)}.
-     */
-    public interface OnApplyWindowInsetsListener {
-
-        /**
-         * When {@link View#setOnApplyWindowInsetsListener(View.OnApplyWindowInsetsListener) set} on a
-         * View, this listener method will be called instead of the view's own {@link
-         * View#onApplyWindowInsets(WindowInsets)} method. The {@code initial*} is the view's
-         * original padding/margin which can be updated and will be applied to the view automatically. This
-         * method should return a new {@link WindowInsetsCompat} with any insets consumed.
-         */
-        WindowInsetsCompat onApplyWindowInsets(View view, WindowInsetsCompat insets, @NonNull Rect initialPadding,
-                                               @Nullable Rect initialMargin);
-    }
-
     @SuppressWarnings("deprecation")
     public static void applyWindowInsetsAsPaddingNoTop(View v) {
         doOnApplyWindowInsets(v, (view, insets, initialPadding, initialMargin) -> {
@@ -148,10 +122,9 @@ public final class UiUtils {
                 return insets;
             }
             ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-            if (!(layoutParams instanceof ViewGroup.MarginLayoutParams)) {
+            if (!(layoutParams instanceof ViewGroup.MarginLayoutParams marginLayoutParams)) {
                 return insets;
             }
-            ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
 
             if (topMargin) {
                 marginLayoutParams.topMargin = initialMargin.top + insets.getSystemWindowInsetTop();
@@ -175,8 +148,7 @@ public final class UiUtils {
     public static void doOnApplyWindowInsets(@NonNull View view, @NonNull OnApplyWindowInsetsListener listener) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         Rect initialMargins;
-        if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
+        if (layoutParams instanceof ViewGroup.MarginLayoutParams marginLayoutParams) {
             // Create a snapshot of the view's margin state.
             initialMargins = new Rect(marginLayoutParams.leftMargin, marginLayoutParams.topMargin,
                     marginLayoutParams.rightMargin, marginLayoutParams.bottomMargin);
@@ -249,5 +221,23 @@ public final class UiUtils {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.TRANSPARENT);
         window.setNavigationBarColor(Color.TRANSPARENT);
+    }
+
+    /**
+     * Wrapper around {@link androidx.core.view.OnApplyWindowInsetsListener} which also passes the
+     * initial padding/margin set on the view. Used with {@link #doOnApplyWindowInsets(View,
+     * OnApplyWindowInsetsListener)}.
+     */
+    public interface OnApplyWindowInsetsListener {
+
+        /**
+         * When {@link View#setOnApplyWindowInsetsListener(View.OnApplyWindowInsetsListener) set} on a
+         * View, this listener method will be called instead of the view's own {@link
+         * View#onApplyWindowInsets(WindowInsets)} method. The {@code initial*} is the view's
+         * original padding/margin which can be updated and will be applied to the view automatically. This
+         * method should return a new {@link WindowInsetsCompat} with any insets consumed.
+         */
+        WindowInsetsCompat onApplyWindowInsets(View view, WindowInsetsCompat insets, @NonNull Rect initialPadding,
+                                               @Nullable Rect initialMargin);
     }
 }

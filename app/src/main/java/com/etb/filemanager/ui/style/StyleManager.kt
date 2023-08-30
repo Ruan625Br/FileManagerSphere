@@ -31,6 +31,7 @@ class StyleManager {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
     }
+
     /**
      * If you are switching from a light theme to a dark theme, it's recommended to call
      * {@link #setDarkTheme} before applying any other dark theme. This can help avoid
@@ -78,6 +79,7 @@ class StyleManager {
         setDarkTheme()
         context.setTheme(R.style.Theme_MaterialYouColors)
     }
+
     private fun enableMaterialDesignTwo(context: Context) {
         setDarkTheme()
         context.setTheme(R.style.AppThemeViolet_Material2_Dark)
@@ -99,7 +101,8 @@ class StyleManager {
             OptionStyle.MATERIAL_DESIGN_TWO -> R.style.AppThemeViolet_Material2_Dark
         }
     }
-    fun resetToDefaultTheme(){
+
+    fun resetToDefaultTheme() {
         setFollowSystemTheme()
     }
 

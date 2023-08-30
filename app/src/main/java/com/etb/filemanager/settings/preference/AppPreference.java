@@ -4,24 +4,16 @@ package com.etb.filemanager.settings.preference;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.net.Uri;
-import android.os.Environment;
-import android.util.ArrayMap;
-import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
+
 import com.etb.filemanager.R;
 import com.etb.filemanager.files.util.ArrayUtils;
 import com.etb.filemanager.files.util.ContextUtils;
-import com.etb.filemanager.files.util.LangUtils;
 import com.etb.filemanager.manager.files.filelist.FileSortOptions;
-import com.etb.filemanager.ui.style.StyleManager;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -29,111 +21,40 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
 public class AppPreference {
-    private static final String PREFERENCE_NAME = "preferences";
-    private static final int PREFERENCE_SKIP = 5;
-
-    @Keep
-    public enum PreferenceKey {
-        //
-        PREF_APP_THEME_STR,
-        PREF_MATERIAL_DESIGN_3_BOOL,
-
-
-        //Interface
-        PREF_ANIM_FILES_LIST_BOOL,
-        PREF_ROUNDED_CORNERS_BOOL,
-        PREF_VIEW_FILE_INFORMATION_STR,
-        PREF_CUSTOM_LOCALE_STR,
-        PREF_TRANSPARENT_LIST_BACKGROUND_BOOL,
-        PREF_SELECTED_FILE_BACKGROUND_OPACITY_STR,
-        PREF_FILE_LIST_MARGINS_STR,
-
-        //Behavior
-        PREF_DEFAULT_FOLDER_STR,
-        PREF_SELECT_FILE_LONG_CLICK_BOOL,
-        PREF_LIST_CATEGORIES_NAME_STR,
-        PREF_LIST_CATEGORIES_PATH_STR,
-        PREF_SHOW_FAST_SCROLL_BOOL,
-
-        //Popup
-        PREF_SORT_BY_STR,
-        PREF_ORDER_FILES_STR,
-        PREF_DIRECTORIES_FIRST_BOOL,
-        PREF_SHOW_HIDDEN_FILE_BOOL,
-        PREF_GRID_TOGGLE_BOOL
-        ;
-
-        private static final String[] sKeys = new String[values().length];
-        @Type
-        private static final int[] sTypes = new int[values().length];
-        private static final List<PreferenceKey> sPrefKeyList = Arrays.asList(values());
-
-        static {
-            String keyStr;
-            int typeSeparator;
-            PreferenceKey[] keyValues = values();
-            for (int i = 0; i < keyValues.length; ++i) {
-                keyStr = keyValues[i].name();
-                typeSeparator = keyStr.lastIndexOf('_');
-                sKeys[i] = keyStr.substring(PREFERENCE_SKIP, typeSeparator).toLowerCase(Locale.ROOT);
-                sTypes[i] = inferType(keyStr.substring(typeSeparator + 1));
-            }
-        }
-        public static int indexOf(PreferenceKey key){
-            return sPrefKeyList.indexOf(key);
-        }
-        public static int indexOf(String key){
-            return ArrayUtils.indexOf(sKeys, key);
-        }
-
-        @Type
-        private static int inferType(@NonNull String typeName) {
-            switch (typeName) {
-                case "BOOL":
-                    return TYPE_BOOLEAN;
-                case "FLOAT":
-                    return TYPE_FLOAT;
-                case "INT":
-                    return TYPE_INTEGER;
-                case "LONG":
-                    return TYPE_LONG;
-                case "STR":
-                    return TYPE_STRING;
-                default:
-                    throw new IllegalArgumentException("Unsupported type.");
-            }
-        }
-    }
-
-    @IntDef(value = {
-            TYPE_BOOLEAN,
-            TYPE_FLOAT,
-            TYPE_INTEGER,
-            TYPE_LONG,
-            TYPE_STRING
-    })
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface Type {
-    }
-
     public static final int TYPE_BOOLEAN = 0;
     public static final int TYPE_FLOAT = 1;
     public static final int TYPE_INTEGER = 2;
     public static final int TYPE_LONG = 3;
     public static final int TYPE_STRING = 4;
-
+    private static final String PREFERENCE_NAME = "preferences";
+    private static final int PREFERENCE_SKIP = 5;
     private static AppPreference sAppPref;
+    @NonNull
+    private final SharedPreferences mPreferences;
+    @NonNull
+    private final SharedPreferences.Editor mEditor;
+    private final Context mContext;
+
+    @SuppressLint("CommitPrefEdits")
+    private AppPreference(@NonNull Context context) {
+        mContext = context;
+        mPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        mEditor = mPreferences.edit();
+        init();
+    }
 
     @NonNull
-    public static AppPreference getInstance(){
-        if (sAppPref == null){
+    public static AppPreference getInstance() {
+        if (sAppPref == null) {
             sAppPref = new AppPreference(ContextUtils.getContext());
         }
         return sAppPref;
     }
 
-    @NonNull static AppPreference getNewInstace(@NonNull Context context){
+    @NonNull
+    static AppPreference getNewInstace(@NonNull Context context) {
         return new AppPreference(context);
     }
 
@@ -178,29 +99,17 @@ public class AppPreference {
         getInstance().setPref(key, value);
     }
 
-    @NonNull
-    private final SharedPreferences mPreferences;
-    @NonNull
-    private final SharedPreferences.Editor mEditor;
-
-    private final Context mContext;
-
-
-    @SuppressLint("CommitPrefEdits")
-    private AppPreference(@NonNull Context context) {
-        mContext = context;
-        mPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        mEditor = mPreferences.edit();
-        init();
-    }
-
     public void setPref(PreferenceKey key, Object value) {
         int index = PreferenceKey.indexOf(key);
-        if (value instanceof Boolean) mEditor.putBoolean(PreferenceKey.sKeys[index], (Boolean) value);
-        else if (value instanceof Float) mEditor.putFloat(PreferenceKey.sKeys[index], (Float) value);
-        else if (value instanceof Integer) mEditor.putInt(PreferenceKey.sKeys[index], (Integer) value);
+        if (value instanceof Boolean)
+            mEditor.putBoolean(PreferenceKey.sKeys[index], (Boolean) value);
+        else if (value instanceof Float)
+            mEditor.putFloat(PreferenceKey.sKeys[index], (Float) value);
+        else if (value instanceof Integer)
+            mEditor.putInt(PreferenceKey.sKeys[index], (Integer) value);
         else if (value instanceof Long) mEditor.putLong(PreferenceKey.sKeys[index], (Long) value);
-        else if (value instanceof String) mEditor.putString(PreferenceKey.sKeys[index], (String) value);
+        else if (value instanceof String)
+            mEditor.putString(PreferenceKey.sKeys[index], (String) value);
         mEditor.apply();
         mEditor.commit();
     }
@@ -282,11 +191,11 @@ public class AppPreference {
     }
 
     @NonNull
-    public Object getDefaultValue(@NonNull PreferenceKey key){
-        switch (key){
+    public Object getDefaultValue(@NonNull PreferenceKey key) {
+        switch (key) {
             case PREF_APP_THEME_STR:
                 return "FOLLOW_SYSTEM";
-              case PREF_DEFAULT_FOLDER_STR:
+            case PREF_DEFAULT_FOLDER_STR:
                 return mContext.getResources().getString(R.string.default_pref_default_folder);
             case PREF_SORT_BY_STR:
                 return FileSortOptions.SortBy.NAME.name();
@@ -324,6 +233,91 @@ public class AppPreference {
                 return false;
         }
         throw new IllegalArgumentException("Pref key not found.");
+    }
+
+    @Keep
+    public enum PreferenceKey {
+        //
+        PREF_APP_THEME_STR,
+        PREF_MATERIAL_DESIGN_3_BOOL,
+
+
+        //Interface
+        PREF_ANIM_FILES_LIST_BOOL,
+        PREF_ROUNDED_CORNERS_BOOL,
+        PREF_VIEW_FILE_INFORMATION_STR,
+        PREF_CUSTOM_LOCALE_STR,
+        PREF_TRANSPARENT_LIST_BACKGROUND_BOOL,
+        PREF_SELECTED_FILE_BACKGROUND_OPACITY_STR,
+        PREF_FILE_LIST_MARGINS_STR,
+
+        //Behavior
+        PREF_DEFAULT_FOLDER_STR,
+        PREF_SELECT_FILE_LONG_CLICK_BOOL,
+        PREF_LIST_CATEGORIES_NAME_STR,
+        PREF_LIST_CATEGORIES_PATH_STR,
+        PREF_SHOW_FAST_SCROLL_BOOL,
+
+        //Popup
+        PREF_SORT_BY_STR,
+        PREF_ORDER_FILES_STR,
+        PREF_DIRECTORIES_FIRST_BOOL,
+        PREF_SHOW_HIDDEN_FILE_BOOL,
+        PREF_GRID_TOGGLE_BOOL;
+
+        private static final String[] sKeys = new String[values().length];
+        @Type
+        private static final int[] sTypes = new int[values().length];
+        private static final List<PreferenceKey> sPrefKeyList = Arrays.asList(values());
+
+        static {
+            String keyStr;
+            int typeSeparator;
+            PreferenceKey[] keyValues = values();
+            for (int i = 0; i < keyValues.length; ++i) {
+                keyStr = keyValues[i].name();
+                typeSeparator = keyStr.lastIndexOf('_');
+                sKeys[i] = keyStr.substring(PREFERENCE_SKIP, typeSeparator).toLowerCase(Locale.ROOT);
+                sTypes[i] = inferType(keyStr.substring(typeSeparator + 1));
+            }
+        }
+
+        public static int indexOf(PreferenceKey key) {
+            return sPrefKeyList.indexOf(key);
+        }
+
+        public static int indexOf(String key) {
+            return ArrayUtils.indexOf(sKeys, key);
+        }
+
+        @Type
+        private static int inferType(@NonNull String typeName) {
+            switch (typeName) {
+                case "BOOL":
+                    return TYPE_BOOLEAN;
+                case "FLOAT":
+                    return TYPE_FLOAT;
+                case "INT":
+                    return TYPE_INTEGER;
+                case "LONG":
+                    return TYPE_LONG;
+                case "STR":
+                    return TYPE_STRING;
+                default:
+                    throw new IllegalArgumentException("Unsupported type.");
+            }
+        }
+    }
+
+    @IntDef(value = {
+            TYPE_BOOLEAN,
+            TYPE_FLOAT,
+            TYPE_INTEGER,
+            TYPE_LONG,
+            TYPE_STRING
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Type {
     }
 
 }

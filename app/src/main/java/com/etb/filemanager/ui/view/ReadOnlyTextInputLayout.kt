@@ -26,26 +26,14 @@ class ReadOnlyTextInputLayout : AppCompatEditText {
     }
 
 
-    override fun getFreezesText(): Boolean {
-        return super.getFreezesText()
-    }
-
-    override fun getDefaultEditable(): Boolean {
-        return super.getDefaultEditable()
-    }
-
-    override fun getDefaultMovementMethod(): MovementMethod {
-        return super.getDefaultMovementMethod()
-    }
-
     override fun setTextIsSelectable(selectable: Boolean) {
         super.setTextIsSelectable(selectable)
 
-        if (selectable){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (selectable) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 focusable = View.FOCUSABLE_AUTO
             }
-        }else{
+        } else {
             isClickable = false
             isFocusable = false
         }
@@ -55,15 +43,15 @@ class ReadOnlyTextInputLayout : AppCompatEditText {
     @Deprecated("Deprecated in Java")
     override fun setBackgroundDrawable(background: Drawable?) {
         var background = background
-        if (isTextSelectable){
-            if (background is RippleDrawable){
+        if (isTextSelectable) {
+            if (background is RippleDrawable) {
                 val content = background.findDrawableByLayerId(0)
-                if (content is MaterialShapeDrawable){
+                if (content is MaterialShapeDrawable) {
                     background = content
                 }
             }
-        }else{
-            if (background is MaterialShapeDrawable){
+        } else {
+            if (background is MaterialShapeDrawable) {
                 background = addRippleEffect(background)
             }
         }
@@ -71,7 +59,7 @@ class ReadOnlyTextInputLayout : AppCompatEditText {
     }
 
     @SuppressLint("ResourceType")
-    private fun addRippleEffect(boxBackground: MaterialShapeDrawable): Drawable{
+    private fun addRippleEffect(boxBackground: MaterialShapeDrawable): Drawable {
         val rippleColor = context.getColorStateList(androidx.appcompat.R.attr.colorControlHighlight)
         val mask = MaterialShapeDrawable(boxBackground.shapeAppearanceModel)
             .apply { setText(Color.WHITE) }

@@ -58,7 +58,7 @@ class ModalBottomSheetCompress : BottomSheetDialogFragment() {
         autoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
             val selectedItem = parent.getItemAtPosition(position) as String
             extension = selectedItem
-             compressionType = when (position) {
+            compressionType = when (position) {
                 0 -> CompressionType.ZIP
                 1 -> CompressionType.SEVENZ
                 2 -> CompressionType.TAR
@@ -71,9 +71,9 @@ class ModalBottomSheetCompress : BottomSheetDialogFragment() {
 
 
         btnCompress.setOnClickListener {
-                if (!eInputEditText.text.isNullOrEmpty()){
-                    compressFiles()
-                }
+            if (!eInputEditText.text.isNullOrEmpty()) {
+                compressFiles()
+            }
             dismiss()
         }
 
@@ -96,8 +96,8 @@ class ModalBottomSheetCompress : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "ModalBottomSheetCompress"
-         const val ARG_CURRENT_PATH = "argCurrentPath"
-         const val ARG_PATHS = "argPaths"
+        const val ARG_CURRENT_PATH = "argCurrentPath"
+        const val ARG_PATHS = "argPaths"
 
         @JvmStatic
         fun newInstance(currentPath: String, paths: List<String>) {

@@ -27,7 +27,7 @@ android {
         }
     }
 
-    buildFeatures{
+    buildFeatures {
         aidl true
         buildConfig true
         viewBinding true
@@ -87,11 +87,10 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
     implementation 'me.zhanghai.android.fastscroll:library:1.2.0'
-
 
 
     // tests
@@ -116,7 +115,7 @@ dependencies {
 
     // Apache Commons IO
     implementation 'commons-io:commons-io:2.11.0'
-    implementation 'org.apache.commons:commons-compress:1.20'
+    implementation 'org.apache.commons:commons-compress:1.21'
 
     // https://mvnrepository.com/artifact/net.sf.sevenzipjbinding/sevenzipjbinding
     implementation("net.sf.sevenzipjbinding:sevenzipjbinding:16.02-2.01")
@@ -145,8 +144,8 @@ dependencies {
 
     //ExoPlayer
 
-    implementation "androidx.media3:media3-exoplayer:1.1.0"
-    implementation "androidx.media3:media3-ui:1.1.0"
+    implementation "androidx.media3:media3-exoplayer:1.1.1"
+    implementation "androidx.media3:media3-ui:1.1.1"
 
     //zoomable
 

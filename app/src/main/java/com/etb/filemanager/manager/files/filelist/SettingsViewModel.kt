@@ -18,7 +18,8 @@ class SettingsViewModel(context: Context) : ViewModel() {
 
 
         val newShowHiddenFiles = !showHiddenFiles
-        sharedPopupSettingsActionSort.edit().putBoolean("settings_action_show_hidden_files", newShowHiddenFiles).apply()
+        sharedPopupSettingsActionSort.edit()
+            .putBoolean("settings_action_show_hidden_files", newShowHiddenFiles).apply()
 
 
         _settingsState.value = SettingsState(newShowHiddenFiles)
@@ -26,7 +27,7 @@ class SettingsViewModel(context: Context) : ViewModel() {
         Settings.FILE_LIST_SHOW_HIDDEN_FILES = newShowHiddenFiles
     }
 
-     fun getActionShowHiddenFiles(): Boolean {
+    fun getActionShowHiddenFiles(): Boolean {
         return sharedPopupSettingsActionSort.getBoolean("settings_action_show_hidden_files", false)
     }
 }

@@ -20,7 +20,7 @@ class SelectPreferenceUtils {
 
     }
 
-    fun sendFileInfo(currentPath: String){
+    fun sendFileInfo(currentPath: String) {
         listener.onFileInfoReceived(currentPath)
     }
 
@@ -28,15 +28,17 @@ class SelectPreferenceUtils {
         val sharedPopupSettingsActionSort: SharedPreferences =
             context.getSharedPreferences("sharedPopupSettingsActionSort", Context.MODE_PRIVATE)
 
-        return  sharedPopupSettingsActionSort.getInt("settings_action_sort_item_selected", 0)
+        return sharedPopupSettingsActionSort.getInt("settings_action_sort_item_selected", 0)
     }
 
     fun getActionSortFolderFirst(context: Context): Boolean {
         val sharedPopupSettingsActionSort: SharedPreferences =
             context.getSharedPreferences("sharedPopupSettingsActionSort", Context.MODE_PRIVATE)
-        return sharedPopupSettingsActionSort.getBoolean("settings_action_sort_directories_first", false)
+        return sharedPopupSettingsActionSort.getBoolean(
+            "settings_action_sort_directories_first",
+            false
+        )
     }
-
 
 
     fun sortFilesBy(position: Int, fileModels: MutableList<FileModel>) {
@@ -46,12 +48,13 @@ class SelectPreferenceUtils {
             2 -> sortFilesByFileType(fileModels)
         }
     }
+
     fun sortFilesAuto(fileModels: MutableList<FileModel>, context: Context) {
         val position = getItemSelectedActionSort(context)
 
-        if (getActionSortFolderFirst(context)){
+        if (getActionSortFolderFirst(context)) {
             sortFilesByFolderFirst(position, fileModels)
-        }else{
+        } else {
             when (position) {
                 0 -> sortFilesAlphabetically(fileModels)
                 1 -> sortFilesByFileSize(fileModels)
@@ -63,7 +66,6 @@ class SelectPreferenceUtils {
 
     private fun sortFilesByFileSize(fileModels: MutableList<FileModel>) {
         fileModels.sortWith(compareByDescending { it.fileSize })
-
 
 
     }
@@ -78,12 +80,13 @@ class SelectPreferenceUtils {
         fileModels.sortWith(compareBy({ it.isDirectory }, { getFileSortingCriteria(it, position) }))
     }
 
-    private fun getFileSortingCriteria(fileModel: FileModel, position: Int): Comparable<*>? = when (position) {
-        0 -> fileModel.fileName
-        1 -> fileModel.fileExtension
-        2 -> fileModel.fileSize
-        else -> null
-    }
+    private fun getFileSortingCriteria(fileModel: FileModel, position: Int): Comparable<*>? =
+        when (position) {
+            0 -> fileModel.fileName
+            1 -> fileModel.fileExtension
+            2 -> fileModel.fileSize
+            else -> null
+        }
 
 
     private fun sortFilesAlphabetically(fileModels: MutableList<FileModel>) {

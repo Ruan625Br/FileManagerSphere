@@ -3,7 +3,6 @@ package com.etb.filemanager.files.util
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Build
 import android.os.LocaleList
@@ -17,7 +16,8 @@ class LocaleContextWrapper(base: Context) : ContextWrapper(base) {
             val language = Preferences.Interface.language
             val systemLocale = Locale(getSystemLanguage())
             Log.i("TAGGG", "TAG: $language")
-            val mLocale = if (language == LangUtils.LANG_AUTO) systemLocale else createLocale(language)
+            val mLocale =
+                if (language == LangUtils.LANG_AUTO) systemLocale else createLocale(language)
             val config = context.resources.configuration
             @SuppressLint("ObsoleteSdkInt")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

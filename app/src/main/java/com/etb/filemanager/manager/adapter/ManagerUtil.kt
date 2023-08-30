@@ -1,14 +1,12 @@
 package com.etb.filemanager.manager.adapter
 
-import java.util.*
+import java.util.Stack
 
 class ManagerUtil {
 
     private var pathStack = Stack<String>()
 
     private val basePath = "/storage/emulated/0"
-
-
 
 
     fun getPreviousPath(): String {
@@ -27,6 +25,7 @@ class ManagerUtil {
             return basePath
         }
     }
+
     fun addToPathStack(path: String) {
         pathStack.push(path)
     }

@@ -2,7 +2,6 @@ package com.etb.filemanager.data.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.nio.file.Path
 
 @Entity(tableName = "file_items")
 data class FileItemEntity(

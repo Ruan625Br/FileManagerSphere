@@ -15,20 +15,28 @@ import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
 import com.etb.filemanager.manager.util.FileUtils
 import java.nio.file.Paths
 
-class CategoryFileModelAdapter(private var listener: ItemListener, private var categoryFileModel: List<CategoryFileModel>, private val mContext: Context) :
+class CategoryFileModelAdapter(
+    private var listener: ItemListener,
+    private var categoryFileModel: List<CategoryFileModel>,
+    private val mContext: Context
+) :
     RecyclerView.Adapter<CategoryFileModelAdapter.ViewHolder>() {
 
     private val fileUtils: FileUtils = FileUtils.getInstance()
     private lateinit var selectPreferenceUtils: SelectPreferenceUtils
     private lateinit var popupSettings: PopupSettingsListener
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryFileModelAdapter.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.category_file_item, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.category_file_item, parent, false)
 
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: CategoryFileModelAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val categoryViewFileModel = categoryFileModel[position]
         val path = Paths.get(categoryViewFileModel.path)
 
@@ -36,7 +44,7 @@ class CategoryFileModelAdapter(private var listener: ItemListener, private var c
         holder.itemIcon.setImageResource(categoryViewFileModel.icon)
         holder.itemTitle.text = categoryViewFileModel.title
 
-        holder.itemCategory.setOnClickListener{
+        holder.itemCategory.setOnClickListener {
             listener.openFileCategory(path)
         }
     }
@@ -46,9 +54,9 @@ class CategoryFileModelAdapter(private var listener: ItemListener, private var c
     }
 
     class ViewHolder(itemFileView: View) : RecyclerView.ViewHolder(itemFileView) {
-             val itemIcon = itemFileView.findViewById<ImageView>(R.id.imageView)
-             val itemTitle = itemFileView.findViewById<TextView>(R.id.item_title)
-             val itemCategory = itemFileView.findViewById<LinearLayout>(R.id.itemCategory)
+        val itemIcon = itemFileView.findViewById<ImageView>(R.id.imageView)
+        val itemTitle = itemFileView.findViewById<TextView>(R.id.item_title)
+        val itemCategory = itemFileView.findViewById<LinearLayout>(R.id.itemCategory)
 
     }
 

@@ -14,10 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PauseCircleFilled
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.PlayCircleFilled
-import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.ScreenRotation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton

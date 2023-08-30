@@ -19,7 +19,11 @@ class MaterialDialogUtils {
 
     @SuppressLint("InflateParams", "SuspiciousIndentation")
     fun createBasicMaterial(
-        title: String, text: String, textPositiveButton: String, context: Context, callback: (DialogResult) -> Unit
+        title: String,
+        text: String,
+        textPositiveButton: String,
+        context: Context,
+        callback: (DialogResult) -> Unit
     ) {
         val inflater = LayoutInflater.from(context)
         val dialogView = inflater.inflate(R.layout.layout_basic_dialog, null)
@@ -90,10 +94,10 @@ class MaterialDialogUtils {
                         R.id.sevenZRadio -> "7z"
                         else -> throw AssertionError(typeId)
                     }
-                callback(DialogInfoResult(true))
+                    callback(DialogInfoResult(true))
 
 
-            }
+                }
         mDialog.setNegativeButton(R.string.dialog_cancel) { _, _ ->
             callback(DialogInfoResult(false))
         }

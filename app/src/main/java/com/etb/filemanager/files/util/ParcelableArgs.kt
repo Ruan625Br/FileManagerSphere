@@ -17,7 +17,6 @@ import kotlinx.parcelize.WriteWith
 import kotlin.reflect.KClass
 
 
-
 interface ParcelableArgs : Parcelable
 
 fun <Args : ParcelableArgs> Bundle.putArgs(args: Args, argsClass: KClass<Args>): Bundle {

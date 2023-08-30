@@ -1,10 +1,8 @@
 package com.etb.filemanager.files.provider.archive.common.properties
 
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.etb.filemanager.manager.files.filelist.TypeOperation
 
 class PropertiesViewModel : ViewModel() {
 
@@ -14,7 +12,6 @@ class PropertiesViewModel : ViewModel() {
     fun addNewTab(title: String) {
         _tabTitleLiveData.value = title
     }
-
 
 
 }

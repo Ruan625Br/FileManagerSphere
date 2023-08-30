@@ -19,10 +19,10 @@ abstract class AnimatedListAdapter<T, VH : RecyclerView.ViewHolder>(
     private val stopAnimationHandler = Handler(Looper.getMainLooper())
     private val stopAnimationRunnable = Runnable { stopAnimation() }
 
-    private val clearAnimationListener = object : RecyclerView.OnScrollListener(){
+    private val clearAnimationListener = object : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
-           clearAnimation()
+            clearAnimation()
         }
     }
 
@@ -40,14 +40,14 @@ abstract class AnimatedListAdapter<T, VH : RecyclerView.ViewHolder>(
         this.recyclerView = null
     }
 
-    override fun refresh(){
+    override fun refresh() {
         resetAnimation()
         super.refresh()
     }
 
-    protected fun bindViewHolderAnimation(holder: VH){
+    protected fun bindViewHolderAnimation(holder: VH) {
         holder.itemView.clearAnimation()
-        if (isAnimating){
+        if (isAnimating) {
             val animation = holder.itemView.context.getAnimation(R.anim.anim_file_list)
                 .apply { startOffset = animationStartOffset.toLong() }
             animationStartOffset += ANIMATION_STAGGER_MILLIS
@@ -85,8 +85,8 @@ abstract class AnimatedListAdapter<T, VH : RecyclerView.ViewHolder>(
     protected open val isAnimationEnabled: Boolean
         get() = true
 
-    companion object{
-        private const val  ANIMATION_STAGGER_MILLIS = 20
+    companion object {
+        private const val ANIMATION_STAGGER_MILLIS = 20
     }
 
 

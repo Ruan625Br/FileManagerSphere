@@ -1,7 +1,5 @@
 package com.etb.filemanager.files.util
 
-import com.etb.filemanager.files.provider.archive.common.mime.compat.checkSelfPermissionCompat
-
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -17,6 +15,7 @@ import androidx.annotation.IntegerRes
 import androidx.annotation.InterpolatorRes
 import androidx.annotation.PluralsRes
 import androidx.fragment.app.Fragment
+import com.etb.filemanager.files.provider.archive.common.mime.compat.checkSelfPermissionCompat
 
 
 fun Fragment.checkSelfPermission(permission: String) =
@@ -97,7 +96,6 @@ val Fragment.mediumAnimTime
 
 val Fragment.longAnimTime
     get() = requireContext().longAnimTime
-
 
 
 fun Fragment.startActivitySafe(intent: Intent, options: Bundle? = null) {

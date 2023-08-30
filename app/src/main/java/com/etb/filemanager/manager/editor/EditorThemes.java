@@ -3,20 +3,22 @@ package com.etb.filemanager.manager.editor;
 
 import android.content.Context;
 import android.graphics.Color;
-
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.core.graphics.ColorUtils;
 
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.elevation.SurfaceColors;
+
+import org.eclipse.tm4e.core.registry.IThemeSource;
+
 import io.github.rosemoe.sora.lang.styling.color.EditorColor;
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
-import org.eclipse.tm4e.core.registry.IThemeSource;
 
 
 public final class EditorThemes {
@@ -24,7 +26,7 @@ public final class EditorThemes {
 
     @NonNull
     public static EditorColorScheme getColorScheme(@NonNull Context context) {
-        return  getDarkScheme(context);
+        return getDarkScheme(context);
     }
 
     @NonNull

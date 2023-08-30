@@ -23,6 +23,7 @@ class IconUtil {
 
         return iconFolder
     }
+
     @SuppressLint("UseCompatLoadingForDrawables")
     fun getPreviewImage(context: Context): Drawable {
         val colorPrimaryInverse = colorUtil.getColorPrimaryInverse(context)
@@ -31,6 +32,7 @@ class IconUtil {
 
         return iconFolder
     }
+
     @SuppressLint("UseCompatLoadingForDrawables")
     fun getPreviewVideo(context: Context): Drawable {
         val colorPrimaryInverse = colorUtil.getColorPrimaryInverse(context)
@@ -53,6 +55,7 @@ class IconUtil {
     fun getBorderPreview(context: Context): Drawable {
         return context.getDrawable(R.drawable.background_border)!!
     }
+
     @SuppressLint("UseCompatLoadingForDrawables")
     fun getBorderNormal(context: Context): Drawable {
         return context.getDrawable(R.drawable.background_icon_item)!!
@@ -69,7 +72,11 @@ class IconUtil {
     }
 
 
-    suspend fun getBitmapPreviewFromPath(filePath: String, targetWidth: Int, targetHeight: Int): Bitmap? {
+    suspend fun getBitmapPreviewFromPath(
+        filePath: String,
+        targetWidth: Int,
+        targetHeight: Int
+    ): Bitmap? {
         return withContext(Dispatchers.IO) {
             try {
                 val options = BitmapFactory.Options().apply {
@@ -77,7 +84,12 @@ class IconUtil {
                 }
                 BitmapFactory.decodeFile(filePath, options)
 
-                val scaleFactor = calculateScaleFactor(options.outWidth, options.outHeight, targetWidth, targetHeight)
+                val scaleFactor = calculateScaleFactor(
+                    options.outWidth,
+                    options.outHeight,
+                    targetWidth,
+                    targetHeight
+                )
 
                 val previewOptions = BitmapFactory.Options().apply {
                     inSampleSize = scaleFactor
@@ -92,7 +104,12 @@ class IconUtil {
         }
     }
 
-    suspend fun getPreview(optionFile: OptionFile, context: Context, filePath: String, imageView: ImageView) {
+    suspend fun getPreview(
+        optionFile: OptionFile,
+        context: Context,
+        filePath: String,
+        imageView: ImageView
+    ) {
         when (optionFile) {
             OptionFile.IMAGE -> loadImagePreview(context, filePath, 50, 50, imageView)
             OptionFile.VIDEO -> loadVideoPreview(context, imageView, filePath)
@@ -114,7 +131,12 @@ class IconUtil {
         }
     }
 
-    fun calculateScaleFactor(imageWidth: Int, imageHeight: Int, targetWidth: Int, targetHeight: Int): Int {
+    fun calculateScaleFactor(
+        imageWidth: Int,
+        imageHeight: Int,
+        targetWidth: Int,
+        targetHeight: Int
+    ): Int {
         var scaleFactor = 1
 
         if (imageWidth > targetWidth || imageHeight > targetHeight) {
@@ -158,7 +180,7 @@ class IconUtil {
     }
 
 
-    enum class OptionFile() {
+    enum class OptionFile {
         IMAGE,
         VIDEO
     }

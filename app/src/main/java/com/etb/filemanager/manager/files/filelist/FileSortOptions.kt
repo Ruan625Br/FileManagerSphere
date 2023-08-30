@@ -10,7 +10,7 @@ data class FileSortOptions(
     val sortBy: SortBy,
     val order: Order,
     val isDirectoriesFirst: Boolean
-): Parcelable {
+) : Parcelable {
     fun createComparator(): Comparator<FileModel> {
         return compareBy<FileModel> { file ->
             NAME_UNIMPORTANT_PREFIXES.any { prefix -> file.fileName.startsWith(prefix) }
@@ -35,9 +35,11 @@ data class FileSortOptions(
             }
         }
     }
+
     companion object {
         private val NAME_UNIMPORTANT_PREFIXES = listOf(".", "#")
     }
+
     enum class SortBy {
         NAME,
         TYPE,

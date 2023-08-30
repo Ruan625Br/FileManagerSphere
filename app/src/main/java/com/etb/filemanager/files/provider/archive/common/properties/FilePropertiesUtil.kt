@@ -21,8 +21,6 @@ import java.util.concurrent.TimeUnit
 class FilePropertiesUtil {
 
 
-
-
     private fun addTabTitle(title: String) {
         HomeFragment().propertiesViewModel.addNewTab(title)
     }
@@ -43,7 +41,7 @@ class FilePropertiesUtil {
         }
     }
 
-   private fun getFileMimeType(mPath: String): String? {
+    private fun getFileMimeType(mPath: String): String? {
         val path: Path = Paths.get(mPath)
         val mimeType: String?
         try {
@@ -72,7 +70,7 @@ class FilePropertiesUtil {
     }
 
     @SuppressLint("SuspiciousIndentation")
-    fun getImageProperties(fileItem: FileModel, mediaType: MediaType): Fragment{
+    fun getImageProperties(fileItem: FileModel, mediaType: MediaType): Fragment {
         val bitmap: Bitmap = BitmapFactory.decodeFile(fileItem.filePath)
         val width = bitmap.width
         val height = bitmap.height
@@ -88,13 +86,14 @@ class FilePropertiesUtil {
         addTabTitle("Imagem")
         return BasicPropertiesFragment.newInstance("null", "null", imageProperties)
     }
-    fun getVideoProperties(fileItem: FileModel, mediaType: MediaType): Fragment{
+
+    fun getVideoProperties(fileItem: FileModel, mediaType: MediaType): Fragment {
         val bitmap: Bitmap = BitmapFactory.decodeFile(fileItem.filePath)
         val width = bitmap.width
         val height = bitmap.height
 
         val dimension = "$width x $height"
-       val format = bitmap.config
+        val format = bitmap.config
 
         val videoProperties = mutableListOf<FileProperties>()
 
@@ -108,18 +107,18 @@ class FilePropertiesUtil {
         return BasicPropertiesFragment.newInstance("null", "null", videoProperties)
     }
 
-    fun getBasicProperties(fileItem: FileModel): Fragment{
+    fun getBasicProperties(fileItem: FileModel): Fragment {
         addTabTitle("Básico")
         val mFile = File(fileItem.filePath)
         val fSize = FileUtils.getInstance().getFileSizeFormatted(mFile.length())
         val fileSize: String
         val fileTitle: String
-        if (fileItem.isDirectory){
+        if (fileItem.isDirectory) {
 
             val items = mFile.list()?.size
             fileTitle = "Conteúdo"
             fileSize = "$items itens"
-        } else{
+        } else {
             fileTitle = "Tamanho"
             fileSize = fSize
         }
@@ -129,7 +128,12 @@ class FilePropertiesUtil {
         basicProperties.add(FileProperties("Caminho", fileItem.filePath))
         basicProperties.add(FileProperties("Tipo", getFileMimeType(fileItem.filePath).toString()))
         basicProperties.add(FileProperties(fileTitle, fileSize))
-        basicProperties.add(FileProperties("Última Modificação", FileUtils.getInstance().getFormatDateFile(fileItem.filePath, false)))
+        basicProperties.add(
+            FileProperties(
+                "Última Modificação",
+                FileUtils.getInstance().getFormatDateFile(fileItem.filePath, false)
+            )
+        )
 
         addTabTitle("Básico")
         return BasicPropertiesFragment.newInstance("null", "null", basicProperties)
@@ -142,7 +146,7 @@ class FilePropertiesUtil {
     }
 }
 
-class PropertiesFragment(){
+class PropertiesFragment {
 
     fun getFragmentPropriedades(position: Int, fileItem: FileModel): Fragment? {
         return when (position) {

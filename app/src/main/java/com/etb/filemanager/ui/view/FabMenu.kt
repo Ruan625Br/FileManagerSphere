@@ -1,13 +1,11 @@
 package com.etb.filemanager.ui.view
 
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.AnimationUtils
 import com.etb.filemanager.R
-import com.etb.filemanager.manager.util.FileUtils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
@@ -79,7 +77,7 @@ class FabMenu(
         mFab!!.startAnimation(
             AnimationUtils.loadAnimation(mContext, R.anim.anim_fab_rotate_backward)
         )
-        mFab!!.setExpanded(true)
+        mFab!!.isExpanded = true
         mIsOpen = true
         //  val item_create_file = (mContext as Activity?)!!.findViewById<View>(R.id.action_create_file)
 
@@ -90,13 +88,19 @@ class FabMenu(
     }
 
     private fun close() {
-        mFab!!.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_fab_rotate_forward))
-        mFab!!.setExpanded(false)
+        mFab!!.startAnimation(
+            AnimationUtils.loadAnimation(
+                mContext,
+                R.anim.anim_fab_rotate_forward
+            )
+        )
+        mFab!!.isExpanded = false
         mIsOpen = false
 
 
     }
-    private fun createDialog(){
+
+    private fun createDialog() {
 
     }
 
@@ -105,7 +109,7 @@ class FabMenu(
 
         fun getInstance(): FabMenu {
             if (instance == null) {
-                instance = FabMenu.instance
+                instance = instance
             }
             return instance!!
         }

@@ -2,23 +2,22 @@ package com.etb.filemanager.interfaces.manager
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
 import com.etb.filemanager.manager.adapter.FileModel
 
 class FileAdapterListenerUtil {
-     private lateinit var  listener: FileAdapterListener
-     private lateinit var context: Context
+    private lateinit var listener: FileAdapterListener
+    private lateinit var context: Context
 
-    fun setListener(mListener: FileAdapterListener, mContext: Context){
+    fun setListener(mListener: FileAdapterListener, mContext: Context) {
         listener = mListener
         context = mContext
     }
 
-    fun addItemOnLongClick(item: FileModel, isActionMode: Boolean){
-         listener.onLongClickListener(item, isActionMode)
+    fun addItemOnLongClick(item: FileModel, isActionMode: Boolean) {
+        listener.onLongClickListener(item, isActionMode)
     }
 
-    fun addItemClick(item: FileModel, path: String, isDirectory: Boolean){
+    fun addItemClick(item: FileModel, path: String, isDirectory: Boolean) {
         listener.onItemClick(item, path, isDirectory)
     }
 

@@ -1,9 +1,5 @@
 package com.etb.filemanager.files.util
 
-import com.etb.filemanager.manager.adapter.FileModel
-import kotlinx.parcelize.WriteWith
-import kotlin.reflect.KMutableProperty1
-
 /*
  * Copyright (c) 2023 Hai Zhang <dreaming.in.code.zh@gmail.com>
  * All Rights Reserved.

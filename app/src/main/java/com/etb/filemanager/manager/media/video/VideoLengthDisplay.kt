@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.etb.filemanager.manager.media.model.Media
 import com.etb.filemanager.ui.util.advancedShadow
@@ -32,7 +31,7 @@ fun VideoLengthDisplay(modifier: Modifier = Modifier, media: Media) {
             ),
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         Text(
             modifier = Modifier,
             text = "Teste",
@@ -42,14 +41,15 @@ fun VideoLengthDisplay(modifier: Modifier = Modifier, media: Media) {
         Spacer(modifier = Modifier.size(2.dp))
         Image(
             modifier = Modifier
-            .size(16.dp)
-            .advancedShadow(
-                cornersRadius = 2.dp,
-                alpha = 0.1f,
-                offsetX = (-2).dp
-            ),
+                .size(16.dp)
+                .advancedShadow(
+                    cornersRadius = 2.dp,
+                    alpha = 0.1f,
+                    offsetX = (-2).dp
+                ),
             imageVector = Icons.Rounded.PlayArrow,
             colorFilter = ColorFilter.tint(color = Color.White),
-            contentDescription = "Video")
+            contentDescription = "Video"
+        )
     }
 }

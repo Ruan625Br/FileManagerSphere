@@ -12,7 +12,6 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.AttrRes
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.text.set
 import com.google.android.material.shape.MaterialShapeDrawable
 
 class ReadOnlyEditText : AppCompatEditText {
@@ -38,14 +37,6 @@ class ReadOnlyEditText : AppCompatEditText {
         super.setText(text, type)
 
 
-
-    }
-
-    override fun getText(): Editable? {
-        return super.getText()
-    }
-    override fun getEditableText(): Editable {
-        return super.getEditableText()
     }
 
     override fun setTextIsSelectable(selectable: Boolean) {

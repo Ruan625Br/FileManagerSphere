@@ -1,7 +1,6 @@
 package com.etb.filemanager.manager.files.ui
 
 
-
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
 

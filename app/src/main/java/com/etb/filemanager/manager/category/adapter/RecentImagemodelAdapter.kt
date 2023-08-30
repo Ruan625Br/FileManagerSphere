@@ -1,7 +1,6 @@
 package com.etb.filemanager.manager.category.adapter
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,20 +11,27 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
 import com.etb.filemanager.interfaces.manager.ItemListener
-import com.etb.filemanager.manager.util.FileUtils
 import java.nio.file.Paths
 
-class RecentImagemodelAdapter(private var itemListener: ItemListener, private var recentImageModel: List<RecentImageModel>, private val mContext: Context) :
+class RecentImagemodelAdapter(
+    private var itemListener: ItemListener,
+    private var recentImageModel: List<RecentImageModel>,
+    private val mContext: Context
+) :
     RecyclerView.Adapter<RecentImagemodelAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentImagemodelAdapter.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.recent_image_item, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.recent_image_item, parent, false)
 
         return ViewHolder(view)
     }
 
 
-    override fun onBindViewHolder(holder: RecentImagemodelAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val recentImageViewModel = recentImageModel[position]
         val imagePath = recentImageViewModel.imagePath
         val mPath = Paths.get(imagePath)

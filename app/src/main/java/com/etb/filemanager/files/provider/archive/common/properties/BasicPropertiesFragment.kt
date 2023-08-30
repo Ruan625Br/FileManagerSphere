@@ -27,7 +27,7 @@ private const val ARG_FILE_PROPERTIES = "fileProperties"
  * create an instance of this fragment.
  * teste
  */
-class BasicPropertiesFragment() : Fragment() {
+class BasicPropertiesFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -71,7 +71,13 @@ class BasicPropertiesFragment() : Fragment() {
 
     fun addListProperties(fileBasicProperties: MutableList<FileProperties>) {
         for (properties in fileBasicProperties) {
-            addProperties(properties.title, properties.property, properties.isMedia, properties.mediaType, properties.mediaPath)
+            addProperties(
+                properties.title,
+                properties.property,
+                properties.isMedia,
+                properties.mediaType,
+                properties.mediaPath
+            )
         }
     }
 
@@ -95,7 +101,8 @@ class BasicPropertiesFragment() : Fragment() {
         val inflaterMedia = LayoutInflater.from(requireContext())
 
         val filePropertiesItem = inflater.inflate(R.layout.file_properties_item, null)
-        val filePropertiesItemMedia = inflaterMedia.inflate(R.layout.file_properties_item_media, null)
+        val filePropertiesItemMedia =
+            inflaterMedia.inflate(R.layout.file_properties_item_media, null)
 
         val tvTitle = filePropertiesItem.findViewById<TextView>(R.id.tvTitle)
         val tvText = filePropertiesItem.findViewById<TextView>(R.id.tvText)
@@ -120,14 +127,19 @@ class BasicPropertiesFragment() : Fragment() {
 
     private fun loadImage(path: String, imageView: ImageView) {
         Glide.with(requireContext()).load(path).diskCacheStrategy(DiskCacheStrategy.ALL)
-            .apply(RequestOptions().override(50, 50)).apply(RequestOptions().placeholder(R.drawable.ic_image))
+            .apply(RequestOptions().override(50, 50))
+            .apply(RequestOptions().placeholder(R.drawable.ic_image))
             .into(imageView)
 
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: String, param2: String, fileProperties: MutableList<FileProperties>) =
+        fun newInstance(
+            param1: String,
+            param2: String,
+            fileProperties: MutableList<FileProperties>
+        ) =
             BasicPropertiesFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)

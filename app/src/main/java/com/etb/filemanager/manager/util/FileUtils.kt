@@ -1,13 +1,10 @@
 package com.etb.filemanager.manager.util
 
 import android.annotation.SuppressLint
-import android.content.ContentUris
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.provider.MediaStore
-import android.util.Log
 import android.webkit.MimeTypeMap
-import com.etb.filemanager.R
 import com.etb.filemanager.manager.category.adapter.RecentImageModel
 import com.etb.filemanager.settings.preference.PopupSettings
 import com.etb.filemanager.ui.style.ColorUtil
@@ -63,7 +60,7 @@ class FileUtils {
             appInfo.sourceDir = apkFilePath
             appInfo.publicSourceDir = apkFilePath
             return appInfo.loadIcon(pm)
-        } catch (e: Exception){
+        } catch (e: Exception) {
 
             return iconUtil.getIconFolder(context)
         }
@@ -126,8 +123,8 @@ class FileUtils {
         return when {
             fileIsApk(file) -> getIconApk(context, file.absolutePath)
             fileIsArchive(file) -> iconUtil.getIconArchive(context)
-           // isImage(file) -> iconUtil.getDrawablePreviewFromPath(context, file.absolutePath, 29, 30)
-          //  isVideo(file) -> iconUtil.getVideoPreviewFromPath(context, file.absolutePath)
+            // isImage(file) -> iconUtil.getDrawablePreviewFromPath(context, file.absolutePath, 29, 30)
+            //  isVideo(file) -> iconUtil.getVideoPreviewFromPath(context, file.absolutePath)
             else -> iconUtil.getIconFolder(context)
         }
     }
@@ -142,51 +139,59 @@ class FileUtils {
         return isArchive(fileExtension)
     }
 
-    private fun isImage(file: File): Boolean{
+    private fun isImage(file: File): Boolean {
         val fileExtension = getFileExtension(file)
         return fileExtension in listOf("png", "jpg", "jpeg")
     }
 
-    private fun isVideo(file: File): Boolean{
+    private fun isVideo(file: File): Boolean {
         val fileExtension = getFileExtension(file)
         return fileExtension in listOf("mp4")
     }
 
 
-/*
-        fun getFileIconByPath(context: Context, imagePath: String): Drawable? {
-            val file = File(imagePath)
-            if (file.exists() && file.isFile) {
-                val mimeType = getMimeType(imagePath)
-                return getDrawableForMimeType(context, mimeType)
-            }
-            return null
-        }*/
-
-        private fun getMimeType(filePath: String): String? {
-            val extension = MimeTypeMap.getFileExtensionFromUrl(filePath)
-            return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-        }
-
-       /* private fun getDrawableForMimeType(context: Context, mimeType: String?): Drawable? {
-            return try {
-                val iconRes = when (mimeType) {
-                    "image/jpeg", "image/png" -> R.drawable.ic_image
-                    "video/mp4" -> R.drawable.ic_video
-                    "audio/mp3" -> R.drawable.ic_audio
-                    // Add more cases for other mime types if needed
-                    else -> R.drawable.ic_file
+    /*
+            fun getFileIconByPath(context: Context, imagePath: String): Drawable? {
+                val file = File(imagePath)
+                if (file.exists() && file.isFile) {
+                    val mimeType = getMimeType(imagePath)
+                    return getDrawableForMimeType(context, mimeType)
                 }
-                ContextCompat.getDrawable(context, iconRes)
-            } catch (e: Exception) {
-                null
-            }
-        }*/
+                return null
+            }*/
 
+    private fun getMimeType(filePath: String): String? {
+        val extension = MimeTypeMap.getFileExtensionFromUrl(filePath)
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+    }
+
+    /* private fun getDrawableForMimeType(context: Context, mimeType: String?): Drawable? {
+         return try {
+             val iconRes = when (mimeType) {
+                 "image/jpeg", "image/png" -> R.drawable.ic_image
+                 "video/mp4" -> R.drawable.ic_video
+                 "audio/mp3" -> R.drawable.ic_audio
+                 // Add more cases for other mime types if needed
+                 else -> R.drawable.ic_file
+             }
+             ContextCompat.getDrawable(context, iconRes)
+         } catch (e: Exception) {
+             null
+         }
+     }*/
 
 
     private fun isArchive(fileExtension: String): Boolean {
-        return fileExtension in listOf("zip", "7z", "tar", "tar.bz2", "tar.gz", "tar.xz", "tar.lz4", "tar.zstd")
+        return fileExtension in listOf(
+            "zip",
+            "7z",
+            "tar",
+            "tar.bz2",
+            "tar.gz",
+            "tar.xz",
+            "tar.lz4",
+            "tar.zstd"
+        )
     }
 
     fun isShowHiddenFiles(context: Context): Boolean {
@@ -234,11 +239,7 @@ class FileUtils {
 
     fun createFolder(folderPath: String, folderName: String): Boolean {
         val folder = File(folderPath, folderName)
-        return if (!folder.exists() && folder.mkdirs()) {
-            true // Pasta criada com sucesso
-        } else {
-            false // A pasta já existe ou ocorreu um erro ao criá-la
-        }
+        return !folder.exists() && folder.mkdirs()
     }
 
     fun createFile(filePath: String, fileName: String): Boolean {
@@ -253,35 +254,37 @@ class FileUtils {
     }
 
 
-    suspend fun getRecentImages(context: Context): ArrayList<RecentImageModel> = withContext(Dispatchers.IO) {
-        val projection = arrayOf(
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.DATA
-        )
-
-        val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
-        val queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-
-        val recentImageModelList = ArrayList<RecentImageModel>()
-
+    suspend fun getRecentImages(context: Context): ArrayList<RecentImageModel> =
         withContext(Dispatchers.IO) {
-            context.contentResolver.query(queryUri, projection, null, null, sortOrder)?.use { cursor ->
-                val imagePathColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-                var count = 0
-                while (cursor.moveToNext() && count < 11) {
-                    val imagePath = cursor.getString(imagePathColumn)
-                    recentImageModelList.add(RecentImageModel(imagePath))
-                    count++
-                }
+            val projection = arrayOf(
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DATA
+            )
+
+            val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
+            val queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+
+            val recentImageModelList = ArrayList<RecentImageModel>()
+
+            withContext(Dispatchers.IO) {
+                context.contentResolver.query(queryUri, projection, null, null, sortOrder)
+                    ?.use { cursor ->
+                        val imagePathColumn =
+                            cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                        var count = 0
+                        while (cursor.moveToNext() && count < 11) {
+                            val imagePath = cursor.getString(imagePathColumn)
+                            recentImageModelList.add(RecentImageModel(imagePath))
+                            count++
+                        }
+                    }
             }
+
+            recentImageModelList
         }
 
-        recentImageModelList
-    }
 
-
-
-    fun loadIcon(){
+    fun loadIcon() {
 
     }
 

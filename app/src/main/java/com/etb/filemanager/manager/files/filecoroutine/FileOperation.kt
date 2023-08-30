@@ -19,10 +19,10 @@ import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream
-import org.apache.commons.compress.compressors.zstandard.ZstdCompressorOutputStream
 import org.apache.commons.io.FileUtils
 import java.io.*
 import java.nio.file.*
+import java.util.Locale
 import kotlin.io.path.*
 
 
@@ -557,7 +557,7 @@ class ExtractArchives {
 
             val extension = getExtension(archiveFile.name)
 
-            when (extension.toLowerCase()) {
+            when (extension.lowercase(Locale.getDefault())) {
                 "zip" -> extractZipArchive(archiveFile, outputDirFile)
                 "7z" -> extract7zArchive(archiveFile, outputDirFile)
                 "tar", "gz", "xz" -> {}

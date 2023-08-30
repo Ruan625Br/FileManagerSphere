@@ -39,7 +39,8 @@ fun getDateHeader(startDate: DateExt, endDate: DateExt): String {
 
 fun getMonth(date: String): String {
     return try {
-        val dateFormatExtended = SimpleDateFormat(Constants.EXTENDED_DATE_FORMAT, Locale.US).parse(date)
+        val dateFormatExtended =
+            SimpleDateFormat(Constants.EXTENDED_DATE_FORMAT, Locale.US).parse(date)
         val cal = Calendar.getInstance(Locale.US).apply { timeInMillis = dateFormatExtended!!.time }
         val month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG_FORMAT, Locale.US)!!
         val year = cal.get(Calendar.YEAR)
@@ -104,7 +105,8 @@ fun Long.getDate(
 }
 
 fun Long.getMonth(): String {
-    val currentDate = Calendar.getInstance(Locale.US).apply { timeInMillis = System.currentTimeMillis() }
+    val currentDate =
+        Calendar.getInstance(Locale.US).apply { timeInMillis = System.currentTimeMillis() }
     val mediaDate = Calendar.getInstance(Locale.US).apply { timeInMillis = this@getMonth * 1000L }
     val month = mediaDate.getDisplayName(Calendar.MONTH, Calendar.LONG_FORMAT, Locale.US)!!
     val year = mediaDate.get(Calendar.YEAR)
@@ -136,4 +138,4 @@ fun String?.formatMinSec(): String {
 }
 
 @Parcelize
-data class DateExt(val month: String, val day: Int, val year: Int): Parcelable
+data class DateExt(val month: String, val day: Int, val year: Int) : Parcelable
