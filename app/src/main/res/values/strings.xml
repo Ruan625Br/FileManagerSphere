@@ -312,5 +312,7 @@
     <string name="experimental_trash_can">Experimental Trash Can</string>
     <string name="restore">Restore</string>
     <string name="trash_is_empty">Trash is empty</string>
+    <string name="cancel">Cancel</string>
+    <string name="apps">Apps</string>
 
 </resources>

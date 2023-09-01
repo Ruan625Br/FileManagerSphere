@@ -37,7 +37,7 @@ class CategoryFileModelAdapter(private var listener: ItemListener, private var c
         holder.itemTitle.text = categoryViewFileModel.title
 
         holder.itemCategory.setOnClickListener{
-            listener.openFileCategory(path)
+            listener.openFileCategory(path, categoryViewFileModel.category)
         }
     }
 

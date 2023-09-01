@@ -3,6 +3,9 @@ package com.etb.filemanager.files.extensions
 import android.content.res.Resources
 import android.graphics.Color
 import android.view.View
+import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.etb.filemanager.files.util.getColorByAttr
 import com.etb.filemanager.settings.preference.Preferences
 import com.google.android.material.shape.CornerFamily
@@ -24,7 +27,7 @@ fun View.applyBackgroundFromPreferences(
     val showBackground = true
 
     val shapeAppearanceModel = ShapeAppearanceModel.builder()
-   shapeAppearanceModel.applyCornerFamilyFromPreferences()
+    shapeAppearanceModel.applyCornerFamilyFromPreferences()
     val materialShapeDrawable = MaterialShapeDrawable(shapeAppearanceModel.build())
 
     if (showBackground) materialShapeDrawable.setTint(colorPrimary) else materialShapeDrawable.setTint(
@@ -83,6 +86,63 @@ fun ShapeAppearanceModel.Builder.applyCornerFamilyFromPreferences(
         }
     }
 }
+
+fun getShapeFromPreferences(
+    cornerFamily: Int = Preferences.Interface.cornerFamily,  cornerSize: Float = 30f
+): CornerBasedShape {
+    var roundedCornerShape: CornerBasedShape = RoundedCornerShape(cornerSize)
+
+
+    return when (cornerFamily) {
+        CornerStyle.ROUNDED.cornerFamily -> {
+            RoundedCornerShape(cornerSize)
+        }
+
+        CornerStyle.CUT.cornerFamily -> {
+            CutCornerShape(cornerSize)
+        }
+
+        CornerStyle.ROUNDED_TOP_RIGHT.cornerFamily -> {
+            RoundedCornerShape(topStart = cornerSize)
+        }
+
+        CornerStyle.ROUNDED_TOP_RIGHT_BOTTOM_LEFT.cornerFamily -> {
+            RoundedCornerShape(bottomEnd = cornerSize)
+        }
+
+        CornerStyle.CUT_TOP_RIGHT_BOTTOM_LEFT.cornerFamily -> {
+            CutCornerShape(
+                topStart = cornerSize,
+                bottomStart = cornerSize,
+                topEnd = cornerSize,
+                bottomEnd = cornerSize
+            )
+        }
+
+        CornerStyle.CUT_TOP_RIGHT.cornerFamily -> {
+            CutCornerShape(topEnd = cornerSize, bottomStart = cornerSize)
+        }
+
+        CornerStyle.CUT_TOP_LEFT.cornerFamily -> {
+            CutCornerShape(topStart = cornerSize, bottomEnd = cornerSize)
+        }
+
+        CornerStyle.ROUNDED_TOP_LEFT.cornerFamily -> {
+            RoundedCornerShape(topEnd = cornerSize)
+        }
+
+        CornerStyle.CUT_TOP_RIGHT_BOTTOM.cornerFamily -> {
+            CutCornerShape(topEnd = cornerSize, bottomEnd = cornerSize)
+        }
+
+        else -> {
+            CutCornerShape(topEnd = cornerSize, bottomEnd = cornerSize)
+        }
+    }
+
+
+}
+
 fun createShapeModelBasedOnCornerFamilyPreference(
     cornerFamily: Int = Preferences.Interface.cornerFamily, cornerSize: Float = 30f
 ): ShapeAppearanceModel {

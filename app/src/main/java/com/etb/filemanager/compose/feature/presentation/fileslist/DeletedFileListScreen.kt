@@ -34,12 +34,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -64,11 +65,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etb.filemanager.R
-import com.etb.filemanager.compose.feature.presentation.deletedfiles.DeletedFileDetails
 import com.etb.filemanager.compose.feature.presentation.deletedfiles.DeletedFileDetailsViewModel
 import com.etb.filemanager.compose.feature.presentation.deletedfiles.DeletedFileEntryViewModel
 import com.etb.filemanager.compose.feature.presentation.deletedfiles.DeletedIFilesViewModel
 import com.etb.filemanager.compose.feature.presentation.deletedfiles.toDeletedFileDetails
+import com.etb.filemanager.compose.feature.presentation.fileslist.components.BottomSheetInfo
 import com.etb.filemanager.compose.feature.provider.AppViewModelProvider
 import com.etb.filemanager.compose.feature.provider.BaseScreen
 import com.etb.filemanager.data.deletedfiles.DeletedFile
@@ -81,6 +82,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 class DeletedFileListScreen : BaseScreen() {
     private val TAG = "FileListScreen"
 
@@ -102,8 +104,10 @@ class DeletedFileListScreen : BaseScreen() {
         }
 
         setContent {
+            val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
             FileManagerTheme {
-                Scaffold(topBar = { AppTopBar() },
+                Scaffold(topBar = { AppTopBar(scrollBehavior) },
                     modifier = Modifier.fillMaxSize(),
                     content = { paddingValues ->
                         DeletedFileListBody(paddingValues = paddingValues)
@@ -172,6 +176,7 @@ class DeletedFileListScreen : BaseScreen() {
         val colorOnSecondary = Color(resolvedColor.toArgb())
         var expanded by remember { mutableStateOf(false) }
         var deleted by remember { mutableStateOf(false) }
+        var showBottomSheetInfo by remember { mutableStateOf(false) }
 
         val extraHeight by animateDpAsState(
             targetValue = if (expanded) 100.dp else 75.dp, animationSpec = spring(
@@ -207,7 +212,7 @@ class DeletedFileListScreen : BaseScreen() {
                             painter = image,
                             contentDescription = null,
                             modifier = Modifier
-                                .size(width = 25.dp, height = 25.dp)
+                                .size(width = 30.dp, height = 30.dp)
                                 .fillMaxWidth()
                                 .align(Alignment.Center),
                             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.inversePrimary)
@@ -267,26 +272,26 @@ class DeletedFileListScreen : BaseScreen() {
             }
         }
     }
-/*
-    @Composable
-    fun SaveDeletedFileToDatabase(file: File) {
-        val viewModel: DeletedFileEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    /*
+        @Composable
+        fun SaveDeletedFileToDatabase(file: File) {
+            val viewModel: DeletedFileEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
 
-        //2 = 2MB
-        val recommendedSize = file.length() < 2 * 1024 * 1024
-        if (recommendedSize) {
-            val updatedDetails = viewModel.deletedFileUIState.deletedFileDetails.copy(
-                fileName = file.name, filePath = file.path, fileData = file.readBytes()
-            )
+            //2 = 2MB
+            val recommendedSize = file.length() < 2 * 1024 * 1024
+            if (recommendedSize) {
+                val updatedDetails = viewModel.deletedFileUIState.deletedFileDetails.copy(
+                    fileName = file.name, filePath = file.path, fileData = file.readBytes()
+                )
 
-            viewModel.updateUiState(updatedDetails)
+                viewModel.updateUiState(updatedDetails)
 
-            LaunchedEffect(viewModel) {
-                viewModel.saveDeletedFile()
+                LaunchedEffect(viewModel) {
+                    viewModel.saveDeletedFile()
+                }
             }
         }
-    }
-*/
+    */
 
     @Composable
     fun RemoveDeletedFileToDatabase(file: DeletedFile) {
@@ -306,20 +311,16 @@ class DeletedFileListScreen : BaseScreen() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun AppTopBar() {
-        TopAppBar(
+    fun AppTopBar(scrollBehavior: TopAppBarScrollBehavior) {
+        LargeTopAppBar(
             title = {
                 Text(
                     text = stringResource(id = R.string.experimental_trash_can),
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
+                    overflow = TextOverflow.Ellipsis
                 )
             },
-
-            colors = topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            )
-
+            scrollBehavior = scrollBehavior
         )
     }
 
@@ -334,6 +335,8 @@ class DeletedFileListScreen : BaseScreen() {
 
         val coroutineScope = rememberCoroutineScope()
         var deleted by remember { mutableStateOf(false) }
+        val showBottomSheet = remember { mutableStateOf(false) }
+
 
         LaunchedEffect(deleted) {
             if (deleted) {
@@ -344,6 +347,7 @@ class DeletedFileListScreen : BaseScreen() {
                 }
             }
         }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -368,8 +372,14 @@ class DeletedFileListScreen : BaseScreen() {
             DeletedFileOption(
                 title = stringResource(id = R.string.delete), modifier = modifier.weight(1f)
             ) {
-                deleted = true
+                // deleted = true
+                showBottomSheet.value = true
             }
+
+            if (showBottomSheet.value) {
+                BottomSheetInfo()
+            }
+
         }
     }
 
