@@ -40,7 +40,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
-import com.etb.filemanager.compose.feature.presentation.fileslist.DeletedFileListScreen
+import com.etb.filemanager.compose.feature.presentation.deletedfileslist.DeletedFileListScreen
 import com.etb.filemanager.files.extensions.sortFileModel
 import com.etb.filemanager.files.provider.archive.common.mime.MimeType
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeIcon
@@ -65,7 +65,6 @@ import com.etb.filemanager.manager.files.filecoroutine.FileOperation
 import com.etb.filemanager.manager.files.filelist.*
 import com.etb.filemanager.manager.files.services.FileOperationService
 import com.etb.filemanager.manager.files.ui.ModalBottomSheetCompress
-import com.etb.filemanager.manager.files.ui.components.showInstallAPKBottomSheet
 import com.etb.filemanager.manager.files.ui.dialogs.BottomSheetInstallAPK
 import com.etb.filemanager.manager.media.MediaViewActivity
 import com.etb.filemanager.manager.media.image.viewer.ImageViewerDialogFragment

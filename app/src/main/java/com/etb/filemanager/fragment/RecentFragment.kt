@@ -30,7 +30,7 @@ import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
 import com.etb.filemanager.activity.SettingsActivity
 import com.etb.filemanager.compose.feature.presentation.apklist.ApkListScreen
-import com.etb.filemanager.compose.feature.presentation.fileslist.DeletedFileListScreen
+import com.etb.filemanager.compose.feature.presentation.deletedfileslist.DeletedFileListScreen
 import com.etb.filemanager.files.extensions.applyBackgroundFromPreferences
 import com.etb.filemanager.files.util.fileProviderUri
 import com.etb.filemanager.interfaces.manager.ItemListener

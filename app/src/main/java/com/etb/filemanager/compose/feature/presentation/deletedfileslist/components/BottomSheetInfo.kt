@@ -5,7 +5,7 @@
  * More details at: https://www.gnu.org/licenses/
  */
 
-package com.etb.filemanager.compose.feature.presentation.fileslist.components
+package com.etb.filemanager.compose.feature.presentation.deletedfileslist.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

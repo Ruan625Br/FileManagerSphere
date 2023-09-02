@@ -5,7 +5,7 @@
  * More details at: https://www.gnu.org/licenses/
  */
 
-package com.etb.filemanager.compose.feature.presentation.fileslist
+package com.etb.filemanager.compose.feature.presentation.deletedfileslist
 
 import android.os.Build
 import android.os.Bundle
@@ -69,7 +69,7 @@ import com.etb.filemanager.compose.feature.presentation.deletedfiles.DeletedFile
 import com.etb.filemanager.compose.feature.presentation.deletedfiles.DeletedFileEntryViewModel
 import com.etb.filemanager.compose.feature.presentation.deletedfiles.DeletedIFilesViewModel
 import com.etb.filemanager.compose.feature.presentation.deletedfiles.toDeletedFileDetails
-import com.etb.filemanager.compose.feature.presentation.fileslist.components.BottomSheetInfo
+import com.etb.filemanager.compose.feature.presentation.deletedfileslist.components.BottomSheetInfo
 import com.etb.filemanager.compose.feature.provider.AppViewModelProvider
 import com.etb.filemanager.compose.feature.provider.BaseScreen
 import com.etb.filemanager.data.deletedfiles.DeletedFile

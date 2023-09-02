@@ -65,7 +65,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".manager.media.MediaViewActivity" />
-        <activity android:name=".compose.feature.presentation.fileslist.DeletedFileListScreen" />
+        <activity android:name=".compose.feature.presentation.deletedfileslist.DeletedFileListScreen" />
         <activity android:name=".compose.feature.presentation.apklist.ApkListScreen"
                 android:exported="true"
                 />
