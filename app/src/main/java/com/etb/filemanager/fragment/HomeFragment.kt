@@ -1,6 +1,5 @@
 package com.etb.filemanager.fragment
 
-import android.Manifest
 import android.Manifest.permission.POST_NOTIFICATIONS
 import android.animation.*
 import android.annotation.SuppressLint
@@ -11,15 +10,10 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.os.Handler
-import android.os.Looper
 import android.os.Parcelable
 import android.provider.DocumentsContract
 import android.provider.Settings
-import android.util.Log
 import android.view.*
-import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,8 +26,6 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -66,7 +58,6 @@ import com.etb.filemanager.manager.files.services.FileOperationService
 import com.etb.filemanager.manager.files.ui.ModalBottomSheetCompress
 import com.etb.filemanager.manager.files.ui.dialogs.BottomSheetInstallAPK
 import com.etb.filemanager.manager.media.MediaViewActivity
-import com.etb.filemanager.manager.media.image.viewer.ImageViewerDialogFragment
 import com.etb.filemanager.manager.media.model.Media
 import com.etb.filemanager.manager.media.model.MediaListInfo
 import com.etb.filemanager.manager.util.FileUtils
@@ -109,12 +100,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     private lateinit var mFab: FloatingActionButton
 
 
-    private var mCurrentPath = "/storage/emulated/0"
-    private val BASE_PATH = "/storage/emulated/0"
     private lateinit var materialDialogUtils: MaterialDialogUtils
     private var fileModel = mutableListOf<FileModel>()
-
-    private val coroutineScope = lifecycleScope
 
     private lateinit var managerUtil: ManagerUtil
 
@@ -125,8 +112,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
     private lateinit var selectPreferenceUtils: SelectPreferenceUtils
     private lateinit var fileAdapterListenerUtil: FileAdapterListenerUtil
-
-    lateinit var selectionTracker: SelectionTracker<Long>
 
     private lateinit var standardBottomSheet: FrameLayout
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
@@ -149,16 +134,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
     private var progressDialog: AlertDialog? = null
     private var isProgressDialogShowing = false
-    private val debouncedSearchRunnable = DebouncedRunnable(Handler(Looper.getMainLooper()), 1000) {
-        if (!isResumed || !viewModel.isSearchViewExpanded) {
-            return@DebouncedRunnable
-        }
-        val query = viewModel.searchViewQuery
-        if (query.isEmpty()) {
-            return@DebouncedRunnable
-        }
-        viewModel.search(query)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -214,8 +189,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         fileAdapterListenerUtil = FileAdapterListenerUtil.getInstance()
         selectPreferenceUtils.setListener(this, requireContext())
 
-        val mFile = fileUri?.path?.let { File(it) }
-        val path = fileUri?.let { fileUtil.getFilePathFromUri(requireContext(), it) }
         val spanCount = if (Preferences.Popup.isGridEnabled) 2 else 1
         recyclerView.layoutManager = GridLayoutManager(requireActivity(), spanCount)
         adapter = FileModelAdapter(requireContext(), this)
@@ -232,7 +205,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     }
 
     private fun observeViewModel() {
-        viewModel.currentPathLiveData.observe(viewLifecycleOwner) { onCurrentPathChanged(it) }
+        viewModel.currentPathLiveData.observe(viewLifecycleOwner) { onCurrentPathChanged() }
         viewModel.selectedFilesLiveData.observe(viewLifecycleOwner) { onSelectedFilesChanged(it) }
         viewModel.fileListLiveData.observe(viewLifecycleOwner) { onFileListChanged(it) }
         if (fileUri != null) {
@@ -278,31 +251,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
 
     override fun onFileInfoReceived(currentPath: String) {
-        // mCurrentPath = currentPath
-        Log.e("HOMEE CURRENTPATH", "PATH $currentPath")
+
 
     }
 
     private fun initToolbar() {
 
         (requireActivity() as AppCompatActivity).setSupportActionBar(topAppBar)
-    }
-
-
-    private fun createDialgRestriction() {
-        val title = requireContext().getString(R.string.restriction_folder)
-        val text = requireContext().getString(R.string.e_restriction_folder)
-        val textPositiveButton = requireContext().getString(R.string.dialog_ok)
-
-        materialDialogUtils.createDialogInfo(
-            title, text, textPositiveButton, "", requireContext(), false
-        ) { dialogResult ->
-            val isConfirmed = dialogResult.confirmed
-            if (isConfirmed) {
-                //managerUtil.getPreviousPath()
-
-            }
-        }
     }
 
     private fun createDialogE(e: String) {
@@ -321,7 +276,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     }
 
 
-    fun onShowHiddenFilesChanged() {
+    private fun onShowHiddenFilesChanged() {
         updateAdapterFileList()
     }
 
@@ -379,74 +334,12 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         }
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.R)
-    private fun requestStoragePermission() {
-        val permission = Manifest.permission.MANAGE_EXTERNAL_STORAGE
-        val requestCode = 1
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (Environment.isExternalStorageManager()) {
-                //
-                // TODO()
-            } else {
-                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
-                val uri = Uri.fromParts("package", requireContext().packageName, null)
-                intent.data = uri
-                startActivity(intent)
-            }
-            ActivityCompat.requestPermissions(
-                requireActivity(), arrayOf<String>(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.MANAGE_EXTERNAL_STORAGE
-                ), 1
-            )
-        } else {
-            requestFilesPermission()
-        }
-
-
-    }
-
-    private fun requestFilesPermission() {
-        val READ_WRITE_PERMISSION_REQUEST_CODE = 1
-
-        if (ContextCompat.checkSelfPermission(
-                requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-                requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                requireActivity(), arrayOf(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ), READ_WRITE_PERMISSION_REQUEST_CODE
-            )
-        } else {
-        }
-
-    }
-
-
     @SuppressLint("NotifyDataSetChanged")
     fun refreshAdapter() {
-        val controller =
-            AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_file_fade_in_anim)
-        //    recyclerView.layoutAnimation = controller
+
         adapter.notifyDataSetChanged()
-        // recyclerView.scheduleLayoutAnimation()
 
     }
-
-    private fun setRecyclerViewAnimation() {
-
-        val controller =
-            AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_file_fade_in_anim)
-        recyclerView.layoutAnimation = controller
-        recyclerView.scheduleLayoutAnimation()
-    }
-
     private fun onToggleGridChange(isGridEnabled: Boolean) {
         val spanCount = if (isGridEnabled) 2 else 1
         recyclerView.animateSpanChange(spanCount)
@@ -460,7 +353,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
             stateful is Loading && !isSearching -> topAppBar.subtitle = getString(R.string.loading)
             else -> topAppBar.subtitle = getSubtitle(files!!)
         }
-        val hasFiles = !files.isNullOrEmpty()
         val throwable = (stateful as? Failure)?.throwable
 
         if (throwable != null) {
@@ -478,7 +370,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
     }
 
-    private fun onCurrentPathChanged(path: Path) {
+    private fun onCurrentPathChanged() {
         updateActionMode()
     }
 
@@ -540,7 +432,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         setUpActionMode()
     }
 
-    fun onSortOptionsChanged() {
+    private fun onSortOptionsChanged() {
         val fileSortOptions = FileSortOptions(
             Preferences.Popup.sortBy,
             Preferences.Popup.orderFiles,
@@ -1520,11 +1412,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         }
     }
 
-    fun Fragment.getParentActivity(): AppCompatActivity? {
-        return activity as? AppCompatActivity
-    }
 
-    fun updateProgress(title: String, msg: String, progress: Int) {
+
+    private fun updateProgress(title: String, msg: String, progress: Int) {
         if (!isProgressDialogShowing) {
             val inflater = LayoutInflater.from(context)
             val dialogView = inflater.inflate(R.layout.basic_dialog_progress, null)
@@ -1555,17 +1445,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
     }
 
-    private fun showImageViewerDialog(imagePathList: List<Path>) {
-        val imageViewerDialogFragment = ImageViewerDialogFragment()
-        val fm = requireActivity().supportFragmentManager
-        imageViewerDialogFragment.arguments = Bundle().apply {
-            putStringArrayList(
-                ImageViewerDialogFragment.ARG_IMAGE_PATH_LIST,
-                ArrayList(imagePathList.map { it.pathString })
-            )
-        }
-        imageViewerDialogFragment.show(parentFragmentManager, ImageViewerDialogFragment.TAG)
-    }
 }
 
 
