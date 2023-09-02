@@ -2,7 +2,6 @@ package com.etb.filemanager.fragment
 
 import android.Manifest
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -151,7 +150,7 @@ class RecentFragment : Fragment(), ItemListener {
         }
     }
 
-    fun initClick() {
+    private fun initClick() {
         val itemStorage = requireView().findViewById<MaterialCardView>(R.id.cInternalStorage)
         val ivTrash = requireView().findViewById<ImageView>(R.id.mn_trash)
         val ivSettings = requireView().findViewById<ImageView>(R.id.iv_settings)
@@ -166,11 +165,12 @@ class RecentFragment : Fragment(), ItemListener {
         }
 
         ivSettings.setOnClickListener {
-            //   (requireActivity() as MainActivity).startNewFragment(settingsFragment)
+              (requireActivity() as MainActivity).startNewFragment(settingsFragment)
             val settingsIntent: Intent = SettingsActivity().getIntent(requireContext())
             startActivity(settingsIntent)
         }
         btnAddCategory.setOnClickListener { showBottomSheetAddCategory() }
+        ivTrash.visibility = View.GONE
         ivTrash.setOnClickListener {
             val intent = Intent(requireContext(), DeletedFileListScreen::class.java)
             startActivity(intent)
@@ -214,7 +214,6 @@ class RecentFragment : Fragment(), ItemListener {
         animation.start()
 
         pbSpace.progress = 0
-        val animationPb = ValueAnimator.ofInt(0, usedSpace)
         animation.duration = 1000
         animation.addUpdateListener { valueAnimator ->
             val progress = valueAnimator.animatedValue as Int
@@ -407,7 +406,6 @@ class RecentFragment : Fragment(), ItemListener {
     }
 
     private fun showImageViewerDialog(imagePathList: List<Path>) {
-        val s = ImageViewerDialogFragment.newInstance(imagePathList)
 
         val imageViewerDialogFragment = ImageViewerDialogFragment()
         imageViewerDialogFragment.arguments = Bundle().apply {
@@ -423,12 +421,10 @@ class RecentFragment : Fragment(), ItemListener {
 
     private fun isReadStoragePermissionGranted(): Boolean {
         return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            // Android 10 (API 29) e abaixo.
             ContextCompat.checkSelfPermission(
                 requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED
         } else {
-            // Android 11 (API 30) e acima.
             ContextCompat.checkSelfPermission(
                 requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED || Environment.isExternalStorageManager()
