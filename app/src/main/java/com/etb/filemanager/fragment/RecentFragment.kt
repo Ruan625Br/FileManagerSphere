@@ -29,7 +29,6 @@ import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
 import com.etb.filemanager.activity.SettingsActivity
 import com.etb.filemanager.compose.feature.presentation.apklist.ApkListScreen
-import com.etb.filemanager.compose.feature.presentation.deletedfileslist.DeletedFileListScreen
 import com.etb.filemanager.files.extensions.applyBackgroundFromPreferences
 import com.etb.filemanager.files.util.fileProviderUri
 import com.etb.filemanager.interfaces.manager.ItemListener
@@ -170,11 +169,6 @@ class RecentFragment : Fragment(), ItemListener {
             startActivity(settingsIntent)
         }
         btnAddCategory.setOnClickListener { showBottomSheetAddCategory() }
-        ivTrash.visibility = View.GONE
-        ivTrash.setOnClickListener {
-            val intent = Intent(requireContext(), DeletedFileListScreen::class.java)
-            startActivity(intent)
-        }
 
     }
 

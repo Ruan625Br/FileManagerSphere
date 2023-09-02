@@ -36,4 +36,9 @@ class ApkListViewModel : ViewModel() {
             _loading.value = false
         }
     }
+
+    fun update(context: Context, appFilter: AppFilter){
+        _loading.value = true
+        loadApkList(context, appFilter)
+    }
 }

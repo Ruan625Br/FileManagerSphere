@@ -315,4 +315,16 @@
     <string name="cancel">Cancel</string>
     <string name="apps">Apps</string>
 
+    <string name="is_system_app">It\'s a system app</string>
+
+    <string name="version_name_label">Version Name</string>
+    <string name="version_code_label">Version Code</string>
+    <string name="min_sdk_version_label">Min SDK Version</string>
+    <string name="target_sdk_version_label">Target SDK Version</string>
+    <string name="compile_sdk_version_label">Compile SDK Version</string>
+    <string name="compile_sdk_version_codename_label">Compile SDK Version Code Name</string>
+    <string name="installed_apps">Installed Apps</string>
+    <string name="system_apps">System Apps</string>
+    <string name="app_installation_files">App Installation Files (APKs)</string>
+
 </resources>

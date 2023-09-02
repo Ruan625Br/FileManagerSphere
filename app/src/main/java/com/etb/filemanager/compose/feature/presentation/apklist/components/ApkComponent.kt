@@ -30,6 +30,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -106,7 +107,7 @@ fun ApkItem(apkInfo: AppInfo, appFilter: AppFilter) {
         Row(modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .background(colorOnSecondary)
+            .background(MaterialTheme.colorScheme.surfaceColorAtElevation(2.0.dp))
             .clickable { expanded = !expanded }
             .padding(8.dp)) {
 
@@ -192,7 +193,7 @@ fun ApkItemOptionsColum(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val resolvedColor = MaterialTheme.colorScheme.onSecondary
-    val colorOnSecondary = Color(resolvedColor.toArgb())
+    val colorOnSecondary = MaterialTheme.colorScheme.surfaceColorAtElevation(2.0.dp)
     val context = LocalContext.current
     val textInfo = if (isAppInfoBottomSheetExpanded) "Open in Settings" else "Info"
 
@@ -256,6 +257,19 @@ fun ApkItemOptionsColum(
 
                     }
 
+                }
+            }
+            AppFilter.SYSTEM -> {
+                ApkItemOptionButton(
+                    text = textInfo,
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(color = colorOnSecondary, shape = Shapes.medium)
+                ) {
+                    if (isAppInfoBottomSheetExpanded) openAppSettings(
+                        context,
+                        apkInfo.packageName
+                    ) else onButtonClickShowAppInfo?.invoke()
                 }
             }
 

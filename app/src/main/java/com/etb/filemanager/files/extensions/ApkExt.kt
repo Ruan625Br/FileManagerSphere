@@ -13,6 +13,7 @@ import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.core.content.pm.PackageInfoCompat
+import com.etb.filemanager.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.nio.file.Path
@@ -38,7 +39,11 @@ suspend fun getInstalledApkInfo(context: Context, appFilter: AppFilter): List<Ap
 
         for (packageInfo in installedPackages) {
             val isSystemApp = packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
+
             if (appFilter == AppFilter.NON_SYSTEM && isSystemApp) {
+                continue
+            }
+            if (appFilter == AppFilter.SYSTEM && !isSystemApp){
                 continue
             }
 
@@ -176,6 +181,7 @@ fun installApk(context: Context, apkFilePath: Path) {
 enum class AppFilter {
     ALL,
     NON_SYSTEM,
+    SYSTEM,
     UNINSTALLED_INTERNAL
 }
 
@@ -211,36 +217,17 @@ fun getAppMetadata(appInfo: AppInfo, context: Context, appIsInstalled: Boolean):
 
         appMetadataList.add(
             AppMetadata(
-                label = "Is System App",
-                content = if (isSystemApp) "Yes" else "No"
+                label = context.getString(R.string.is_system_app),
+                content = if (isSystemApp) context.getString(R.string.yes) else context.getString(R.string.no)
             )
         )
-        appMetadataList.add(AppMetadata(label = "Version name", content = versionName))
-        appMetadataList.add(AppMetadata(label = "Version code", content = versionCode))
-        appMetadataList.add(
-            AppMetadata(
-                label = "Min Sdk Version",
-                content = minSdkVersion
-            )
-        )
-        appMetadataList.add(
-            AppMetadata(
-                label = "Target Sdk Version",
-                content = targetSdkVersion
-            )
-        )
-        appMetadataList.add(
-            AppMetadata(
-                label = "Compile Sdk Version",
-                content = compileSdkVersion
-            )
-        )
-        appMetadataList.add(
-            AppMetadata(
-                label = "Compile Sdk Version Code name",
-                content = compileSdkVersionCodename
-            )
-        )
+        appMetadataList.add(AppMetadata(label = context.getString(R.string.version_name_label), content = versionName))
+        appMetadataList.add(AppMetadata(label = context.getString(R.string.version_code_label), content = versionCode))
+        appMetadataList.add(AppMetadata(label = context.getString(R.string.min_sdk_version_label), content = minSdkVersion))
+        appMetadataList.add(AppMetadata(label = context.getString(R.string.target_sdk_version_label), content = targetSdkVersion))
+        appMetadataList.add(AppMetadata(label = context.getString(R.string.compile_sdk_version_label), content = compileSdkVersion))
+        appMetadataList.add(AppMetadata(label = context.getString(R.string.compile_sdk_version_codename_label), content = compileSdkVersionCodename))
+
 
     }
 
