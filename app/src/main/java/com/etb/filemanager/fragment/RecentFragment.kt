@@ -112,11 +112,13 @@ class RecentFragment : Fragment(), ItemListener {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
+        showDialogStoragePermission()
+
     }
 
     @SuppressLint("SuspiciousIndentation")
     fun initCategoryItem() {
-            val recyclerView = requireView().findViewById<RecyclerView>(R.id.recyclerView)
+        val recyclerView = requireView().findViewById<RecyclerView>(R.id.recyclerView)
 
 
         val categoryFileModels = getCategories(requireContext())
@@ -286,6 +288,52 @@ class RecentFragment : Fragment(), ItemListener {
                 }
             }
 
+        }
+    }
+
+    fun showDialogStoragePermission() {
+        if (!checkPermission()) {
+            val title = getString(R.string.permission_required)
+            val message = getString(R.string.permission_required_body)
+            val textPositiveButton = getString(R.string.allow)
+            val textNegativeButton = getString(R.string.dialog_cancel)
+
+            MaterialDialogUtils().createDialogInfo(
+                title, message, textPositiveButton, textNegativeButton, requireContext(), true
+            ) { dialogResult ->
+                val isConfirmed = dialogResult.confirmed
+                if (isConfirmed) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                        val uri = Uri.fromParts("package", requireContext().packageName, null)
+                        intent.data = uri
+                        startActivity(intent)
+                    } else {
+                        val readWritePermission = arrayOf(
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        )
+
+                        ActivityCompat.requestPermissions(
+                            requireActivity(), readWritePermission, 1
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+
+    fun checkPermission(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Environment.isExternalStorageManager()
+        } else {
+            val readWritePermission = arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+
+            arePermissionsGranted(readWritePermission)
         }
     }
 
