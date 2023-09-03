@@ -1,3 +1,10 @@
+/*
+ * Copyright (c)  2023  Juan Nascimento
+ * Part of FileManagerSphere - RecentFragment.kt
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * More details at: https://www.gnu.org/licenses/
+ */
+
 package com.etb.filemanager.fragment
 
 import android.Manifest
@@ -28,7 +35,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
 import com.etb.filemanager.activity.SettingsActivity
-import com.etb.filemanager.compose.feature.presentation.apklist.ApkListScreen
+import com.etb.filemanager.compose.feature.presentation.categorylist.apklist.ApkListScreen
 import com.etb.filemanager.files.extensions.applyBackgroundFromPreferences
 import com.etb.filemanager.files.util.fileProviderUri
 import com.etb.filemanager.interfaces.manager.ItemListener
@@ -164,7 +171,6 @@ class RecentFragment : Fragment(), ItemListener {
         }
 
         ivSettings.setOnClickListener {
-              (requireActivity() as MainActivity).startNewFragment(settingsFragment)
             val settingsIntent: Intent = SettingsActivity().getIntent(requireContext())
             startActivity(settingsIntent)
         }

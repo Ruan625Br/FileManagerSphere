@@ -5,7 +5,7 @@
  * More details at: https://www.gnu.org/licenses/
  */
 
-package com.etb.filemanager.compose.feature.presentation.apklist
+package com.etb.filemanager.compose.feature.presentation.categorylist.apklist
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -44,8 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etb.filemanager.R
 import com.etb.filemanager.compose.core.presentation.components.FilterChipGroup
-import com.etb.filemanager.compose.feature.presentation.apklist.components.ApkList
-import com.etb.filemanager.compose.feature.presentation.apklist.components.ApkListViewModel
+import com.etb.filemanager.compose.feature.presentation.categorylist.apklist.components.ApkList
+import com.etb.filemanager.compose.feature.presentation.categorylist.apklist.components.ApkListViewModel
 import com.etb.filemanager.compose.feature.provider.BaseScreen
 import com.etb.filemanager.files.extensions.AppFilter
 import com.etb.filemanager.ui.theme.FileManagerTheme

@@ -1,9 +1,15 @@
+/*
+ * Copyright (c)  2023  Juan Nascimento
+ * Part of FileManagerSphere - BaseActivity.kt
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * More details at: https://www.gnu.org/licenses/
+ */
+
 package com.etb.filemanager.activity
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.etb.filemanager.files.util.Args
 import com.etb.filemanager.files.util.LocaleContextWrapper

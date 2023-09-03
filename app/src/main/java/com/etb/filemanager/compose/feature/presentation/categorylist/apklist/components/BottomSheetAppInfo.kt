@@ -5,7 +5,7 @@
  * More details at: https://www.gnu.org/licenses/
  */
 
-package com.etb.filemanager.compose.feature.presentation.apklist.components
+package com.etb.filemanager.compose.feature.presentation.categorylist.apklist.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image

@@ -1,8 +1,14 @@
+/*
+ * Copyright (c)  2023  Juan Nascimento
+ * Part of FileManagerSphere - EmptyArray.java
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * More details at: https://www.gnu.org/licenses/
+ */
+
 package com.etb.filemanager.files.util;
 
 
 
-// Copyright 2006 The Android Open Source Project
 public final class EmptyArray {
     private EmptyArray() {}
 
