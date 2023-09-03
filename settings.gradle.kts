@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "File Manager"
-include ':app'
+rootProject.name = "File Manager Sphere"
+include("app")
