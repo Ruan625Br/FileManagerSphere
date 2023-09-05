@@ -12,6 +12,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import kotlin.io.path.pathString
+import android.media.MediaMetadataRetriever
 
 fun Uri.isFromApps(): Boolean =
     scheme.toString() == "content" && toString().contains("Android/")
@@ -32,4 +33,17 @@ fun Context.uriToPath(uri: Uri?): String? {
     }
     cursor?.close()
     return path ?: uri.fileProviderPath.pathString
+}
+
+fun Uri.getVideoDuration(context: Context): Long {
+    val retriever = MediaMetadataRetriever()
+
+    return try {
+        retriever.setDataSource(context, this)
+        val durationStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+        durationStr?.toLongOrNull() ?: 0
+    } catch (e: Exception) {
+        0
+
+    }
 }

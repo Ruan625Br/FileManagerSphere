@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
 
 }
 
@@ -146,6 +147,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
 
+    //Google accompanist
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.33.1-alpha")
+
     //Glide Compose
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.github.bumptech.glide:compose:1.0.0-alpha.5")
@@ -175,9 +179,14 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
 
-
-
+    //Dagger - Hilt
+    implementation("com.google.dagger:hilt-android:2.44")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")
+    ksp("androidx.hilt:hilt-compiler:1.0.0")
+    ksp("com.google.dagger:hilt-compiler:2.44")
 }
+
+
 
 
 

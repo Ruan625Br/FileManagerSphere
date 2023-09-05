@@ -10,7 +10,6 @@ package com.etb.filemanager.files.util
 import android.content.ContentResolver
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
-import com.etb.filemanager.BuildConfig
 import java.io.IOException
 import java.net.URI
 import java.nio.file.Files
@@ -37,7 +36,7 @@ val Path.fileProviderUri: Uri
         val uriPath = Uri.encode(toUri().toString())
         return Uri.Builder()
             .scheme(ContentResolver.SCHEME_CONTENT)
-            .authority(BuildConfig.FILE_PROVIDIER_AUTHORITY)
+            .authority("com.etb.filemanager.file_provider")
             .path(uriPath)
             .build()
     }

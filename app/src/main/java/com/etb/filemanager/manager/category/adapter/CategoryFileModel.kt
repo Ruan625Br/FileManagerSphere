@@ -9,11 +9,14 @@ package com.etb.filemanager.manager.category.adapter
 
 import android.content.Context
 import android.os.Environment
+import android.os.Parcelable
 import com.etb.filemanager.R
 import com.etb.filemanager.settings.preference.Preferences
+import kotlinx.parcelize.Parcelize
 
-
-class CategoryFileModel(var icon: Int, var title: String, var path: String, val category: Category = Category.GENERIC)
+@Parcelize
+data class CategoryFileModel(val icon: Int, val title: String, val path: String, val category: Category = Category.GENERIC) :
+    Parcelable
 
 
 enum class Category(){
@@ -43,12 +46,12 @@ fun getCategories(context: Context): ArrayList<CategoryFileModel> {
     val categoryFileModels = ArrayList<CategoryFileModel>()
     categoryFileModels.add(
         CategoryFileModel(
-            R.drawable.ic_image, context.getString(R.string.images), dcimPath
+            R.drawable.ic_image, context.getString(R.string.images), dcimPath, Category.IMAGE
         )
     )
     categoryFileModels.add(
         CategoryFileModel(
-            R.drawable.ic_video, context.getString(R.string.video), moviesPath
+            R.drawable.ic_video, context.getString(R.string.video), moviesPath, Category.MOVIES
         )
     )
     categoryFileModels.add(
@@ -80,4 +83,15 @@ fun getCategories(context: Context): ArrayList<CategoryFileModel> {
     }
 
     return categoryFileModels
+}
+
+fun Category?.getName(context: Context): String{
+    return when(this){
+        Category.IMAGE -> context.getString(R.string.images)
+        Category.MOVIES -> context.getString(R.string.videos)
+        Category.MUSIC -> context.getString(R.string.songs)
+        Category.GENERIC -> context.getString(R.string.files)
+        Category.APPS -> context.getString(R.string.apps)
+        else ->  context.getString(R.string.files)
+    }
 }

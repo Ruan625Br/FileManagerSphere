@@ -7,12 +7,12 @@
 
 package com.etb.filemanager.interfaces.manager
 
-import com.etb.filemanager.manager.category.adapter.Category
+import com.etb.filemanager.manager.category.adapter.CategoryFileModel
 import java.nio.file.Path
 
 interface ItemListener {
 
-    fun openFileCategory(path: Path, category: Category)
+    fun openFileCategory(path: Path, categoryFileModel: CategoryFileModel)
     fun refreshItem()
     fun openItemWith(path: Path)
 

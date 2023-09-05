@@ -13,9 +13,13 @@ import android.net.Uri
 import android.provider.MediaStore
 import com.etb.filemanager.compose.feature.presentation.recentimages.model.RecentImage
 import com.etb.filemanager.files.app.contentResolver
+import com.etb.filemanager.files.extensions.sortFileModel
 import com.etb.filemanager.files.provider.archive.common.mime.MimeType
 import com.etb.filemanager.files.provider.archive.common.mime.isASpecificTypeOfMime
 import com.etb.filemanager.files.provider.archive.common.mime.isMedia
+import com.etb.filemanager.manager.adapter.FileModel
+import com.etb.filemanager.manager.adapter.loadFileItem
+import com.etb.filemanager.manager.media.model.Media
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -151,3 +155,43 @@ suspend fun fetchRecentImagesUris(
 
     recentImageModelList
 }
+
+suspend fun getAllMediaFromMediaStore(
+    context: Context,
+    mimeType: MimeType = MimeType.ANY
+): ArrayList<Media> = withContext(Dispatchers.IO) {
+    val mediaList = ArrayList<Media>()
+    val fileModelList = mutableListOf<FileModel>()
+    val projection = arrayOf(MediaStore.MediaColumns.DATA)
+    val selection = MediaStore.MediaColumns.MIME_TYPE + "=?"
+    val selectionArgs = arrayOf(mimeType.value)
+    val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
+
+    val cursor = context.contentResolver.query(
+        when (mimeType) {
+            MimeType.IMAGE_ANY -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            MimeType.VIDEO_MP4 -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+            MimeType.ANY -> MediaStore.Files.getContentUri("external")
+            else -> MediaStore.Files.getContentUri("external")
+        },
+        projection,
+        null,
+        null,
+        sortOrder
+    )
+
+    cursor?.use {
+        val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        while (it.moveToNext()) {
+            val mediaPath = it.getString(columnIndex)
+            fileModelList.add(Paths.get(mediaPath).loadFileItem())
+        }
+    }
+
+    fileModelList.sortFileModel().map {
+        mediaList.add(Media.createFromFileModel(it))
+    }
+
+    return@withContext mediaList
+}
+

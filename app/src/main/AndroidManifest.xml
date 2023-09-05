@@ -69,6 +69,7 @@
         <activity android:name=".compose.feature.presentation.categorylist.apklist.ApkListScreen"
                 android:exported="true"
                 />
+        <activity android:name=".compose.feature.presentation.categorylist.CategoryListScreen"/>
 
         <service
                 android:name=".manager.files.services.FileOperationService"

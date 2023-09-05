@@ -51,8 +51,8 @@ import com.etb.filemanager.files.util.LocaleContextWrapper
 import com.etb.filemanager.files.util.toggleOrientation
 import com.etb.filemanager.manager.media.model.Media
 import com.etb.filemanager.manager.media.model.MediaListInfo
-import com.etb.filemanager.ui.theme.FileManagerTheme
 import com.etb.filemanager.manager.media.video.VideoPlayerController
+import com.etb.filemanager.ui.theme.FileManagerTheme
 import com.etb.filemanager.ui.util.Constants
 import com.etb.filemanager.ui.util.Constants.Animation.enterAnimation
 import com.etb.filemanager.ui.util.Constants.Animation.exitAnimation
@@ -81,8 +81,7 @@ class MediaViewActivity : ComponentActivity() {
                         MediaViewScreen(mediaListInfo = mediaListInfo!!,
                             paddingValues = paddingValues,
                             toggleRotate = ::toggleOrientation,
-                            onGoBack = { onBackPressedDispatcher.onBackPressed() },
-                            navigateUp = { finish() },)
+                            navigateUp = { onBackPressedDispatcher.onBackPressed() },)
                     }
                 })
 
@@ -102,7 +101,6 @@ fun MediaViewScreen(
     mediaListInfo: MediaListInfo,
     paddingValues: PaddingValues,
     toggleRotate: () -> Unit,
-    onGoBack: () -> Unit,
     navigateUp: () -> Unit,
 ) {
 
@@ -197,7 +195,7 @@ fun MediaViewScreen(
             currentDate = currentDate.value,
             paddingValues = paddingValues,
             bottomSheetState = bottomSheetState,
-            onGoBack = onGoBack
+            onGoBack = navigateUp
         )
         MediaViewBottomBar(
             bottomSheetState = bottomSheetState,

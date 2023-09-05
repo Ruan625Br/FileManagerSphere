@@ -15,3 +15,6 @@ data class MediaListInfo(
     val mediaList: List<Media>,
     val currentMedia: Media
 ): Parcelable
+
+fun List<Media>.toMediaListInfo(currentMedia: Media) =
+    MediaListInfo(this, currentMedia)

@@ -35,11 +35,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
 import com.etb.filemanager.activity.SettingsActivity
-import com.etb.filemanager.compose.feature.presentation.categorylist.apklist.ApkListScreen
+import com.etb.filemanager.compose.feature.presentation.categorylist.CategoryListScreen
 import com.etb.filemanager.files.extensions.applyBackgroundFromPreferences
 import com.etb.filemanager.files.util.fileProviderUri
 import com.etb.filemanager.interfaces.manager.ItemListener
 import com.etb.filemanager.manager.category.adapter.Category
+import com.etb.filemanager.manager.category.adapter.CategoryFileModel
 import com.etb.filemanager.manager.category.adapter.CategoryFileModelAdapter
 import com.etb.filemanager.manager.category.adapter.RecentImagemodelAdapter
 import com.etb.filemanager.manager.category.adapter.getCategories
@@ -373,9 +374,20 @@ class RecentFragment : Fragment(), ItemListener {
         }
     }
 
-    override fun openFileCategory(path: Path, category: Category) {
+    override fun openFileCategory(path: Path, categoryFileModel: CategoryFileModel) {
         if (isReadStoragePermissionGranted()) {
 
+            if (categoryFileModel.category == Category.GENERIC){
+                val uri = path.fileProviderUri
+                val homeFragment = HomeFragment.newInstance(uri)
+                (requireActivity() as MainActivity).startNewFragment(homeFragment)
+            }else{
+                val intent = Intent(requireContext(), CategoryListScreen::class.java)
+                intent.putExtra("categoryFileModel", categoryFileModel)
+                requireActivity().startActivity(intent)
+            }
+
+/*
             when (category) {
                 Category.GENERIC -> {
                     val uri = path.fileProviderUri
@@ -394,6 +406,7 @@ class RecentFragment : Fragment(), ItemListener {
                     (requireActivity() as MainActivity).startNewFragment(homeFragment)
                 }
             }
+*/
 
 
         }

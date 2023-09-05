@@ -82,7 +82,7 @@ class ApkListScreen : BaseScreen() {
             }
         }
     }
-
+}
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -189,4 +189,3 @@ class ApkListScreen : BaseScreen() {
         )
 
     }
-}
