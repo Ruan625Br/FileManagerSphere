@@ -14,3 +14,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "File Manager Sphere"
 include("app")
+include(":app:benchmark")
