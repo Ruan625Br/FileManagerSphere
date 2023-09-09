@@ -129,7 +129,7 @@ fun MediaItem(
                 .signature(MediaKey(media.id, media.mimeType))
                 .format(DecodeFormat.PREFER_RGB_565)
                 .override(270)
-                .encodeQuality(70)
+                .encodeQuality(40)
 
         }
 
@@ -213,6 +213,7 @@ fun MediaGridView(
     ) { media: Media, requestBuilder: RequestBuilder<Drawable> ->
         requestBuilder
             .signature(MediaKey(media.id, media.mimeType))
+            .encodeQuality(30)
             .load(media.uri)
     }
 

@@ -11,10 +11,10 @@ import android.os.Build
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -43,7 +43,7 @@ fun NavigationComp(
     val navPipe = hiltViewModel<ChanneledViewModel>()
     navPipe
         .initWithNav(navController)
-        .collectAsState(LocalLifecycleOwner.current)
+        .collectAsStateWithLifecycle(LocalLifecycleOwner.current)
 
     NavHost(
         navController = navController,

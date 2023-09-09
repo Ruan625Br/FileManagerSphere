@@ -154,6 +154,7 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
 
     //Google accompanist
     implementation("com.google.accompanist:accompanist-navigation-animation:0.33.1-alpha")
