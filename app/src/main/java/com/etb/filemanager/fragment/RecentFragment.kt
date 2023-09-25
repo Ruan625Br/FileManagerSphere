@@ -141,8 +141,7 @@ class RecentFragment : Fragment(), ItemListener {
         modalBottomSheetAddCategory.show(parentFragmentManager, ModalBottomSheetAddCategory.TAG)
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    fun setRecentImages() {
+    private fun setRecentImages() {
         val recyclerView = requireView().findViewById<RecyclerView>(R.id.recy_recents_images)
         val listener = this
         val mainScope = CoroutineScope(Dispatchers.Main)
@@ -160,8 +159,8 @@ class RecentFragment : Fragment(), ItemListener {
     private fun initClick() {
         val itemStorage = requireView().findViewById<MaterialCardView>(R.id.cInternalStorage)
         val ivTrash = requireView().findViewById<ImageView>(R.id.mn_trash)
+        ivTrash.visibility = View.INVISIBLE
         val ivSettings = requireView().findViewById<ImageView>(R.id.iv_settings)
-        val settingsFragment = SettingsFragment()
         itemStorage.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 requestPermissionLauncher.launch(Manifest.permission.MANAGE_EXTERNAL_STORAGE)
@@ -237,7 +236,6 @@ class RecentFragment : Fragment(), ItemListener {
         val readWritePermission = arrayOf(
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
-        val READ_WRITE_PERMISSION_REQUEST_CODE = 1
 
         if (arePermissionsGranted(readWritePermission)) {
             openListFiles()
@@ -254,7 +252,7 @@ class RecentFragment : Fragment(), ItemListener {
                 val isConfirmed = dialogResult.confirmed
                 if (isConfirmed) {
                     ActivityCompat.requestPermissions(
-                        requireActivity(), readWritePermission, READ_WRITE_PERMISSION_REQUEST_CODE
+                        requireActivity(), readWritePermission, 1
                     )
                     requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
 
@@ -291,7 +289,7 @@ class RecentFragment : Fragment(), ItemListener {
         }
     }
 
-    fun showDialogStoragePermission() {
+    private fun showDialogStoragePermission() {
         if (!checkPermission()) {
             val title = getString(R.string.permission_required)
             val message = getString(R.string.permission_required_body)
@@ -324,7 +322,7 @@ class RecentFragment : Fragment(), ItemListener {
     }
 
 
-    fun checkPermission(): Boolean {
+    private fun checkPermission(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             Environment.isExternalStorageManager()
         } else {
@@ -349,21 +347,6 @@ class RecentFragment : Fragment(), ItemListener {
         return true
     }
 
-    private val requestStoragePermissions = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        permissions.entries.forEach {
-            val isGranted = it.value
-            if (isGranted) {
-                openListFiles()
-                setRecentImages()
-            } else {
-                requestStoragePermission()
-            }
-        }
-    }
-
-
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -376,50 +359,25 @@ class RecentFragment : Fragment(), ItemListener {
 
     override fun openFileCategory(path: Path, categoryFileModel: CategoryFileModel) {
         if (isReadStoragePermissionGranted()) {
-
-            if (categoryFileModel.category == Category.GENERIC){
+            if (categoryFileModel.category == Category.GENERIC) {
                 val uri = path.fileProviderUri
                 val homeFragment = HomeFragment.newInstance(uri)
                 (requireActivity() as MainActivity).startNewFragment(homeFragment)
-            }else{
+            } else {
                 val intent = Intent(requireContext(), CategoryListScreen::class.java)
                 intent.putExtra("categoryFileModel", categoryFileModel)
                 requireActivity().startActivity(intent)
             }
 
-/*
-            when (category) {
-                Category.GENERIC -> {
-                    val uri = path.fileProviderUri
-                    val homeFragment = HomeFragment.newInstance(uri)
-                    (requireActivity() as MainActivity).startNewFragment(homeFragment)
-                }
-
-                Category.APPS -> {
-                    val intent = Intent(requireContext(), ApkListScreen::class.java)
-                    startActivity(intent)
-                }
-
-                else -> {
-                    val uri = path.fileProviderUri
-                    val homeFragment = HomeFragment.newInstance(uri)
-                    (requireActivity() as MainActivity).startNewFragment(homeFragment)
-                }
-            }
-*/
-
-
         }
     }
 
     override fun openItemWith(path: Path) {
-        // FileUtil().actionOpenWith(path.pathString, requireContext())
         showImageViewerDialog(listOf(path))
 
     }
 
     private fun showImageViewerDialog(imagePathList: List<Path>) {
-
         val imageViewerDialogFragment = ImageViewerDialogFragment()
         imageViewerDialogFragment.arguments = Bundle().apply {
             putStringArrayList(
@@ -445,9 +403,6 @@ class RecentFragment : Fragment(), ItemListener {
     }
 
     override fun refreshItem() {
-
-        /*this is a quick fix i am using to update items after new ones are added,
-         the way to update items will be improved in the future*/
         initCategoryItem()
     }
 
