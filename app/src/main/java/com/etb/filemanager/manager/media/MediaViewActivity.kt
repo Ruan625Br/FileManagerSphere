@@ -28,12 +28,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -61,7 +62,7 @@ import com.etb.filemanager.ui.util.Constants.DEFAULT_LOW_VELOCITY_SWIPE_DURATION
 class MediaViewActivity : ComponentActivity() {
     private var mediaListInfo: MediaListInfo? = null
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bundle = intent.extras
@@ -74,8 +75,6 @@ class MediaViewActivity : ComponentActivity() {
         }
         setContent {
             FileManagerTheme {
-                val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
-
                 Scaffold(modifier = Modifier.fillMaxSize(), content = { paddingValues ->
                     if (mediaListInfo != null) {
                         MediaViewScreen(mediaListInfo = mediaListInfo!!,
@@ -110,9 +109,8 @@ fun MediaViewScreen(
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartIntentSenderForResult(),
             onResult = {})
     val currentMedia = rememberSaveable { mutableStateOf<Media?>(null) }
-    val currentMediaPosition = mediaListInfo.mediaList.indexOf(mediaListInfo.currentMedia)
     val currentMediaId = mediaListInfo.currentMedia.id
-    var runtimeMediaId by rememberSaveable(currentMediaId) { mutableStateOf(currentMediaId) }
+    var runtimeMediaId by rememberSaveable(currentMediaId) { mutableLongStateOf(currentMediaId) }
     val initialPage = rememberSaveable(runtimeMediaId) {
         mediaListInfo.mediaList.indexOfFirst { it.id == runtimeMediaId.coerceAtLeast(0) }
     }
@@ -125,12 +123,12 @@ fun MediaViewScreen(
         initialPageOffsetFraction = 0f,
         pageCount = mediaListInfo.mediaList::size
     )
-    val lastIndex = remember { mutableStateOf(-1) }
+    val lastIndex = remember { mutableIntStateOf(-1) }
     val updateContent: (Int) -> Unit = { page ->
         if (mediaListInfo.mediaList.isNotEmpty()) {
             val index = if (page == -1) 0 else page
-            if (lastIndex.value != -1) runtimeMediaId =
-                mediaListInfo.mediaList[lastIndex.value.coerceAtMost(mediaListInfo.mediaList.size - 1)].id
+            if (lastIndex.intValue != -1) runtimeMediaId =
+                mediaListInfo.mediaList[lastIndex.intValue.coerceAtMost(mediaListInfo.mediaList.size - 1)].id
             currentMedia.value = mediaListInfo.mediaList[index]
 
 
@@ -205,7 +203,7 @@ fun MediaViewScreen(
             currentIndex = pagerState.currentPage,
             result = result
         ) {
-            lastIndex.value = it
+            lastIndex.intValue = it
         }
     }
     BackHandler(!showUI.value) {
