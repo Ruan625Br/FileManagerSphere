@@ -44,14 +44,14 @@
                                 android:layout_height="wrap_content"
                                 android:id="@+id/iv_settings"
                                 app:tint="?attr/colorOnPrimary"
-                                app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.971"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintVertical_bias="0.902"
-                                android:layout_marginEnd="4dp"
+                                app:layout_constraintVertical_bias="0.896"
                                 android:layout_marginBottom="4dp"
-                                app:layout_constraintTop_toBottomOf="@+id/tv_space_free" />
+                                app:layout_constraintTop_toBottomOf="@+id/tv_space_free"
+                                app:layout_constraintStart_toEndOf="@+id/mn_about"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                android:layout_marginStart="5dp" />
 
                         <ImageView
                                 android:src="@drawable/ic_help_24"
@@ -59,14 +59,25 @@
                                 android:layout_height="wrap_content"
                                 android:id="@+id/mn_about"
                                 app:tint="?attr/colorOnPrimary"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintHorizontal_bias="1.0"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintVertical_bias="0.896"
                                 android:layout_marginBottom="4dp"
                                 app:layout_constraintTop_toBottomOf="@+id/tv_space_free"
-                                app:layout_constraintEnd_toStartOf="@+id/iv_settings"
-                                android:layout_marginEnd="8dp" />
+                                app:layout_constraintStart_toEndOf="@+id/mn_trash"
+                                android:layout_marginStart="5dp" />
+
+                        <ImageView
+                                android:src="@drawable/ic_trash_24"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/mn_trash"
+                                app:tint="?attr/colorOnPrimary"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintVertical_bias="0.896"
+                                android:layout_marginBottom="4dp"
+                                app:layout_constraintTop_toBottomOf="@+id/tv_space_free"
+                                android:layout_marginStart="292dp" />
 
                         <TextView
                                 android:id="@+id/tv_space_free"

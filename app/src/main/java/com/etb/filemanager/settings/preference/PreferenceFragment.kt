@@ -1,3 +1,10 @@
+/*
+ * Copyright (c)  2023  Juan Nascimento
+ * Part of FileManagerSphere - PreferenceFragment.kt
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * More details at: https://www.gnu.org/licenses/
+ */
+
 package com.etb.filemanager.settings.preference
 
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -11,6 +18,7 @@ import androidx.annotation.StringRes
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.etb.filemanager.activity.SettingsActivity
 import com.etb.filemanager.ui.view.UiUtils
 
 abstract class PreferenceFragment : PreferenceFragmentCompat() {
@@ -34,6 +42,10 @@ abstract class PreferenceFragment : PreferenceFragmentCompat() {
         UiUtils.applyWindowInsetsAsPaddingNoTop(recyclerView)
     }
 
+    fun restart(){
+        (activity as SettingsActivity).restart()
+
+    }
 
     @CallSuper
     override fun onStart() {

@@ -1,0 +1,23 @@
+[versions]
+
+agp = "8.1.1"
+kotlin = "1.9.10"
+junit = "1.1.5"
+espresso-core = "3.5.1"
+uiautomator = "2.3.0-alpha04"
+benchmark-macro-junit4 = "1.2.0-beta04"
+baseline-profile = "1.2.0-beta04"
+
+[libraries]
+junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
+benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmark-macro-junit4" }
+
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+com-android-test = { id = "com.android.test", version.ref = "agp" }
+baselineprofile = { id = "androidx.baselineprofile", version.ref = "baseline-profile"}

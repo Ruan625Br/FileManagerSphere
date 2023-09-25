@@ -1,3 +1,10 @@
+/*
+ * Copyright (c)  2023  Juan Nascimento
+ * Part of FileManagerSphere - ArchiveWriter.kt
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * More details at: https://www.gnu.org/licenses/
+ */
+
 import android.annotation.SuppressLint
 import android.os.Build
 import org.apache.commons.compress.archivers.ArchiveEntry

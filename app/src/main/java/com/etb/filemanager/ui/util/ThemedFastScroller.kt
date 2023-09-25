@@ -1,7 +1,9 @@
 
 /*
- * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * All Rights Reserved.
+ * Copyright (c)  2023  Juan Nascimento
+ * Part of FileManagerSphere - ThemedFastScroller.kt
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * More details at: https://www.gnu.org/licenses/
  */
 
 package com.etb.filemanager.ui.util

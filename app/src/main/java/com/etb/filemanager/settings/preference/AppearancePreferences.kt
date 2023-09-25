@@ -1,3 +1,10 @@
+/*
+ * Copyright (c)  2023  Juan Nascimento
+ * Part of FileManagerSphere - AppearancePreferences.kt
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * More details at: https://www.gnu.org/licenses/
+ */
+
 package com.etb.filemanager.settings.preference
 
 import android.os.Bundle
@@ -73,11 +80,6 @@ class AppearancePreferences : PreferenceFragment() {
 
     override fun getTitle(): Int {
         return R.string.pref_cat_appearance
-    }
-
-    private fun restart() {
-        (activity as SettingsActivity).restart()
-
     }
 
 }

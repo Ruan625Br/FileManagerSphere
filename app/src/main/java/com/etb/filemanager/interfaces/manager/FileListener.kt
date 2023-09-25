@@ -1,3 +1,10 @@
+/*
+ * Copyright (c)  2023  Juan Nascimento
+ * Part of FileManagerSphere - FileListener.kt
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * More details at: https://www.gnu.org/licenses/
+ */
+
 package com.etb.filemanager.interfaces.manager
 
 import com.etb.filemanager.manager.adapter.FileModel
@@ -23,6 +30,7 @@ interface FileListener {
     fun createShortcut(file: FileModel)
     fun showPropertiesDialog(file: FileModel)
     fun showBottomSheet(file: FileModel)
+    fun showBottomSheetInstallAPK(file: FileModel)
     fun onClickFileAction(file: FileModel, action: CreateFileAction)
 
 

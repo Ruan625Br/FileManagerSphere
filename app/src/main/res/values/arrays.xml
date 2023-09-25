@@ -71,6 +71,20 @@
         <item>16</item>
     </string-array>
 
+
+    <string-array name="corner_family_entries">
+        <item>@string/corner_family_rounded</item>
+        <item>@string/corner_family_cut</item>
+        <item>@string/corner_family_rounded_top_right</item>
+        <item>@string/corner_family_rounded_top_right_bottom_left</item>
+        <item>@string/corner_family_cut_top_right_bottom_left</item>
+        <item>@string/corner_family_cut_top_right</item>
+        <item>@string/corner_family_cut_top_left</item>
+        <item>@string/corner_family_rounded_top_left</item>
+        <item>@string/corner_family_cut_top_right_bottom</item>
+    </string-array>
+
+
     <string-array name="menu_type_items">
         <item>.zip</item>
         <item>.7z</item>

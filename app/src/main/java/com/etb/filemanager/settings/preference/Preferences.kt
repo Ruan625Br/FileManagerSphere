@@ -1,3 +1,10 @@
+/*
+ * Copyright (c)  2023  Juan Nascimento
+ * Part of FileManagerSphere - Preferences.kt
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * More details at: https://www.gnu.org/licenses/
+ */
+
 package com.etb.filemanager.settings.preference
 
 import android.content.Context
@@ -84,6 +91,12 @@ class Preferences {
                 AppPreference.set(
                     AppPreference.PreferenceKey.PREF_FILE_LIST_MARGINS_STR, value.toString()
                 )
+            }
+        var cornerFamily: Int
+            get() = AppPreference.getInt(AppPreference.PreferenceKey.PREF_CORNER_FAMILY_INT)
+            set(value) {
+                AppPreference.set(
+                    AppPreference.PreferenceKey.PREF_CORNER_FAMILY_INT, value)
             }
     }
 

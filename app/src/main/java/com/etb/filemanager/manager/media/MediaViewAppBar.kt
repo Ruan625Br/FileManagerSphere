@@ -1,3 +1,10 @@
+/*
+ * Copyright (c)  2023  Juan Nascimento
+ * Part of FileManagerSphere - MediaViewAppBar.kt
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * More details at: https://www.gnu.org/licenses/
+ */
+
 package com.etb.filemanager.manager.media
 
 import androidx.compose.animation.AnimatedVisibility
@@ -22,11 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.etb.filemanager.R
 import com.etb.filemanager.ui.style.Back40P
 import com.etb.filemanager.ui.util.Constants
 import kotlinx.coroutines.launch
@@ -76,7 +81,7 @@ fun MediaViewAppBar(
             ) {
                 if (showDate) {
                     Text(
-                        text = stringResource(id = R.string.dialog_image_viewer).uppercase(),
+                        text = "",
                         modifier = Modifier,
                         style = MaterialTheme.typography.titleSmall,
                         fontFamily = FontFamily.Monospace,

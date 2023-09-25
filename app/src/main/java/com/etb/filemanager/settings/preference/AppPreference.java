@@ -1,3 +1,10 @@
+/*
+ * Copyright (c)  2023  Juan Nascimento
+ * Part of FileManagerSphere - AppPreference.java
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * More details at: https://www.gnu.org/licenses/
+ */
+
 package com.etb.filemanager.settings.preference;
 
 
@@ -22,6 +29,7 @@ import com.etb.filemanager.files.util.ContextUtils;
 import com.etb.filemanager.files.util.LangUtils;
 import com.etb.filemanager.manager.files.filelist.FileSortOptions;
 import com.etb.filemanager.ui.style.StyleManager;
+import com.google.android.material.shape.CornerFamily;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -48,6 +56,7 @@ public class AppPreference {
         PREF_TRANSPARENT_LIST_BACKGROUND_BOOL,
         PREF_SELECTED_FILE_BACKGROUND_OPACITY_STR,
         PREF_FILE_LIST_MARGINS_STR,
+        PREF_CORNER_FAMILY_INT,
 
         //Behavior
         PREF_DEFAULT_FOLDER_STR,
@@ -322,6 +331,8 @@ public class AppPreference {
                 return mContext.getString(R.string.default_file_list_margins);
             case PREF_SHOW_FAST_SCROLL_BOOL:
                 return false;
+            case PREF_CORNER_FAMILY_INT:
+                return CornerFamily.ROUNDED;
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

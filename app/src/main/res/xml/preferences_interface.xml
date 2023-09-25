@@ -25,4 +25,9 @@
             app:key="@string/pref_key_file_list_margins"
             app:title="@string/pref_title_file_list_margins"
             app:iconSpaceReserved="false" />
+    <Preference
+            app:key="@string/pref_key_corner_family"
+            app:title="@string/pref_title_corner_family"
+            app:summary="@string/pref_summary_corner_family"
+            app:iconSpaceReserved="false" />
 </PreferenceScreen>

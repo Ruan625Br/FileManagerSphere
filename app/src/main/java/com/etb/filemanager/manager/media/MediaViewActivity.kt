@@ -1,3 +1,10 @@
+/*
+ * Copyright (c)  2023  Juan Nascimento
+ * Part of FileManagerSphere - MediaViewActivity.kt
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * More details at: https://www.gnu.org/licenses/
+ */
+
 package com.etb.filemanager.manager.media
 
 import android.app.Activity
@@ -21,12 +28,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -44,8 +52,8 @@ import com.etb.filemanager.files.util.LocaleContextWrapper
 import com.etb.filemanager.files.util.toggleOrientation
 import com.etb.filemanager.manager.media.model.Media
 import com.etb.filemanager.manager.media.model.MediaListInfo
-import com.etb.filemanager.ui.theme.FileManagerTheme
 import com.etb.filemanager.manager.media.video.VideoPlayerController
+import com.etb.filemanager.ui.theme.FileManagerTheme
 import com.etb.filemanager.ui.util.Constants
 import com.etb.filemanager.ui.util.Constants.Animation.enterAnimation
 import com.etb.filemanager.ui.util.Constants.Animation.exitAnimation
@@ -54,7 +62,7 @@ import com.etb.filemanager.ui.util.Constants.DEFAULT_LOW_VELOCITY_SWIPE_DURATION
 class MediaViewActivity : ComponentActivity() {
     private var mediaListInfo: MediaListInfo? = null
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bundle = intent.extras
@@ -67,15 +75,12 @@ class MediaViewActivity : ComponentActivity() {
         }
         setContent {
             FileManagerTheme {
-                val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
-
                 Scaffold(modifier = Modifier.fillMaxSize(), content = { paddingValues ->
                     if (mediaListInfo != null) {
                         MediaViewScreen(mediaListInfo = mediaListInfo!!,
                             paddingValues = paddingValues,
                             toggleRotate = ::toggleOrientation,
-                            onGoBack = { onBackPressedDispatcher.onBackPressed() },
-                            navigateUp = { finish() },)
+                            navigateUp = { onBackPressedDispatcher.onBackPressed() },)
                     }
                 })
 
@@ -95,7 +100,6 @@ fun MediaViewScreen(
     mediaListInfo: MediaListInfo,
     paddingValues: PaddingValues,
     toggleRotate: () -> Unit,
-    onGoBack: () -> Unit,
     navigateUp: () -> Unit,
 ) {
 
@@ -105,9 +109,8 @@ fun MediaViewScreen(
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartIntentSenderForResult(),
             onResult = {})
     val currentMedia = rememberSaveable { mutableStateOf<Media?>(null) }
-    val currentMediaPosition = mediaListInfo.mediaList.indexOf(mediaListInfo.currentMedia)
     val currentMediaId = mediaListInfo.currentMedia.id
-    var runtimeMediaId by rememberSaveable(currentMediaId) { mutableStateOf(currentMediaId) }
+    var runtimeMediaId by rememberSaveable(currentMediaId) { mutableLongStateOf(currentMediaId) }
     val initialPage = rememberSaveable(runtimeMediaId) {
         mediaListInfo.mediaList.indexOfFirst { it.id == runtimeMediaId.coerceAtLeast(0) }
     }
@@ -120,12 +123,12 @@ fun MediaViewScreen(
         initialPageOffsetFraction = 0f,
         pageCount = mediaListInfo.mediaList::size
     )
-    val lastIndex = remember { mutableStateOf(-1) }
+    val lastIndex = remember { mutableIntStateOf(-1) }
     val updateContent: (Int) -> Unit = { page ->
         if (mediaListInfo.mediaList.isNotEmpty()) {
             val index = if (page == -1) 0 else page
-            if (lastIndex.value != -1) runtimeMediaId =
-                mediaListInfo.mediaList[lastIndex.value.coerceAtMost(mediaListInfo.mediaList.size - 1)].id
+            if (lastIndex.intValue != -1) runtimeMediaId =
+                mediaListInfo.mediaList[lastIndex.intValue.coerceAtMost(mediaListInfo.mediaList.size - 1)].id
             currentMedia.value = mediaListInfo.mediaList[index]
 
 
@@ -190,7 +193,7 @@ fun MediaViewScreen(
             currentDate = currentDate.value,
             paddingValues = paddingValues,
             bottomSheetState = bottomSheetState,
-            onGoBack = onGoBack
+            onGoBack = navigateUp
         )
         MediaViewBottomBar(
             bottomSheetState = bottomSheetState,
@@ -200,7 +203,7 @@ fun MediaViewScreen(
             currentIndex = pagerState.currentPage,
             result = result
         ) {
-            lastIndex.value = it
+            lastIndex.intValue = it
         }
     }
     BackHandler(!showUI.value) {

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c)  2023  Juan Nascimento
+ * Part of FileManagerSphere - FileUtils.kt
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * More details at: https://www.gnu.org/licenses/
+ */
+
 package com.etb.filemanager.manager.util
 
 import android.annotation.SuppressLint
@@ -16,9 +23,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
+import java.nio.file.Path
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.io.path.createDirectory
+import kotlin.io.path.createFile
+import kotlin.io.path.exists
+import kotlin.io.path.isDirectory
 
 
 class FileUtils {
@@ -55,6 +67,7 @@ class FileUtils {
         return deleted
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     fun getIconApk(context: Context, apkFilePath: String?): Drawable? {
         try {
             val pm = context.packageManager
@@ -64,8 +77,10 @@ class FileUtils {
             appInfo.publicSourceDir = apkFilePath
             return appInfo.loadIcon(pm)
         } catch (e: Exception){
-
-            return iconUtil.getIconFolder(context)
+            val colorPrimaryInverse = colorUtil.getColorPrimaryInverse(context)
+            val iconApk = context.getDrawable(R.drawable.file_apk_icon)!!
+            colorUtil.setTintDrawable(colorPrimaryInverse, iconApk)
+            return iconApk
         }
     }
 

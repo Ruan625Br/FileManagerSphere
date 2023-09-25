@@ -1,8 +1,14 @@
+/*
+ * Copyright (c)  2023  Juan Nascimento
+ * Part of FileManagerSphere - RecentFragment.kt
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * More details at: https://www.gnu.org/licenses/
+ */
+
 package com.etb.filemanager.fragment
 
 import android.Manifest
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -29,20 +35,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
 import com.etb.filemanager.activity.SettingsActivity
+import com.etb.filemanager.compose.feature.presentation.categorylist.CategoryListScreen
+import com.etb.filemanager.files.extensions.applyBackgroundFromPreferences
 import com.etb.filemanager.files.util.fileProviderUri
-import com.etb.filemanager.files.util.getColorByAttr
 import com.etb.filemanager.interfaces.manager.ItemListener
+import com.etb.filemanager.manager.category.adapter.Category
 import com.etb.filemanager.manager.category.adapter.CategoryFileModel
 import com.etb.filemanager.manager.category.adapter.CategoryFileModelAdapter
 import com.etb.filemanager.manager.category.adapter.RecentImagemodelAdapter
+import com.etb.filemanager.manager.category.adapter.getCategories
+import com.etb.filemanager.manager.media.image.viewer.ImageViewerDialogFragment
 import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.manager.util.FileUtils.SpaceType
 import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.AboutFragment
-import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.ui.view.ModalBottomSheetAddCategory
-import com.etb.filemanager.files.util.FileUtil
-import com.etb.filemanager.manager.media.image.viewer.ImageViewerDialogFragment
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -95,7 +102,7 @@ class RecentFragment : Fragment(), ItemListener {
             (requireActivity() as MainActivity).startNewFragment(aboutFragment)
         }
 
-        // initStyleView()
+        initStyleView()
 
         fileUtils = FileUtils()
         setStorageSpaceInGB()
@@ -111,59 +118,17 @@ class RecentFragment : Fragment(), ItemListener {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
+        showDialogStoragePermission()
+
     }
 
     @SuppressLint("SuspiciousIndentation")
     fun initCategoryItem() {
-        val listCategoryName = Preferences.Behavior.categoryNameList
-        val listCategoryPath = Preferences.Behavior.categoryPathList
         val recyclerView = requireView().findViewById<RecyclerView>(R.id.recyclerView)
-        val dcimPath =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).absolutePath
-        val moviesPath =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath
-        val documentsPath =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath
-        val musicPath =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath
-        val downloadsPath =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
 
 
-        val categoryFileModels = ArrayList<CategoryFileModel>()
-        categoryFileModels.add(
-            CategoryFileModel(
-                R.drawable.ic_image, getString(R.string.images), dcimPath
-            )
-        )
-        categoryFileModels.add(
-            CategoryFileModel(
-                R.drawable.ic_video, getString(R.string.video), moviesPath
-            )
-        )
-        categoryFileModels.add(
-            CategoryFileModel(
-                R.drawable.ic_document, getString(R.string.document), documentsPath
-            )
-        )
-        categoryFileModels.add(
-            CategoryFileModel(
-                R.drawable.ic_music, getString(R.string.music), musicPath
-            )
-        )
+        val categoryFileModels = getCategories(requireContext())
 
-        categoryFileModels.add(
-            CategoryFileModel(
-                R.drawable.ic_download, getString(R.string.document), downloadsPath
-            )
-        )
-        if (listCategoryName.isNotEmpty()) {
-            for ((index, name) in listCategoryName.withIndex()) {
-                val mName = name
-                val mPath = listCategoryPath[index]
-                categoryFileModels.add(CategoryFileModel(R.drawable.ic_folder, mName, mPath))
-            }
-        }
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 4)
         adapter = CategoryFileModelAdapter(this, categoryFileModels, requireContext())
         recyclerView.adapter = adapter
@@ -176,8 +141,7 @@ class RecentFragment : Fragment(), ItemListener {
         modalBottomSheetAddCategory.show(parentFragmentManager, ModalBottomSheetAddCategory.TAG)
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    fun setRecentImages() {
+    private fun setRecentImages() {
         val recyclerView = requireView().findViewById<RecyclerView>(R.id.recy_recents_images)
         val listener = this
         val mainScope = CoroutineScope(Dispatchers.Main)
@@ -192,10 +156,11 @@ class RecentFragment : Fragment(), ItemListener {
         }
     }
 
-    fun initClick() {
+    private fun initClick() {
         val itemStorage = requireView().findViewById<MaterialCardView>(R.id.cInternalStorage)
+        val ivTrash = requireView().findViewById<ImageView>(R.id.mn_trash)
+        ivTrash.visibility = View.INVISIBLE
         val ivSettings = requireView().findViewById<ImageView>(R.id.iv_settings)
-        val settingsFragment = SettingsFragment()
         itemStorage.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 requestPermissionLauncher.launch(Manifest.permission.MANAGE_EXTERNAL_STORAGE)
@@ -206,7 +171,6 @@ class RecentFragment : Fragment(), ItemListener {
         }
 
         ivSettings.setOnClickListener {
-            //   (requireActivity() as MainActivity).startNewFragment(settingsFragment)
             val settingsIntent: Intent = SettingsActivity().getIntent(requireContext())
             startActivity(settingsIntent)
         }
@@ -220,23 +184,10 @@ class RecentFragment : Fragment(), ItemListener {
     }
 
     private fun initStyleView() {
-        if (Preferences.Interface.isEnabledRoundedCorners) {
-            if (roundedCornersDrawable == null) {
-                val mCornerRadius =
-                    requireContext().resources.getDimensionPixelSize(R.dimen.corner_radius_base)
-                        .toFloat()
-                val colorPrimary = getColorByAttr(com.google.android.material.R.attr.colorPrimary)
-                roundedCornersDrawable = GradientDrawable().apply {
-                    cornerRadius = mCornerRadius
-                    setColor(colorPrimary)
-                }
-            }
-
-            cBaseItem.background = roundedCornersDrawable
-            cInternalStorage.background = roundedCornersDrawable
-            cCategoryFileItem.background = roundedCornersDrawable
-            cRecentImg.background = roundedCornersDrawable
-        }
+        cBaseItem.applyBackgroundFromPreferences()
+        cRecentImg.applyBackgroundFromPreferences()
+        cInternalStorage.applyBackgroundFromPreferences()
+        cCategoryFileItem.applyBackgroundFromPreferences()
     }
 
     @SuppressLint("SetTextI18n", "StringFormatMatches")
@@ -263,7 +214,6 @@ class RecentFragment : Fragment(), ItemListener {
         animation.start()
 
         pbSpace.progress = 0
-        val animationPb = ValueAnimator.ofInt(0, usedSpace)
         animation.duration = 1000
         animation.addUpdateListener { valueAnimator ->
             val progress = valueAnimator.animatedValue as Int
@@ -286,7 +236,6 @@ class RecentFragment : Fragment(), ItemListener {
         val readWritePermission = arrayOf(
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
-        val READ_WRITE_PERMISSION_REQUEST_CODE = 1
 
         if (arePermissionsGranted(readWritePermission)) {
             openListFiles()
@@ -303,7 +252,7 @@ class RecentFragment : Fragment(), ItemListener {
                 val isConfirmed = dialogResult.confirmed
                 if (isConfirmed) {
                     ActivityCompat.requestPermissions(
-                        requireActivity(), readWritePermission, READ_WRITE_PERMISSION_REQUEST_CODE
+                        requireActivity(), readWritePermission, 1
                     )
                     requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
 
@@ -340,6 +289,52 @@ class RecentFragment : Fragment(), ItemListener {
         }
     }
 
+    private fun showDialogStoragePermission() {
+        if (!checkPermission()) {
+            val title = getString(R.string.permission_required)
+            val message = getString(R.string.permission_required_body)
+            val textPositiveButton = getString(R.string.allow)
+            val textNegativeButton = getString(R.string.dialog_cancel)
+
+            MaterialDialogUtils().createDialogInfo(
+                title, message, textPositiveButton, textNegativeButton, requireContext(), true
+            ) { dialogResult ->
+                val isConfirmed = dialogResult.confirmed
+                if (isConfirmed) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                        val uri = Uri.fromParts("package", requireContext().packageName, null)
+                        intent.data = uri
+                        startActivity(intent)
+                    } else {
+                        val readWritePermission = arrayOf(
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        )
+
+                        ActivityCompat.requestPermissions(
+                            requireActivity(), readWritePermission, 1
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun checkPermission(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Environment.isExternalStorageManager()
+        } else {
+            val readWritePermission = arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+
+            arePermissionsGranted(readWritePermission)
+        }
+    }
+
     private fun arePermissionsGranted(permissions: Array<String>): Boolean {
         for (permission in permissions) {
             if (ContextCompat.checkSelfPermission(
@@ -352,21 +347,6 @@ class RecentFragment : Fragment(), ItemListener {
         return true
     }
 
-    private val requestStoragePermissions = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        permissions.entries.forEach {
-            val isGranted = it.value
-            if (isGranted) {
-                openListFiles()
-                setRecentImages()
-            } else {
-                requestStoragePermission()
-            }
-        }
-    }
-
-
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -377,22 +357,27 @@ class RecentFragment : Fragment(), ItemListener {
         }
     }
 
-    override fun openFileCategory(path: Path) {
+    override fun openFileCategory(path: Path, categoryFileModel: CategoryFileModel) {
         if (isReadStoragePermissionGranted()) {
-            val uri = path.fileProviderUri
-            val homeFragment = HomeFragment.newInstance(uri)
-            (requireActivity() as MainActivity).startNewFragment(homeFragment)
+            if (categoryFileModel.category == Category.GENERIC) {
+                val uri = path.fileProviderUri
+                val homeFragment = HomeFragment.newInstance(uri)
+                (requireActivity() as MainActivity).startNewFragment(homeFragment)
+            } else {
+                val intent = Intent(requireContext(), CategoryListScreen::class.java)
+                intent.putExtra("categoryFileModel", categoryFileModel)
+                requireActivity().startActivity(intent)
+            }
+
         }
     }
 
     override fun openItemWith(path: Path) {
-       // FileUtil().actionOpenWith(path.pathString, requireContext())
-       showImageViewerDialog(listOf(path))
+        showImageViewerDialog(listOf(path))
 
     }
-    private fun showImageViewerDialog(imagePathList: List<Path>){
-        val s = ImageViewerDialogFragment.newInstance(imagePathList)
 
+    private fun showImageViewerDialog(imagePathList: List<Path>) {
         val imageViewerDialogFragment = ImageViewerDialogFragment()
         imageViewerDialogFragment.arguments = Bundle().apply {
             putStringArrayList(
@@ -400,28 +385,24 @@ class RecentFragment : Fragment(), ItemListener {
                 java.util.ArrayList(imagePathList.map { it.pathString })
             )
         }
-        imageViewerDialogFragment.show(requireActivity().supportFragmentManager, ImageViewerDialogFragment.TAG)
+        imageViewerDialogFragment.show(
+            requireActivity().supportFragmentManager, ImageViewerDialogFragment.TAG
+        )
     }
+
     private fun isReadStoragePermissionGranted(): Boolean {
         return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            // Android 10 (API 29) e abaixo.
             ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED
         } else {
-            // Android 11 (API 30) e acima.
             ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED || Environment.isExternalStorageManager()
         }
     }
 
     override fun refreshItem() {
-
-        /*this is a quick fix i am using to update items after new ones are added,
-         the way to update items will be improved in the future*/
         initCategoryItem()
     }
 

@@ -1,14 +1,19 @@
+/*
+ * Copyright (c)  2023  Juan Nascimento
+ * Part of FileManagerSphere - InterfacePreferences.kt
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * More details at: https://www.gnu.org/licenses/
+ */
+
 package com.etb.filemanager.settings.preference
 
 import android.os.Bundle
+import android.util.Log
 import androidx.preference.ListPreference
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.etb.filemanager.R
-import com.etb.filemanager.activity.BaseActivity
-import com.etb.filemanager.files.util.getStringArray
-import com.etb.filemanager.ui.style.StyleManager
+import com.etb.filemanager.files.extensions.CornerStyle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class InterfacePreferences : PreferenceFragment() {
@@ -16,6 +21,7 @@ class InterfacePreferences : PreferenceFragment() {
         return R.string.pref_interface_title
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_interface, rootKey)
         preferenceManager.preferenceDataStore = SettingsDataStore()
@@ -30,11 +36,18 @@ class InterfacePreferences : PreferenceFragment() {
         val swtRoundedCorners = findPreference<SwitchPreferenceCompat>("rounded_corners")
         val isEnabledRoundedCorner = Preferences.Interface.isEnabledRoundedCorners
         swtRoundedCorners?.isChecked = isEnabledRoundedCorner
+        swtRoundedCorners?.setOnPreferenceChangeListener { preference, newValue ->
+            restart()
+            true
+        }
 
         //View File Information
-        val simpleMenuPreference = findPreference<ListPreference>(getString(R.string.pref_key_view_file_information))
-        val fileInformationEntries = requireContext().resources.getStringArray(R.array.view_file_information_entries)
-        val fileInformationValues = requireContext().resources.getStringArray(R.array.view_file_information_values)
+        val simpleMenuPreference =
+            findPreference<ListPreference>(getString(R.string.pref_key_view_file_information))
+        val fileInformationEntries =
+            requireContext().resources.getStringArray(R.array.view_file_information_entries)
+        val fileInformationValues =
+            requireContext().resources.getStringArray(R.array.view_file_information_values)
 
         var currentFileInformationOption = Preferences.Interface.viewFileInformationOption
         var mCurrentTheIndex = fileInformationValues.indexOf(currentFileInformationOption.name)
@@ -55,20 +68,24 @@ class InterfacePreferences : PreferenceFragment() {
         }
 
         //Transparent list background
-        val sTransparentBackground = findPreference<SwitchPreferenceCompat>(getString(R.string.pref_key_transparent_list_background))
+        val sTransparentBackground =
+            findPreference<SwitchPreferenceCompat>(getString(R.string.pref_key_transparent_list_background))
         val isEnabledTransBackground = Preferences.Interface.isEnabledTransparentListBackground
         sTransparentBackground?.isChecked = isEnabledTransBackground
 
         //Background of files in transparent list
-        val opacityEntries = requireContext().resources.getStringArray(R.array.selected_file_background_opacity_entries)
-        val opacityValues = requireContext().resources.getStringArray(R.array.selected_file_background_opacity_values)
+        val opacityEntries =
+            requireContext().resources.getStringArray(R.array.selected_file_background_opacity_entries)
+        val opacityValues =
+            requireContext().resources.getStringArray(R.array.selected_file_background_opacity_values)
 
         val currentOpacity = Preferences.Interface.selectedFileBackgroundOpacity.toString()
         var currentOpacityIndex = opacityValues.indexOf(currentOpacity)
 
         val opacitySummary = opacityEntries[currentOpacityIndex]
 
-        val selectedFileBackgroundOpacity = findPreference<Preference>(getString(R.string.pref_key_selected_file_background_opacity))!!
+        val selectedFileBackgroundOpacity =
+            findPreference<Preference>(getString(R.string.pref_key_selected_file_background_opacity))!!
 
         selectedFileBackgroundOpacity.summary = opacitySummary
         selectedFileBackgroundOpacity.setOnPreferenceClickListener { preference ->
@@ -89,15 +106,18 @@ class InterfacePreferences : PreferenceFragment() {
         }
 
         //File list margins
-        val fileListMarginsEntries = requireContext().resources.getStringArray(R.array.file_list_margins_entries)
-        val fileListMarginsValues = requireContext().resources.getStringArray(R.array.file_list_margins_values)
+        val fileListMarginsEntries =
+            requireContext().resources.getStringArray(R.array.file_list_margins_entries)
+        val fileListMarginsValues =
+            requireContext().resources.getStringArray(R.array.file_list_margins_values)
 
         val currentMargin = Preferences.Interface.fileListMargins.toString()
         var currentMarginIndex = fileListMarginsValues.indexOf(currentMargin)
 
         val fileListMarginsSummary = fileListMarginsEntries[currentMarginIndex]
 
-        val fileListMargins = findPreference<Preference>(getString(R.string.pref_key_file_list_margins))!!
+        val fileListMargins =
+            findPreference<Preference>(getString(R.string.pref_key_file_list_margins))!!
 
         fileListMargins.summary = fileListMarginsSummary
         fileListMargins.setOnPreferenceClickListener { preference ->
@@ -118,6 +138,30 @@ class InterfacePreferences : PreferenceFragment() {
             true
         }
 
+
+        //Corner family
+
+        val cornerFamilyEntries =
+            requireContext().resources.getStringArray(R.array.corner_family_entries)
+        var currentCornerFamily = Preferences.Interface.cornerFamily
+         val prefCornerFamily =
+            findPreference<Preference>(getString(R.string.pref_key_corner_family))!!
+
+        prefCornerFamily.setOnPreferenceClickListener { preference ->
+            MaterialAlertDialogBuilder(requireContext()).setTitle(getString(R.string.pref_title_corner_family))
+                .setSingleChoiceItems(cornerFamilyEntries, currentCornerFamily) { dialog, which ->
+                    if (which != currentCornerFamily) {
+                        currentCornerFamily = which
+                        Preferences.Interface.cornerFamily = currentCornerFamily
+                        restart()
+                    }
+
+                    dialog.cancel()
+                }
+                .setNegativeButton(getString(R.string.dialog_cancel)) { dialog, which ->
+                }.show()
+            true
+        }
     }
 
     enum class ViewFileInformationOption {

@@ -8,8 +8,15 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+            tools:ignore="QueryAllPackagesPermission" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES"/>
+
+
     <application
+            android:name=".data.SphereApplication"
             android:allowBackup="true"
             android:dataExtractionRules="@xml/data_extraction_rules"
             android:fullBackupContent="@xml/backup_rules"
@@ -23,7 +30,7 @@
         <activity
                 android:name=".activity.SettingsActivity"
                 android:exported="true"
-                android:windowSoftInputMode="adjustResize"/>
+                android:windowSoftInputMode="adjustResize" />
 
         <provider
                 android:name=".files.app.AppProvider"
@@ -57,7 +64,12 @@
                 <data android:mimeType="vnd.android.document/directory" />
             </intent-filter>
         </activity>
-        <activity android:name=".manager.media.MediaViewActivity"/>
+        <activity android:name=".manager.media.MediaViewActivity" />
+        <activity android:name=".compose.feature.presentation.deletedfiles.deletedfileslist.DeletedFileListScreen" />
+        <activity android:name=".compose.feature.presentation.categorylist.apklist.ApkListScreen"
+                android:exported="true"
+                />
+        <activity android:name=".compose.feature.presentation.categorylist.CategoryListScreen"/>
 
         <service
                 android:name=".manager.files.services.FileOperationService"
