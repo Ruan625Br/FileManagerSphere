@@ -1,0 +1,5 @@
+- Implemented list for categories
+- Added feature to allow users to customize the corner family
+- Reduced time to launch the video/image viewer
+- Added fast scrolling in file list
+- Various bug fixes and performance improvements for a smoother experience.
