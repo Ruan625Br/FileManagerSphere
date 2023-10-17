@@ -7,22 +7,15 @@
 
 package com.etb.filemanager.compose.feature.presentation.deletedfiles
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.etb.filemanager.data.deletedfiles.DeletedFile
 import com.etb.filemanager.data.deletedfiles.DeletedFilesRepository
-import com.etb.filemanager.manager.util.FileUtils
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.withContext
-import java.nio.file.Paths
-import kotlin.io.path.createFile
-import kotlin.io.path.exists
 
 class DeletedFileDetailsViewModel(
     private val deletedFilesRepository: DeletedFilesRepository

@@ -17,8 +17,8 @@ android {
         applicationId = "com.etb.filemanager"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.1.1"
+        versionCode = 4
+        versionName = "1.1.2"
 
         resValue("string", "app_version", "$versionName ($versionCode)")
         buildConfigField("String", "FILE_PROVIDER_AUTHORITY", "\"$applicationId.file_provider\"")
