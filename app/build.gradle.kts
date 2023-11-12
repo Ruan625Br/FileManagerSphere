@@ -21,9 +21,9 @@ android {
         versionName = "1.1.2"
 
         resValue("string", "app_version", "$versionName ($versionCode)")
-        buildConfigField("String", "FILE_PROVIDER_AUTHORITY", "\"$applicationId.file_provider\"")
-        resValue("string", "app_provider_authority", "$applicationId.app_provider")
-        resValue("string", "file_provider_authority", "$applicationId.file_provider")
+        buildConfigField("String", "FILE_PROVIDER_AUTHORITY", "\"$applicationId.jn.fileprovider\"")
+        resValue("string", "app_provider_authority", "$applicationId.jn.app_provider")
+        resValue("string", "file_provider_authority", "$applicationId.jn.file_provider")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -126,7 +126,6 @@ dependencies {
     implementation("commons-io:commons-io:2.11.0")
     implementation("org.apache.commons:commons-compress:1.20")
 
-    // https://mvnrepository.com/artifact/net.sf.sevenzipjbinding/sevenzipjbinding
     implementation("net.sf.sevenzipjbinding:sevenzipjbinding:16.02-2.01")
 
     //Google
