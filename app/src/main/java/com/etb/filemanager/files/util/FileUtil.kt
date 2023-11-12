@@ -18,6 +18,7 @@ import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import com.etb.filemanager.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.*
@@ -107,7 +108,7 @@ class FileUtil {
 
     fun shareFile(path: String, context: Context) {
         val file = File(path)
-        val uri = FileProvider.getUriForFile(context, "com.etb.filemanager.fileprovider", file)
+        val uri = FileProvider.getUriForFile(context,  BuildConfig.FILE_PROVIDER_AUTHORITY, file)
         val mimeType = getMimeType(uri, null)
 
 
@@ -131,7 +132,7 @@ class FileUtil {
         if (files.isNotEmpty()) {
             val uris = ArrayList<Uri>()
             for (file in files) {
-                val uri = FileProvider.getUriForFile(context, "com.etb.filemanager.fileprovider", file)
+                val uri = FileProvider.getUriForFile(context, BuildConfig.FILE_PROVIDER_AUTHORITY, file)
                 uris.add(uri)
             }
 
@@ -140,7 +141,7 @@ class FileUtil {
             intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-            context.startActivity(Intent.createChooser(intent, "Compartilhar arquivos tete"))
+            context.startActivity(Intent.createChooser(intent, "Compartilhar arquivos"))
         }
     }
 
@@ -158,8 +159,6 @@ class FileUtil {
 
         if (intent.resolveActivity(context.packageManager) != null) {
             context.startActivity(intent)
-        } else {
-            Toast.makeText(context, "Nenhum aplicativo encontrado para abrir o arquivo", Toast.LENGTH_SHORT).show()
         }
     }
 

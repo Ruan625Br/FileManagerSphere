@@ -38,7 +38,7 @@
                 android:exported="false" />
         <provider
                 android:name="androidx.core.content.FileProvider"
-                android:authorities="com.etb.filemanager.fileprovider"
+                android:authorities="com.etb.filemanager.jn.fileprovider"
                 android:exported="false"
                 android:grantUriPermissions="true">
             <meta-data
