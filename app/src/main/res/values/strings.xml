@@ -328,5 +328,7 @@
     <string name="app_installation_files">App Installation Files (APKs)</string>
     <string name="videos">Videos</string>
     <string name="songs">Songs</string>
+    <string name="basic">Basic</string>
+    <string name="extra">Extra</string>
 
 </resources>
