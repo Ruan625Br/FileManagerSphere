@@ -12,7 +12,6 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -61,8 +60,6 @@ import kotlin.io.path.pathString
 class RecentFragment : Fragment(), ItemListener {
 
     private lateinit var fileUtils: FileUtils
-
-    private var roundedCornersDrawable: GradientDrawable? = null
     private lateinit var cRecentImg: MaterialCardView
     private lateinit var cInternalStorage: MaterialCardView
     private lateinit var cCategoryFileItem: MaterialCardView
@@ -78,32 +75,23 @@ class RecentFragment : Fragment(), ItemListener {
         return inflater.inflate(R.layout.fragment_recent, container, false)
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        roundedCornersDrawable = null
-        //initStyleView()
-    }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val aboutFragment = AboutFragment()
-
 
         cBaseItem = view.findViewById(R.id.cBaseItems)
         cCategoryFileItem = view.findViewById(R.id.cCategoryItem)
         cRecentImg = view.findViewById(R.id.cRecentImage)
         btnAddCategory = view.findViewById(R.id.btnAddCategory)
-        val mnAbout = view.findViewById<ImageView>(R.id.mn_about)
         cInternalStorage = view.findViewById(R.id.cInternalStorage)
+
+        val mnAbout = view.findViewById<ImageView>(R.id.mn_about)
+        val aboutFragment = AboutFragment()
 
         mnAbout.setOnClickListener {
             (requireActivity() as MainActivity).startNewFragment(aboutFragment)
         }
-
         initStyleView()
-
         fileUtils = FileUtils()
         setStorageSpaceInGB()
         initCategoryItem()
@@ -117,7 +105,6 @@ class RecentFragment : Fragment(), ItemListener {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-
         showDialogStoragePermission()
 
     }
@@ -125,10 +112,7 @@ class RecentFragment : Fragment(), ItemListener {
     @SuppressLint("SuspiciousIndentation")
     fun initCategoryItem() {
         val recyclerView = requireView().findViewById<RecyclerView>(R.id.recyclerView)
-
-
         val categoryFileModels = getCategories(requireContext())
-
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 4)
         adapter = CategoryFileModelAdapter(this, categoryFileModels, requireContext())
         recyclerView.adapter = adapter
@@ -149,7 +133,6 @@ class RecentFragment : Fragment(), ItemListener {
             val recentImage = withContext(Dispatchers.IO) {
                 fileUtils.getRecentImages(requireContext())
             }
-
             recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
             val adapter = RecentImagemodelAdapter(listener, recentImage, requireContext())
             recyclerView.adapter = adapter
@@ -159,8 +142,8 @@ class RecentFragment : Fragment(), ItemListener {
     private fun initClick() {
         val itemStorage = requireView().findViewById<MaterialCardView>(R.id.cInternalStorage)
         val ivTrash = requireView().findViewById<ImageView>(R.id.mn_trash)
-        ivTrash.visibility = View.INVISIBLE
         val ivSettings = requireView().findViewById<ImageView>(R.id.iv_settings)
+        ivTrash.visibility = View.INVISIBLE
         itemStorage.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 requestPermissionLauncher.launch(Manifest.permission.MANAGE_EXTERNAL_STORAGE)
@@ -169,13 +152,11 @@ class RecentFragment : Fragment(), ItemListener {
 
             }
         }
-
         ivSettings.setOnClickListener {
             val settingsIntent: Intent = SettingsActivity().getIntent(requireContext())
             startActivity(settingsIntent)
         }
         btnAddCategory.setOnClickListener { showBottomSheetAddCategory() }
-
     }
 
     private fun openListFiles() {
@@ -202,6 +183,7 @@ class RecentFragment : Fragment(), ItemListener {
         val totalSpace = fileUtils.getStorageSpaceInGB(SpaceType.TOTAL)
         val freeSpace = fileUtils.getStorageSpaceInGB(SpaceType.FREE)
         val usedSpace = fileUtils.getStorageSpaceInGB(SpaceType.USED)
+        val animation = ObjectAnimator.ofInt(cpSpace, "progress", 0, usedSpace)
 
 
         tvSpaceUsed.text = getString(R.string.used_space_format, usedSpace)
@@ -209,17 +191,14 @@ class RecentFragment : Fragment(), ItemListener {
         tvSpaceTotal.text = getString(R.string.total_space_format, totalSpace)
         tvSpaceOf.text = getString(R.string.space_of_format, freeSpace, totalSpace)
 
-        val animation = ObjectAnimator.ofInt(cpSpace, "progress", 0, usedSpace)
         animation.duration = 1000
         animation.start()
 
         pbSpace.progress = 0
         animation.duration = 1000
         animation.addUpdateListener { valueAnimator ->
-            val progress = valueAnimator.animatedValue as Int
-            pbSpace.progress = progress
+            pbSpace.progress = valueAnimator.animatedValue as Int
         }
-
         animation.start()
     }
 
@@ -229,7 +208,6 @@ class RecentFragment : Fragment(), ItemListener {
         } else {
             requestReadWritePermission()
         }
-
     }
 
     private fun requestReadWritePermission() {

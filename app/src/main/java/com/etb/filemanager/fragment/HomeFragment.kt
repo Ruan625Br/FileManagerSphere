@@ -10,28 +10,25 @@ package com.etb.filemanager.fragment
 import android.Manifest.permission.POST_NOTIFICATIONS
 import android.animation.*
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import android.provider.DocumentsContract
 import android.provider.Settings
 import android.view.*
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.documentfile.provider.DocumentFile
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,6 +36,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
+import com.etb.filemanager.files.extensions.parcelable
 import com.etb.filemanager.files.extensions.sortFileModel
 import com.etb.filemanager.files.provider.archive.common.mime.MimeType
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeIcon
@@ -47,10 +45,7 @@ import com.etb.filemanager.files.provider.archive.common.mime.isASpecificTypeOfM
 import com.etb.filemanager.files.provider.archive.common.mime.isMedia
 import com.etb.filemanager.files.provider.archive.common.properties.*
 import com.etb.filemanager.files.util.*
-import com.etb.filemanager.interfaces.manager.FileAdapterListenerUtil
 import com.etb.filemanager.interfaces.manager.FileListener
-import com.etb.filemanager.interfaces.settings.PopupSettingsListener
-import com.etb.filemanager.interfaces.settings.util.SelectPreferenceUtils
 import com.etb.filemanager.manager.adapter.FileModel
 import com.etb.filemanager.manager.adapter.FileModelAdapter
 import com.etb.filemanager.manager.adapter.ManagerUtil
@@ -58,7 +53,6 @@ import com.etb.filemanager.manager.editor.CodeEditorFragment
 import com.etb.filemanager.manager.file.CreateFileAction
 import com.etb.filemanager.manager.file.FileAction
 import com.etb.filemanager.manager.file.FileOptionAdapter
-import com.etb.filemanager.manager.files.filecoroutine.FileCoroutineViewModel
 import com.etb.filemanager.manager.files.filecoroutine.FileOperation
 import com.etb.filemanager.manager.files.filelist.*
 import com.etb.filemanager.manager.files.services.FileOperationService
@@ -76,12 +70,9 @@ import com.etb.filemanager.ui.view.FabMenu
 import com.etb.filemanager.ui.view.ScrollingViewOnApplyWindowInsetsListener
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.*
 import java.io.File
 import java.nio.file.*
@@ -89,66 +80,49 @@ import java.util.*
 import kotlin.io.path.pathString
 
 
-private const val ARG_FILE_URI = "fileUri"
-private const val ARG_LAST_STATE_FILE_LIST = "lastStateFileList"
+class HomeFragment : Fragment(), FileListener {
 
-class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
+    private lateinit var viewModel: FileListViewModel
+    private lateinit var settingsViewModel: SettingsViewModel
+    val propertiesViewModel = PropertiesViewModel()
+
+    private lateinit var fileUtils: FileUtils
+    private lateinit var materialDialogUtils: MaterialDialogUtils
+    private lateinit var managerUtil: ManagerUtil
+    private val fileUtil = FileUtil()
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: FileModelAdapter
+
+    private lateinit var mFab: FloatingActionButton
+    private lateinit var topAppBar: MaterialToolbar
+    private lateinit var standardBottomSheet: FrameLayout
+    private lateinit var standardBottomSheetOp: FrameLayout
+    private lateinit var bottomSheetProperties: FrameLayout
+    private lateinit var bottomSheetRename: FrameLayout
+
+    private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
+    private lateinit var standardBehaviorOperation: BottomSheetBehavior<FrameLayout>
+    private lateinit var bottomSheetBehaviorProperties: BottomSheetBehavior<FrameLayout>
+    private lateinit var bottomSheetBehaviorRename: BottomSheetBehavior<FrameLayout>
+
+    private lateinit var popupSettings: PopupSettings
+
+    private var actionMode: ActionMode? = null
+    private var isActionMode = false
 
     private var fileUri: Uri? = null
     private var lastStateFileList: Parcelable? = null
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: FileModelAdapter
-    private var itemSelectedSort: Int = 0
-    private lateinit var popupSettings: PopupSettings
-    private lateinit var fileUtils: FileUtils
-    private val fileUtil = FileUtil()
-
-    private lateinit var mFab: FloatingActionButton
-
-
-    private lateinit var materialDialogUtils: MaterialDialogUtils
-    private var fileModel = mutableListOf<FileModel>()
-
-    private lateinit var managerUtil: ManagerUtil
-
-
-    private var actionMode: androidx.appcompat.view.ActionMode? = null
-    private var isActionMode = false
-    private lateinit var topAppBar: MaterialToolbar
-
-    private lateinit var selectPreferenceUtils: SelectPreferenceUtils
-    private lateinit var fileAdapterListenerUtil: FileAdapterListenerUtil
-
-    private lateinit var standardBottomSheet: FrameLayout
-    private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
-    private lateinit var standardBottomSheetOp: FrameLayout
-    private lateinit var standardBehaviorOperation: BottomSheetBehavior<FrameLayout>
-    private lateinit var bottomSheetProperties: FrameLayout
-    private lateinit var bottomSheetBehaviorProperties: BottomSheetBehavior<FrameLayout>
-    private lateinit var bottomSheetRename: FrameLayout
-    private lateinit var bottomSheetBehaviorRename: BottomSheetBehavior<FrameLayout>
-
-    private lateinit var settingsViewModel: SettingsViewModel
     private var showHiddenFiles = false
 
-    private lateinit var viewModel: FileListViewModel
-    private lateinit var coroutineViewModel: FileCoroutineViewModel
-
-    val propertiesViewModel = PropertiesViewModel()
-
-    private val REQUEST_CODE = 6
-
-    private var progressDialog: AlertDialog? = null
-    private var isProgressDialogShowing = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            fileUri = it.getParcelable(ARG_FILE_URI)
-            lastStateFileList = it.getParcelable(ARG_LAST_STATE_FILE_LIST)
+            fileUri = it.parcelable(ARG_FILE_URI)
+            lastStateFileList = it.parcelable(ARG_LAST_STATE_FILE_LIST)
         }
-        setHasOptionsMenu(true)
     }
 
 
@@ -168,12 +142,12 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         mFab = view.findViewById(R.id.mfab)
         settingsViewModel = SettingsViewModel(requireContext())
         viewModel = ViewModelProvider(this)[FileListViewModel::class.java]
-        coroutineViewModel = ViewModelProvider(this)[FileCoroutineViewModel::class.java]
 
 
         showHiddenFiles = settingsViewModel.getActionShowHiddenFiles()
         topAppBar = view.findViewById(R.id.topAppBar)
         initToolbar()
+        setupMenu()
 
         recyclerView = view.findViewById(R.id.recyclerView)
 
@@ -185,16 +159,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
         observeSettings()
         observeViewModel()
-        observeOperationViewModel()
-
         initFabClick()
-
-
-
-
-        selectPreferenceUtils = SelectPreferenceUtils.getInstance()
-        fileAdapterListenerUtil = FileAdapterListenerUtil.getInstance()
-        selectPreferenceUtils.setListener(this, requireContext())
 
         val spanCount = if (Preferences.Popup.isGridEnabled) 2 else 1
         recyclerView.layoutManager = GridLayoutManager(requireActivity(), spanCount)
@@ -207,7 +172,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
             )
         }
         lastStateFileList?.let { recyclerView.layoutManager!!.onRestoreInstanceState(it) }
-
 
     }
 
@@ -228,37 +192,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
     }
 
-
-    private fun observeOperationViewModel() {
-
-        coroutineViewModel.operationInfo.observe(viewLifecycleOwner) { info ->
-            if (info.progress != null) {
-                updateProgress(info.title, info.message, info.message.toInt())
-            } else {
-                progressDialog?.cancel()
-            }
-        }
-
-    }
-
     fun onNewIntent(uri: Uri) {
         navigateTo(fileUtil.getFilePathFromUri(requireContext(), uri).toString())
-
-    }
-
-
-    @SuppressLint("NotifyDataSetChanged")
-    override fun onItemSelectedActionSort(itemSelected: Int, itemSelectedFolderFirst: Boolean) {
-        itemSelectedSort = itemSelected
-        if (::adapter.isInitialized) {
-            selectPreferenceUtils.sortFilesAuto(fileModel, requireContext())
-            refreshAdapter()
-        }
-    }
-
-
-    override fun onFileInfoReceived(currentPath: String) {
-
 
     }
 
@@ -269,11 +204,10 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
     private fun createDialogE(e: String) {
         val title = requireContext().getString(R.string.error)
-        val text = e
         val textPositiveButton = requireContext().getString(R.string.dialog_ok)
 
         materialDialogUtils.createDialogInfo(
-            title, text, textPositiveButton, "", requireContext(), false
+            title, e, textPositiveButton, "", requireContext(), false
         ) { dialogResult ->
             val isConfirmed = dialogResult.confirmed
             if (isConfirmed) {
@@ -341,12 +275,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun refreshAdapter() {
-
-        adapter.notifyDataSetChanged()
-
-    }
     private fun onToggleGridChange(isGridEnabled: Boolean) {
         val spanCount = if (isGridEnabled) 2 else 1
         recyclerView.animateSpanChange(spanCount)
@@ -456,211 +384,24 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         actionMode?.finish()
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_file_list, menu)
-
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        val itemSortByName = menu.findItem(R.id.action_sort_by_name)
-        val itemSortByType = menu.findItem(R.id.action_sort_by_type)
-        val itemSortBySize = menu.findItem(R.id.action_sort_by_size)
-        val itemSortByLastModified = menu.findItem(R.id.action_sort_by_last_modified)
-        val itemSortOrderAscending = menu.findItem(R.id.action_sort_order_ascending)
-        val itemSortDirectoriesFirst = menu.findItem(R.id.action_sort_directories_first)
-        val itemShowHiddenFiles = menu.findItem(R.id.action_show_hidden_files)
-        val itemToggleGrid = menu.findItem(R.id.action_toggle_grid)
-
-
-        itemSortOrderAscending.isChecked =
-            (Preferences.Popup.orderFiles == FileSortOptions.Order.ASCENDING)
-        itemSortDirectoriesFirst.isChecked = Preferences.Popup.isDirectoriesFirst
-        itemShowHiddenFiles.isChecked = Preferences.Popup.showHiddenFiles
-        val quantity = if (Preferences.Popup.isGridEnabled) 1 else 2
-        val titleToggleGrid = getQuantityString(R.plurals.file_list_action_toggle_grid, quantity)
-        itemToggleGrid.title = titleToggleGrid
-
-        val menuItems: MutableList<MenuItem> = ArrayList()
-        itemSortByName?.let { menuItems.add(it) }
-        itemSortByType?.let { menuItems.add(it) }
-        itemSortBySize?.let { menuItems.add(it) }
-        menuItems.add(itemSortByLastModified)
-
-        val checkedSortByItem = when (Preferences.Popup.sortBy) {
-            FileSortOptions.SortBy.NAME -> itemSortByName
-            FileSortOptions.SortBy.TYPE -> itemSortByType
-            FileSortOptions.SortBy.SIZE -> itemSortBySize
-            FileSortOptions.SortBy.LAST_MODIFIED -> itemSortByLastModified
-        }
-        checkedSortByItem.isChecked = true
-
-
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_toggle_grid -> {
-                viewModel.setGriToggle()
-            }
-
-            R.id.action_sort_by_name -> {
-                viewModel.setSortBy(FileSortOptions.SortBy.NAME)
-            }
-
-            R.id.action_sort_by_type -> {
-                viewModel.setSortBy(FileSortOptions.SortBy.TYPE)
-            }
-
-            R.id.action_sort_by_size -> {
-                viewModel.setSortBy(FileSortOptions.SortBy.SIZE)
-            }
-
-            R.id.action_sort_by_last_modified -> {
-                viewModel.setSortBy(FileSortOptions.SortBy.LAST_MODIFIED)
-            }
-
-            R.id.action_sort_order_ascending -> {
-                viewModel.setOrderFiles()
-            }
-
-            R.id.action_sort_directories_first -> {
-                viewModel.setDirectoriesFirst()
-            }
-
-            R.id.action_refresh -> {
-                refresh()
-            }
-
-            R.id.action_select_all -> {
-                adapter.selectAllFiles()
-            }
-
-            R.id.action_navigate_to -> {
-                createDialogNavigateTo()
-            }
-
-            R.id.action_show_hidden_files -> {
-                viewModel.setShowHiddenFiles(!Preferences.Popup.showHiddenFiles)
-            }
-
-            R.id.action_share -> {
-                val mPath = viewModel.currentPath!!.pathString
-                shareFiles(null, listOf(mPath))
-            }
-
-            R.id.action_copy_path -> {
-                fileUtil.copyTextToClipboard(
-                    requireContext(), viewModel.currentPathLiveData.value.toString(), true
-                )
-            }
-
-            else -> return super.onOptionsItemSelected(item)
-        }
-        activity?.invalidateOptionsMenu()
-        return true
-    }
-
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param fileUri File uri.
-         * @return A new instance of fragment HomeFragment.
-         */
-        @JvmStatic
-        fun newInstance(fileUri: Uri? = null, lastState: Parcelable? = null) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(ARG_FILE_URI, fileUri)
-                    putParcelable(ARG_LAST_STATE_FILE_LIST, lastState)
-                }
-            }
-
-
-    }
-
-    @RequiresApi(Build.VERSION_CODES.R)
-    private fun requestAllFilesPermission() {
-        val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
-        intent.addCategory("android.intent.category.DEFAULT")
-        intent.data = Uri.fromParts("package", requireContext().packageName, null)
-        startActivity(intent)
-    }
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                data.data?.let { treeUri ->
-                    requireContext().contentResolver.takePersistableUriPermission(
-                        treeUri,
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                    )
-                    val path = getFolderPathFromUri(treeUri)
-                    if (path != null) {
-                        navigateTo(path)
-                    } else {
-                        // Tratar o caso em que não foi possível obter o caminho da URI da árvore
-                    }
-                }
-            }
-        }
-
-
-    }
-
-
-    private fun getFolderPathFromUri(uri: Uri): String? {
-        val docUri = DocumentsContract.buildDocumentUriUsingTree(
-            uri, DocumentsContract.getTreeDocumentId(uri)
-        )
-        val resolver = requireContext().contentResolver
-
-        resolver.query(docUri, null, null, null, null)?.use { cursor ->
-            if (cursor.moveToFirst()) {
-                val pathIndex = cursor.getColumnIndex(DocumentsContract.Root.COLUMN_DOCUMENT_ID)
-                val fullPath = cursor.getString(pathIndex)
-                return fullPath?.removePrefix("tree:")
-            }
-        }
-
-        return null
-    }
-
-
-    private fun listFiles(folder: DocumentFile): List<Uri> {
-        return if (folder.isDirectory) {
-            folder.listFiles().mapNotNull { file ->
-                if (file.name != null) file.uri else null
-            }
-        } else {
-            emptyList()
-        }
-    }
-
     private fun setUpActionMode() {
 
-        val actionModeCallback = object : androidx.appcompat.view.ActionMode.Callback {
+        val actionModeCallback = object : ActionMode.Callback {
             override fun onCreateActionMode(
-                mode: androidx.appcompat.view.ActionMode?, menu: Menu?
+                mode: ActionMode?, menu: Menu?
             ): Boolean {
                 mode?.menuInflater?.inflate(R.menu.menu_file_lis_select, menu)
                 return true
             }
 
             override fun onPrepareActionMode(
-                mode: androidx.appcompat.view.ActionMode?, menu: Menu?
+                mode: ActionMode?, menu: Menu?
             ): Boolean {
                 return false
             }
 
             override fun onActionItemClicked(
-                mode: androidx.appcompat.view.ActionMode?, item: MenuItem?
+                mode: ActionMode?, item: MenuItem?
             ): Boolean {
                 return when (item?.itemId) {
                     R.id.action_cut -> {
@@ -698,9 +439,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
                     R.id.action_rename -> {
                         val selectedFile = viewModel.selectedFiles.toMutableList()
-                        if (viewModel.selectedFiles.size == 1) showRenameFileDialog(selectedFile.first()) else showBottomSheetRenameMultipleFiles(
-                            viewModel.selectedFiles
-                        )
+                        if (viewModel.selectedFiles.size == 1) {
+
+                            showRenameFileDialog(selectedFile.first())
+                        } else {
+                            showBottomSheetRenameMultipleFiles(
+                                viewModel.selectedFiles
+                            )
+                        }
                         finishActionMode()
                         true
                     }
@@ -714,12 +460,11 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
                 }
             }
 
-            override fun onDestroyActionMode(mode: androidx.appcompat.view.ActionMode?) {
+            override fun onDestroyActionMode(mode: ActionMode?) {
                 actionMode = null
                 clearSelectedFiles()
             }
         }
-
         actionMode = (activity as AppCompatActivity?)!!.startSupportActionMode(actionModeCallback)
 
 
@@ -746,21 +491,20 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         viewModel.reload()
     }
 
-    fun navigateTo(path: String) {
+    private fun navigateTo(path: String) {
         val state = recyclerView.layoutManager!!.onSaveInstanceState()
         viewModel.navigateTo(state!!, Paths.get(path))
 
     }
 
 
-    fun createDialogNavigateTo() {
+    private fun createDialogNavigateTo() {
         val mPath = viewModel.currentPath?.pathString!!
         val title = requireContext().getString(R.string.file_list_action_navigate_to)
-        val text = mPath
         val textPositiveButton = requireContext().getString(R.string.dialog_ok)
 
         materialDialogUtils.createBasicMaterial(
-            title, text, textPositiveButton, requireContext()
+            title, mPath, textPositiveButton, requireContext()
         ) { dialogResult ->
             val isConfirmed = dialogResult.confirmed
             val enteredText = dialogResult.text
@@ -791,7 +535,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     }
 
     override fun openFile(file: FileModel) {
-        val pickOptions = viewModel.pickOptions
         if (file.isDirectory) {
             navigateTo(file.filePath)
         } else {
@@ -802,15 +545,13 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     override fun openFileWith(file: FileModel) {
         val path = file.filePath
         val mimeType = fileUtil.getMimeType(null, path)
-        val uri = Paths.get(path).fileProviderUri
 
+        val isSpecificFileType = if (mimeType != null) {
+            MimeTypeUtil().isSpecificFileType(
+                mimeType, MimeTypeIcon.CODE
+            )
+        } else false
 
-        val isSpecificFileType = if (mimeType != null) MimeTypeUtil().isSpecificFileType(
-            mimeType, MimeTypeIcon.CODE
-        ) else false
-        val isImage = if (mimeType != null) MimeTypeUtil().isSpecificFileType(
-            mimeType, MimeTypeIcon.IMAGE
-        ) else false
         if (!file.isDirectory && isSpecificFileType) {
             val state = recyclerView.layoutManager!!.onSaveInstanceState()
             val fileUri = Uri.fromFile(File(path))
@@ -820,6 +561,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
                 .setReadOnly(false).setLastState(state).build()
             val fragment = CodeEditorFragment()
             val args = Bundle()
+
             args.putParcelable(CodeEditorFragment.ARG_OPTIONS, options)
             fragment.arguments = args
             (requireActivity() as MainActivity).startNewFragment(fragment)
@@ -841,7 +583,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
                         mime != null && MimeType(mime).isMedia()
                     }
 
-                    if (filteredFiles != null && filteredFiles.isNotEmpty()) {
+                    if (!filteredFiles.isNullOrEmpty()) {
 
                         val mediasList = filteredFiles.map { file ->
                             val media = withContext(Dispatchers.IO) {
@@ -860,18 +602,17 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
                 }
             }
 
-            if (mimeTypeObj.isASpecificTypeOfMime(MimeType.APK))
-               showBottomSheetInstallAPK(file)
+            if (mimeTypeObj.isASpecificTypeOfMime(MimeType.APK)) showBottomSheetInstallAPK(file)
         }
 
     }
 
     override fun cutFile(file: FileItemSet) {
-        createBottomSheetOperation(file, false, null, FileOperation.MOVE)
+        createBottomSheetOperation(file, null, FileOperation.MOVE)
     }
 
     override fun copyFile(file: FileItemSet) {
-        createBottomSheetOperation(file, true, null, FileOperation.MOVE)
+        createBottomSheetOperation(file, null, FileOperation.COPY)
     }
 
     override fun confirmDeleteFile(files: FileItemSet?, fileItem: FileModel?) {
@@ -885,9 +626,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
             paths = listOf(fileItem!!.filePath)
             file = fileItem
         } else {
-            val files = files.toList()
-            paths = files.map { it.filePath }
-            file = files.first()
+            val filesList = files.toList()
+            paths = filesList.map { it.filePath }
+            file = filesList.first()
 
         }
         val text = getQuantityString(
@@ -924,45 +665,18 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         }
     }
 
-    override fun extractFile(file: FileModel) {
-        TODO("Not yet implemented")
-    }
-
-    override fun showCreateArchiveDialog(file: FileModel) {
-        TODO("Not yet implemented")
-    }
-
-    override fun shareFile(file: FileModel) {
-        TODO("Not yet implemented")
-    }
-
-    override fun copyPath(file: FileModel) {
-        TODO("Not yet implemented")
-    }
-
-    override fun addBookmark(file: FileModel) {
-        TODO("Not yet implemented")
-    }
-
-    override fun createShortcut(file: FileModel) {
-        TODO("Not yet implemented")
-    }
-
-    override fun showPropertiesDialog(file: FileModel) {
-        TODO("Not yet implemented")
-    }
-
     override fun showBottomSheet(file: FileModel) {
         showBottomSheetMoreActionFile(file)
     }
-    override fun showBottomSheetInstallAPK(file: FileModel){
-        BottomSheetInstallAPK.newInstance(file).show(parentFragmentManager, BottomSheetInstallAPK.TAG)
+
+    override fun showBottomSheetInstallAPK(file: FileModel) {
+        BottomSheetInstallAPK.newInstance(file)
+            .show(parentFragmentManager, BottomSheetInstallAPK.TAG)
     }
 
     override fun onClickFileAction(file: FileModel, action: CreateFileAction) {
 
         when (action) {
-
             CreateFileAction.OPEN_WITH -> {
                 fileUtil.actionOpenWith(file.filePath, requireContext())
             }
@@ -972,16 +686,16 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
             }
 
             CreateFileAction.EXTRACT -> {
-                createBottomSheetOperation(null, true, file, FileOperation.EXTRACT)
+                createBottomSheetOperation(null, file, FileOperation.EXTRACT)
 
             }
 
             CreateFileAction.CUT -> {
-                createBottomSheetOperation(null, false, file, FileOperation.MOVE)
+                createBottomSheetOperation(null, file, FileOperation.MOVE)
             }
 
             CreateFileAction.COPY -> {
-                createBottomSheetOperation(null, true, file, FileOperation.COPY)
+                createBottomSheetOperation(null, file, FileOperation.COPY)
             }
 
             CreateFileAction.RENAME -> {
@@ -1114,7 +828,7 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
     @SuppressLint("SetTextI18n")
     private fun createBottomSheetOperation(
-        files: FileItemSet?, copy: Boolean, fileItem: FileModel?, operation: FileOperation
+        files: FileItemSet?, fileItem: FileModel?, operation: FileOperation
     ) {
 
         val ivCloseOp = requireView().findViewById<ImageView>(R.id.iv_close_op)
@@ -1125,7 +839,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         standardBehaviorOperation.maxHeight = 500
         standardBehaviorOperation.state = BottomSheetBehavior.STATE_EXPANDED
         val file: FileModel
-        val mFiles: MutableList<FileModel>
         val paths: List<Path>
 
 
@@ -1167,7 +880,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
         tvTitleOp.text = title
 
-
         ivStartOp.setOnClickListener {
             val destinationDir = viewModel.currentPath.toString()
             when (operation) {
@@ -1178,7 +890,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
             }
             standardBehaviorOperation.state = BottomSheetBehavior.STATE_HIDDEN
         }
-
         ivCloseOp.setOnClickListener {
             standardBehaviorOperation.state = BottomSheetBehavior.STATE_HIDDEN
         }
@@ -1217,15 +928,14 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
         val tabLayout = requireView().findViewById<TabLayout>(R.id.tabLayout)
 
-        tabLayout.addTab(tabLayout.newTab().setText("Básico"))
-        tabLayout.addTab(tabLayout.newTab().setText("Extra"))
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.basic)))
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.extra)))
 
         bottomSheetProperties.isFocusableInTouchMode = true
         bottomSheetProperties.requestFocus()
         bottomSheetBehaviorProperties.peekHeight = 1000
         bottomSheetBehaviorProperties.maxHeight = 1000
         bottomSheetBehaviorProperties.state = BottomSheetBehavior.STATE_EXPANDED
-
 
         bottomSheetBehaviorProperties.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
@@ -1234,21 +944,18 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
                     tabLayout.clearOnTabSelectedListeners()
                     tabLayout.removeAllTabs()
-
                     pa.adapter = null
-
 
                 }
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
-            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
 
 
     }
 
+    @SuppressLint("InflateParams")
     private fun showBottomSheetRenameMultipleFiles(files: FileItemSet) {
 
         val listInputEditText = mutableListOf<TextInputEditText>()
@@ -1256,23 +963,18 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
         val paths = mutableListOf<Path>()
         val layout = requireView().findViewById<LinearLayout>(R.id.linearLayout)
         val tvTitle = requireView().findViewById<TextView>(R.id.tv_title_rename)
-
-
         val btnRename = requireView().findViewById<Button>(R.id.btn_rename)
 
 
-        for (fileItem in files.toMutableList()) {
-            if (!selectedFiles.contains(fileItem)) {
-                selectedFiles.add(fileItem)
-            }
+        files.toMutableList().forEach {
+            if (!selectedFiles.contains(it)) selectedFiles.add(it)
         }
 
         tvTitle.text = resources.getQuantityString(R.plurals.renamingItems, 1, selectedFiles.size)
-        for (file in selectedFiles) {
+        selectedFiles.forEach { file ->
             val inflater = LayoutInflater.from(requireContext())
 
             val view = inflater.inflate(R.layout.layout_basic_dialog, null)
-            val textInputLayout = view.findViewById<TextInputLayout>(R.id.eInputLayout)
             val textInputEditText = view.findViewById<TextInputEditText>(R.id.eInputEditText)
 
             textInputEditText.setText(file.fileName)
@@ -1325,14 +1027,9 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     }
 
     private fun delete(paths: List<String>) {
-
-      /*  val it = Intent(requireContext(), DeletedFileListScreen::class.java)
-        it.putStringArrayListExtra("pathList", ArrayList(paths))
-        startActivity(it)
-*/
         askPermission()
         val intent = Intent(requireContext(), FileOperationService::class.java)
-        intent.putStringArrayListExtra("sourcePaths", ArrayList<String>(paths))
+        intent.putStringArrayListExtra("sourcePaths", ArrayList(paths))
         intent.putExtra("destinationPath", "null")
         intent.putExtra("operation", FileOperation.DELETE)
         ContextCompat.startForegroundService(requireContext(), intent)
@@ -1342,8 +1039,8 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
     private fun rename(paths: List<Path>, newNames: List<String>) {
         val mPaths = paths.map { it.toAbsolutePath().toString() }
         val intent = Intent(requireContext(), FileOperationService::class.java)
-        intent.putStringArrayListExtra("sourcePaths", ArrayList<String>(mPaths))
-        intent.putStringArrayListExtra("newNames", ArrayList<String>(newNames))
+        intent.putStringArrayListExtra("sourcePaths", ArrayList(mPaths))
+        intent.putStringArrayListExtra("newNames", ArrayList(newNames))
         intent.putExtra("operation", FileOperation.RENAME)
         ContextCompat.startForegroundService(requireContext(), intent)
     }
@@ -1401,46 +1098,6 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
                 })
             }
 
-            else -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    requestPermissionLauncher.launch(
-                        POST_NOTIFICATIONS
-                    )
-                }
-            }
-        }
-    }
-
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-        } else {
-        }
-    }
-
-
-
-    private fun updateProgress(title: String, msg: String, progress: Int) {
-        if (!isProgressDialogShowing) {
-            val inflater = LayoutInflater.from(context)
-            val dialogView = inflater.inflate(R.layout.basic_dialog_progress, null)
-            val lProgress = dialogView.findViewById<LinearProgressIndicator>(R.id.progressindicator)
-
-            lProgress.progress = progress
-
-            val builder =
-                MaterialAlertDialogBuilder(requireContext()).setView(dialogView).setTitle(title)
-                    .setMessage(msg).setCancelable(false)
-
-            progressDialog = builder.create()
-            progressDialog?.show()
-            isProgressDialogShowing = true
-        } else {
-            progressDialog?.setMessage(msg)
-            val lProgress =
-                progressDialog?.findViewById<LinearProgressIndicator>(R.id.progressindicator)
-            lProgress?.progress = progress
         }
     }
 
@@ -1452,8 +1109,141 @@ class HomeFragment : Fragment(), PopupSettingsListener, FileListener {
 
     }
 
+    private fun setupMenu() {
+        val menuHost: MenuHost = requireActivity()
+
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_file_list, menu)
+            }
+
+            override fun onPrepareMenu(menu: Menu) {
+                super.onPrepareMenu(menu)
+
+                val itemSortByName = menu.findItem(R.id.action_sort_by_name)
+                val itemSortByType = menu.findItem(R.id.action_sort_by_type)
+                val itemSortBySize = menu.findItem(R.id.action_sort_by_size)
+                val itemSortByLastModified = menu.findItem(R.id.action_sort_by_last_modified)
+                val itemSortOrderAscending = menu.findItem(R.id.action_sort_order_ascending)
+                val itemSortDirectoriesFirst = menu.findItem(R.id.action_sort_directories_first)
+                val itemShowHiddenFiles = menu.findItem(R.id.action_show_hidden_files)
+                val itemToggleGrid = menu.findItem(R.id.action_toggle_grid)
+
+
+                itemSortOrderAscending.isChecked =
+                    (Preferences.Popup.orderFiles == FileSortOptions.Order.ASCENDING)
+                itemSortDirectoriesFirst.isChecked = Preferences.Popup.isDirectoriesFirst
+                itemShowHiddenFiles.isChecked = Preferences.Popup.showHiddenFiles
+                val quantity = if (Preferences.Popup.isGridEnabled) 1 else 2
+                val titleToggleGrid =
+                    getQuantityString(R.plurals.file_list_action_toggle_grid, quantity)
+                itemToggleGrid.title = titleToggleGrid
+
+                val menuItems: MutableList<MenuItem> = ArrayList()
+                itemSortByName?.let { menuItems.add(it) }
+                itemSortByType?.let { menuItems.add(it) }
+                itemSortBySize?.let { menuItems.add(it) }
+                menuItems.add(itemSortByLastModified)
+
+                val checkedSortByItem = when (Preferences.Popup.sortBy) {
+                    FileSortOptions.SortBy.NAME -> itemSortByName
+                    FileSortOptions.SortBy.TYPE -> itemSortByType
+                    FileSortOptions.SortBy.SIZE -> itemSortBySize
+                    FileSortOptions.SortBy.LAST_MODIFIED -> itemSortByLastModified
+                }
+                checkedSortByItem.isChecked = true
+
+
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                handleMenuItemSelected(menuItem)
+                requireActivity().invalidateMenu()
+                return true
+            }
+
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun handleMenuItemSelected(menuItem: MenuItem) {
+        when (menuItem.itemId) {
+            R.id.action_toggle_grid -> {
+                viewModel.setGriToggle()
+            }
+
+            R.id.action_sort_by_name -> {
+                viewModel.setSortBy(FileSortOptions.SortBy.NAME)
+            }
+
+            R.id.action_sort_by_type -> {
+                viewModel.setSortBy(FileSortOptions.SortBy.TYPE)
+            }
+
+            R.id.action_sort_by_size -> {
+                viewModel.setSortBy(FileSortOptions.SortBy.SIZE)
+            }
+
+            R.id.action_sort_by_last_modified -> {
+                viewModel.setSortBy(FileSortOptions.SortBy.LAST_MODIFIED)
+            }
+
+            R.id.action_sort_order_ascending -> {
+                viewModel.setOrderFiles()
+            }
+
+            R.id.action_sort_directories_first -> {
+                viewModel.setDirectoriesFirst()
+            }
+
+            R.id.action_refresh -> {
+                refresh()
+            }
+
+            R.id.action_select_all -> {
+                adapter.selectAllFiles()
+            }
+
+            R.id.action_navigate_to -> {
+                createDialogNavigateTo()
+            }
+
+            R.id.action_show_hidden_files -> {
+                viewModel.setShowHiddenFiles(!Preferences.Popup.showHiddenFiles)
+            }
+
+            R.id.action_share -> {
+                val mPath = viewModel.currentPath!!.pathString
+                shareFiles(null, listOf(mPath))
+            }
+
+            R.id.action_copy_path -> {
+                fileUtil.copyTextToClipboard(
+                    requireContext(), viewModel.currentPathLiveData.value.toString(), true
+                )
+            }
+        }
+    }
+
+    companion object {
+        private const val ARG_FILE_URI = "fileUri"
+        private const val ARG_LAST_STATE_FILE_LIST = "lastStateFileList"
+
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param fileUri File uri.
+         * @return A new instance of fragment HomeFragment.
+         */
+        @JvmStatic
+        fun newInstance(fileUri: Uri? = null, lastState: Parcelable? = null) =
+            HomeFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(ARG_FILE_URI, fileUri)
+                    putParcelable(ARG_LAST_STATE_FILE_LIST, lastState)
+                }
+            }
+
+
+    }
 }
-
-
-
-

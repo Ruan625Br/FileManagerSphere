@@ -27,10 +27,6 @@ import java.util.Objects
 class SettingsActivity : BaseActivity(),
     PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     private lateinit var binding: ActivitySettingsBinding
-
-    private val SCHEME = "file-manager-sphere"
-    private val HOST = "settings"
-
     private var mLevel = 0
     private var mKeys: List<String> = emptyList()
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -53,12 +49,12 @@ class SettingsActivity : BaseActivity(),
         }
 
 
-        val uri = getIntent().data
-        if (uri != null && SCHEME.equals(uri.scheme) && HOST.equals(uri.host) && uri.path != null) {
+        val uri = intent.data
+        if (uri != null && SCHEME == uri.scheme && HOST == uri.host && uri.path != null) {
             mKeys = Objects.requireNonNull(uri.pathSegments)
         }
 
-        supportFragmentManager.addFragmentOnAttachListener { fragmentManager, fragment ->
+        supportFragmentManager.addFragmentOnAttachListener { _, fragment ->
             if (fragment !is SettingsFragment) {
                 ++mLevel
             }
@@ -67,10 +63,8 @@ class SettingsActivity : BaseActivity(),
             mLevel = supportFragmentManager.backStackEntryCount
         }
         if (argsSavedInstanceState == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.main_layout, SettingsFragment().getInstance(getKey(mLevel)))
-                .commit()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.main_layout, SettingsFragment().getInstance(getKey(mLevel))).commit()
         }
     }
 
@@ -82,7 +76,7 @@ class SettingsActivity : BaseActivity(),
             val fragment: Fragment? = supportFragmentManager.findFragmentById(R.id.main_layout)
             if (fragment is SettingsFragment) {
                 getKey(0.also {
-                    mLevel = it
+                    mLevel = 0
                 })?.let { (fragment as SettingsFragment?)?.setPrefKey(it) }
             }
         }
@@ -108,9 +102,7 @@ class SettingsActivity : BaseActivity(),
     }
 
     private fun getSettingUri(vararg pathSegments: String): Uri {
-        val builder = Uri.Builder()
-            .scheme(SCHEME)
-            .authority(HOST)
+        val builder = Uri.Builder().scheme(SCHEME).authority(HOST)
         for (pathSegment in pathSegments) {
             builder.appendPath(pathSegment)
         }
@@ -125,8 +117,7 @@ class SettingsActivity : BaseActivity(),
     }
 
     override fun onPreferenceStartFragment(
-        caller: PreferenceFragmentCompat,
-        pref: Preference
+        caller: PreferenceFragmentCompat, pref: Preference
     ): Boolean {
         if (pref.fragment != null) {
             val fragmentManager = supportFragmentManager
@@ -134,18 +125,15 @@ class SettingsActivity : BaseActivity(),
             val fragment = fragmentManager.fragmentFactory.instantiate(classLoader, pref.fragment!!)
             val subKey = getKey(mLevel + 1)
             if (subKey != null && fragment is PreferenceFragment && Objects.equals(
-                    pref.key,
-                    getKey(mLevel)
+                    pref.key, getKey(mLevel)
                 )
             ) {
                 args.putString("key", subKey)
             }
             fragment.arguments = args
             fragment.setTargetFragment(caller, 0)
-            fragmentManager.beginTransaction()
-                .replace(R.id.main_layout, fragment)
-                .addToBackStack(null)
-                .commit()
+            fragmentManager.beginTransaction().replace(R.id.main_layout, fragment)
+                .addToBackStack(null).commit()
             return true
         }
         return false
@@ -157,6 +145,13 @@ class SettingsActivity : BaseActivity(),
         }
 
         applyConfigurationChangesToActivities(savedInstanceState)
+
+    }
+
+    companion object {
+
+        private const val SCHEME = "file-manager-sphere"
+        private const val HOST = "settings"
 
     }
 }
