@@ -275,16 +275,13 @@
     <string name="experimental_trash_can">Lata de lixo experimental</string>
     <string name="corner_family_rounded">Arredondado</string>
     <string name="rotate_screen_cd">Girar Tela</string>
-    <string name="pref_key_selected_file_background_opacity">selecionado_arquivo_fundo_opacidade</string>
     <string name="pref_summary_show_fast_scroll">Ative ou desative a rolagem rápida na lista de arquivos.</string>
     <string name="corner_family_cut_top_left">Cortado (canto superior esquerdo)</string>
     <string name="edit">Editar</string>
     <string name="pref_title_corner_family">Família arredondada</string>
     <string name="restore">Restaurar</string>
     <string name="corner_family_cut">Cortar</string>
-    <string name="pref_key_transparent_list_background">transparente_lista_fundo</string>
     <string name="pref_title_show_fast_scroll">Mostrar scroll rápido na lista de arquivos</string>
-    <string name="pref_key_show_fast_scroll">mostrar_scroll_rapido</string>
     <string name="corner_family_rounded_top_right">Arredondado (Canto superior direito)</string>
     <string name="corner_family_cut_top_right">Cortado (canto superior direito)</string>
     <string name="play_video">Reproduzir vídeo</string>
@@ -293,10 +290,8 @@
     <string name="pref_summary_corner_family">Escolha o arredondamento de cantos para seu layout.</string>
     <string name="cancel">Cancelar</string>
     <string name="corner_family_cut_top_right_bottom">Cortado (superior direito e inferior)</string>
-    <string name="pref_key_corner_family">familia_arredondada</string>
     <string name="corner_family_rounded_top_left">Arredondado (Canto superior esquerdo)</string>
     <string name="corner_family_rounded_top_right_bottom_left">Arredondado (superior direito e inferior esquerdo)</string>
-    <string name="pref_key_file_list_margins">arquivo_lista_margens</string>
     <string name="trash_is_empty">Lixeira está vazia</string>
     <string name="pause_video">Pausar vídeo</string>
     <string name="unable_to_get_apk_package">Não foi possível obter o pacote apk</string>
