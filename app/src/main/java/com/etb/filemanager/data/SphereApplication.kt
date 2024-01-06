@@ -10,7 +10,9 @@ package com.etb.filemanager.data
 import android.app.Application
 import com.etb.filemanager.data.deletedfiles.AppContainer
 import com.etb.filemanager.data.deletedfiles.AppDataContainer
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class SphereApplication : Application() {
 
     lateinit var container: AppContainer

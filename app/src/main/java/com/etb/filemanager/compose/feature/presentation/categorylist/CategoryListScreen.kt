@@ -24,7 +24,9 @@ import com.etb.filemanager.files.util.toggleOrientation
 import com.etb.filemanager.manager.category.adapter.CategoryFileModel
 import com.etb.filemanager.manager.category.adapter.getName
 import com.etb.filemanager.ui.theme.FileManagerTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CategoryListScreen : BaseScreen() {
     private var categoryFileModel: CategoryFileModel? = null
 
