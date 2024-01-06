@@ -1,7 +1,7 @@
 [versions]
 
 agp = "8.2.0"
-kotlin = "1.9.10"
+kotlin = "1.9.20"
 junit = "1.1.5"
 espresso-core = "3.5.1"
 uiautomator = "2.3.0-alpha04"

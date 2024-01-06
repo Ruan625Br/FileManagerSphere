@@ -43,7 +43,7 @@ android {
 
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = "1.5.5"
     }
 
 
@@ -71,10 +71,9 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes.add("/META-INF/{AL2.0,LGPL2.1}")
-
         }
     }
 
@@ -84,7 +83,6 @@ dependencies {
     val material3 = "1.2.0-alpha05"
     val navigationVersion = "2.6.0"
     val composeBom = platform("androidx.compose:compose-bom:2023.08.00")
-    val coilBom = platform("io.coil-kt:coil-bom:2.4.0")
     val roomVersion = "2.5.2"
 
 
@@ -172,8 +170,7 @@ dependencies {
     implementation("net.engawapg.lib:zoomable:1.5.0-beta1")
 
     //Coil
-    implementation("io.coil-kt:coil-bom")
-    implementation(coilBom)
+    implementation(platform("io.coil-kt:coil-bom:2.5.0"))
     implementation("io.coil-kt:coil-video")
     implementation("io.coil-kt:coil-gif")
     implementation("io.coil-kt:coil-svg")
