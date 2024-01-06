@@ -4,8 +4,8 @@ agp = "8.2.0"
 kotlin = "1.9.20"
 junit = "1.1.5"
 espresso-core = "3.5.1"
-uiautomator = "2.3.0-alpha04"
-benchmark-macro-junit4 = "1.2.0-beta04"
+uiautomator = "2.3.0-beta01"
+benchmark-macro-junit4 = "1.2.2"
 baseline-profile = "1.2.0-beta04"
 
 [libraries]

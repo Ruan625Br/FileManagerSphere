@@ -213,8 +213,7 @@ class FileModelAdapter(
 
             }
 
-        } else
-            loadImageFromDirectory(binding)
+        } else loadImageFromDirectory(binding)
 
 
         binding.fileTitle.text = file.fileName
@@ -290,8 +289,7 @@ class FileModelAdapter(
 
 
     private fun getIconByMimeType(
-        mimeType: String?,
-        binding: FileItemBinding
+        mimeType: String?, binding: FileItemBinding
     ) {
         val icFile = AppCompatResources.getDrawable(mContext, R.drawable.file_generic_icon)
         val tint = getTintForIcons()
@@ -308,12 +306,8 @@ class FileModelAdapter(
         val imageView = binding.iconFile
 
         binding.iconFile.clearColorFilter()
-        Glide.with(mContext)
-            .load(path)
-            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-            .override(50, 50)
-            .placeholder(R.drawable.ic_image)
-            .into(imageView)
+        Glide.with(mContext).load(path).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .override(50, 50).placeholder(R.drawable.ic_image).into(imageView)
     }
 
     private fun loadImageFromDirectory(binding: FileItemBinding) {
@@ -367,10 +361,9 @@ class FileModelAdapter(
 
     }
 
-    override fun getPopupText(position: Int): CharSequence {
-        val file = getItem(position)
+    override fun getPopupText(view: View, position: Int): CharSequence {
         val locale = Locale(Preferences.Interface.language)
-        return file.fileName.take(1).uppercase(locale)
+        return getItem(position).fileName.take(1).uppercase(locale)
     }
 
 }
