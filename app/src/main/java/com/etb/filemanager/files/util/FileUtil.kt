@@ -95,7 +95,7 @@ class FileUtil {
     @SuppressLint("QueryPermissionsNeeded")
     fun actionOpenWith(path: String, context: Context) {
         val file = File(path)
-        val uri = FileProvider.getUriForFile(context, context.packageName + ".fileprovider", file)
+        val uri = FileProvider.getUriForFile(context, BuildConfig.FILE_PROVIDER_AUTHORITY, file)
         val mimeType = getMimeType(uri, null)
 
         val intent = Intent(Intent.ACTION_VIEW).apply {
