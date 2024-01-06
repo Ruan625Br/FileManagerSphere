@@ -7,17 +7,25 @@
 
 package com.etb.filemanager.manager.files.filelist
 
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import java.io.File
-import java.nio.file.*
-import java.nio.file.WatchKey
+import java.nio.file.FileSystems
 import java.nio.file.FileVisitResult
-import java.nio.file.attribute.BasicFileAttributes
-import java.nio.file.SimpleFileVisitor
 import java.nio.file.Files
-import java.nio.file.StandardWatchEventKinds.*
-class KWatchChannel (
+import java.nio.file.Path
+import java.nio.file.SimpleFileVisitor
+import java.nio.file.StandardWatchEventKinds.ENTRY_CREATE
+import java.nio.file.StandardWatchEventKinds.ENTRY_DELETE
+import java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY
+import java.nio.file.WatchKey
+import java.nio.file.WatchService
+import java.nio.file.attribute.BasicFileAttributes
+class KWatchChannel @OptIn(DelicateCoroutinesApi::class) constructor(
     val file: File,
     val scope: CoroutineScope = GlobalScope,
     val mode: Mode,

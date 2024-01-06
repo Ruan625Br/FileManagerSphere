@@ -22,6 +22,7 @@ class ScrollingViewOnApplyWindowInsetsListener(
         fastScroller.setPadding(0, 0, 0, 0)
     }
 
+    @Suppress("DEPRECATION")
     override fun onApplyWindowInsets(view: View, insets: WindowInsets): WindowInsets {
         view.setPadding(
             initialPadding.left, initialPadding.top, initialPadding.right,

@@ -11,17 +11,16 @@ import android.os.Build
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.etb.filemanager.compose.core.presentation.common.ChanneledViewModel
 import com.etb.filemanager.compose.core.presentation.util.Screen
 import com.etb.filemanager.compose.feature.presentation.categorylist.components.CategoryListScreen
+import com.etb.filemanager.files.extensions.parcelable
 import com.etb.filemanager.manager.category.adapter.CategoryFileModel
 import com.etb.filemanager.manager.media.MediaViewScreen
 import com.etb.filemanager.manager.media.model.MediaListInfo
@@ -37,8 +36,6 @@ fun NavigationComp(
     toggleRotate: () -> Unit,
 
     ) {
-
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     val navPipe = hiltViewModel<ChanneledViewModel>()
     navPipe
@@ -73,7 +70,7 @@ fun NavigationComp(
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     backStackEntry.arguments?.getParcelable("mediaInfo", MediaListInfo::class.java)
                 } else {
-                    backStackEntry.arguments?.getParcelable("mediaInfo")
+                    backStackEntry.arguments?.parcelable("mediaInfo")
                 }
 
             MediaViewScreen(

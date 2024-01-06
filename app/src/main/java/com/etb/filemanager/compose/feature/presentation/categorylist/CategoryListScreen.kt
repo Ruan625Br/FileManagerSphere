@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.compose.rememberNavController
 import com.etb.filemanager.compose.core.presentation.components.NavigationComp
 import com.etb.filemanager.compose.feature.provider.BaseScreen
+import com.etb.filemanager.files.extensions.parcelable
 import com.etb.filemanager.files.util.toggleOrientation
 import com.etb.filemanager.manager.category.adapter.CategoryFileModel
 import com.etb.filemanager.manager.category.adapter.getName
@@ -35,7 +36,7 @@ class CategoryListScreen : BaseScreen() {
             categoryFileModel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra("categoryFileModel", CategoryFileModel::class.java)
             } else {
-                intent.getParcelableExtra("categoryFileModel")
+                intent.parcelable("categoryFileModel")
             }
         }
 

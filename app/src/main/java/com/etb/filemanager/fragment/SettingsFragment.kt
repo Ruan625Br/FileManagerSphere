@@ -12,7 +12,6 @@ import android.os.Bundle
 import androidx.collection.ArrayMap
 import androidx.preference.Preference
 import com.etb.filemanager.R
-import com.etb.filemanager.activity.BaseActivity
 import com.etb.filemanager.activity.SettingsActivity
 import com.etb.filemanager.files.util.LangUtils
 import com.etb.filemanager.settings.preference.PreferenceFragment
@@ -56,7 +55,7 @@ class SettingsFragment : PreferenceFragment() {
         }
         val locale: Preference = Objects.requireNonNull(findPreference("custom_locale"))
         locale.summary = languageNames[localeIndex]
-        locale.setOnPreferenceClickListener { preference ->
+        locale.setOnPreferenceClickListener { _ ->
             MaterialAlertDialogBuilder(requireContext()).setTitle(getString(R.string.pref_app_language_title))
                 .setSingleChoiceItems(languageNames, localeIndex) { dialog, which ->
                     if (which != localeIndex) {
@@ -67,11 +66,11 @@ class SettingsFragment : PreferenceFragment() {
                     }
                     dialog.dismiss()
                 }
-                .setNegativeButton(getString(R.string.dialog_cancel)) { dialog, which ->
+                .setNegativeButton(getString(R.string.dialog_cancel)) { _, _ ->
                 }.show()
             true
         }
-        locale.setOnPreferenceChangeListener { preference, newValue ->
+        locale.setOnPreferenceChangeListener { _, _ ->
             locale.summary = languageNames[localeIndex]
 
             true

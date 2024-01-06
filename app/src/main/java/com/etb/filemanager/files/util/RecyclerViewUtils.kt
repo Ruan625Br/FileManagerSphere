@@ -7,9 +7,12 @@
 
 package com.etb.filemanager.files.util
 
-import android.animation.*
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.ChangeBounds
@@ -31,7 +34,7 @@ import androidx.transition.TransitionManager
     for (i in 0 until childCount) {
         val child = recyclerView.getChildAt(i)
         val lp = child.layoutParams as RecyclerView.LayoutParams
-        val oldPosition = lp.viewAdapterPosition
+        val oldPosition = lp.absoluteAdapterPosition
         val newPosition = (recyclerView.layoutManager as? GridLayoutManager)?.getPosition(child) ?: continue
 
         if (oldPosition != RecyclerView.NO_POSITION && newPosition != RecyclerView.NO_POSITION) {

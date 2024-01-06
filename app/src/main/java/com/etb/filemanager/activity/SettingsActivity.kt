@@ -93,11 +93,9 @@ class SettingsActivity : BaseActivity(),
         }
     }
 
-    fun getIntent(context: Context, vararg paths: String?): Intent {
+    fun getIntent(context: Context, vararg paths: String): Intent {
         val intent = Intent(context, SettingsActivity::class.java)
-        if (paths != null) {
-            intent.data = SettingsActivity().getSettingUri(*paths as Array<out String>)
-        }
+        intent.data = SettingsActivity().getSettingUri(*paths)
         return intent
     }
 

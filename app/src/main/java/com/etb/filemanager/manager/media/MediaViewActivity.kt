@@ -11,7 +11,6 @@ import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -115,9 +114,6 @@ fun MediaViewScreen(
         mediaListInfo.mediaList.indexOfFirst { it.id == runtimeMediaId.coerceAtLeast(0) }
     }
 
-    Log.i("MediaView", "runtimeMediaId: $runtimeMediaId")
-    Log.i("MediaView", "currentMediaId: $currentMediaId")
-
     val pagerState = rememberPagerState(
         initialPage = initialPage,
         initialPageOffsetFraction = 0f,
@@ -139,7 +135,6 @@ fun MediaViewScreen(
     val maxImageSize = 4096
 
     val windowInsetsController = rememberWindowInsetsController()
-    val currentDate = rememberSaveable { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -190,7 +185,6 @@ fun MediaViewScreen(
             showUI = showUI.value,
             showInfo = false,
             showDate = true,
-            currentDate = currentDate.value,
             paddingValues = paddingValues,
             bottomSheetState = bottomSheetState,
             onGoBack = navigateUp

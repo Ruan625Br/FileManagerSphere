@@ -22,7 +22,6 @@ import com.etb.filemanager.manager.adapter.loadFileItem
 import com.etb.filemanager.manager.media.model.Media
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
 
@@ -72,30 +71,6 @@ fun getMediaURIsFromDirectory(path: Path): List<Uri> {
     return mediaURIs
 }
 
-fun Context.getMediaIdFromPath(mediaPath: String): Long? {
-    val context = this
-    val projection = arrayOf(MediaStore.Images.Media._ID)
-    val selection = "${MediaStore.MediaColumns.DATA} = ?"
-    val selectionArgs = arrayOf(mediaPath)
-    val mime = FileUtil().getMimeType(null, mediaPath)
-    val queryUri = if (mediaPath.endsWith(".mp4")) {
-        MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-    } else {
-        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-    }
-
-    context.contentResolver.query(
-        queryUri, projection, selection, selectionArgs, null
-    )?.use { cursor ->
-        if (cursor.moveToFirst()) {
-            val idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-            return cursor.getLong(idColumnIndex)
-        }
-    }
-
-    return null
-}
-
 suspend fun getMediaIdFromPath(mediaPath: String, context: Context): Long? =
     withContext(Dispatchers.IO) {
         val projection = arrayOf(MediaStore.Images.Media._ID)
@@ -123,9 +98,6 @@ suspend fun getMediaIdFromPath(mediaPath: String, context: Context): Long? =
         return@withContext null
     }
 
-fun getMediaIdFromFile(file: File) {
-    val path = file.toPath()
-}
 
 suspend fun fetchRecentImagesUris(
     context: Context,
@@ -163,8 +135,6 @@ suspend fun getAllMediaFromMediaStore(
     val mediaList = ArrayList<Media>()
     val fileModelList = mutableListOf<FileModel>()
     val projection = arrayOf(MediaStore.MediaColumns.DATA)
-    val selection = MediaStore.MediaColumns.MIME_TYPE + "=?"
-    val selectionArgs = arrayOf(mimeType.value)
     val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
 
     val cursor = context.contentResolver.query(

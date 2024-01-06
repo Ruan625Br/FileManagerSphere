@@ -40,9 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -66,7 +64,6 @@ import java.nio.file.Paths
 @Composable
 fun ApkItem(apkInfo: AppInfo, appFilter: AppFilter) {
     val resolvedColor = MaterialTheme.colorScheme.onSecondary
-    val colorOnSecondary = Color(resolvedColor.toArgb())
 
     var expanded by remember { mutableStateOf(false) }
     var isAppInfoBottomSheetExpanded by remember { mutableStateOf(false) }
@@ -191,8 +188,6 @@ fun ApkItemOptionsColum(
     onButtonClickShowAppInfo: (() -> Unit)? = null,
     isAppInfoBottomSheetExpanded: Boolean
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val resolvedColor = MaterialTheme.colorScheme.onSecondary
     val colorOnSecondary = MaterialTheme.colorScheme.surfaceColorAtElevation(2.0.dp)
     val context = LocalContext.current
     val textInfo = if (isAppInfoBottomSheetExpanded) "Open in Settings" else "Info"

@@ -11,11 +11,9 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -24,8 +22,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
 import com.etb.filemanager.databinding.FragmentImageViewerItemBinding
 import com.google.android.material.imageview.ShapeableImageView
-import com.google.android.material.shape.CornerFamily
-import com.google.android.material.shape.ShapeAppearanceModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -74,29 +70,9 @@ class ImageViewerItemFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 val bitmap = loadResizedImageAsync(path)
+                val imageWidth = bitmap.width
+                val imageHeight = bitmap.height
 
-                val imageMaxWidth = 1920
-                val imageMaxHeight = 1080
-                var imageWidth = bitmap.width
-                var imageHeight = bitmap.height
-
-/*
-                if (imageHeight > imageMaxHeight) {
-                    imageWidth = imageMaxWidth
-                    imageHeight = imageMaxHeight
-
-                    val shapeAppearanceModel = ShapeAppearanceModel.builder().setAllCorners(
-                            CornerFamily.ROUNDED,
-                            resources.getDimensionPixelSize(R.dimen.corner_radius_base).toFloat()
-                        ).build()
-                    shapeableImageView.shapeAppearanceModel = shapeAppearanceModel
-                    shapeableImageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                    shapeableImageView.layoutParams.apply {
-                        width = imageMaxWidth
-                        height = imageHeight
-                    }
-                }
-*/
                 Glide.with(requireContext()).load(path).diskCacheStrategy(DiskCacheStrategy.ALL)
                     .apply(
                         RequestOptions().override(imageWidth, imageHeight)
@@ -112,12 +88,10 @@ class ImageViewerItemFragment : Fragment() {
 
     private suspend fun loadResizedImageAsync(path: String?): Bitmap =
         withContext(Dispatchers.Default) {
-            val maxWidth = 800
-            val maxHeight = 800
             val options = BitmapFactory.Options().apply {
                 inJustDecodeBounds = true
                 BitmapFactory.decodeFile(path, this)
-                inSampleSize = calculateInSampleSize(this, maxWidth, maxHeight)
+                inSampleSize = calculateInSampleSize(this)
                 inJustDecodeBounds = false
             }
 
@@ -125,16 +99,17 @@ class ImageViewerItemFragment : Fragment() {
         }
 
     private fun calculateInSampleSize(
-        options: BitmapFactory.Options, maxWidth: Int, maxHeight: Int
+        options: BitmapFactory.Options
     ): Int {
         val imageHeight = options.outHeight
         val imageWidth = options.outWidth
         var inSampleSize = 1
+        val maxSize = 800
 
-        if (imageHeight > maxHeight || imageWidth > maxWidth) {
+        if (imageHeight > maxSize || imageWidth > maxSize) {
             val halfHeight = imageHeight / 2
             val halfWidth = imageWidth / 2
-            while ((halfHeight / inSampleSize) >= maxHeight && (halfWidth / inSampleSize) >= maxWidth) {
+            while ((halfHeight / inSampleSize) >= maxSize && (halfWidth / inSampleSize) >= maxSize) {
                 inSampleSize *= 2
             }
         }

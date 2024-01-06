@@ -21,14 +21,10 @@ import com.google.android.material.shape.ShapeAppearanceModel
 
 fun Int.toPixelFromDP(): Int {
     val density = Resources.getSystem().displayMetrics.density
-    val pixelValue = (this * density).toInt()
-    return pixelValue
+    return (this * density).toInt()
 }
 
-fun View.applyBackgroundFromPreferences(
-    cornerSize: Float? = null, cornerFamily: Int = Preferences.Interface.cornerFamily
-) {
-    val mCornerSize = cornerSize ?: if (Preferences.Interface.isEnabledRoundedCorners) 30f else 0f
+fun View.applyBackgroundFromPreferences() {
     val context = this.context
     val colorPrimary = context.getColorByAttr(com.google.android.material.R.attr.colorPrimary)
     val showBackground = true
@@ -97,8 +93,6 @@ fun ShapeAppearanceModel.Builder.applyCornerFamilyFromPreferences(
 fun getShapeFromPreferences(
     cornerFamily: Int = Preferences.Interface.cornerFamily,  cornerSize: Float = 30f
 ): CornerBasedShape {
-    var roundedCornerShape: CornerBasedShape = RoundedCornerShape(cornerSize)
-
 
     return when (cornerFamily) {
         CornerStyle.ROUNDED.cornerFamily -> {

@@ -7,12 +7,13 @@
 
 package com.etb.filemanager.manager.files.filecoroutine
 
-import android.content.Context
 import android.util.Log
-import com.etb.filemanager.R
-import com.etb.filemanager.files.util.ContextUtils
-import com.etb.filemanager.manager.files.filecoroutine.CompressionType.*
-import com.etb.filemanager.manager.util.MaterialDialogUtils
+import com.etb.filemanager.manager.files.filecoroutine.CompressionType.SEVENZ
+import com.etb.filemanager.manager.files.filecoroutine.CompressionType.TAR
+import com.etb.filemanager.manager.files.filecoroutine.CompressionType.TARGZ
+import com.etb.filemanager.manager.files.filecoroutine.CompressionType.TARXZ
+import com.etb.filemanager.manager.files.filecoroutine.CompressionType.TARZSTD
+import com.etb.filemanager.manager.files.filecoroutine.CompressionType.ZIP
 import kala.compress.archivers.zip.ZipArchiveEntry
 import kala.compress.archivers.zip.ZipArchiveOutputStream
 import kala.compress.compressors.gzip.GzipCompressorOutputStream
@@ -26,15 +27,26 @@ import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream
-import org.apache.commons.compress.compressors.zstandard.ZstdCompressorOutputStream
 import org.apache.commons.io.FileUtils
-import java.io.*
-import java.nio.file.*
-import kotlin.io.path.*
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InterruptedIOException
+import java.nio.file.Files
+import java.nio.file.LinkOption
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
+import kotlin.io.path.ExperimentalPathApi
+import kotlin.io.path.createDirectory
+import kotlin.io.path.createFile
+import kotlin.io.path.deleteRecursively
+import kotlin.io.path.exists
+import kotlin.io.path.moveTo
 
 
 suspend fun performFileOperation(
-    context: Context,
     operation: FileOperation,
     sourcePath: List<String>?,
     newNames: List<String>?,
@@ -83,11 +95,7 @@ private fun deleteFile(
             val progress = (completedFiles * 100 / totalFiles).toInt()
             sendProgress(progressListener, progress)
         } catch (e: IOException) {
-            try {
-                showOperationDialog()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+           e.printStackTrace()
         }
     }
 }
@@ -142,7 +150,7 @@ private fun moveAtomically(source: Path, target: Path) {
         source.moveTo(target, LinkOption.NOFOLLOW_LINKS, StandardCopyOption.ATOMIC_MOVE)
 
     } catch (e: InterruptedIOException) {
-        showOperationDialog()
+       e.printStackTrace()
     }
 }
 
@@ -216,38 +224,6 @@ private fun copy(paths: List<String>, destinationPath: String, progressListener:
     } catch (e: InterruptedException) {
         Log.e("EROOOO", "Erro: $e")
     }
-}
-
-private fun showOperationDialog() {
-    val mContext = ContextUtils.getContext()
-    val title = mContext.getString(R.string.error_occurred)
-    val message = mContext.getString(R.string.error_occurred_during_operation)
-    val textPositiveButton = mContext.getString(R.string.ok)
-
-    MaterialDialogUtils().createDialogInfo(
-        title, message, textPositiveButton, "", mContext, false
-    ) { dialogResult ->
-        val isConfirmed = dialogResult.confirmed
-        if (isConfirmed) {
-
-        }
-    }
-}
-
-private fun showConfirmationDialog(fileName: String): Boolean {
-    var isConfirmed = false
-    val context = ContextUtils.getContext()
-    val title = context.getString(R.string.warning)
-    val message = "O arquivo '$fileName' já existe. Deseja substituí-lo?"
-    val textPositiveButton = context.getString(R.string.ok)
-    val textNegativeButton = context.getString(R.string.skip)
-
-    MaterialDialogUtils().createDialogInfo(
-        title, message, textPositiveButton, textNegativeButton, context, true
-    ) { dialogResult ->
-        isConfirmed = dialogResult.confirmed
-    }
-    return isConfirmed
 }
 
 
@@ -407,7 +383,7 @@ class CompressFiles {
                     )
                 }
             } else {
-                val entry = sevenZOutputFile.createArchiveEntry(file, entryName + "/")
+                val entry = sevenZOutputFile.createArchiveEntry(file, "$entryName/")
                 sevenZOutputFile.putArchiveEntry(entry)
                 sevenZOutputFile.closeArchiveEntry()
             }
@@ -564,7 +540,7 @@ class ExtractArchives {
 
             val extension = getExtension(archiveFile.name)
 
-            when (extension.toLowerCase()) {
+            when (extension.lowercase()) {
                 "zip" -> extractZipArchive(archiveFile, outputDirFile)
                 "7z" -> extract7zArchive(archiveFile, outputDirFile)
                 "tar", "gz", "xz" -> {}

@@ -31,9 +31,8 @@ fun Context.getPackageApk(path: Path): String {
     val apkFilePath = path.pathString
     val packageInfo =
         packageManager.getPackageArchiveInfo(apkFilePath, PackageManager.GET_META_DATA)
-    val packageName = packageInfo?.packageName.toString()
 
-    return packageName
+    return packageInfo?.packageName.toString()
 }
 
 
@@ -57,7 +56,6 @@ suspend fun getInstalledApkInfo(context: Context, appFilter: AppFilter): List<Ap
             val appName = packageInfo.applicationInfo.loadLabel(pm).toString()
             val appIcon = packageInfo.applicationInfo.loadIcon(pm)
             val packageName = packageInfo.packageName
-            val versionCode = PackageInfoCompat.getLongVersionCode(packageInfo)
 
             apkInfoList.add(
                 AppInfo(
@@ -89,7 +87,6 @@ suspend fun getUninstalledApkInfo(context: Context): List<AppInfo> = withContext
             val appName = packageInfo.applicationInfo.loadLabel(pm).toString()
             val appIcon = packageInfo.applicationInfo.loadIcon(pm)
             val packageName = packageInfo.packageName
-            val versionCode = PackageInfoCompat.getLongVersionCode(packageInfo)
 
             apkInfoList.add(
                 AppInfo(
@@ -150,8 +147,6 @@ fun openApp(context: Context, packageName: String) {
 
     if (intent != null) {
         context.startActivity(intent)
-    } else {
-
     }
 }
 
@@ -171,7 +166,6 @@ fun openAppSettings(context: Context, packageName: String) {
 
 fun installApk(context: Context, apkFilePath: Path) {
 
-    // val uri = apkFilePath.fileProviderUri
     val uri = FileProvider.getUriForFile(
         context,
         context.packageName + ".fileprovider",

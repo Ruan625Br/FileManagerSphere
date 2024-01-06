@@ -62,7 +62,7 @@ class ModalBottomSheetCompress : BottomSheetDialogFragment() {
         autoCompleteTextView.setText(mSelectedItem, false)
         compressionType = CompressionType.ZIP
         extension = mSelectedItem
-        autoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
+        autoCompleteTextView.setOnItemClickListener { parent, _, position, _ ->
             val selectedItem = parent.getItemAtPosition(position) as String
             extension = selectedItem
              compressionType = when (position) {

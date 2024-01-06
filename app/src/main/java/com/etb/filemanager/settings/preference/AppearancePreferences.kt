@@ -42,7 +42,7 @@ class AppearancePreferences : PreferenceFragment() {
             ?: throw IllegalArgumentException("Preference not found: app_theme")
         appTheme.isEnabled = isEnabledDMaterialDesign3
         appTheme.summary = appThemeSummary
-        appTheme.setOnPreferenceClickListener { preference ->
+        appTheme.setOnPreferenceClickListener { _ ->
             MaterialAlertDialogBuilder(requireContext()).setTitle(getString(R.string.themes_title))
                 .setSingleChoiceItems(themesEntries, mCurrentTheIndex) { dialog, which ->
                     if (which != mCurrentTheIndex) {
@@ -54,7 +54,7 @@ class AppearancePreferences : PreferenceFragment() {
                     dialog.cancel()
                 }
 
-                .setNegativeButton(getString(R.string.dialog_cancel)) { dialog, which ->
+                .setNegativeButton(getString(R.string.dialog_cancel)) { _, _ ->
                 }.show()
             true
         }
@@ -65,7 +65,7 @@ class AppearancePreferences : PreferenceFragment() {
         val isEnabledMaterialDesign = Preferences.Appearance.isEnabledDMaterialDesign3
         sMaterialDesign?.isChecked = isEnabledMaterialDesign
 
-        sMaterialDesign?.setOnPreferenceChangeListener { preference, newValue ->
+        sMaterialDesign?.setOnPreferenceChangeListener { _, newValue ->
             val newValueMaterial = newValue as Boolean
             appTheme.isEnabled = newValueMaterial
             val theme = StyleManager.OptionStyle.MATERIAL_DESIGN_TWO.name

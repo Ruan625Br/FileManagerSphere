@@ -379,7 +379,6 @@ class HomeFragment : Fragment(), FileListener {
     @SuppressLint("NotifyDataSetChanged")
     private fun finishActionMode() {
         clearSelectedFiles()
-        if (::adapter.isInitialized) adapter.clearItemSelection()
         isActionMode = false
         actionMode?.finish()
     }

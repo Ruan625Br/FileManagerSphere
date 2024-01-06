@@ -52,7 +52,6 @@ class FileOperationService : Service() {
 
         serviceScope.launch {
             performFileOperation(
-                applicationContext,
                 operation,
                 sourcePath,
                 newNames,

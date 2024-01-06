@@ -10,16 +10,11 @@ package com.etb.filemanager.manager.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
-import android.os.Build
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -29,10 +24,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
 import com.etb.filemanager.databinding.FileItemBinding
 import com.etb.filemanager.files.extensions.createShapeModelBasedOnCornerFamilyPreference
-import com.etb.filemanager.files.extensions.toPixelFromDP
-import com.etb.filemanager.files.provider.archive.common.mime.MimeType
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeUtil
-import com.etb.filemanager.files.provider.archive.common.mime.isASpecificTypeOfMime
 import com.etb.filemanager.files.util.FileUtil
 import com.etb.filemanager.files.util.getColorByAttr
 import com.etb.filemanager.files.util.getDimension
@@ -48,14 +40,8 @@ import com.etb.filemanager.manager.util.FileUtils
 import com.etb.filemanager.settings.preference.InterfacePreferences
 import com.etb.filemanager.settings.preference.Preferences
 import com.etb.filemanager.ui.style.ColorUtil
-import com.etb.filemanager.ui.style.IconUtil
-import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
-import com.google.android.material.shape.ShapeAppearanceModel
 import me.zhanghai.android.fastscroll.PopupTextProvider
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.Paths
 import java.util.*
 
 
@@ -63,7 +49,6 @@ class FileModelAdapter(
     private val mContext: Context, private val listener: FileListener
 ) : AnimatedListAdapter<FileModel, FileModelAdapter.ViewHolder>(CALLBACK), PopupTextProvider {
 
-    private val fileUtils: FileUtils = FileUtils.getInstance()
     private val basePath = "/storage/emulated/0"
     private var currentPath = basePath
 
@@ -86,7 +71,7 @@ class FileModelAdapter(
             }
         }
 
-    var pickOptions: PickOptions? = null
+    private var pickOptions: PickOptions? = null
         set(value) {
             field = value
             notifyItemRangeChanged(0, itemCount, PAYLOAD_STATE_CHANGED)
@@ -154,13 +139,6 @@ class FileModelAdapter(
         listener.selectFiles(files, true)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun clearItemSelection() {
-        for (index in 0 until itemCount) {
-            val file = getItem(index)
-
-        }
-    }
 
     @Deprecated("", ReplaceWith("replaceList(list)"))
     override fun replace(list: List<FileModel>, clear: Boolean) {
@@ -175,7 +153,7 @@ class FileModelAdapter(
         rebuildFilePositionMap()
     }
 
-    fun rebuildFilePositionMap() {
+    private fun rebuildFilePositionMap() {
         filePositionMap.clear()
         for (index in 0 until itemCount) {
             val file = getItem(index)
@@ -228,7 +206,7 @@ class FileModelAdapter(
         setVisibility(isDirectory, mimeType, binding)
         if (!isDirectory) {
             if (mimeType != null && mimeType.isMimeTypeMedia()) {
-                loadImage(filePath, binding, mimeType)
+                loadImage(filePath, binding)
 
             } else {
                 getIconByMimeType(mimeType, binding)
@@ -269,52 +247,24 @@ class FileModelAdapter(
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getFileMimeType(mPath: String): String? {
-        val path: Path = Paths.get(mPath)
-        val mimeType: String?
-        try {
-            mimeType = Files.probeContentType(path)
-        } catch (e: Exception) {
-            Log.e("Get File", "Erro: $e")
-            return null
-        }
-        return mimeType
-    }
-
     private fun setVisibility(isDir: Boolean, mimeType: String?, binding: FileItemBinding) {
         val isMedia = mimeType?.isMimeTypeMedia() ?: false
         val viewFileInformationOption = Preferences.Interface.viewFileInformationOption
         val colorPrimary = mContext.getColorByAttr(com.google.android.material.R.attr.colorPrimary)
         val colorOnPrimary =
             mContext.getColorByAttr(com.google.android.material.R.attr.colorOnPrimary)
-        val colorPrimaryInverse =
-            mContext.getColorByAttr(com.google.android.material.R.attr.colorPrimaryInverse)
         val iconFile = binding.iconFile
-
-
-        val widthNormal = 56
-        val heightNormal = 55
-        val layoutParams = iconFile.layoutParams
-
-        val layoutParamsNormal = layoutParams.apply {
-            width = widthNormal.toPixelFromDP()
-            height = heightNormal.toPixelFromDP()
-        }
-
         val showStroke = false
         val showBackground = true
-
-        val cornerSize =  if (Preferences.Interface.isEnabledRoundedCorners) 30f else 0f
         val strokeWidth = 10
 
-        val shapeAppearanceModel =  createShapeModelBasedOnCornerFamilyPreference()
+        val shapeAppearanceModel = createShapeModelBasedOnCornerFamilyPreference()
         val borderDrawable = MaterialShapeDrawable(shapeAppearanceModel)
 
         if (showBackground && !isMedia) borderDrawable.setTint(colorPrimary) else borderDrawable.setTint(
             Color.TRANSPARENT
         )
-         if (showStroke && isMedia) borderDrawable.setStroke(strokeWidth.toFloat(), colorOnPrimary)
+        if (showStroke && isMedia) borderDrawable.setStroke(strokeWidth.toFloat(), colorOnPrimary)
 
         iconFile.background = borderDrawable
         iconFile.scaleType =
@@ -354,9 +304,7 @@ class FileModelAdapter(
 
     }
 
-    private fun loadImage(path: String, binding: FileItemBinding, mimeType: String) {
-        val mimeTypeObject = MimeType(mimeType)
-        val isApk = mimeTypeObject.isASpecificTypeOfMime(MimeType.APK)
+    private fun loadImage(path: String, binding: FileItemBinding) {
         val imageView = binding.iconFile
 
         binding.iconFile.clearColorFilter()
@@ -382,16 +330,8 @@ class FileModelAdapter(
         val colorControlNormal =
             mContext.getColorByAttr(com.google.android.material.R.attr.colorControlNormal)
         val showBackground = true
-        val tint = if (showBackground) colorPrimaryInverse else colorControlNormal
 
-        return tint
-    }
-
-    private fun setPreview(preview: Drawable, placeholder: Drawable, binding: FileItemBinding) {
-        Glide.with(mContext).load(preview).diskCacheStrategy(DiskCacheStrategy.ALL)
-            .apply(RequestOptions().placeholder(placeholder)).into(binding.iconFile)
-
-
+        return if (showBackground) colorPrimaryInverse else colorControlNormal
     }
 
     private fun String.isMimeTypeMedia(): Boolean {

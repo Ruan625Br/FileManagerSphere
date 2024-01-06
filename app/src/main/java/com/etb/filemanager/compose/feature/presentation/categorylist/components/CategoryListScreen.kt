@@ -76,7 +76,6 @@ fun GeneratingMediaList(
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    val mediaListState by viewModel.mediaListState.observeAsState(emptyList())
     val loading by viewModel.loading.observeAsState(initial = true)
 
     val mediaUiState by viewModel.uiState.collectAsStateWithLifecycle()

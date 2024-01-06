@@ -82,7 +82,7 @@ dependencies {
 
     val material3 = "1.2.0-alpha05"
     val navigationVersion = "2.6.0"
-    val composeBom = platform("androidx.compose:compose-bom:2023.08.00")
+    val composeBom = platform("androidx.compose:compose-bom:2023.10.01")
     val roomVersion = "2.5.2"
 
 

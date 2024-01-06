@@ -8,7 +8,6 @@
 package com.etb.filemanager.manager.files.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -34,19 +32,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.etb.filemanager.files.extensions.getPackageApk
 import com.etb.filemanager.manager.adapter.FileModel
 import com.etb.filemanager.ui.theme.FileManagerTheme
 import com.etb.filemanager.ui.theme.Shapes
-import kotlinx.coroutines.launch
 import java.io.File
 
 
@@ -58,7 +50,6 @@ fun APKInfoRow(
     content: String,
     file: FileModel
 ) {
-    val clipboardManager: ClipboardManager = LocalClipboardManager.current
 
     ListItem(
         modifier = modifier
@@ -134,7 +125,6 @@ private fun APKNameContainer(
     file: FileModel,
     content: @Composable () -> Unit
 ){
-    val ApkPackage = "pacote do app"
     Column(
         modifier = Modifier
             .fillMaxWidth()

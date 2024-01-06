@@ -7,7 +7,6 @@
 
 package com.etb.filemanager.compose.feature.presentation.deletedfiles.deletedfileslist
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
@@ -68,8 +67,8 @@ import com.etb.filemanager.R
 import com.etb.filemanager.compose.feature.presentation.deletedfiles.DeletedFileDetailsViewModel
 import com.etb.filemanager.compose.feature.presentation.deletedfiles.DeletedFileEntryViewModel
 import com.etb.filemanager.compose.feature.presentation.deletedfiles.DeletedIFilesViewModel
-import com.etb.filemanager.compose.feature.presentation.deletedfiles.toDeletedFileDetails
 import com.etb.filemanager.compose.feature.presentation.deletedfiles.deletedfileslist.components.BottomSheetInfo
+import com.etb.filemanager.compose.feature.presentation.deletedfiles.toDeletedFileDetails
 import com.etb.filemanager.compose.feature.provider.AppViewModelProvider
 import com.etb.filemanager.compose.feature.provider.BaseScreen
 import com.etb.filemanager.data.deletedfiles.DeletedFile
@@ -92,6 +91,7 @@ class DeletedFileListScreen : BaseScreen() {
         super.onCreate(savedInstanceState)
         val bundle = intent.extras
 
+/*
         if (bundle != null) {
             fileModel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra("fileModel", FileModel::class.java)
@@ -99,6 +99,7 @@ class DeletedFileListScreen : BaseScreen() {
                 intent.getParcelableExtra("fileModel")
             }
         }
+*/
         if (bundle != null) {
             pathList = bundle.getStringArrayList("pathList")?.toList()
         }
@@ -176,7 +177,6 @@ class DeletedFileListScreen : BaseScreen() {
         val colorOnSecondary = Color(resolvedColor.toArgb())
         var expanded by remember { mutableStateOf(false) }
         var deleted by remember { mutableStateOf(false) }
-        var showBottomSheetInfo by remember { mutableStateOf(false) }
 
         val extraHeight by animateDpAsState(
             targetValue = if (expanded) 100.dp else 75.dp, animationSpec = spring(

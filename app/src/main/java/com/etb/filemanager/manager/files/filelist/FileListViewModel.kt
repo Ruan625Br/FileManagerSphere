@@ -8,7 +8,11 @@
 package com.etb.filemanager.manager.files.filelist
 
 import android.os.Parcelable
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import com.etb.filemanager.files.util.CloseableLiveData
 import com.etb.filemanager.files.util.Stateful
 import com.etb.filemanager.manager.adapter.FileModel
@@ -100,7 +104,6 @@ class FileListViewModel : ViewModel() {
         get() = currentPathLiveData.value
 
     private val _searchStateLiveData = MutableLiveData(SearchState(false, ""))
-    val searchStateLive: LiveData<SearchState> = _searchStateLiveData
     val searchState: SearchState
         get() = _searchStateLiveData.value!!
 
@@ -124,25 +127,12 @@ class FileListViewModel : ViewModel() {
         get() = _fileListLiveData.value!!
 
     fun reload() {
-        val path = currentPath
         _fileListLiveData.reload()
     }
 
 
     val searchViewExpandedLiveData = MutableLiveData(false)
-    var isSearchViewExpanded: Boolean
-        get() = searchViewExpandedLiveData.value!!
-        set(value) {
-            if (searchViewExpandedLiveData.value == value) return
-            searchViewExpandedLiveData.value = value
-        }
     private val _searchViewQueryLiveData = MutableLiveData("")
-    var searchViewQuery: String
-        get() = _searchViewQueryLiveData.value!!
-        set(value) {
-            if (_searchViewQueryLiveData.value == value) return
-            _searchViewQueryLiveData.value = value
-        }
 
     private class FileListSwitchMapLiveData(
         private val pathLiveData: LiveData<Path>,

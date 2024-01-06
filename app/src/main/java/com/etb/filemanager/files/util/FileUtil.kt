@@ -22,10 +22,8 @@ import com.etb.filemanager.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.*
-import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.nio.file.StandardCopyOption
 
 
 class FileUtil {
@@ -42,58 +40,6 @@ class FileUtil {
     private fun getFolderName(pathString: String): String {
         val path: Path = Paths.get(pathString)
         return path.fileName.toString()
-    }
-
-
-    fun getFileExtension(path: Path): String {
-        val fileName = path.fileName.toString()
-        val dotIndex = fileName.lastIndexOf(".")
-        return if (dotIndex > 0 && dotIndex < fileName.length - 1) {
-            fileName.substring(dotIndex + 1).toLowerCase()
-        } else {
-            ""
-        }
-    }
-
-    fun getFileSize(path: Path): Long {
-        return Files.size(path)
-    }
-
-    fun createFolder(path: String, pathName: String): Boolean {
-        val folderPath = Paths.get("$path/$pathName")
-
-        return try {
-            Files.createDirectory(folderPath)
-            true
-        } catch (e: IOException) {
-            Log.e("Erro ao criar a pasta", "Erro: $e")
-            false
-
-        }
-    }
-
-    fun isValidName(name: String): Boolean {
-        return isValidNameFolder(name)
-
-    }
-
-    private fun isValidNameFolder(folderName: String): Boolean {
-        val regex = Regex("^[^/\\\\?%*:|\"<>]*$") // Padrão regex para validar o nome da pasta
-        return regex.matches(folderName)
-
-    }
-
-
-    fun renameFile(path: String, newFileName: String) {
-        val sourcePath = Paths.get(path)
-        val targetPath = sourcePath.resolveSibling(newFileName)
-
-        try {
-            Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING)
-        } catch (e: Exception) {
-            Log.e("Erro ao renomear", "Erro: ${e.message}")
-            Log.e("File", "sourcePath: $sourcePath\ntargetPath: $targetPath\nnewFileName: $newFileName")
-        }
     }
 
     fun copyTextToClipboard(context: Context, text: String, toast: Boolean) {
@@ -176,17 +122,6 @@ class FileUtil {
         return null
     }
 
-    fun getFileMimeType(mPath: String): String? {
-        val path: Path = Paths.get(mPath)
-        val mimeType: String?
-        try {
-            mimeType = Files.probeContentType(path)
-        } catch (e: Exception) {
-            Log.e("Get File", "Erro: $e")
-            return null
-        }
-        return mimeType
-    }
 
     fun getFilePathFromUri(context: Context, uri: Uri): String? {
         var filePath: String? = null
@@ -253,6 +188,5 @@ fun jsonStringToList(jsonString: String?): List<String> {
 }
 
 fun stringListToJsonString(stringList: List<String>): String {
-    val jsonString = Gson().toJson(stringList)
-    return jsonString
+    return Gson().toJson(stringList)
 }

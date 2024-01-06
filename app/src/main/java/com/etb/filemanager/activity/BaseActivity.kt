@@ -31,6 +31,7 @@ abstract class BaseActivity : AppCompatActivity() {
         styleManager.setTheme(optionStyle, this)
     }
 
+    @Suppress("DEPRECATION")
     fun applyConfigurationChangesToActivities(savedInstanceState: Bundle) {
         val intent = Intent(this, SettingsActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK

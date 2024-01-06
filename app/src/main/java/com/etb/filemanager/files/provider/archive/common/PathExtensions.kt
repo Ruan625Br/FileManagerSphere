@@ -23,14 +23,6 @@ val Path.provider: FileSystemProvider
     get() = fileSystem.provider()
 
 
-fun AutoCloseable.closeSafe() {
-    try {
-        close()
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
-}
-
 @Throws(IOException::class)
 fun Path.search(query: String, intervalMillis: Long, listener: (List<Path>) -> Unit) {
     val searchResults = mutableListOf<Path>()

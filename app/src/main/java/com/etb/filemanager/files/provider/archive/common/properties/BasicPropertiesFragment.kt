@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
+import com.etb.filemanager.files.extensions.parcelable
 import com.etb.filemanager.files.provider.archive.common.mime.MediaType
 
 
@@ -47,7 +48,7 @@ class BasicPropertiesFragment() : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
-            fileProperties = it.getParcelableArrayList(ARG_FILE_PROPERTIES)
+            fileProperties = it.parcelable(ARG_FILE_PROPERTIES)
 
 
         }

@@ -8,12 +8,10 @@
 package com.etb.filemanager.settings.preference
 
 import android.os.Bundle
-import android.util.Log
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import com.etb.filemanager.R
-import com.etb.filemanager.files.extensions.CornerStyle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class InterfacePreferences : PreferenceFragment() {
@@ -21,22 +19,16 @@ class InterfacePreferences : PreferenceFragment() {
         return R.string.pref_interface_title
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_interface, rootKey)
         preferenceManager.preferenceDataStore = SettingsDataStore()
 
 
-//        //Anim in file list
-//        val swtAnimInFileList = findPreference<SwitchPreferenceCompat>("testssss")
-//        val isEnabledAnimInFileList = Preferences.Interface.isAnimationEnabledForFileList
-//        swtAnimInFileList?.isChecked = isEnabledAnimInFileList
-
         //Rounded corners
         val swtRoundedCorners = findPreference<SwitchPreferenceCompat>("rounded_corners")
         val isEnabledRoundedCorner = Preferences.Interface.isEnabledRoundedCorners
         swtRoundedCorners?.isChecked = isEnabledRoundedCorner
-        swtRoundedCorners?.setOnPreferenceChangeListener { preference, newValue ->
+        swtRoundedCorners?.setOnPreferenceChangeListener { _, _ ->
             restart()
             true
         }
@@ -55,7 +47,7 @@ class InterfacePreferences : PreferenceFragment() {
 
         simpleMenuPreference?.summary = fileInformationSummary
 
-        simpleMenuPreference?.setOnPreferenceChangeListener { preference, newValue ->
+        simpleMenuPreference?.setOnPreferenceChangeListener { _, newValue ->
             val newOptionName = newValue as String
             val newOption = ViewFileInformationOption.valueOf(newOptionName)
             currentFileInformationOption = newOption
@@ -88,7 +80,7 @@ class InterfacePreferences : PreferenceFragment() {
             findPreference<Preference>(getString(R.string.pref_key_selected_file_background_opacity))!!
 
         selectedFileBackgroundOpacity.summary = opacitySummary
-        selectedFileBackgroundOpacity.setOnPreferenceClickListener { preference ->
+        selectedFileBackgroundOpacity.setOnPreferenceClickListener { _ ->
             MaterialAlertDialogBuilder(requireContext()).setTitle(getString(R.string.pref_title_selected_file_background_opacity))
                 .setSingleChoiceItems(opacityEntries, currentOpacityIndex) { dialog, which ->
                     if (which != currentOpacityIndex) {
@@ -100,7 +92,7 @@ class InterfacePreferences : PreferenceFragment() {
 
                     dialog.cancel()
                 }
-                .setNegativeButton(getString(R.string.dialog_cancel)) { dialog, which ->
+                .setNegativeButton(getString(R.string.dialog_cancel)) { _, _ ->
                 }.show()
             true
         }
@@ -120,7 +112,7 @@ class InterfacePreferences : PreferenceFragment() {
             findPreference<Preference>(getString(R.string.pref_key_file_list_margins))!!
 
         fileListMargins.summary = fileListMarginsSummary
-        fileListMargins.setOnPreferenceClickListener { preference ->
+        fileListMargins.setOnPreferenceClickListener { _ ->
             MaterialAlertDialogBuilder(requireContext()).setTitle(getString(R.string.pref_title_file_list_margins))
                 .setSingleChoiceItems(fileListMarginsEntries, currentMarginIndex) { dialog, which ->
                     if (which != currentMarginIndex) {
@@ -133,7 +125,7 @@ class InterfacePreferences : PreferenceFragment() {
 
                     dialog.cancel()
                 }
-                .setNegativeButton(getString(R.string.dialog_cancel)) { dialog, which ->
+                .setNegativeButton(getString(R.string.dialog_cancel)) { _, _ ->
                 }.show()
             true
         }
@@ -147,7 +139,7 @@ class InterfacePreferences : PreferenceFragment() {
          val prefCornerFamily =
             findPreference<Preference>(getString(R.string.pref_key_corner_family))!!
 
-        prefCornerFamily.setOnPreferenceClickListener { preference ->
+        prefCornerFamily.setOnPreferenceClickListener { _ ->
             MaterialAlertDialogBuilder(requireContext()).setTitle(getString(R.string.pref_title_corner_family))
                 .setSingleChoiceItems(cornerFamilyEntries, currentCornerFamily) { dialog, which ->
                     if (which != currentCornerFamily) {
@@ -158,7 +150,7 @@ class InterfacePreferences : PreferenceFragment() {
 
                     dialog.cancel()
                 }
-                .setNegativeButton(getString(R.string.dialog_cancel)) { dialog, which ->
+                .setNegativeButton(getString(R.string.dialog_cancel)) { _, _ ->
                 }.show()
             true
         }

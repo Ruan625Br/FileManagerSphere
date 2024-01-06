@@ -19,6 +19,7 @@ data class FileProperties(var title: String,
                           var isMedia: Boolean = false,
                           var mediaType: MediaType = MediaType.VIDEO,
                           var mediaPath: String = "") : Parcelable {
+    @Suppress("DEPRECATION")
     @RequiresApi(Build.VERSION_CODES.Q)
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",

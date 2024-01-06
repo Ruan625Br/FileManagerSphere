@@ -7,7 +7,6 @@
 
 package com.etb.filemanager.compose.feature.presentation.categorylist.medialist.compenents
 
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -34,19 +33,14 @@ import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -78,46 +72,13 @@ fun MediaItem(
             context
         ).formatMinSec()
         else null
-    val imageRequest = ImageRequest.Builder(LocalContext.current)
-        .data(media.uri)
-        .memoryCacheKey("${media.uri}_${media.mimeType.value}")
-        .diskCacheKey("${media.uri}_${media.mimeType.value}")
-        .crossfade(true)
-        .bitmapConfig( Bitmap.Config.RGB_565)
-        .build()
-
-    val painter = rememberAsyncImagePainter(
-        model = imageRequest,
-        contentScale = ContentScale.Crop,
-        filterQuality = FilterQuality.None
-    )
-
 
     Box(
         modifier = modifier
             .aspectRatio(1f)
             .size(100.dp)
     ) {
-       /* GlideImage(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.surfaceContainerHigh),
-            contentDescription = "null",
-            contentScale = ContentScale.Crop,
-            model = media.uri
 
-        ) {
-            it.thumbnail(preloadRequestBuilder)
-                .signature(MediaKey(media.id, media.mimeType))
-                .format(DecodeFormat.PREFER_RGB_565).override(270)
-        }*/
-        /*    AsyncImage(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.surfaceContainerHigh),
-            model = imageRequest,
-            contentDescription = "image",
-            contentScale = ContentScale.Crop,)*/
         GlideImage(
             modifier = Modifier
                 .fillMaxSize()
@@ -183,9 +144,7 @@ fun LazyGridItemScope.MediaComponent(
     media: Media,
     preloadRequestBuilder: RequestBuilder<Drawable>,
     onItemClick: (Media) -> Unit,
-    onItemLongClick: (Media) -> Unit,
 ) {
-    val isSelected = remember { mutableStateOf(false) }
 
     MediaItem(
         media = media,
@@ -240,7 +199,6 @@ fun MediaGridView(
                 MediaComponent(
                     media = media,
                     onItemClick = { onMediaClick(mediaList.toMediaListInfo(it)) },
-                    onItemLongClick = {},
                     preloadRequestBuilder = preloadRequestBuilder
                 )
             }

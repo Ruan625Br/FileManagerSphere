@@ -41,7 +41,6 @@ fun MediaViewAppBar(
     showUI: Boolean,
     showInfo: Boolean,
     showDate: Boolean,
-    currentDate: String,
     paddingValues: PaddingValues,
     bottomSheetState: AppBottomSheetState,
     onGoBack: () -> Unit

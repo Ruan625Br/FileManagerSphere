@@ -20,8 +20,6 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 import com.etb.filemanager.files.compat.readParcelableListCompat
 
-inline fun <reified T : Parcelable> Parcel.readParcelable(): T? =
-    readParcelable(T::class.java.classLoader)
 
 fun <T : Parcelable?> Parcel.readParcelableListCompat(classLoader: ClassLoader?): List<T> =
     readParcelableListCompat(mutableListOf(), classLoader)

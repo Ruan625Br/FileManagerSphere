@@ -38,7 +38,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.OpenInNew
@@ -75,7 +74,6 @@ import androidx.exifinterface.media.ExifInterface
 import com.etb.filemanager.R
 import com.etb.filemanager.files.util.FileUtil
 import com.etb.filemanager.files.util.actionEdit
-import com.etb.filemanager.files.util.launchEditIntent
 import com.etb.filemanager.files.util.shareMedia
 import com.etb.filemanager.manager.media.model.Media
 import com.etb.filemanager.ui.theme.Black40P
@@ -83,8 +81,6 @@ import com.etb.filemanager.ui.util.Constants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.IOException
-import java.math.RoundingMode
-import java.text.DecimalFormat
 
 @SuppressLint("RememberReturnType")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -163,7 +159,6 @@ fun BoxScope.MediaViewBottomBar(
                 ) {
                     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                         MediaViewDateContainer(
-                            currentMedia = currentMedia,
                             exifMetadata = exifMetadata
                         ) {
 /**/
@@ -184,7 +179,6 @@ fun BoxScope.MediaViewBottomBar(
 
 @Composable
 private fun MediaViewDateContainer(
-    currentMedia: Media,
     exifMetadata: ExifMetadata,
     content: @Composable () -> Unit
 ) {
@@ -232,11 +226,7 @@ private fun MediaViewActions(
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val favoriteIcon by remember(currentMedia) {
-        mutableStateOf(
-            Icons.Filled.Favorite
-        )
-    }
+
     // Share Component
     BottomBarColumn(
         currentMedia = currentMedia,
@@ -270,7 +260,7 @@ private fun MediaViewActions(
             imageVector = Icons.Outlined.DeleteOutline,
             title = stringResource(id = R.string.delete)
         ) {
-            result?.let { result ->
+            result?.let { _ ->
                 scope.launch {
                     onDeleteMedia?.invoke(currentIndex)
                 }
@@ -379,40 +369,14 @@ class AppBottomSheetState(
 }
 
 class ExifMetadata(exifInterface: ExifInterface) {
-    val manufacturerName: String? =
-        exifInterface.getAttribute(ExifInterface.TAG_MAKE)
-    val modelName: String? =
-        exifInterface.getAttribute(ExifInterface.TAG_MODEL)
-    val apertureValue: Double =
-        exifInterface.getAttributeDouble(ExifInterface.TAG_APERTURE_VALUE, 0.0)
-
-    val focalLength: Double =
-        exifInterface.getAttributeDouble(ExifInterface.TAG_FOCAL_LENGTH, 0.0)
-    val isoValue: Int =
-        exifInterface.getAttributeInt(ExifInterface.TAG_ISO_SPEED, 0)
-    val imageWidth: Int =
+    private val imageWidth: Int =
         exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, -1)
-    val imageHeight: Int =
+    private val imageHeight: Int =
         exifInterface.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, -1)
-    val imageMp: String
-        get() {
-            val roundingMP = DecimalFormat("#.#").apply { roundingMode = RoundingMode.DOWN }
-            return roundingMP.format(imageWidth * imageHeight / 1024000.0)
-        }
 
     val imageDescription: String? =
         exifInterface.getAttribute(ExifInterface.TAG_IMAGE_DESCRIPTION)
 
-    val lensDescription: String?
-        get() {
-            return if (!manufacturerName.isNullOrEmpty() && !modelName.isNullOrEmpty() && apertureValue != 0.0) {
-                "$manufacturerName $modelName - f/$apertureValue - $imageMp MP"
-            } else null
-        }
-
-
-    val gpsLatLong: DoubleArray? =
-        exifInterface.latLong
 }
 
 @Throws(IOException::class)

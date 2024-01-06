@@ -15,20 +15,14 @@ package com.etb.filemanager.files.compat
 import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.core.os.ParcelCompat
 
-fun Parcel.readBooleanCompat(): Boolean = ParcelCompat.readBoolean(this)
-
-fun Parcel.writeBooleanCompat(value: Boolean) {
-    ParcelCompat.writeBoolean(this, value)
-}
 
 fun <E : Parcelable?, L : MutableList<E>> Parcel.readParcelableListCompat(
     list: L,
     classLoader: ClassLoader?
 ): L {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        @Suppress("UNCHECKED_CAST")
+        @Suppress("UNCHECKED_CAST", "DEPRECATION")
         return readParcelableList(list, classLoader) as L
     } else {
         val size = readInt()
@@ -38,7 +32,7 @@ fun <E : Parcelable?, L : MutableList<E>> Parcel.readParcelableListCompat(
         }
         val listSize = list.size
         for (index in 0 until size) {
-            @Suppress("UNCHECKED_CAST")
+            @Suppress("UNCHECKED_CAST", "DEPRECATION")
             val element = readParcelable<E>(classLoader) as E
             if (index < listSize) {
                 list[index] = element
@@ -67,6 +61,3 @@ fun <T : Parcelable?> Parcel.writeParcelableListCompat(value: List<T>?, flags: I
         }
     }
 }
-
-@Suppress("UNCHECKED_CAST")
-fun <T> Parcel.readSerializableCompat(): T? = readSerializable() as T?

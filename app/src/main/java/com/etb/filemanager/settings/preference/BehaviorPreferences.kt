@@ -11,17 +11,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.etb.filemanager.R
-import com.etb.filemanager.manager.util.MaterialDialogUtils
-import com.etb.filemanager.ui.style.StyleManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import java.io.File
-import java.nio.file.Path
-import java.nio.file.Paths
 
 class BehaviorPreferences : PreferenceFragment(){
     override fun getTitle(): Int {
@@ -33,19 +27,18 @@ class BehaviorPreferences : PreferenceFragment(){
         preferenceManager.preferenceDataStore = SettingsDataStore()
 
 
-        val prefDefaulFolder = findPreference<Preference>("default_folder")
+        val prefDefaultFolder = findPreference<Preference>("default_folder")
         val currentDefaultFolder = Preferences.Behavior.defaultFolder
 
 
         //Default folder
-        prefDefaulFolder!!.summary = currentDefaultFolder
+        prefDefaultFolder!!.summary = currentDefaultFolder
         val inflater = LayoutInflater.from(requireContext())
         val dialogView = inflater.inflate(R.layout.layout_basic_dialog, null)
-        val eInputLayout = dialogView.findViewById<TextInputLayout>(R.id.eInputLayout)
         val eInputEditText = dialogView.findViewById<TextInputEditText>(R.id.eInputEditText)
 
         val title = requireContext().getString(R.string.pref_behavior_set_default_folder_title)
-        prefDefaulFolder.setOnPreferenceClickListener { preference ->
+        prefDefaultFolder.setOnPreferenceClickListener { preference ->
             val parent = dialogView.parent as? ViewGroup
             parent?.removeView(dialogView)
             eInputEditText.setText(currentDefaultFolder)
@@ -54,7 +47,7 @@ class BehaviorPreferences : PreferenceFragment(){
                 .setTitle(title)
                 .setView(dialogView)
                 .setCancelable(false)
-            .setPositiveButton(getString(R.string.set)) { dialog, which ->
+            .setPositiveButton(getString(R.string.set)) { _, _ ->
                 val enteredText = eInputEditText.text.toString()
                 val path = File(enteredText)
                 if (enteredText != currentDefaultFolder && path.exists()){
