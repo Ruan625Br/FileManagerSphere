@@ -193,6 +193,9 @@ dependencies {
 
     //Baseline Profile
     baselineProfile(project(":app:benchmark"))
+
+    //FilePickerSphere
+    implementation("com.github.Ruan625Br:FilePickerSphere:1.0.0")
 }
 
 

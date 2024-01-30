@@ -22,7 +22,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
-import com.etb.filemanager.databinding.FileItemBinding
+import com.etb.filemanager.databinding.FileItemViewBinding
 import com.etb.filemanager.files.extensions.createShapeModelBasedOnCornerFamilyPreference
 import com.etb.filemanager.files.provider.archive.common.mime.MimeTypeUtil
 import com.etb.filemanager.files.util.FileUtil
@@ -161,7 +161,7 @@ class FileModelAdapter(
         }
     }
 
-    private fun applyStyle(binding: FileItemBinding) {
+    private fun applyStyle(binding: FileItemViewBinding) {
         if (Preferences.Interface.isEnabledRoundedCorners) {
             mContext.let { ctx ->
                 binding.itemFile.radius = ctx.getDimension(R.dimen.corner_radius_base)
@@ -177,7 +177,7 @@ class FileModelAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
-        FileItemBinding.inflate(parent.context.layoutInflater, parent, false)
+        FileItemViewBinding.inflate(parent.context.layoutInflater, parent, false)
     ).apply {
         applyStyle(binding)
         binding.itemFile.background = CheckableItemBackground.create(binding.itemFile.context)
@@ -246,7 +246,7 @@ class FileModelAdapter(
 
     }
 
-    private fun setVisibility(isDir: Boolean, mimeType: String?, binding: FileItemBinding) {
+    private fun setVisibility(isDir: Boolean, mimeType: String?, binding: FileItemViewBinding) {
         val isMedia = mimeType?.isMimeTypeMedia() ?: false
         val viewFileInformationOption = Preferences.Interface.viewFileInformationOption
         val colorPrimary = mContext.getColorByAttr(com.google.android.material.R.attr.colorPrimary)
@@ -289,7 +289,7 @@ class FileModelAdapter(
 
 
     private fun getIconByMimeType(
-        mimeType: String?, binding: FileItemBinding
+        mimeType: String?, binding: FileItemViewBinding
     ) {
         val icFile = AppCompatResources.getDrawable(mContext, R.drawable.file_generic_icon)
         val tint = getTintForIcons()
@@ -302,7 +302,7 @@ class FileModelAdapter(
 
     }
 
-    private fun loadImage(path: String, binding: FileItemBinding) {
+    private fun loadImage(path: String, binding: FileItemViewBinding) {
         val imageView = binding.iconFile
 
         binding.iconFile.clearColorFilter()
@@ -310,7 +310,7 @@ class FileModelAdapter(
             .override(50, 50).placeholder(R.drawable.ic_image).into(imageView)
     }
 
-    private fun loadImageFromDirectory(binding: FileItemBinding) {
+    private fun loadImageFromDirectory(binding: FileItemViewBinding) {
         val icFolder = AppCompatResources.getDrawable(mContext, R.drawable.ic_folder)!!
         icFolder.setTint(getTintForIcons())
         binding.iconFile.setColorFilter(getTintForIcons(), PorterDuff.Mode.SRC_IN)
@@ -335,7 +335,7 @@ class FileModelAdapter(
     }
 
 
-    class ViewHolder(val binding: FileItemBinding) : RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: FileItemViewBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun clear() {
         super.clear()

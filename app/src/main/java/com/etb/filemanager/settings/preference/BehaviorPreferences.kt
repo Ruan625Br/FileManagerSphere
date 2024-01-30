@@ -8,16 +8,18 @@
 package com.etb.filemanager.settings.preference
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import com.etb.filemanager.R
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputEditText
-import java.io.File
+import com.jn.filepickersphere.filelist.common.mime.MimeType
+import com.jn.filepickersphere.filepicker.FilePickerCallbacks
+import com.jn.filepickersphere.filepicker.FilePickerSphereManager
+import com.jn.filepickersphere.filepicker.style.FilePickerStyle
+import com.jn.filepickersphere.models.FileModel
+import com.jn.filepickersphere.models.FilePickerModel
+import com.jn.filepickersphere.models.PickOptions
 
-class BehaviorPreferences : PreferenceFragment(){
+class BehaviorPreferences : PreferenceFragment() {
     override fun getTitle(): Int {
         return R.string.pref_behavior_title
     }
@@ -27,53 +29,73 @@ class BehaviorPreferences : PreferenceFragment(){
         preferenceManager.preferenceDataStore = SettingsDataStore()
 
 
-        val prefDefaultFolder = findPreference<Preference>("default_folder")
+        //Default folder
+        val prefDefaultFolder = findPreference<Preference>("default_folder")!!
         val currentDefaultFolder = Preferences.Behavior.defaultFolder
 
+        prefDefaultFolder.summary = currentDefaultFolder
+        prefDefaultFolder.setOnPreferenceClickListener { _ ->
 
-        //Default folder
-        prefDefaultFolder!!.summary = currentDefaultFolder
-        val inflater = LayoutInflater.from(requireContext())
-        val dialogView = inflater.inflate(R.layout.layout_basic_dialog, null)
-        val eInputEditText = dialogView.findViewById<TextInputEditText>(R.id.eInputEditText)
-
-        val title = requireContext().getString(R.string.pref_behavior_set_default_folder_title)
-        prefDefaultFolder.setOnPreferenceClickListener { preference ->
-            val parent = dialogView.parent as? ViewGroup
-            parent?.removeView(dialogView)
-            eInputEditText.setText(currentDefaultFolder)
-
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(title)
-                .setView(dialogView)
-                .setCancelable(false)
-            .setPositiveButton(getString(R.string.set)) { _, _ ->
-                val enteredText = eInputEditText.text.toString()
-                val path = File(enteredText)
-                if (enteredText != currentDefaultFolder && path.exists()){
-                    preference.summary = enteredText
-                    Preferences.Behavior.defaultFolder = enteredText
-                }
-
-            }.setNegativeButton(R.string.dialog_cancel) { _, _ ->
-            }.show()
+            selectFolder {
+                Preferences.Behavior.defaultFolder = it
+                prefDefaultFolder.summary = it
+            }
             true
 
         }
 
         //Select file long click
-
-        val switchSelectFileLongClick = findPreference<SwitchPreferenceCompat>("select_file_long_click")
+        val switchSelectFileLongClick =
+            findPreference<SwitchPreferenceCompat>("select_file_long_click")
         val selectFileLongClick = Preferences.Behavior.selectFileLongClick
 
         switchSelectFileLongClick?.isChecked = selectFileLongClick
 
         //Show fast scroll
-        val swShowFastScroll = findPreference<SwitchPreferenceCompat>(getString(R.string.pref_key_show_fast_scroll))
+        val swShowFastScroll =
+            findPreference<SwitchPreferenceCompat>(getString(R.string.pref_key_show_fast_scroll))
         val isFastScrollEnabled = Preferences.Behavior.isFastScrollEnabled
         swShowFastScroll?.isChecked = isFastScrollEnabled
 
 
     }
+
+    private fun selectFolder(onSelectedFolder: (String) -> Unit) {
+
+        val defaultPath =  requireContext().getString(R.string.default_pref_default_folder)
+        val model = FilePickerModel(
+            PickOptions(
+                mimeType = listOf(MimeType.DIRECTORY),
+                localOnly = false,
+                maxSelection = null
+            )
+        )
+        FilePickerSphereManager(
+            context = requireContext(), filePickerCallbacks = object : FilePickerCallbacks {
+                override fun onAllFilesSelected(files: List<FileModel>) {
+                    val path = if (files.isEmpty()) defaultPath else files.first().path
+                    onSelectedFolder(path)
+                }
+
+                override fun onFileSelectionChanged(file: FileModel, selected: Boolean) {
+
+                }
+
+                override fun onOpenFile(file: FileModel) {
+
+                }
+
+                override fun onSelectedFilesChanged(files: List<FileModel>) {
+
+                }
+
+            }, filePickerModel = model
+        ).style(
+            FilePickerStyle(
+                appTheme = Preferences.Appearance.getAppTheme()
+            )
+        ).picker()
+    }
+
 }
 
