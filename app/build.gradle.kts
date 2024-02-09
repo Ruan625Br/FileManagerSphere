@@ -80,16 +80,15 @@ android {
 }
 dependencies {
 
-    val material3 = "1.2.0-beta01"
-    val navigationVersion = "2.7.6"
-    val composeBom = platform("androidx.compose:compose-bom:2023.10.01")
+    val material3 = "1.2.0"
+    val navigationVersion = "2.7.7"
     val roomVersion = "2.6.1"
 
 
     // AndroidX Libraries
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.core:core-ktx:1.12.0")
 
 
@@ -117,13 +116,13 @@ dependencies {
     implementation("com.jakewharton.threetenabp:threetenabp:1.4.6")
     implementation("dev.rikka.rikkax.preference:simplemenu-preference:1.0.3")
     implementation("dev.rikka.shizuku:api:13.1.5")
-    runtimeOnly("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    runtimeOnly("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     //https://github.com/Glavo/kala-compress
     implementation("org.glavo.kala:kala-compress:1.21.0.1-beta3")
 
     // Apache Commons IO
-    implementation("commons-io:commons-io:2.11.0")
-    implementation("org.apache.commons:commons-compress:1.20")
+    implementation("commons-io:commons-io:2.15.1")
+    implementation("org.apache.commons:commons-compress:1.25.0")
 
     implementation("net.sf.sevenzipjbinding:sevenzipjbinding:16.02-2.01")
 
@@ -135,8 +134,8 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
 
     //Compose
-    implementation(composeBom)
-    androidTestImplementation(composeBom)
+    implementation("androidx.compose:compose-bom:2024.02.00")
+    androidTestImplementation("androidx.compose:compose-bom:2024.02.00")
 
     implementation("androidx.compose.runtime:runtime")
     implementation("androidx.compose.ui:ui")
@@ -146,16 +145,16 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class:$material3")
     implementation("androidx.compose.runtime:runtime-livedata")
     implementation("androidx.compose.ui:ui-tooling")
-    implementation("com.google.accompanist:accompanist-themeadapter-material:0.32.0")
+    implementation("com.google.accompanist:accompanist-themeadapter-material:0.34.0")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 
     //Google accompanist
-    implementation("com.google.accompanist:accompanist-navigation-animation:0.33.1-alpha")
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.34.0")
 
     //Glide Compose
     implementation("com.github.bumptech.glide:glide:4.16.0")
@@ -163,11 +162,11 @@ dependencies {
 
 
     //ExoPlayer
-    implementation("androidx.media3:media3-exoplayer:1.2.0")
-    implementation("androidx.media3:media3-ui:1.2.0")
+    implementation("androidx.media3:media3-exoplayer:1.2.1")
+    implementation("androidx.media3:media3-ui:1.2.1")
 
     //zoomable
-    implementation("net.engawapg.lib:zoomable:1.5.3")
+    implementation("net.engawapg.lib:zoomable:1.6.0")
 
     //Coil
     implementation(platform("io.coil-kt:coil-bom:2.5.0"))
@@ -183,7 +182,7 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
 
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
 
     //Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.50")

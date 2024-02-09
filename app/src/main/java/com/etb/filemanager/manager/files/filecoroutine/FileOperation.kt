@@ -19,15 +19,12 @@ import kala.compress.archivers.zip.ZipArchiveOutputStream
 import kala.compress.compressors.gzip.GzipCompressorOutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.apache.commons.compress.archivers.ArchiveEntry
-import org.apache.commons.compress.archivers.ArchiveStreamFactory
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry
 import org.apache.commons.compress.archivers.sevenz.SevenZFile
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream
-import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -550,7 +547,7 @@ class ExtractArchives {
     }
 
     private fun extractZipArchive(archiveFile: File, outputDirFile: File) {
-        val zipInputStream =
+      /*  val zipInputStream =
             ArchiveStreamFactory().createArchiveInputStream("zip", FileInputStream(archiveFile))
         var entry: ArchiveEntry? = zipInputStream.nextEntry
 
@@ -563,7 +560,7 @@ class ExtractArchives {
             entry = zipInputStream.nextEntry
         }
 
-        zipInputStream.close()
+        zipInputStream.close()*/
     }
 
 
