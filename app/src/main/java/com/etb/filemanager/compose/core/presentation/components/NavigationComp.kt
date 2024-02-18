@@ -8,7 +8,6 @@
 package com.etb.filemanager.compose.core.presentation.components
 
 import android.os.Build
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -27,7 +26,6 @@ import com.etb.filemanager.manager.media.model.MediaListInfo
 import com.etb.filemanager.ui.util.Constants.Animation.navigateInAnimation
 import com.etb.filemanager.ui.util.Constants.Animation.navigateUpAnimation
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavigationComp(
     navController: NavHostController,

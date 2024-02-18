@@ -98,4 +98,3 @@ class BehaviorPreferences : PreferenceFragment() {
     }
 
 }
-

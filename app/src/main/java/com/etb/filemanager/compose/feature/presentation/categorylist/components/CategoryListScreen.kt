@@ -1,6 +1,6 @@
 /*
  * Copyright (c)  2023  Juan Nascimento
- * Part of FileManagerSphere - CategoryListScreen.kt
+ * Part of FileManagerSphere - HomeScreen.kt
  * SPDX-License-Identifier: GPL-3.0-or-later
  * More details at: https://www.gnu.org/licenses/
  */

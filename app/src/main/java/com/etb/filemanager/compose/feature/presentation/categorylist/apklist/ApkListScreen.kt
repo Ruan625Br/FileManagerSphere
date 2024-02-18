@@ -84,108 +84,105 @@ class ApkListScreen : BaseScreen() {
     }
 }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    fun ApkListScreenBody(
-        innerPadding: PaddingValues,
-    ) {
-        val context = LocalContext.current
+@Composable
+fun ApkListScreenBody(
+    innerPadding: PaddingValues,
+) {
+    val context = LocalContext.current
 
-        val chipsList = remember {
-            mutableStateListOf(
-                context.getString(R.string.installed_apps) to true,
-                context.getString(R.string.system_apps) to false,
-                context.getString(R.string.app_installation_files) to false,
-            )
-        }
-        var chipSelectedIndex by remember { mutableIntStateOf(0) }
-        var updateAppList by remember { mutableStateOf(false) }
-
-
-        Column(
-        ) {
-            FilterChipGroup(innerPadding = innerPadding,
-                modifier = Modifier
-                    .padding(start = 10.dp, bottom = 5.dp)
-                    .fillMaxWidth()
-                    .background(color = MaterialTheme.colorScheme.surfaceColorAtElevation(0.dp)),
-                chips = chipsList,
-                onChipClick = { index ->
-                    chipsList[index] = chipsList[index].copy(second = true)
-                    chipSelectedIndex = index
-                    updateAppList = true
-                    chipsList.indices.forEachIndexed { i, _ ->
-                        if (i != index) {
-
-                            chipsList[i] = chipsList[i].copy(second = false)
-
-                        }
-                    }
-
-                })
-
-            LaunchedEffect(chipSelectedIndex) {
-                updateAppList = true
-
-            }
-
-
-            if (updateAppList) {
-                GeneratingApkListBase(index = chipSelectedIndex)
-            }
-        }
-
-    }
-
-    @Composable
-    fun GeneratingApkList(
-        innerPadding: PaddingValues,
-        appFilter: AppFilter = AppFilter.ALL,
-        apkListViewModel: ApkListViewModel = viewModel(),
-
-        ) {
-        val context = LocalContext.current
-
-        val apkListState by apkListViewModel.apkListState.observeAsState(emptyList())
-        val loading by apkListViewModel.loading.observeAsState(true)
-
-        LaunchedEffect(context) {
-            apkListViewModel.loadApkList(context, appFilter)
-        }
-
-        if (loading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .wrapContentSize(Alignment.Center)
-            ) {
-                CircularProgressIndicator()
-            }
-        } else {
-            ApkList(innerPadding = innerPadding, apkList = apkListState, appFilter = appFilter)
-        }
-    }
-
-
-    @Composable
-    fun GeneratingApkListBase(index: Int) {
-        val apkListViewModel: ApkListViewModel = viewModel()
-        val context = LocalContext.current
-
-        val appFilter: AppFilter = when (index) {
-            0 -> AppFilter.NON_SYSTEM
-            1 -> AppFilter.SYSTEM
-            2 -> AppFilter.UNINSTALLED_INTERNAL
-            else -> {
-                AppFilter.NON_SYSTEM
-            }
-        }
-        apkListViewModel.update(context, appFilter)
-
-        GeneratingApkList(
-            innerPadding = PaddingValues(0.dp),
-            appFilter = appFilter,
-            apkListViewModel = apkListViewModel
+    val chipsList = remember {
+        mutableStateListOf(
+            context.getString(R.string.installed_apps) to true,
+            context.getString(R.string.system_apps) to false,
+            context.getString(R.string.app_installation_files) to false,
         )
-
     }
+    var chipSelectedIndex by remember { mutableIntStateOf(0) }
+    var updateAppList by remember { mutableStateOf(false) }
+
+
+    Column {
+        FilterChipGroup(innerPadding = innerPadding,
+            modifier = Modifier
+                .padding(start = 10.dp, bottom = 5.dp)
+                .fillMaxWidth()
+                .background(color = MaterialTheme.colorScheme.surfaceColorAtElevation(0.dp)),
+            chips = chipsList,
+            onChipClick = { index ->
+                chipsList[index] = chipsList[index].copy(second = true)
+                chipSelectedIndex = index
+                updateAppList = true
+                chipsList.indices.forEachIndexed { i, _ ->
+                    if (i != index) {
+                        chipsList[i] = chipsList[i].copy(second = false)
+
+                    }
+                }
+
+            })
+
+        LaunchedEffect(chipSelectedIndex) {
+            updateAppList = true
+
+        }
+
+
+        if (updateAppList) {
+            GeneratingApkListBase(index = chipSelectedIndex)
+        }
+    }
+
+}
+
+@Composable
+fun GeneratingApkList(
+    innerPadding: PaddingValues,
+    appFilter: AppFilter = AppFilter.ALL,
+    apkListViewModel: ApkListViewModel = viewModel(),
+
+    ) {
+    val context = LocalContext.current
+
+    val apkListState by apkListViewModel.apkListState.observeAsState(emptyList())
+    val loading by apkListViewModel.loading.observeAsState(true)
+
+    LaunchedEffect(context) {
+        apkListViewModel.loadApkList(context, appFilter)
+    }
+
+    if (loading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(Alignment.Center)
+        ) {
+            CircularProgressIndicator()
+        }
+    } else {
+        ApkList(innerPadding = innerPadding, apkList = apkListState, appFilter = appFilter)
+    }
+}
+
+
+@Composable
+fun GeneratingApkListBase(index: Int) {
+    val apkListViewModel: ApkListViewModel = viewModel()
+    val context = LocalContext.current
+
+    val appFilter: AppFilter = when (index) {
+        0 -> AppFilter.NON_SYSTEM
+        1 -> AppFilter.SYSTEM
+        2 -> AppFilter.UNINSTALLED_INTERNAL
+        else -> {
+            AppFilter.NON_SYSTEM
+        }
+    }
+    apkListViewModel.update(context, appFilter)
+
+    GeneratingApkList(
+        innerPadding = PaddingValues(0.dp),
+        appFilter = appFilter,
+        apkListViewModel = apkListViewModel
+    )
+
+}

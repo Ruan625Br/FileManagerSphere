@@ -5,6 +5,9 @@ plugins {
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("org.jetbrains.kotlin.plugin.serialization")
+    id("androidx.room")
     alias(libs.plugins.baselineprofile)
 
 }
@@ -29,8 +32,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-
     }
 
     buildFeatures {
@@ -77,6 +78,10 @@ android {
         }
     }
 
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
+
 }
 dependencies {
 
@@ -95,6 +100,20 @@ dependencies {
     // UI Libraries
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.11.0")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.preference:preference-ktx:1.2.1")
@@ -177,7 +196,6 @@ dependencies {
 
     //Room
     implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.core:core-ktx:1.12.0")
     ksp("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
 
@@ -193,8 +211,15 @@ dependencies {
     //Baseline Profile
     baselineProfile(project(":app:benchmark"))
 
-    //FilePickerSphere
+    //GenerativeAI
+    implementation("com.google.ai.client.generativeai:generativeai:0.1.2")
+
+    //Kotlin serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+
+    //Ruan625Br
     implementation("com.github.Ruan625Br:FilePickerSphere:1.0.0")
+    implementation("com.github.Ruan625Br:AIResponseMatcher:4904b50758")
 }
 
 

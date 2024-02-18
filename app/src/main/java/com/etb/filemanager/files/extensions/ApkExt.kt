@@ -20,6 +20,7 @@ import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.core.content.pm.PackageInfoCompat
+import com.etb.filemanager.BuildConfig
 import com.etb.filemanager.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -49,7 +50,7 @@ suspend fun getInstalledApkInfo(context: Context, appFilter: AppFilter): List<Ap
             if (appFilter == AppFilter.NON_SYSTEM && isSystemApp) {
                 continue
             }
-            if (appFilter == AppFilter.SYSTEM && !isSystemApp){
+            if (appFilter == AppFilter.SYSTEM && !isSystemApp) {
                 continue
             }
 
@@ -90,10 +91,7 @@ suspend fun getUninstalledApkInfo(context: Context): List<AppInfo> = withContext
 
             apkInfoList.add(
                 AppInfo(
-                    appName = appName,
-                    appIcon = appIcon,
-                    packageName = packageName,
-                    apkPath = path
+                    appName = appName, appIcon = appIcon, packageName = packageName, apkPath = path
                 )
             )
         }
@@ -167,9 +165,7 @@ fun openAppSettings(context: Context, packageName: String) {
 fun installApk(context: Context, apkFilePath: Path) {
 
     val uri = FileProvider.getUriForFile(
-        context,
-        context.packageName + ".fileprovider",
-        apkFilePath.toFile()
+        context, BuildConfig.FILE_PROVIDER_AUTHORITY, apkFilePath.toFile()
     )
 
     val installIntent = Intent(Intent.ACTION_VIEW)
@@ -180,17 +176,14 @@ fun installApk(context: Context, apkFilePath: Path) {
 }
 
 enum class AppFilter {
-    ALL,
-    NON_SYSTEM,
-    SYSTEM,
-    UNINSTALLED_INTERNAL
+    ALL, NON_SYSTEM, SYSTEM, UNINSTALLED_INTERNAL
 }
 
-private fun isSystemPackage(applicationInfo: ApplicationInfo): Boolean {
-    return applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
-}
-
-fun getAppMetadata(appInfo: AppInfo, context: Context, appIsInstalled: Boolean): MutableList<AppMetadata> {
+fun getAppMetadata(
+    appInfo: AppInfo,
+    context: Context,
+    appIsInstalled: Boolean
+): MutableList<AppMetadata> {
     val packageManager = context.packageManager
     val appMetadataList = mutableListOf<AppMetadata>()
     val packageInfo = getPackageInfo(appIsInstalled, appInfo, packageManager)
@@ -208,12 +201,12 @@ fun getAppMetadata(appInfo: AppInfo, context: Context, appIsInstalled: Boolean):
         val compileSdkVersion = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             info.compileSdkVersion
         } else {
-           ""
+            ""
         }.toString()
         val compileSdkVersionCodename = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             info.compileSdkVersionCodename
         } else {
-           ""
+            ""
         }.toString()
 
         appMetadataList.add(
@@ -222,12 +215,42 @@ fun getAppMetadata(appInfo: AppInfo, context: Context, appIsInstalled: Boolean):
                 content = if (isSystemApp) context.getString(R.string.yes) else context.getString(R.string.no)
             )
         )
-        appMetadataList.add(AppMetadata(label = context.getString(R.string.version_name_label), content = versionName))
-        appMetadataList.add(AppMetadata(label = context.getString(R.string.version_code_label), content = versionCode))
-        appMetadataList.add(AppMetadata(label = context.getString(R.string.min_sdk_version_label), content = minSdkVersion))
-        appMetadataList.add(AppMetadata(label = context.getString(R.string.target_sdk_version_label), content = targetSdkVersion))
-        appMetadataList.add(AppMetadata(label = context.getString(R.string.compile_sdk_version_label), content = compileSdkVersion))
-        appMetadataList.add(AppMetadata(label = context.getString(R.string.compile_sdk_version_codename_label), content = compileSdkVersionCodename))
+        appMetadataList.add(
+            AppMetadata(
+                label = context.getString(R.string.version_name_label),
+                content = versionName
+            )
+        )
+        appMetadataList.add(
+            AppMetadata(
+                label = context.getString(R.string.version_code_label),
+                content = versionCode
+            )
+        )
+        appMetadataList.add(
+            AppMetadata(
+                label = context.getString(R.string.min_sdk_version_label),
+                content = minSdkVersion
+            )
+        )
+        appMetadataList.add(
+            AppMetadata(
+                label = context.getString(R.string.target_sdk_version_label),
+                content = targetSdkVersion
+            )
+        )
+        appMetadataList.add(
+            AppMetadata(
+                label = context.getString(R.string.compile_sdk_version_label),
+                content = compileSdkVersion
+            )
+        )
+        appMetadataList.add(
+            AppMetadata(
+                label = context.getString(R.string.compile_sdk_version_codename_label),
+                content = compileSdkVersionCodename
+            )
+        )
 
 
     }
@@ -236,12 +259,8 @@ fun getAppMetadata(appInfo: AppInfo, context: Context, appIsInstalled: Boolean):
 }
 
 
-
-
 fun getPackageInfo(
-    appIsInstalled: Boolean,
-    appInfo: AppInfo,
-    packageManager: PackageManager
+    appIsInstalled: Boolean, appInfo: AppInfo, packageManager: PackageManager
 ): PackageInfo? {
     val packageInfo = if (appIsInstalled) {
         packageManager.getPackageInfo(appInfo.packageName, 0)

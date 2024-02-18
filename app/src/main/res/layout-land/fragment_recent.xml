@@ -23,7 +23,7 @@
                 <com.google.android.material.card.MaterialCardView
                         android:layout_width="379dp"
                         android:layout_height="188dp"
-                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         style="@style/Widget.FileManagerSphere.MaterialCardView.LargeRound"
                         android:elevation="18dp"
@@ -337,6 +337,15 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                        android:id="@+id/fab_chat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ChatSphere"
+                        android:layout_marginVertical="16dp"
+                        app:layout_constraintStart_toStartOf="@id/cInternalStorage"
+                        app:layout_constraintTop_toBottomOf="@id/cInternalStorage" />
 
                 <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cCategoryItem"

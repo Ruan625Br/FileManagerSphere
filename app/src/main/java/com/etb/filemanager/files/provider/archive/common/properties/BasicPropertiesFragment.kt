@@ -9,6 +9,7 @@ package com.etb.filemanager.files.provider.archive.common.properties
 
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.etb.filemanager.R
-import com.etb.filemanager.files.extensions.parcelable
 import com.etb.filemanager.files.provider.archive.common.mime.MediaType
 
 
@@ -35,7 +35,7 @@ private const val ARG_FILE_PROPERTIES = "fileProperties"
  * create an instance of this fragment.
  * teste
  */
-class BasicPropertiesFragment() : Fragment() {
+class BasicPropertiesFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -48,8 +48,12 @@ class BasicPropertiesFragment() : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
-            fileProperties = it.parcelable(ARG_FILE_PROPERTIES)
-
+            fileProperties =  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+              it.getParcelableArrayList(ARG_FILE_PROPERTIES, FileProperties::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                it.getParcelableArrayList(ARG_FILE_PROPERTIES)
+            }
 
         }
     }
@@ -77,7 +81,7 @@ class BasicPropertiesFragment() : Fragment() {
      * @author Juan Nascimento
      */
 
-    fun addListProperties(fileBasicProperties: MutableList<FileProperties>) {
+    private fun addListProperties(fileBasicProperties: MutableList<FileProperties>) {
         for (properties in fileBasicProperties) {
             addProperties(properties.title, properties.property, properties.isMedia, properties.mediaType, properties.mediaPath)
         }

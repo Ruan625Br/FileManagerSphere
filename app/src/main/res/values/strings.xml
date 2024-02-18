@@ -330,5 +330,6 @@
     <string name="songs">Songs</string>
     <string name="basic">Basic</string>
     <string name="extra">Extra</string>
+    <string name="message_not_sent">Message not sent</string>
 
 </resources>
