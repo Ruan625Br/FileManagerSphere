@@ -9,6 +9,7 @@ package com.etb.filemanager.compose.core.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -21,20 +22,26 @@ import com.etb.filemanager.compose.feature.presentation.chat_screen.ChatViewMode
 const val ChatRoute = "chat"
 
 fun NavGraphBuilder.chatScreen(
-    paddingValues: PaddingValues
+    imagePath: String?, paddingValues: PaddingValues
 ) {
     composable(
         route = ChatRoute
     ) {
         val viewModel: ChatViewModel = hiltViewModel()
         val uiState by viewModel.state.collectAsStateWithLifecycle()
+        val context = LocalContext.current
 
-        ChatScreen(uiState = uiState,
-            paddingValues = paddingValues,
-            onClickSendMsg = { msg ->
-                viewModel.sendMessage(msg)
-            },
-            onClickChat = { viewModel.setCurrentChat(it) }) { viewModel.newChat() }
+        imagePath?.let {
+            viewModel.addImages(it, context)
+        }
+
+        ChatScreen(uiState = uiState, paddingValues = paddingValues, onClickSendMsg = { msg ->
+            viewModel.sendMessage(msg)
+        }, onClickChat = { viewModel.setCurrentChat(it) }, onClickNewChat = {
+            viewModel.newChat()
+        }, onSelectImage = {
+            //viewModel.addImages(it, context)
+        })
     }
 }
 

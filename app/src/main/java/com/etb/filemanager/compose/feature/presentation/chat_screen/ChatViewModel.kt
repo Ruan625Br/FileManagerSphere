@@ -7,6 +7,9 @@
 
 package com.etb.filemanager.compose.feature.presentation.chat_screen
 
+import android.content.Context
+import android.graphics.BitmapFactory
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.etb.filemanager.compose.core.extensions.hasPendingMessage
@@ -30,8 +33,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
-    private val modelRepository: GenerativeModelManager,
-    private val chatRepository: ChatRepository
+    private val modelRepository: GenerativeModelManager, private val chatRepository: ChatRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ChatUiState())
@@ -39,7 +41,7 @@ class ChatViewModel @Inject constructor(
 
     init {
         loadChatList()
-        if (createNewChatIsAvailable()){
+        if (createNewChatIsAvailable()) {
             newChat()
         }
     }
@@ -52,9 +54,7 @@ class ChatViewModel @Inject constructor(
                 text = message, participant = Participant.USER,
             )
             val loadingMessage = Message(
-                text = "Generating message...",
-                participant = Participant.MODEL,
-                isPending = true
+                text = "Generating message...", participant = Participant.MODEL, isPending = true
             )
             messages.apply {
                 addAll(previousMessages)
@@ -64,9 +64,7 @@ class ChatViewModel @Inject constructor(
             updateMessages(messages)
             chatRepository.upsert(_state.value.chat.toChatEntity())
             val modelMessage = modelRepository.generateContent(
-                message = message,
-                chatHistory = previousMessages.toContent(),
-                scope = this
+                message = message, chatHistory = previousMessages.toContent(), scope = this
             )
 
             messages.remove(loadingMessage)
@@ -86,7 +84,8 @@ class ChatViewModel @Inject constructor(
 
     private fun updateMessages(messages: List<Message>) {
         val chat = _state.value.chat.copy(
-            messages = messages)
+            messages = messages
+        )
 
         _state.update {
             it.copy(chat = chat)
@@ -100,10 +99,14 @@ class ChatViewModel @Inject constructor(
             chatRepository.getAllChat().collectLatest { listChatEntity ->
                 _state.update { listChat ->
                     val list = listChatEntity.map { it.toChat() }.reversed()
+                    if (list.isNotEmpty()) {
+                        setCurrentChat(list.first())
+                    }
                     listChat.copy(chatList = list)
                 }
             }
         }
+
     }
 
     fun newChat() {
@@ -126,8 +129,28 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-   private fun createNewChatIsAvailable(): Boolean {
+    fun addImages(pathString: String, context: Context) {
+        val currentState = _state.value
+        val bitmap = BitmapFactory.decodeFile(pathString)
+        bitmap?.let { mBitmap ->
+            val updatedImages = currentState.chat.images.toMutableList().apply {
+                add(mBitmap.asImageBitmap())
+            }
+            val updatedChat = currentState.chat.copy(
+                images = updatedImages
+            )
+            /*_state.compareAndSet(
+                currentState, currentState.copy(chat = updatedChat)
+            )*/
+            _state.update {
+                it.copy(chat = updatedChat)
+            }
+        }
+
+    }
+
+    private fun createNewChatIsAvailable(): Boolean {
         val chatList = _state.value.chatList
-       return chatList.isNotEmpty() && chatList.last().messages.isNotEmpty()
+        return chatList.isNotEmpty() && chatList.last().messages.isNotEmpty()
     }
 }

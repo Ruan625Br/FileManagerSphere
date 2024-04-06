@@ -7,8 +7,11 @@
 
 package com.etb.filemanager.compose.core.models
 
+import androidx.compose.ui.graphics.ImageBitmap
+
 data class Chat(
     val id: Int = 0,
     val chatSettings: ChatSettings = ChatSettings(),
     val messages: List<Message> = emptyList(),
+    val images: List<ImageBitmap> = emptyList(),
 )

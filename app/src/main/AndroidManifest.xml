@@ -80,6 +80,12 @@
                 android:enabled="true"
                 android:exported="false" />
 
+        <service
+                android:name=".manager.files.services.ScreenshotObserverService"
+                android:enabled="true"
+                android:foregroundServiceType="specialUse"
+                android:exported="false" />
+
         <meta-data
                 android:name="preloaded_fonts"
                 android:resource="@array/preloaded_fonts" />

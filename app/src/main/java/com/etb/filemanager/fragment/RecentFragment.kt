@@ -31,6 +31,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.etb.filemanager.BuildConfig
 import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
 import com.etb.filemanager.activity.SettingsActivity
@@ -111,7 +112,7 @@ class RecentFragment : Fragment(), ItemListener {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         showDialogStoragePermission()
-
+        checkNotificationPermission()
     }
 
     @SuppressLint("SuspiciousIndentation")
@@ -311,6 +312,35 @@ class RecentFragment : Fragment(), ItemListener {
         }
     }
 
+    private fun checkNotificationPermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            val permission = Manifest.permission.POST_NOTIFICATIONS
+            if (ContextCompat.checkSelfPermission(
+                requireContext(), permission
+            ) == PackageManager.PERMISSION_DENIED){
+                if (shouldShowRequestPermissionRationale(permission)) {
+                   MaterialDialogUtils().createDialogInfo(
+                       getString(R.string.notification_permission_required),
+                       getString(R.string.notification_permission_required_msg),
+                       getString(R.string.allow),
+                       getString(R.string.cancel),
+                       requireContext(),
+                       false
+                   ){ result ->
+
+                       if (result.confirmed){
+                           val uri = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
+                           Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                               addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                               data = uri
+                               startActivity(this)
+                           }
+                       }
+                   }
+                }
+            }
+        }
+    }
 
     private fun checkPermission(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

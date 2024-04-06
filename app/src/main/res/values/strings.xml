@@ -331,5 +331,6 @@
     <string name="basic">Basic</string>
     <string name="extra">Extra</string>
     <string name="message_not_sent">Message not sent</string>
-
+    <string name="notification_permission_required">Notification permission required</string>
+    <string name="notification_permission_required_msg">To provide a better user experience, we need to access your notifications. This permission is necessary for the application to display important notifications. We assure you that your notifications will be handled securely and with privacy in mind. To grant the permission, click "Allow" below.</string>
 </resources>

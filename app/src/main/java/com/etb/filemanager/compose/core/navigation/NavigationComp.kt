@@ -19,7 +19,8 @@ fun NavigationComp(
     navController: NavHostController = rememberNavController(),
     startDestination: String,
     paddingValues: PaddingValues,
-    categoryFileModel: CategoryFileModel?
+    categoryFileModel: CategoryFileModel?,
+    imagePath: String?
 ) {
     NavHost(
         navController = navController, startDestination = startDestination
@@ -38,6 +39,7 @@ fun NavigationComp(
         )
 
         chatScreen(
+            imagePath = imagePath,
             paddingValues = paddingValues
         )
     }

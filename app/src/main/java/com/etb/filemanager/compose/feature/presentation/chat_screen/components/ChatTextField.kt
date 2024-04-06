@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.dp
 import com.etb.filemanager.compose.core.models.FileOperationItem
 import com.etb.filemanager.files.provider.archive.common.mime.MimeType
@@ -37,18 +38,27 @@ import kotlin.io.path.Path
 
 @Composable
 fun ChatTextField(
+    images: List<ImageBitmap>,
     modifier: Modifier = Modifier,
     onClickSendMsg: (String) -> (Unit),
+    onSelectImage: (Uri) -> Unit,
 ) {
     var value by rememberSaveable {
         mutableStateOf("")
     }
 
     val operations = listOf(
-        FileOperationItem("Rename File", "I renamed the file MyFile01 in the Download folder to MyFile-01"),
+        FileOperationItem(
+            "Rename File",
+            "I renamed the file MyFile01 in the Download folder to MyFile-01"
+        ),
         FileOperationItem("Create File", "Create a file named MyFile01.txt in the Download folder"),
-        FileOperationItem("Write to File", "Write a list of mathematics exercises to the file MyFile01.txt in the Download folder"),
-        FileOperationItem("Delete File", "Delete the file MyFile01.txt from the Download folder"))
+        FileOperationItem(
+            "Write to File",
+            "Write a list of mathematics exercises to the file MyFile01.txt in the Download folder"
+        ),
+        FileOperationItem("Delete File", "Delete the file MyFile01.txt from the Download folder")
+    )
 
     var fileUri by remember {
         mutableStateOf<Uri?>(null)
@@ -56,12 +66,15 @@ fun ChatTextField(
 
     Column {
 
-        ListFileOperations(
-            modifier = Modifier
-                .padding(horizontal = 8.dp),
-            operations = operations, onClickOperation = {
-            value = it.content
-        })
+        Images(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            bitmapList = images)
+
+        ListFileOperations(modifier = Modifier.padding(horizontal = 8.dp),
+            operations = operations,
+            onClickOperation = {
+                value = it.content
+            })
 
         AnimatedVisibility(visible = fileUri != null) {
             val path = Path(fileUri?.path!!)
@@ -75,11 +88,10 @@ fun ChatTextField(
                 Text(text = "Message")
             },
             leadingIcon = {
-                 AnimatedVisibility(visible = fileUri == null) {
-                     ButtonPickerFiles(onFilePicker = {
-                         fileUri = it
-                     })
-                 }
+                    ButtonPickerFiles(onFilePicker = {
+                        fileUri = it
+                        onSelectImage(it)
+                    })
             },
             trailingIcon = {
                 AnimatedVisibility(visible = value.isNotBlank()) {
@@ -107,14 +119,22 @@ private fun ButtonPickerFiles(
     var result by remember {
         mutableStateOf<Uri?>(null)
     }
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocument(), onResult = {
-        result = it
-    })
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument(),
+        onResult = {
+            it?.let { uri -> onFilePicker(uri) }
+        })
 
 
     IconButton(onClick = {
-        launcher.launch(arrayOf(MimeType.DIRECTORY.value, MimeType.IMAGE_ANY.value, MimeType.PDF.value, MimeType.TEXT_PLAIN.value))
-        result?.let { onFilePicker(it) }
+        launcher.launch(
+            arrayOf(
+                MimeType.DIRECTORY.value,
+                MimeType.IMAGE_ANY.value,
+                MimeType.PDF.value,
+                MimeType.TEXT_PLAIN.value
+            )
+        )
     }) {
         Icon(imageVector = Icons.Rounded.UploadFile, contentDescription = null)
     }

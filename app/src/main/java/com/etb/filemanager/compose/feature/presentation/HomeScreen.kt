@@ -16,30 +16,31 @@ import com.etb.filemanager.compose.core.navigation.NavigationComp
 import com.etb.filemanager.compose.feature.provider.BaseScreen
 import com.etb.filemanager.files.extensions.parcelable
 import com.etb.filemanager.manager.category.adapter.CategoryFileModel
+import com.etb.filemanager.manager.files.services.ScreenshotObserverService
 import com.etb.filemanager.ui.theme.FileManagerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeScreen : BaseScreen() {
     private var categoryFileModel: CategoryFileModel? = null
+    private var imagePath: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bundle = intent.extras
         val startDestination = intent.getStringExtra("startDestination")!!
 
-        if (startDestination != ChatRoute && bundle != null){
-            categoryFileModel = bundle.parcelable("categoryFileModel")
+        when {
+            startDestination != ChatRoute && bundle != null -> {
+                categoryFileModel = bundle.parcelable("categoryFileModel")
+
+            }
+            startDestination == ChatRoute -> {
+                imagePath = intent.getStringExtra(ScreenshotObserverService.SCREENSHOT_PATH)
+            }
+
         }
 
-       /* if (bundle != null) {
-            categoryFileModel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                intent.getParcelableExtra("categoryFileModel", CategoryFileModel::class.java)
-            } else {
-                intent.parcelable("categoryFileModel")
-            }
-        }
-*/
         setContent {
             val navController = rememberNavController()
 
@@ -50,7 +51,8 @@ class HomeScreen : BaseScreen() {
                             navController = navController,
                             startDestination = startDestination,
                             paddingValues = innerPadding,
-                            categoryFileModel = categoryFileModel
+                            categoryFileModel = categoryFileModel,
+                            imagePath = imagePath
                         )
                     }
                 )

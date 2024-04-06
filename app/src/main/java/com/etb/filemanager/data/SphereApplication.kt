@@ -8,7 +8,16 @@
 package com.etb.filemanager.data
 
 import android.app.Application
+import android.content.Intent
+import com.etb.filemanager.manager.files.services.ScreenshotObserverService
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class SphereApplication : Application()
+class SphereApplication : Application(){
+
+    override fun onCreate() {
+        super.onCreate()
+        startService(Intent(this, ScreenshotObserverService::class.java))
+    }
+
+}
