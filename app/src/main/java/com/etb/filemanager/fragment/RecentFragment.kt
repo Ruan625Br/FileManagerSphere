@@ -35,7 +35,6 @@ import com.etb.filemanager.R
 import com.etb.filemanager.activity.MainActivity
 import com.etb.filemanager.activity.SettingsActivity
 import com.etb.filemanager.compose.core.navigation.CategoryListRoute
-import com.etb.filemanager.compose.core.navigation.ChatRoute
 import com.etb.filemanager.compose.feature.presentation.HomeScreen
 import com.etb.filemanager.files.extensions.applyBackgroundFromPreferences
 import com.etb.filemanager.files.util.fileProviderUri
@@ -52,10 +51,12 @@ import com.etb.filemanager.manager.util.MaterialDialogUtils
 import com.etb.filemanager.settings.preference.AboutFragment
 import com.etb.filemanager.ui.view.ModalBottomSheetAddCategory
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.nio.file.Path
 import kotlin.io.path.pathString
 
@@ -69,7 +70,6 @@ class RecentFragment : Fragment(), ItemListener {
     private lateinit var cBaseItem: MaterialCardView
     private lateinit var btnAddCategory: Button
     private lateinit var adapter: CategoryFileModelAdapter
-    private lateinit var fabChat: ExtendedFloatingActionButton
 
 
     override fun onCreateView(
@@ -88,7 +88,6 @@ class RecentFragment : Fragment(), ItemListener {
         cRecentImg = view.findViewById(R.id.cRecentImage)
         btnAddCategory = view.findViewById(R.id.btnAddCategory)
         cInternalStorage = view.findViewById(R.id.cInternalStorage)
-        fabChat = view.findViewById(R.id.fab_chat)
 
         val mnAbout = view.findViewById<ImageView>(R.id.mn_about)
         val aboutFragment = AboutFragment()
@@ -162,13 +161,6 @@ class RecentFragment : Fragment(), ItemListener {
             startActivity(settingsIntent)
         }
         btnAddCategory.setOnClickListener { showBottomSheetAddCategory() }
-
-        fabChat.setOnClickListener {
-            val intent = Intent(requireActivity(), HomeScreen::class.java).apply {
-                putExtra("startDestination", ChatRoute)
-            }
-            startActivity(intent)
-        }
     }
 
     private fun openListFiles() {

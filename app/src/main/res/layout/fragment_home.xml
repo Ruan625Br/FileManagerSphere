@@ -19,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimaryContainer"
-                app:liftOnScroll="true">
+                app:liftOnScroll="false">
 
             <com.google.android.material.appbar.MaterialToolbar
                     android:layout_width="match_parent"
