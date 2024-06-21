@@ -32,7 +32,7 @@
 
 ---                 
 
-## What is FileMangerSphere?
+## What is FileManagerSphere?
  
 <div align="center">
     <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="32%" alt="Screenshot 1" />
@@ -87,8 +87,8 @@ FileManagerSphere is a powerful file management tool, designed to simplify and e
 
 > _Currently you can download FileManagerSphere in the following ways
 ._
-> - [_GitHub Releases_](https://github.com/Ruan625Br/FileMangerSphere/releases)
-> - [_GitHub Actions_](https://github.com/Ruan625Br/FileMangerSphere/actions)
+> - [_GitHub Releases_](https://github.com/Ruan625Br/FileManagerSphere/releases)
+> - [_GitHub Actions_](https://github.com/Ruan625Br/FileManagerSphere/actions)
 
 
 <p  align="parent">
