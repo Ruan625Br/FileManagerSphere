@@ -45,7 +45,6 @@
     <string name="video">فيديو</string>
     <string name="document">وثائق</string>
     <string name="music">موسيقى</string>
-    <string name="whatsapp">واتساب</string>
     <string name="messages_header">مسنجر</string>
     <string name="sync_header">مزامنة</string>
     <string name="signature_title">توقيعك</string>
@@ -63,7 +62,6 @@
     <string name="save_and_exit">‌حفظ وخروج</string>
     <string name="search_option_whole_word">الكلمة بالكامل</string>
     <string name="search">بحث</string>
-    <string name="java">جافا</string>
     <string name="undo">الغاء التحميل</string>
     <string name="redo">إعادة</string>
     <string name="save">حفظ</string>
