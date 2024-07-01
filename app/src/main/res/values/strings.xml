@@ -42,14 +42,13 @@
     <string name="_24_de_mar">24 de mar.</string>
     <string name="_16_kb">16 KB</string>
     <string name="todo">TODO</string>
-    <string name="testeeeeeeeee">TESTEEEEEEEEE</string>
     <string name="file_list_select_action_archive">Compress</string>
     <string name="recente">Recent</string>
     <string name="storage">Storage</string>
     <string name="used_space">Used Space</string>
     <string name="free_space">Free Space</string>
     <string name="gb">GB</string>
-    <string name="gb_total">128</string>
+    <string name="gb_total" translatable="false">128</string>
     <string name="internal_st">Internal storage</string>
     <string name="policy_and_terms"><![CDATA[Privacy Policy and Terms & Conditions]]></string>
     <string name="ok">Ok</string>
@@ -65,7 +64,7 @@
     <string name="document">Document</string>
     <string name="music">Music</string>
 
-    <string name="whatsapp">WhatsApp</string>
+    <string name="whatsapp" translatable="false">WhatsApp</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
@@ -103,7 +102,7 @@
         <item quantity="other">%d results</item>
     </plurals>
     <string name="search">Search</string>
-    <string name="java">Java</string>
+    <string name="java" translatable="false">Java</string>
     <string name="undo">Undo</string>
     <string name="redo">Redo</string>
     <string name="save">Save</string>
@@ -216,7 +215,7 @@
     <string name="pref_appearance_description">Theme, animations, features, etc.</string>
     <string name="pref_interface_description">Personalize the appearance of the application according to your preferences.</string>
     <string name="pref_behavior_description">Default folder, View mode, etc.</string>
-    <string name="default_pref_default_folder">/storage/emulated/0</string>
+    <string name="default_pref_default_folder" translatable="false">/storage/emulated/0</string>
     <bool name="default_is_directories_first">true</bool>
     <bool name="default_show_hidden_file">false</bool>
     <bool name="default_grid_toggle">false</bool>
@@ -225,27 +224,27 @@
     <bool name="default_is_enabled_rounded_corners">true</bool>
     <bool name="default_is_enabled_dynamic_colors">false</bool>
     <bool name="default_is_enabled_material_design_3">true</bool>
-    <string name="default_list_categories_path" />
-    <string name="default_list_categories_name" />
+    <string name="default_list_categories_path" translatable="false" />
+    <string name="default_list_categories_name" translatable="false" />
     <bool name="default_is_enabled_transparent_list_background">false</bool>
-    <string name="default_selected_file_background_opacity">0.48</string>
-    <string name="default_file_list_margins">4</string>
+    <string name="default_selected_file_background_opacity" translatable="false">0.48</string>
+    <string name="default_file_list_margins" translatable="false">4</string>
     <string name="material_design_default_theme">Material Design 2 default theme</string>
 
 
     <string name="default_view_file_information">EVERYTHING</string>
-    <string name="radio_zip">.zip</string>
-    <string name="radio_tar_xz">.tar.xz</string>
-    <string name="radio_7z">.7z</string>
-    <string name="compression_zip">.zip</string>
-    <string name="compression_tar">.tar</string>
-    <string name="compression_gzip">.gzip</string>
-    <string name="compression_xz">.xz</string>
-    <string name="compression_tar_xz">.tar.xz</string>
-    <string name="compression_tar_gz">.tar.gz</string>
-    <string name="compression_zstandard">Zstandard</string>
+    <string name="radio_zip" translatable="false">.zip</string>
+    <string name="radio_tar_xz" translatable="false">.tar.xz</string>
+    <string name="radio_7z" translatable="false">.7z</string>
+    <string name="compression_zip" translatable="false">.zip</string>
+    <string name="compression_tar" translatable="false">.tar</string>
+    <string name="compression_gzip" translatable="false">.gzip</string>
+    <string name="compression_xz" translatable="false">.xz</string>
+    <string name="compression_tar_xz" translatable="false">.tar.xz</string>
+    <string name="compression_tar_gz" translatable="false">.tar.gz</string>
+    <string name="compression_zstandard" translatable="false">Zstandard</string>
     <string name="format_file">File format</string>
-    <string name="path_whatsapp">/storage/emulated/0/Android/media/com.whatsapp/WhatsApp</string>
+    <string name="path_whatsapp" translatable="false">/storage/emulated/0/Android/media/com.whatsapp/WhatsApp</string>
     <string name="category_name">Category name</string>
     <string name="category_path">Category path</string>
     <string name="category_add">Add category</string>

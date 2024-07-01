@@ -42,7 +42,6 @@
     <string name="_24_de_mar">3月24日。</string>
     <string name="_16_kb">16 KB</string>
     <string name="todo">待办事项</string>
-    <string name="testeeeeeeeee">TESTEEEEEEEEE</string>
     <string name="recente">最近</string>
     <string name="storage">存储</string>
     <string name="used_space">已用空间</string>
@@ -140,5 +139,4 @@
         <item quantity="other">操作 %1$d 个项目</item>
     </plurals>
     <string name="gb">GB</string>
-    <string name="gb_total">128</string>
 </resources>
