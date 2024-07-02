@@ -2,7 +2,6 @@
 <resources>
     <string name="sort">Сортировка</string>
     <string name="_lang_tag">ru</string>
-
     <string name="file_list_action_sort_by_name">Имя</string>
     <string name="file_list_action_sort_by_type">Тип</string>
     <string name="file_list_action_sort_by_size">Размер</string>
@@ -26,4 +25,15 @@
     <string name="file_item_action_properties">Свойства</string>
     <string name="dialog_ok">Хорошо</string>
     <string name="file_item_action_extract">Распаковать</string>
+    <string name="gb">ГБ</string>
+    <string name="dialog_cancel">Отмена</string>
+    <string name="dialog_new_folder">Новая папка</string>
+    <string name="dialog_new_file">Новый файл</string>
+    <string name="dialog_name_file">Имя файла</string>
+    <string name="dialog_name_folder">Имя папки</string>
+    <string name="dialog_file_exists">Файл с таким названием уже существует</string>
+    <string name="_16_kb">16 КБ</string>
+    <string name="storage">Хранилище</string>
+    <string name="used_space">Использованное место</string>
+    <string name="free_space">Свободное место</string>
 </resources>
