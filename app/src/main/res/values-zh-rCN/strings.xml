@@ -141,4 +141,19 @@
     </plurals>
     <string name="gb">GB</string>
     <string name="gb_total">128</string>
+    <string name="auto">自动</string>
+    <string name="whatsapp">微信</string>
+    <string name="sync_title">定期同步电子邮件</string>
+    <string name="java">Java</string>
+    <string name="set">设置</string>
+    <string name="free_space_format">%sGB</string>
+    <string name="total_space_format">%sGB</string>
+    <string name="pref_key_transparent_list_background">transparent_list_background</string>
+    <string name="pref_key_view_file_information">查看文件信息</string>
+    <string name="pref_key_file_list_margins">文件列表边距</string>
+    <string name="pref_key_material_design_3">莫奈设计3</string>
+    <string name="file_modified_are_you_sure">该文件已被修改。是否确定？</string>
+    <string name="used_space_format">%sGB</string>
+    <string name="pref_key_selected_file_background_opacity">选定的文件背景不透明度</string>
+    <string name="pref_key_show_fast_scroll">显示快速滚动</string>
 </resources>
