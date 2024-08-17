@@ -233,4 +233,12 @@
     <string name="red_theme_light_mode">红色主题灯光模式</string>
     <string name="red_theme_dark_mode">红色主题深色模式</string>
     <string name="corner_family_rounded">圆形</string>
+    <string name="message_not_sent">消息未发送</string>
+    <string name="extra">额外</string>
+    <string name="basic">基本</string>
+    <string name="songs">歌曲</string>
+    <string name="videos">视频</string>
+    <string name="app_installation_files">应用安装文件 (APK)</string>
+    <string name="system_apps">系统应用</string>
+    <string name="installed_apps">安装应用</string>
 </resources>
