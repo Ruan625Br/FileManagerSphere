@@ -241,4 +241,6 @@
     <string name="app_installation_files">应用安装文件 (APK)</string>
     <string name="system_apps">系统应用</string>
     <string name="installed_apps">安装应用</string>
+    <string name="compile_sdk_version_codename_label">编译SDK版本代号</string>
+    <string name="compile_sdk_version_label">编译SDK版本</string>
 </resources>
