@@ -14,4 +14,5 @@
     <string name="share">Paylaş</string>
     <string name="file_list_action_sort_by_type">Tür</string>
     <string name="file_list_action_show_hidden_files">Gizli dosyaları göster</string>
+    <string name="auto">oto</string>
 </resources>
